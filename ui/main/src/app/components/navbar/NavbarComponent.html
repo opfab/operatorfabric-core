@@ -18,12 +18,15 @@
     <!-- COLLAPSED NAVIGATION -->
     <nav class="opfab-navigation opfab-collapsed-navbar" aria-label="Collapsed Navigation">
         <ul>
-            <li class="opfab-navigation-link" [class.active]="'feed' === currentMenuId">
+            <li>
                 <a
                     id="opfab-navbar-menu-feed-collapsed"
+                    class="opfab-navigation-link"
+                    [class.active]="'feed' === currentMenuId"
                     (click)="goToCoreMenu('feed')"
                     (keydown.enter)="goToCoreMenu('feed')"
                     translate
+                    tabindex="0"
                     >{{ 'menu.feed' }}</a
                 >
             </li>
@@ -44,56 +47,60 @@
 
     <!-- FULL SCREEN NAVIGATION -->
     <nav class="opfab-navigation opfab-full-navbar" aria-label="Full screen navigation">
-        <ul *ngFor="let menuElement of upperMenuElements; let i = index">
-            <li
-                [class.active]="menuElement.id === currentMenuId"
-                class="opfab-navigation-link"
-                *ngIf="!menuElement.dropdownMenu || menuElement.dropdownMenu.length === 0">
-                <a
+        <ul>
+            <ng-container *ngFor="let menuElement of upperMenuElements; let i = index">
+                <li *ngIf="!menuElement.dropdownMenu || menuElement.dropdownMenu.length === 0">
+                    <a
+                        id="opfab-navbar-menu-{{ menuElement.id }}"
+                        class="opfab-navigation-link"
+                        [class.active]="menuElement.id === currentMenuId"
+                        (click)="clickOnMenu(menuElement)"
+                        (keydown.enter)="clickOnMenu(menuElement)"
+                        tabindex="0"
+                        >{{ menuElement.label }}</a
+                    >
+                    <a
+                        *ngIf="menuElement.linkType === 'BOTH'"
+                        id="opfab-navbar-menu-icon-{{ menuElement.id }}"
+                        class="opfab-icon-external-link"
+                        (click)="clickOnMenu(menuElement, true)"
+                        (keydown.enter)="clickOnMenu(menuElement, true)"
+                        tabindex="0">
+                        <em class="fas fa-external-link-alt"></em>
+                    </a>
+                </li>
+                <li
+                    *ngIf="menuElement.dropdownMenu?.length > 0"
                     id="opfab-navbar-menu-{{ menuElement.id }}"
-                    (click)="clickOnMenu(menuElement)"
-                    (keydown.enter)="clickOnMenu(menuElement)"
-                    tabindex="0"
-                    >{{ menuElement.label }}</a
-                >
-                <a
-                    id="opfab-navbar-menu-icon-{{ menuElement.id }}"
-                    *ngIf="menuElement.linkType === 'BOTH'"
-                    class="opfab-icon-external-link"
-                    (click)="clickOnMenu(menuElement, true)">
-                    <em class="fas fa-external-link-alt"></em>
-                </a>
-            </li>
-            <li
-                *ngIf="menuElement.dropdownMenu?.length > 0"
-                class="opfab-navigation-link"
-                id="opfab-navbar-menu-{{ menuElement.id }}">
-                <a id="opfab-navbar-menu-label-{{ menuElement.id }}" tabindex="0">{{ menuElement.label }}</a>
-                <!-- padding-bottom to add space between menu and sub menu-->
-                <em class="fa fa-caret-down" style="padding-left: 5px; padding-bottom: 10px"></em>
-                <ul>
-                    <li
-                        *ngFor="let subMenuElement of menuElement.dropdownMenu"
-                        class="opfab-navigation-dropdown-menu-link">
-                        <a
-                            id="opfab-navbar-menu-dropdown-{{ subMenuElement.id }}"
-                            (click)="clickOnMenu(subMenuElement)"
-                            (keydown.enter)="clickOnMenu(subMenuElement)"
-                            tabindex="0"
-                            >{{ subMenuElement.label }}</a
-                        >
-                        <a
-                            id="opfab-navbar-menu-dropdown-icon-{{ subMenuElement.id }}"
-                            *ngIf="subMenuElement.linkType === 'BOTH'"
-                            class="opfab-icon-external-link"
-                            (click)="clickOnMenu(subMenuElement, true)"
-                            (keydown.enter)="clickOnMenu(subMenuElement, true)"
-                            tabindex="0">
-                            <em class="fas fa-external-link-alt"></em>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+                    class="opfab-navigation-dropdown-menu"
+                    [class.active]="isSubMenuActive(menuElement)"
+                    tabindex="0">
+                    <a id="opfab-navbar-menu-label-{{ menuElement.id }}">{{ menuElement.label }}</a>
+                    <em class="fa fa-caret-down" style="padding-left: 5px"></em>
+                    <ul>
+                        <li *ngFor="let subMenuElement of menuElement.dropdownMenu">
+                            <a
+                                id="opfab-navbar-menu-dropdown-{{ subMenuElement.id }}"
+                                class="opfab-navigation-link"
+                                [class.active]="subMenuElement.id === currentMenuId"
+                                (click)="clickOnMenu(subMenuElement)"
+                                (keydown.enter)="clickOnMenu(subMenuElement)"
+                                tabindex="0"
+                                >{{ subMenuElement.label }}</a
+                            >
+                            <a
+                                *ngIf="subMenuElement.linkType === 'BOTH'"
+                                id="opfab-navbar-menu-dropdown-icon-{{ subMenuElement.id }}"
+                                class="opfab-icon-external-link"
+                                (click)="clickOnMenu(subMenuElement, true)"
+                                (keydown.enter)="clickOnMenu(subMenuElement, true)"
+                                tabindex="0">
+                                <em class="fas fa-external-link-alt"></em>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ng-container>
         </ul>
     </nav>
     <nav class="opfab-full-navbar" aria-label="Full Navigation Icons">

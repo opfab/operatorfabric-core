@@ -131,4 +131,8 @@ export class NavbarComponent {
         return this.domSanitizationService.bypassSecurityTrustUrl(this.navbarPage.logo.base64Image); //NOSONAR
         // No security issue here as the image is provided by a configuration file
     }
+
+    isSubMenuActive(menuElement: NavbarMenuElement): boolean {
+        return menuElement.dropdownMenu.some((dropdownMenuElement) => dropdownMenuElement.id === this.currentMenuId);
+    }
 }

@@ -37,21 +37,25 @@
 
 .opfab-navigation {
     padding-top: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
 }
 
-  
+.opfab-navigation > ul {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 1rem;
+}
+
 .opfab-navigation-link {
-    cursor: pointer;
-    position: relative;
-    margin-left: 1rem;
-    margin-right: 1rem;
     color: var(--opfab-navbar-color);
+    text-decoration: none;
+    cursor: pointer;
 
     &:hover,
-    &:focus {
+    &:focus-visible {
         color: var(--opfab-navbar-color-hover);
     }
 }
@@ -67,18 +71,12 @@
     color: var(--opfab-navbar-color);
     text-decoration: none;
     padding-left: 0.5rem;
+    cursor: pointer;
 
     &:hover,
-    &:focus {
+    &:focus-visible {
         color: var(--opfab-navbar-color-hover);
     }
-}
-
-.opfab-navigation ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
 }
 
 /* NAVIGATION LINKS AS ICONS */
@@ -110,36 +108,45 @@
 
 /* DROPDOWN MENUS */
 
-.opfab-navigation ul ul {
+.opfab-navigation-dropdown-menu {
+    position: relative;
+    padding-bottom: 10px;
+    color: var(--opfab-navbar-color);
+    cursor: pointer;
+
+    &:hover,
+    &:focus-within {
+        color: var(--opfab-navbar-color-hover);
+    }
+}
+
+.opfab-navigation-dropdown-menu.active {
+    color: var(--opfab-navbar-color-active);
+    font-weight: bold;
+}
+
+.opfab-navigation-dropdown-menu > ul {
     border : 1px solid var(--opfab-navbar-dropdown-menu-border-color);
     position: absolute;
     border-radius: 10px;
     left: 0;
     z-index: 1;
-    overflow:visible;
+    overflow: visible;
     background-color: var(--opfab-navbar-right-menu-bgcolor);
     display: none;
-    margin-top: 0;
-    padding-top: 10px;
-    padding-bottom: 15px; 
-    padding-right: 15px;
-  }
+    list-style: none;
+    margin-top: 10px;
+    padding: 1rem;
+    font-weight: normal;
+    cursor: default;
+}
 
-.opfab-navigation li:hover  ul, 
-.opfab-navigation li:focus-within ul {
-    display: block;
-  }
-
-.opfab-navigation-dropdown-menu-link {
-    position: relative;
-    margin-left: 1rem;
-    margin-top: 5px;
-    color: var(--opfab-navbar-color);
-
-    &:hover,
-    &:focus {
-        color: var(--opfab-navbar-color-hover);
-    }
+.opfab-navigation-dropdown-menu:hover ul, 
+.opfab-navigation-dropdown-menu:focus-within ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
 .opfab-navbar-info {
