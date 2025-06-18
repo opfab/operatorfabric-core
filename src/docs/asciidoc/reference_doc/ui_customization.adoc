@@ -605,6 +605,8 @@ It is possible instead of using an input field to use a select field by setting 
 
 The option `allowNewOptionForSelect` allows the user to enter a new value that is not in the list of possible values. If set to `false`, the user will only be able to select from the list of possible values.
 
+If you want the input for new options to be restricted to a certain number of characters, you can set the `maxInputLength` field in the column definition.
+
 ==== Response restrictions
 
 It is possible to restrict the possibility to respond to entities that are defined as required (field `entitiesRequiredToRespond` in the card). To do this, you need to set `responseOnlyAllowedForEntitiesRequiredToRespond` to `true` in the custom screen definition.
