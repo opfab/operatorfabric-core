@@ -34,9 +34,15 @@
             COMPLIANT: 'yes',
             ALARM: 'no'
         },
+        // Possible values: `INPROGRESS`, `FINISHED`, `CANCELED`
         defaultSelectedTypeOfState: [
             'INPROGRESS',
             'FINISHED'
+        ],
+        // Possible values: 'READ', 'NOT_READ', 'ACKNOWLEDGED', 'NOT_ACKNOWLEDGED'
+        defaultSelectedReadAndAck: [
+            'NOT_ACKNOWLEDGED',
+            'NOT_READ'
         ],
         includeOnlyCardsEmittedByCurrentUserEntities: false,
         results: {
