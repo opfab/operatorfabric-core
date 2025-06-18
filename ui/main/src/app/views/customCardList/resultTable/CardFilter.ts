@@ -156,8 +156,9 @@ export class CardFilter {
     }
 
     private isCardEmittedByCurrentUserEntity(card: Card): boolean {
-        if (card.publisherType === PublisherType.ENTITY)
+        if (card.publisherType === PublisherType.ENTITY || card.publisherType === PublisherType.EXTERNAL) {
             return UsersService.getCurrentUserWithPerimeters().userData.entities.includes(card.publisher);
+        }
         return false;
     }
 }

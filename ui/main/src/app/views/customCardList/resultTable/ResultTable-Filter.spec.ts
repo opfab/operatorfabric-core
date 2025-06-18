@@ -417,6 +417,43 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
         const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
         expect(dataArray).toEqual([{cardId: 'id0', testField: 'processId0'}]);
     });
+    // special case where publisher is not a user of the entity but
+    // an external application that is allowed to send cards on behalf of the entity
+    it('by current user entities if includeOnlyCardsEmittedByCurrentUserEntities is set to true and publisher is external', async () => {
+        const resultTable = getResultTable({includeOnlyCardsEmittedByCurrentUserEntities: true});
+        const cards = [
+            getOneLightCard({
+                publisher: 'entity1',
+                publisherType: PublisherType.EXTERNAL,
+                process: 'processId0',
+                state: 'state1.0',
+                id: 'id0'
+            }),
+            getOneLightCard({
+                publisher: 'entity2',
+                publisherType: PublisherType.EXTERNAL,
+                process: 'processId0',
+                state: 'state1.1',
+                startDate: 100,
+                id: 'id1'
+            })
+        ];
+
+        await setUserPerimeter({
+            computedPerimeters: [],
+            userData: {
+                login: 'test',
+                firstName: 'firstName',
+                lastName: 'lastName',
+                entities: ['entity1']
+            }
+        });
+
+        const filterValues = new FilterValues();
+        resultTable.setFilters(filterValues);
+        const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        expect(dataArray).toEqual([{cardId: 'id0', testField: 'processId0'}]);
+    });
 
     it('that have responses from my entities if excludeCardsWithResponseFromMyEntities is called', () => {
         const resultTable = getResultTable();
