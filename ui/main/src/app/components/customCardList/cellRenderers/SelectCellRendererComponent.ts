@@ -18,6 +18,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
 @Component({
     selector: 'of-select-cell-renderer',
     templateUrl: './SelectCellRendererComponent.html',
+    styleUrls: ['./SelectCellRendererComponent.scss'],
     imports: [NgIf, NgForOf, ReactiveFormsModule, MultiSelectComponent]
 })
 export class SelectCellRendererComponent implements ICellRendererAngularComp {
@@ -28,6 +29,8 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
     public allowNewOptionForSelect = false;
     public otherOptionLabel = 'Other...';
     public otherOptionPlaceholder = 'Please specify';
+    public maxLength: number;
+    public charCount = '';
 
     @ViewChild('otherInput') otherInputElement!: ElementRef<HTMLInputElement>;
 
@@ -42,6 +45,9 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
         this.params = params;
         this.fieldValue = params.getValue().value;
         this.allowNewOptionForSelect = params.getValue().allowNewOptionForSelect;
+        this.maxLength = params.colDef.customParams.maxInputLength;
+        this.charCount = `0/${this.maxLength}`;
+
         this.selectOptions = params.getValue().possibleValues.map((value: any) => ({
             label: value.label,
             value: value.value
@@ -82,7 +88,12 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
             // set user focus on the input field
             setTimeout(() => this.otherInputElement.nativeElement.focus(), 0);
             this.otherInputControl.setValue('');
+            this.charCount = `0/${this.maxLength}`;
         }
+    }
+
+    onInput(event: any) {
+        if (this.maxLength > 0) this.charCount = `${event.target.value.length}/${this.maxLength}`;
     }
 
     addOtherOption() {
