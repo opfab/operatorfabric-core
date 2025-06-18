@@ -125,6 +125,10 @@ export class CustomCardListView {
         return this.customScreenDefinition?.defaultSelectedTypeOfState ?? [];
     }
 
+    public getDefaultSelectedReadAndAck(): string[] {
+        return this.customScreenDefinition?.defaultSelectedReadAndAck ?? [];
+    }
+
     private isProcessIdInTheListOfCustomScreenDefinition(processId: string): boolean {
         return (
             !this.customScreenDefinition?.processIds ||

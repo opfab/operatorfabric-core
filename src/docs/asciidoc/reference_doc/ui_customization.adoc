@@ -423,8 +423,12 @@ It is possible to include only cards emitted by the entities of the current user
 
 You can define the filters to be displayed in the header of the screen by adding them to the `headerFilters` array. The following filters are available: `PROCESS`, `TYPE_OF_STATE`, `READ_ACK`, `RESPONSE_FROM_MY_ENTITIES` and `RESPONSE_FROM_ALL_ENTITIES`.
 
-You can define pre-selected values for the type of state multiselect by setting the field `defaultSelectedTypeOfState`.
-The possible values are `INPROGRESS`, `FINISHED`, `CANCELED`.
+You can define pre-selected values : 
+
+- for the type of state multiselect filter by setting the field `defaultSelectedTypeOfState`. The possible values are `INPROGRESS`, `FINISHED`, `CANCELED`.
+- for the read and ack multiselect fitler by setting the field `defaultSelectedReadAndAck`. The possible values are `READ`, `NOT_READ`, `ACKNOWLEDGED`, `NOT_ACKNOWLEDGED`.
+
+
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
