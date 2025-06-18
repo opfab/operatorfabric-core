@@ -26,6 +26,7 @@ export class CardFilter {
     private readFilter: boolean = undefined;
     private ackFilter: boolean = undefined;
     private includeOnlyCardsEmittedByCurrentUserEntities = false;
+    private excludeCardsEmittedByCurrentUserEntities = false;
 
     public setFilters(filterValues: FilterValues) {
         this.startDate = filterValues.startDate;
@@ -37,6 +38,7 @@ export class CardFilter {
         this.includeCardsWithResponsesFromAllEntities = filterValues.includeCardsWithResponsesFromAllEntities;
         this.includeCardsWithResponseFromMyEntities = filterValues.includeCardsWithResponseFromMyEntities;
         this.includeOnlyCardsEmittedByCurrentUserEntities = filterValues.includeOnlyCardsEmittedByCurrentUserEntities;
+        this.excludeCardsEmittedByCurrentUserEntities = filterValues.excludeCardsEmittedByCurrentUserEntities;
     }
 
     private setReadAndAckFilter(readAndAck: string[]) {
@@ -70,6 +72,7 @@ export class CardFilter {
             return true;
         if (this.includeOnlyCardsEmittedByCurrentUserEntities && !this.isCardEmittedByCurrentUserEntity(card))
             return true;
+        if (this.excludeCardsEmittedByCurrentUserEntities && this.isCardEmittedByCurrentUserEntity(card)) return true;
         return false;
     }
 

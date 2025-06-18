@@ -19,4 +19,5 @@ export class FilterValues {
     public includeCardsWithResponseFromMyEntities: boolean;
     public includeCardsWithResponsesFromAllEntities: boolean;
     public includeOnlyCardsEmittedByCurrentUserEntities: boolean;
+    public excludeCardsEmittedByCurrentUserEntities: boolean;
 }
