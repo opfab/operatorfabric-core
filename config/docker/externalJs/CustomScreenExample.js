@@ -190,6 +190,7 @@
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',
                     minWidth: 300,
+                    maxInputLength: 256,
                     showTooltips: true
 
                 },

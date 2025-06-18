@@ -19,18 +19,23 @@
         <option *ngFor="let option of selectOptions" [value]="option.value">{{ option.label }}</option>
         <option *ngIf="allowNewOptionForSelect" value="__other__">{{ otherOptionLabel }}</option>
     </select>
-    <input
-        #otherInput
-        *ngIf="showOtherInput"
-        type="text"
-        [formControl]="otherInputControl"
-        (blur)="addOtherOption()"
-        (keydown.enter)="addOtherOption()"
-        (keydown.esc)="cancelOtherInput()"
-        (click)="$event.stopPropagation()"
-        placeholder="{{ otherOptionPlaceholder }}"
-        class="opfab-input"
-        style="height: 35px; width: 80%" />
+    <div class="input-container">
+        <input
+            #otherInput
+            *ngIf="showOtherInput"
+            type="text"
+            [formControl]="otherInputControl"
+            [attr.maxlength]="maxLength > 0 ? maxLength : null"
+            (input)="onInput($event)"
+            (blur)="addOtherOption()"
+            (keydown.enter)="addOtherOption()"
+            (keydown.esc)="cancelOtherInput()"
+            (click)="$event.stopPropagation()"
+            placeholder="{{ otherOptionPlaceholder }}"
+            class="opfab-input"
+            style="height: 35px; width: 100%" />
+        <span *ngIf="maxLength>0 && showOtherInput" class="char-count"> {{ charCount }} </span>
+    </div>
 </div>
 
 <div
