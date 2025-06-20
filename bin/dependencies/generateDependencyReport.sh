@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,5 +50,4 @@ generateNpmReport node-services/cards-external-diffusion
 generateNpmReport node-services/supervisor
 generateNpmReport ui/main
 generateNpmReport src/tooling/migration-rrule-recurrence
-generateNpmReport src/tooling/migration-opfab3
 echo "Report done in $report_name"
