@@ -12,10 +12,8 @@ Files with the `-java.yml` suffix are only used when Opfab is started in Java mo
 ## web-ui
 
 Contains Nginx configuration files:
-- `nginx-cors-permissive.conf`: Used for development mode.
-- `nginx-java.conf.template`: Used for Java mode. This is a template file processed by the startup script to set the Docker host IP.
+- `nginx-dev.conf.template`: Used for development and Java mode. This template is processed by the startup script to set the Docker host IP, allowing services outside Docker (such as in Java mode) to be accessed. It includes permissive CORS settings.
 - `nginx-prod.conf`: Used for production mode.
-
 The startup script will copy the appropriate file to `nginx.conf`.
 
 ### ui-config

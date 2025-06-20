@@ -73,7 +73,7 @@ server {
   location /auth {
     proxy_set_header X-Forwarded-For $proxy_protocol_addr;
     proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header Host $host;
+    proxy_set_header Host $host:2002;  #port is necessary for implicit/code flow mode with Keycloak (cypress tests)
     proxy_pass http://keycloak:89/auth;
   }
 
