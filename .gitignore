@@ -132,6 +132,7 @@ config/businessconfig-storage/**
 # script generated
 config/web-ui/nginx.conf
 config/web-ui/ui-config/web-ui.json
+config/services/cards-publication.yml
 
 # Back up of the test config
 config/mongodump/**

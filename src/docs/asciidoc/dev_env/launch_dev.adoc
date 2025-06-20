@@ -102,8 +102,9 @@ Opfab can be started in three different modes:
 1. **Development mode** (`dev`): This is the default mode. It is CORS permissive and suitable for development.
 2. **Production mode** (`prod`): This mode is more restrictive, suitable for production and used for CI/CD pipeline tests.
 3. **Java mode** (`java`): This mode is similar to development mode, but executes the Java services directly on the host machine instead of using Docker containers. This mode provides an easier environment for Java service development.
+4. **Light mode** ('light'): run only the essential services in docker, without test modules (Kafka,Zookeeper,Modbus dummy devices and ext app) permissive CORS"
 
-To start Opfab in a specific mode, use `./startOpfab.sh [mode]` where `[mode]` can be `dev`, `prod`, or `java`.
+To start Opfab in a specific mode, use `./startOpfab.sh [mode]` where `[mode]` can be `dev`, `prod`, `java` or `light`.
 
 In java mode, you can start and stop each service individually using the `run_all.sh` script located in the `bin` directory. For example, to start all services, you can run:
 

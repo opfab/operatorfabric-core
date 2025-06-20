@@ -14,6 +14,7 @@ print_help() {
     echo "  dev   -   all service in docker with permissive CORS (Default value)"
     echo "  prod  -   all service in docker with strict CORS , not useable with ng serve"
     echo "  java  -   run the Java application directly, using docker for other services , permissive CORS"
+    echo "  light -   run only the essential services in docker, without test modules (Kafka,Zookeeper,Modbus dummy devices and ext app) permissive CORS"
 }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,6 +25,11 @@ cd "$SCRIPT_DIR" || exit 1
     MODE=${1:-dev}
 
     [[ -f .env-dev ]] && source .env-dev #used to set specific MY_DOCKER_HOST if needed
+
+    # Docker host IP is set by default for linux configuration
+    if [ -z "${MY_DOCKER_HOST}" ]; then
+                MY_DOCKER_HOST=172.17.0.1
+    fi
 
 
     cd ../config
@@ -41,6 +47,7 @@ cd "$SCRIPT_DIR" || exit 1
     mkdir -p mongodump
 
     cp web-ui/ui-config/web-ui-base.json web-ui/ui-config/web-ui.json
+    cp services/cards-publication-base.yml services/cards-publication.yml
     case "$MODE" in
         prod)
             echo "Prod mode : Using strict cors for production mode"
@@ -48,19 +55,20 @@ cd "$SCRIPT_DIR" || exit 1
             docker compose up -d
             ;;
         dev)
-            echo "Dev: Using permissive cors for development mode"
-            cp web-ui/nginx-cors-permissive.conf web-ui/nginx.conf
-            docker compose up -d cards-consultation cards-publication users businessconfig mongodb rabbitmq keycloak kafka #if kafka is started after cards-publication it may cause issues
+            echo "Dev mode: Using permissive cors for development mode"
+            sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
             docker compose up -d
             ;;
+        light)
+            echo "Light mode : Using permissive cors for development mode and do not start all test tools"
+            sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
+            # Use a specific configuration for cards-publication without Kafka
+            cp services/cards-publication-nokafka.yml services/cards-publication.yml
+            docker compose up -d cards-consultation cards-publication users businessconfig mongodb rabbitmq keycloak web-ui cards-external-diffusion cards-reminder supervisor mailhog
+            ;;
         java)
-            echo "Java : Starting Java application directly with permissive CORS"
-            if [ -z "${MY_DOCKER_HOST}" ]; then
-                MY_DOCKER_HOST=172.17.0.1
-            fi
-
-            # Set localhost to the docker host IP in nginx configuration
-            sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-java.conf.template > ./web-ui/nginx.conf
+            echo "Java mode : Starting Java application directly with permissive CORS"
+            sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
             docker compose -f docker-compose.yml up -d mongodb rabbitmq keycloak mailhog zookeeper kafka web-ui cards-external-diffusion cards-reminder supervisor ext-app dummy-modbus-device_1 dummy-modbus-device_2
             cd ../bin
             ./run_all.sh start

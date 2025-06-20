@@ -18,11 +18,11 @@ trap cleanup EXIT
 #End remove shell cursor 
 
 
-services=( "users" "cards-consultation" "cards-publication" "businessconfig" "external-devices")
+services=( "users" "cards-consultation" "cards-publication" "businessconfig")
 showWaitInProgress=0
 
 function display_usage() {
-	echo -e "\nThis script waits for the specified OpFab services to start, as well as Keycloak."
+	echo -e "\nThis script waits for the main OpFab services to start, as well as Keycloak."
 	echo -e "Usage:"
 	echo -e "\twaitforOpfabToStart.sh [OPTIONS]\n"
 	echo -e "options:"
