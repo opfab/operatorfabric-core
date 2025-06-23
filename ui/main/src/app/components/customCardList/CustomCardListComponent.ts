@@ -169,6 +169,14 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private readonly ngUnsubscribe$ = new Subject<void>();
     private inputMode$ = new Subject<void>();
+
+    private readonly severitySortValue = new Map([
+        ['ALARM', 1],
+        ['ACTION', 2],
+        ['COMPLIANT', 3],
+        ['INFORMATION', 4]
+    ]);
+
     loadingInProgress = false;
 
     constructor(private readonly modalService: NgbModal) {
@@ -295,11 +303,22 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     }
                 },
                 severity: {
-                    sortable: false,
+                    sortable: true,
                     resizable: false,
                     maxWidth: 18,
                     cellClassRules: severityCellClassRules,
-                    headerClass: 'opfab-ag-header-with-no-padding'
+                    headerClass: 'opfab-ag-header-with-no-padding',
+                    comparator: (valueA: any, valueB: any) => {
+                        valueA = this.severitySortValue.get(valueA);
+                        valueB = this.severitySortValue.get(valueB);
+                        if (valueA > valueB) {
+                            return 1;
+                        }
+                        if (valueA < valueB) {
+                            return -1;
+                        }
+                        return 0;
+                    }
                 },
                 typeOfState: {
                     sortable: true,
