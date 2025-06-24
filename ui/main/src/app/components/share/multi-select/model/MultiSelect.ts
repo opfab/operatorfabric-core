@@ -28,6 +28,7 @@ export class MultiSelectConfig {
     public autoSelectFirstOption?: boolean;
     public labelRenderer?: any;
     public selectedLabelRenderer?: any;
+    public position?: string;
 }
 export class MultiSelect {
     public id: string;

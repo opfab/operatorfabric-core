@@ -30,8 +30,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     @Output() selectionChange: EventEmitter<string[]> = new EventEmitter<string[]>();
 
     private oldOptions: Array<MultiSelectOption>;
-    // It is important to initialize it with an empty array an not undefined to avoid
-    // to trigger the change event when no option is selected on the first load
+    // It is important to initialize it with an empty array and not undefined to avoid
+    // triggering the change event when no option is selected on the first load
     // See Issue #7526
     private oldSelectedOptions = new Array<string>();
 
@@ -43,7 +43,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
 
     ngAfterViewInit() {
         setTimeout(() => {
-            // Hack : let the time to destroy on old version of a multiselect with same id
+            // Hack: let the time to destroy an old version of a multiselect with the same id
             this.createVirtualSelectComponent();
             this.setOptionList();
             this.setSelectedOptions();
@@ -89,7 +89,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
             allowNewOption: allowNewOption,
             autoSelectFirstOption: autoSelectFirstOption,
             labelRenderer: this.config.labelRenderer,
-            selectedLabelRenderer: this.config.selectedLabelRenderer
+            selectedLabelRenderer: this.config.selectedLabelRenderer,
+            position: this.config.position
         });
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);
