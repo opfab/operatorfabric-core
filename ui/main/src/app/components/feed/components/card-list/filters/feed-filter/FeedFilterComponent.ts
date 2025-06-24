@@ -166,7 +166,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 sortOptions: true,
                 nbOfDisplayValues: 4,
                 multiple: false,
-                search: true
+                search: true,
+                position: 'top'
             },
             selectedOptions: []
         };

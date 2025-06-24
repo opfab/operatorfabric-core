@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -44,7 +44,8 @@ opfab.multiSelect = {
             search: config.search,
             hideClearButton: config.multiple !== undefined ? !config.multiple : false,
             allowNewOption: config.allowNewOption !== undefined ? config.allowNewOption : false,
-            autoSelectFirstOption: config.autoSelectFirstOption !== undefined ? config.autoSelectFirstOption : false
+            autoSelectFirstOption: config.autoSelectFirstOption !== undefined ? config.autoSelectFirstOption : false,
+            position: config.position
         });
         return multiSelect;
     }
