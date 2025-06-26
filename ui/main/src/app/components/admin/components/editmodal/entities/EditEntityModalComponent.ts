@@ -30,9 +30,8 @@ import {User} from '@ofServices/users/model/User';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Observable, of} from 'rxjs';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {NgIf} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
-import {TagInputModule} from 'ngx-chips';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
@@ -40,7 +39,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './EditEntityModalComponent.html',
     styleUrls: ['./EditEntityModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, TagInputModule]
+    imports: [NgFor, NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditEntityModalComponent implements OnInit {
     entityForm: FormGroup<{
@@ -48,7 +47,7 @@ export class EditEntityModalComponent implements OnInit {
         name: FormControl<string | null>;
         description: FormControl<string | null>;
         roles: FormControl<[] | null>;
-        labels: FormControl<[] | null>;
+        labels: FormControl<string[] | null>;
         parents: FormControl<[] | null>;
         users: FormControl<[] | null>;
     }>;
@@ -200,6 +199,23 @@ export class EditEntityModalComponent implements OnInit {
         this.roles.setValue(this.roles.value);
         if (this.parents.value.length === 0) {
             this.parents.setValue([]);
+        }
+    }
+
+    addLabel(value: string) {
+        const labels = [...this.labels.value];
+        value = value.trim();
+        if (value && !labels.includes(value)) {
+            labels.push(value);
+            this.labels.setValue(labels);
+        }
+    }
+
+    removeLabel(index: number) {
+        if (this.labels.value.length !== 0) {
+            const labels = [...this.labels.value];
+            labels.splice(index, 1);
+            this.labels.setValue(labels);
         }
     }
 

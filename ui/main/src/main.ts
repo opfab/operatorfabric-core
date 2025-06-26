@@ -61,7 +61,6 @@ import {SharingService} from './app/components/admin/services/SharingService';
 import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TagInputModule} from 'ngx-chips';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {NgbModule, NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
@@ -82,7 +81,6 @@ bootstrapApplication(AppComponent, {
             BrowserModule,
             FormsModule,
             ReactiveFormsModule,
-            TagInputModule,
             OAuthModule.forRoot(),
             NgbModule,
             TranslateModule.forRoot(),
