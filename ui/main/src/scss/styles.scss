@@ -10,8 +10,6 @@
 
 /* You can add global styles to this file, and also import other style files */
 @use '../../node_modules/ag-grid-community/styles' as ag;
-/* stylelint-disable-next-line scss/load-no-partial-leading-underscore */
-@import '../../node_modules/ngx-chips/core/styles/core/_core';
 
 *, ::after, ::before {
   box-sizing: border-box;
@@ -540,67 +538,6 @@ ngb-pagination {
 
 .opfab-monitoring-ag-grid-row {
     cursor: pointer;
-}
-
-// OpFab customization of the default theme for ngx-chips component
-// It allows the colors to match the ones from the OpFab global style and to respond to the night/day mode
-
-tag-input {
-    .ng2-tag-input.opfab-theme {
-        @include tag-input-theme(
-            (
-                container-border-bottom: none,
-                container-border-bottom-focused: none,
-                box-shadow: none
-            )
-        );
-
-        tag {
-            @include tag-theme(
-                (
-                    background: var(--opfab-color-blue),
-                    background-focused: var(--opfab-color-blue),
-                    background-active: var(--opfab-color-blue),
-                    background-hover: var(--opfab-color-blue),
-                    color: #fff,
-                    color-hover: #fff,
-                    border-radius: 2px,
-                    box-shadow: none,
-                    margin: 0.3rem 0.1rem 0.3rem 0.8rem,
-                    height: 26px,
-                    line-height: 26px,
-                    font-family: var(--opfab-font-family)
-                )
-            );
-
-            delete-icon {
-                @include icon-theme(
-                    (
-                        fill: #fff,
-                        fill-focus: #fff,
-                        transition: all 0.35s
-                    )
-                );
-
-                svg {
-                    transform: translate(0, -4px) scale(0.8);
-                }
-            }
-        }
-
-        input {
-            @include tag-theme(
-                (
-                    background: var(--opfab-bgcolor),
-                    background-focused: var(--opfab-bgcolor),
-                    background-active: var(--opfab-bgcolor),
-                    background-hover: var(--opfab-bgcolor),
-                    color: var(--opfab-color),
-                    color-hover: var(--opfab-color)
-                )
-            );
-        }
-    }
 }
 
 .opfab-link {

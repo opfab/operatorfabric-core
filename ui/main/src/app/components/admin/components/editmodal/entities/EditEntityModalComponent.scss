@@ -19,3 +19,35 @@
 .entity-modal {
     max-height: 90vh;
 }
+
+.label-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+}
+
+.label-list > input {
+    background-color: var(--opfab-bgcolor);
+    color: var(--opfab-input-text-color);
+    caret-color: var(--opfab-input-text-color);
+    width: 150px;
+    border: none;
+}
+
+.label-chip {
+    border: 0;
+    border-radius: 2px;
+    color: white;
+    background-color: var(--opfab-color-blue);
+    padding: 2px 5px 2px 8px;
+    cursor: default;
+}
+
+.label-chip > span {
+    padding: 0 3px;
+    margin-left: 2px;
+    font-weight: bold;
+    cursor: pointer;
+}

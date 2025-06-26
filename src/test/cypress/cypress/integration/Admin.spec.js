@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -159,7 +159,7 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type('entity description');
 
-        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).type('Label1');
+        cy.get('.label-list').find('input').eq(0).type('Label1{enter}');
 
         cy.get('#opfab-roles').click();
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
@@ -206,15 +206,16 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-roles').click();
 
-        cy.get('tag-input').find('[aria-label="Label1"]').should('exist');
+        cy.get('.label-list').find('.label-chip').eq(0).should('contain.text', 'Label1');
+
         // Add Label2
-        // Using type('Label2') ends up sometimes with a truncated value, so we use invoke('val', 'Label2') instead
-        cy.get('tag-input').find('[aria-label="Add label"]').eq(0).invoke('val', 'Label2').trigger('input');
+        cy.get('.label-list').find('input').eq(0).type('Label2{enter}');
 
         // Remove Label1
-        cy.get('tag-input').find('[aria-label="Remove tag"]').eq(0).click();
-        cy.get('tag-input').find('[aria-label="Label1"]').should('not.exist');
-        cy.get('tag-input').find('[aria-label="Label2"]').should('exist');
+        cy.get('.label-list').find('span').eq(0).click();
+
+        cy.get('.label-list').find('.label-chip').should('have.length', 1);
+        cy.get('.label-list').find('.label-chip').eq(0).should('contain.text', 'Label2');
 
         cy.get('#opfab-parents').click();
         // Deselect old parents
