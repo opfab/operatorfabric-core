@@ -7,26 +7,24 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<ngx-charts-chart
-    [view]="[width, height]"
-    xmlns:svg="http://www.w3.org/1999/svg"
-    [showLegend]="false"
-    ofMouseWheel
-    (mouseWheelUp)="onZoom($event, 'in')"
-    (mouseWheelDown)="onZoom($event, 'out')"
-    class="">
-    <svg:g [attr.transform]="translateGraph" class="chart">
-        <svg:g *ngFor="let rectangle of timeLineView.getDayRectangles()">
-            <svg:rect
+<svg
+    [attr.width]="timeLineWidth"
+    [attr.height]="timeLineHeight"
+    (wheel)="onMouseWheel($event)"
+    style="overflow: visible">
+    <g transform="translate(10,30)">
+        <!-- Background rectangle for 7D and W domain -->
+        <g *ngFor="let rectangle of timeLineView.getDayRectangles()">
+            <rect
                 *ngIf="rectangle.changeBgColor"
-                [attr.x]="xScale(rectangle.start)"
-                [attr.width]="xScale(rectangle.end) - xScale(rectangle.start)"
+                [attr.x]="getXCoordinate(rectangle.start)"
+                [attr.width]="getXCoordinate(rectangle.end) - getXCoordinate(rectangle.start)"
                 y="0"
                 fill="var(--opfab-timeline-week-bgcolor)"
-                [attr.height]="dims.height"></svg:rect>
+                [attr.height]="gridHeight"></rect>
             <text
                 *ngIf="rectangle.changeBgColor"
-                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) / 2"
+                [attr.x]="(getXCoordinate(rectangle.end) + getXCoordinate(rectangle.start)) / 2"
                 [attr.y]="53"
                 fill="var(--opfab-timeline-week-color)"
                 text-anchor="middle"
@@ -36,7 +34,7 @@
             </text>
             <text
                 *ngIf="!rectangle.changeBgColor"
-                [attr.x]="xScale(rectangle.start) + (xScale(rectangle.end) - xScale(rectangle.start)) / 2"
+                [attr.x]="(getXCoordinate(rectangle.end) + getXCoordinate(rectangle.start)) / 2"
                 [attr.y]="53"
                 fill="var(--opfab-timeline-week-color2)"
                 text-anchor="middle"
@@ -44,72 +42,87 @@
                 stroke-width="0.5px">
                 {{ rectangle.dateToDisplay }}
             </text>
-        </svg:g>
-        <svg:g
-            ngx-charts-x-axis
-            [xScale]="xScale"
-            [dims]="dims"
-            [showGridLines]="true"
-            [tickFormatting]="timeLineView.getXTickLabel"
-            [rotateTicks]="false"
-            [ticks]="timeLineView.getXTicks()"
-            fill="var(--opfab-timeline-grid-text-color)"></svg:g>
+        </g>
 
-        <svg:g
-            ngx-charts-y-axis
-            [yScale]="yScale"
-            [dims]="dims"
-            [tickFormatting]="emptyLabel"
-            [ticks]="[0, 1, 2, 3, 4, 5]"
-            [showGridLines]="true"></svg:g>
+        <!-- Y axis grid lines -->
+        <g>
+            <rect
+                [attr.x]="0"
+                [attr.width]="gridWidth"
+                [attr.y]="gridHeight - 2"
+                fill="#B1B1B1"
+                [attr.height]="2"></rect>
+            <line
+                *ngFor="let i of [0,1,2,3,4]"
+                [attr.x1]="0"
+                [attr.x2]="gridWidth"
+                [attr.y1]="gridHeight * i / 5"
+                [attr.y2]="gridHeight * i / 5"
+                stroke="var(--opfab-timeline-grid-color)"
+                stroke-width="0.5px" />
+        </g>
 
-        <svg:rect [attr.x]="0" [attr.width]="2" y="0" fill="#B1B1B1" [attr.height]="dims.height"></svg:rect>
+        <!-- X axis with labels and vertical bars-->
 
-        <svg:rect
-            [attr.x]="xScale(timeLineView.getTimeGridDomain()[1]) - 2"
-            [attr.width]="2"
-            y="0"
-            fill="#B1B1B1"
-            [attr.height]="dims.height"></svg:rect>
+        <g id="opfab-timeline-xaxis">
+            <rect [attr.x]="0" [attr.width]="2" y="0" fill="#B1B1B1" [attr.height]="gridHeight"></rect>
+            <g *ngFor="let tick of timeLineView.getXTicks()">
+                <line
+                    [attr.x1]="getXCoordinate(tick)"
+                    [attr.x2]="getXCoordinate(tick)"
+                    [attr.y1]="0"
+                    [attr.y2]="gridHeight"
+                    stroke="var(--opfab-timeline-grid-color)"
+                    stroke-width="0.5px" />
+                <text
+                    [attr.x]="getXCoordinate(tick)"
+                    [attr.y]="gridHeight + 15"
+                    text-anchor="middle"
+                    fill="var(--opfab-timeline-grid-text-color)"
+                    [attr.font-size]="12">
+                    {{ timeLineView.getXTickLabel(tick) }}
+                </text>
+            </g>
+            <rect [attr.x]="gridWidth - 2" [attr.width]="2" y="0" fill="#B1B1B1" [attr.height]="gridHeight"></rect>
+        </g>
 
-        <svg:rect
-            [attr.x]="0"
-            [attr.width]="xScale(timeLineView.getTimeGridDomain()[1])"
-            [attr.y]="dims.height - 2"
-            fill="#B1B1B1"
-            [attr.height]="2"></svg:rect>
-
+        <!-- TIMELINE REAL TIME BAR -->
         <!-- no rounded only up corner possible with svg so use two rectangles -->
-        <svg:rect
-            *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
-            [attr.x]="getRealTimeTextPosition() - 50"
-            [attr.width]="100"
-            y="-18"
-            fill="var(--opfab-timeline-realtimebar-color)"
-            [attr.height]="18"
-            rx="10"
-            ry="10"></svg:rect>
-        <svg:rect
-            *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
-            [attr.x]="getRealTimeTextPosition() - 50"
-            [attr.width]="100"
-            y="-10"
-            fill="var(--opfab-timeline-realtimebar-color)"
-            [attr.height]="10"></svg:rect>
+        <g *ngIf="isRealTimeBarVisible()">
+            <rect
+                [attr.x]="getRealTimeBarTextPosition() - 50"
+                [attr.width]="100"
+                y="-18"
+                fill="var(--opfab-timeline-realtimebar-color)"
+                [attr.height]="18"
+                rx="10"
+                ry="10"></rect>
+            <rect
+                [attr.x]="getRealTimeBarTextPosition() - 50"
+                [attr.width]="100"
+                y="-10"
+                fill="var(--opfab-timeline-realtimebar-color)"
+                [attr.height]="10"></rect>
+            <text
+                [attr.x]="getRealTimeBarTextPosition()"
+                [attr.y]="-8"
+                fill="var(--opfab-timeline-text-color)"
+                text-anchor="middle"
+                stroke-width="0.5px"
+                [attr.font-size]="13"
+                dy=".3em"
+                id="opfab-timeline-time-cursor">
+                {{ getRealTimeBarText() }}
+            </text>
+            <rect
+                [attr.x]="getXCoordinate(xRealTimeLine)"
+                [attr.width]="2"
+                y="0"
+                fill="var(--opfab-timeline-realtimebar-color)"
+                [attr.height]="gridHeight"></rect>
+        </g>
 
-        <text
-            *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
-            [attr.x]="getRealTimeTextPosition()"
-            [attr.y]="-8"
-            fill="var(--opfab-timeline-text-color)"
-            text-anchor="middle"
-            stroke-width="0.5px"
-            [attr.font-size]="13"
-            dy=".3em"
-            id="opfab-timeline-time-cursor">
-            {{ getXRealTimeLineFormatting(xRealTimeLine) }}
-        </text>
-
+        <!-- TIMELINE TITLE -->
         <text
             [attr.x]="'50%'"
             [attr.y]="-27"
@@ -118,22 +131,15 @@
             [attr.font-size]="13"
             dy=".3em"
             id="opfab-timeline-title">
-            {{ timeLineView.getTitle() }}
+            {{ getTimeLineTitle() }}
         </text>
 
-        <svg:rect
-            *ngIf="timeLineView.checkInsideDomain(xRealTimeLine)"
-            [attr.x]="xScale(xRealTimeLine)"
-            [attr.width]="2"
-            y="0"
-            fill="var(--opfab-timeline-realtimebar-color)"
-            [attr.height]="dims.height"></svg:rect>
-
-        <svg:g *ngFor="let circle of circles$ | async; let index = index" type="button">
-            <svg:g
+        <!-- CIRCLES -->
+        <g *ngFor="let circle of circles$ | async; let index = index" type="button">
+            <g
                 id="opfab-timelineCircle-{{ index }}"
                 (click)="onCircleClick(circle)"
-                (mouseenter)="feedCircleHovered(circle, p1)"
+                (mouseenter)="circleHovered(circle, p1)"
                 (mouseleave)="onMouseLeave()"
                 container="body"
                 #p1="ngbPopover"
@@ -141,17 +147,16 @@
                 [autoClose]="false"
                 triggers="mouseenter"
                 popoverClass="opfab-popover opfab-popover-with-scrolling">
-                <svg:g />
-                <svg:ellipse
-                    [attr.cx]="xScale(circle.date)"
-                    [attr.cy]="yScale(circle.circleYPosition)"
+                <ellipse
+                    [attr.cx]="getXCoordinate(circle.date)"
+                    [attr.cy]="getYCoordinate(circle.circleYPosition)"
                     [attr.ry]="'10'"
                     [attr.rx]="circle.width"
                     [attr.fill]="circle.color"
                     [attr.stroke]="'stroke'" />
                 <text
-                    [attr.x]="xScale(circle.date)"
-                    [attr.y]="yScale(circle.circleYPosition)"
+                    [attr.x]="getXCoordinate(circle.date)"
+                    [attr.y]="getYCoordinate(circle.circleYPosition)"
                     text-anchor="middle"
                     stroke-width="0px"
                     fill="white"
@@ -160,28 +165,28 @@
                     dy=".3em">
                     {{ circle.count }}
                 </text>
-            </svg:g>
-        </svg:g>
-    </svg:g>
-    <ng-template #tooltipTemplate>
+            </g>
+        </g>
+    </g>
+</svg>
+<ng-template #tooltipTemplate>
+    <div
+        (mouseenter)="onMouseEnter()"
+        (mouseleave)="openPopover.close()"
+        style="padding: 10px; overflow-y: auto; max-height: 500px">
         <div
-            (mouseenter)="onMouseEnter()"
-            (mouseleave)="openPopover.close()"
-            style="padding: 10px; overflow-y: auto; max-height: 500px">
-            <div
-                *ngFor="let title of currentCircleHovered.summary; let i = index"
-                style="padding: 0px; margin: 0px; line-height: 8px">
-                <br *ngIf="i > 0" />
-                <button
-                    [id]="'opfab-timeline-bubble-btn' + i"
-                    class="btn btn-cardlink btn-sm"
-                    (click)="showCard(title.cardId)"
-                    style="width: 100%">
-                    <div style="text-align: left" class="opfab-bubble-text">
-                        {{ title.summaryDate }} {{ title.titleTranslated }}
-                    </div>
-                </button>
-            </div>
+            *ngFor="let title of currentCircleHovered.summary; let i = index"
+            style="padding: 0px; margin: 0px; line-height: 8px">
+            <br *ngIf="i > 0" />
+            <button
+                [id]="'opfab-timeline-bubble-btn' + i"
+                class="btn btn-cardlink btn-sm"
+                (click)="showCard(title.cardId)"
+                style="width: 100%">
+                <div style="text-align: left" class="opfab-bubble-text">
+                    {{ title.summaryDate }} {{ title.titleTranslated }}
+                </div>
+            </button>
         </div>
-    </ng-template>
-</ngx-charts-chart>
+    </div>
+</ng-template>

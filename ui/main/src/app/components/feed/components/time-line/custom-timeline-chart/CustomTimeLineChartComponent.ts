@@ -12,33 +12,18 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     EventEmitter,
-    Inject,
     Input,
-    NgZone,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
-    PLATFORM_ID,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {scaleLinear, scaleTime} from 'd3-scale';
-import {
-    BaseChartComponent,
-    calculateViewDimensions,
-    ChartComponent,
-    ScaleType,
-    ViewDimensions,
-    ChartCommonModule,
-    AxesModule
-} from '@swimlane/ngx-charts';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/views/timeline/TimelineView';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
-import {MouseWheelDirective} from '../directives/MouseWheelDirective';
 import {NgFor, NgIf, AsyncPipe} from '@angular/common';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
@@ -48,32 +33,15 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     styleUrls: ['./CustomTimeLineChartComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ChartCommonModule, MouseWheelDirective, NgFor, NgIf, AxesModule, NgbPopover, AsyncPipe]
+    imports: [NgFor, NgIf, NgbPopover, AsyncPipe]
 })
-export class CustomTimelineChartComponent extends BaseChartComponent implements OnInit, OnDestroy {
+export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChanges {
     @Input() domainId;
     @Input() valueDomain;
-    // Hack to force reload of the timeline when the user switch from hidden timeline
-    // to visible timeline by cliking on "show timeline" :
-    // When isHidden will change from true to false, it will trigger ngOnchange in ngx-chart and reprocess the chart drawing
-    // It solves bugs :
-    // - https://github.com/opfab/operatorfabric-core/issues/3346
-    // - https://github.com/opfab/operatorfabric-core/issues/3348
-    @Input() isHidden;
-
     @Output() zoomChange: EventEmitter<string> = new EventEmitter<string>();
 
-    @ViewChild(ChartComponent, {read: ElementRef}) chart: ElementRef;
-
     public timeLineView;
-
-    public dims: ViewDimensions;
-    public yScale: any;
-    public xScale: any;
-    public translateGraph: string;
-
     public xRealTimeLine: Date;
-
     public currentCircleHovered;
     public openPopover: NgbPopover;
     public popoverTimeOut;
@@ -83,15 +51,36 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
 
     public circles$: Observable<any>;
 
-    constructor(chartElement: ElementRef, zone: NgZone, cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: any) {
-        super(chartElement, zone, cd, platformId);
+    public timeLineWidth: number;
+    public timeLineHeight: number;
+    public gridWidth: number;
+    public gridHeight: number;
+
+    constructor(cd: ChangeDetectorRef) {
         this.timeLineView = new TimelineView();
         this.changeDetectorRef = cd;
         this.circles$ = this.timeLineView.getCircles();
     }
 
     ngOnInit(): void {
+        this.computeDimensions();
         this.updateRealtime();
+        window.addEventListener('resize', this.onWindowResize);
+    }
+
+    ngOnChanges(): void {
+        this.timeLineView.setDomain(this.domainId, this.valueDomain);
+    }
+
+    onWindowResize = () => {
+        this.computeDimensions();
+    };
+
+    computeDimensions(): void {
+        this.timeLineWidth = window.innerWidth - 60;
+        this.timeLineHeight = 160;
+        this.gridWidth = this.timeLineWidth - 20;
+        this.gridHeight = 95;
     }
 
     /**
@@ -108,46 +97,65 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }, 1000);
     }
 
-    /**
-     * Main function for ngx-charts
-     * called for each update on chart
-     */
-    update(): void {
-        this.timeLineView.setDomain(this.domainId, this.valueDomain);
-        super.update();
-        this.updateDimensions();
-    }
-
-    updateDimensions(): void {
-        this.dims = calculateViewDimensions({
-            width: this.width,
-            height: this.height,
-            margins: [30, 15, 10, 0],
-            showXAxis: true,
-            showYAxis: true,
-            xAxisHeight: 19,
-            yAxisWidth: 0,
-            showLegend: false,
-            legendType: ScaleType.Time
-        });
-
-        this.xScale = scaleTime().range([0, this.dims.width]).domain(this.timeLineView.getTimeGridDomain());
-        this.yScale = scaleLinear().range([this.dims.height, 0]).domain([0, 5]);
-        this.translateGraph = `translate(${this.dims.xOffset} , 30)`;
-    }
-
     //
     // FOLLOWING METHODS ARE CALLED FROM THE HTML
     //
+    circleHovered(myCircle, p): void {
+        if (this.openPopover) {
+            this.openPopover.close();
+        }
+        clearTimeout(this.popoverTimeOut);
+        this.openPopover = p;
+        this.currentCircleHovered = myCircle;
+    }
 
-    emptyLabel(): string {
-        return '';
+    getTimeLineTitle() {
+        return this.timeLineView.getTitle();
+    }
+
+    getXCoordinate(epochDate: number): number {
+        const domain = this.timeLineView.getTimeGridDomain();
+        const start = domain[0];
+        const end = domain[1];
+        return ((epochDate - start) / (end - start)) * this.gridWidth;
+    }
+
+    getRealTimeBarText() {
+        return format(this.xRealTimeLine, 'dd/MM/yy HH:mm');
+    }
+
+    getRealTimeBarTextPosition() {
+        return Math.max(this.getXCoordinate(this.xRealTimeLine.valueOf()), 50); // To avoid going to much on the left, 50px min
+    }
+
+    getYCoordinate(value: number): number {
+        return this.gridHeight - (value / 5) * this.gridHeight;
+    }
+
+    isRealTimeBarVisible() {
+        return this.timeLineView.checkInsideDomain(this.xRealTimeLine);
     }
 
     onCircleClick(circle) {
         if (circle.count === 1) {
             this.showCard(circle.summary[0].cardId);
         }
+    }
+
+    onMouseEnter() {
+        clearTimeout(this.popoverTimeOut);
+    }
+
+    onMouseLeave() {
+        if (this.openPopover) {
+            this.popoverTimeOut = setTimeout(() => {
+                this.openPopover.close();
+            }, 1000);
+        }
+    }
+
+    onMouseWheel(event): void {
+        this.zoomChange.emit(event.deltaY < 0 ? 'in' : 'out');
     }
 
     showCard(cardId): void {
@@ -166,44 +174,9 @@ export class CustomTimelineChartComponent extends BaseChartComponent implements 
         }, 500);
     }
 
-    getXRealTimeLineFormatting(xRealTimeLine) {
-        return format(xRealTimeLine, 'dd/MM/yy HH:mm');
-    }
-
-    getRealTimeTextPosition() {
-        return Math.max(this.xScale(this.xRealTimeLine), 50); // To avoid going to much on the left, 50px min
-    }
-
-    feedCircleHovered(myCircle, p): void {
-        if (this.openPopover) {
-            this.openPopover.close();
-        }
-        clearTimeout(this.popoverTimeOut);
-        this.openPopover = p;
-        this.currentCircleHovered = myCircle;
-    }
-
-    onMouseLeave() {
-        if (this.openPopover) {
-            this.popoverTimeOut = setTimeout(() => {
-                this.openPopover.close();
-            }, 1000);
-        }
-    }
-
-    onMouseEnter() {
-        clearTimeout(this.popoverTimeOut);
-    }
-
-    /**
-     *  change for next or previous zoom set by buttons conf
-     */
-    onZoom($event: MouseEvent, direction): void {
-        this.zoomChange.emit(direction);
-    }
-
     ngOnDestroy() {
         this.timeLineView.destroy();
         this.isDestroyed = true;
+        window.removeEventListener('resize', this.onWindowResize);
     }
 }

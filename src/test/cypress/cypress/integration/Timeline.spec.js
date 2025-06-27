@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,6 @@ describe('Time line moves', function () {
     beforeEach('Reset UI configuration file ', function () {
         script.deleteAllCards();
     });
-
     it('Check timelime manual moves in RT mode', function () {
         // NB : month  starts at 0
 
@@ -90,7 +89,7 @@ describe('Time line moves', function () {
         opfab.loginWithClock(new Date(2030, 2, 31, 10, 50));
 
         setTimeLineDomain('7D');
-        checkFirstTickLabel(' 00h ');
+        checkSecondTickLabel(' 00h ');
         checkTitle(' 30/03/2030 - 07/04/2030 ');
         moveRight();
         checkFirstTickLabel(' 00h ');
@@ -100,7 +99,7 @@ describe('Time line moves', function () {
         checkTitle(' 02/04/2030 - 10/04/2030 ');
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkFirstTickLabel(' 00h ');
+        checkSecondTickLabel(' 00h ');
         checkTitle(' 30/03/2030 - 07/04/2030 ');
 
         moveLeft();
@@ -111,7 +110,7 @@ describe('Time line moves', function () {
         checkTitle(' 29/03/2030 - 06/04/2030 ');
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkFirstTickLabel(' 00h ');
+        checkSecondTickLabel(' 00h ');
         checkTitle(' 30/03/2030 - 07/04/2030 ');
     });
 
@@ -202,7 +201,7 @@ describe('Time line moves', function () {
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 00:10 ');
         checkTitle(' 31 March 2030 ');
-        checkFirstTickLabel(' 22h ');
+        checkSecondTickLabel(' 22h ');
         // the bubble at the start of the timeline has disappear
         checkHaveCircle(1);
 
@@ -215,7 +214,7 @@ describe('Time line moves', function () {
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 00:40 ');
         checkTitle(' 31 March 2030 ');
-        checkFirstTickLabel(' 22h30 ');
+        checkSecondTickLabel(' 22h30 ');
         checkHaveCircle(1);
 
         cy.tick(15 * MINUTES);
@@ -400,7 +399,7 @@ describe('Time line moves', function () {
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 00:05 ');
         checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkFirstTickLabel(' 16h ');
+        checkSecondTickLabel(' 16h ');
         checkHaveCircle(1);
 
         cy.tick(12 * HOURS);
@@ -899,7 +898,11 @@ describe('Time line moves', function () {
     }
 
     function checkFirstTickLabel(label) {
-        cy.get('.axis').find('text').first().should('have.text', label);
+        cy.get('#opfab-timeline-xaxis').find('text').first().should('have.text', label);
+    }
+
+    function checkSecondTickLabel(label) {
+        cy.get('#opfab-timeline-xaxis').find('text').eq(1).should('have.text', label);
     }
 
     function checkDisplayedCardTitle(title) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,8 @@
 
 import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
 import {SettingsCommands} from '../support/settingsCommands';
-import {SoundCommands} from '../support/soundCommands'
-import {ScriptCommands} from "../support/scriptCommands";
+import {SoundCommands} from '../support/soundCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('Session ended test', function () {
     const opfab = new OpfabGeneralCommands();
@@ -44,12 +44,12 @@ describe('Session ended test', function () {
         checkSessionIsActive();
         goSevenDaysInTheFuture();
         checkSessionIsClosed();
-        cy.tick(10); // necessary to trigger the sound   
+        cy.tick(10); // necessary to trigger the sound
         sound.checkNumberOfEmittedSoundIs(1);
     });
 
     function setTimelineInYearMode() {
-        cy.get('.axis').find('text').first().as('firstTimelineXTick');
+        cy.get('#opfab-timeline-xaxis').find('text').first().as('firstTimelineXTick');
         cy.get('#opfab-timeline-link-period-Y').click();
     }
 
