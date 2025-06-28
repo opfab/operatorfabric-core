@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'org.hidetake.swagger.generator'
-    id "com.vanniktech.maven.publish" version "0.32.0"
+    id "com.vanniktech.maven.publish" version "0.33.0"
 }
 
 subprojects {
