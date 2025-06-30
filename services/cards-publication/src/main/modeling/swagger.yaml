@@ -1052,7 +1052,7 @@ paths:
               type: string
         '400':
           description: Bad request
-  '/cards-consultation/cards/{id}':
+  '/cards-publication/cards/{id}':
     parameters:
       - in: path
         name: id
@@ -1069,6 +1069,13 @@ paths:
       responses:
         '200':
           description: OK
+  '/cards-consultation/cards/{id}':
+    parameters:
+      - in: path
+        name: id
+        type: string
+        required: true
+        description: "The id parameter is constructed as follows : {process}.{processInstanceId}"
     get:
       operationId: fetchProcessCard
       tags:
