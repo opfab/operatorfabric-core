@@ -11,7 +11,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
-import {NgFor} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -19,7 +18,7 @@ import {FormsModule} from '@angular/forms';
     templateUrl: './AdminComponent.html',
     styleUrls: ['./AdminComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet, NgFor, FormsModule]
+    imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet, FormsModule]
 })
 export class AdminComponent {
     constructor(protected translate: TranslateService) {}

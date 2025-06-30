@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AsyncPipe, NgFor, NgIf} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -55,7 +55,6 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
         NgIf,
         NgFor,
         AgGridAngular,
-        AsyncPipe,
         FormsModule,
         NgxDaterangepickerMd,
         ReactiveFormsModule,

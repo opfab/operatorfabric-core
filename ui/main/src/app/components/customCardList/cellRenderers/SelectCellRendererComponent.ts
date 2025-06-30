@@ -12,14 +12,13 @@ import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {NgForOf, NgIf} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponent';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
 @Component({
     selector: 'of-select-cell-renderer',
     templateUrl: './SelectCellRendererComponent.html',
     styleUrls: ['./SelectCellRendererComponent.scss'],
-    imports: [NgIf, NgForOf, ReactiveFormsModule, MultiSelectComponent]
+    imports: [NgIf, NgForOf, ReactiveFormsModule]
 })
 export class SelectCellRendererComponent implements ICellRendererAngularComp {
     public params: any;
