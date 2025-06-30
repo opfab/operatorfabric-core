@@ -14,7 +14,7 @@ import {NavbarView} from 'app/views/navbar/NavbarView';
 import {NavbarMenuElement, NavbarPage} from 'app/views/navbar/NavbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NavbarMenuView} from 'app/views/navbar/NavbarMenuView';
-import {NgClass, NgTemplateOutlet, NgFor, NgIf} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InfoComponent} from './info/InfoComponent';
 import {UserCardComponent} from '../usercard/UserCardComponent';
@@ -28,8 +28,6 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     styleUrls: ['./NavbarComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgClass,
-        NgTemplateOutlet,
         NgFor,
         NgIf,
         NgbPopover,

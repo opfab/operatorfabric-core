@@ -10,14 +10,10 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {TranslateModule} from '@ngx-translate/core';
-import {NgFor, NgIf, NgStyle} from '@angular/common';
-import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-html-renderer',
-    templateUrl: './HTMLCellRendererComponent.html',
-    imports: [TranslateModule, NgIf, NgbPopover, NgFor, NgStyle]
+    templateUrl: './HTMLCellRendererComponent.html'
 })
 export class HTMLCellRendererComponent implements ICellRendererAngularComp {
     public cellHTML: string;
