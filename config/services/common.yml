@@ -30,6 +30,7 @@ operatorfabric:
 ### entitiesIdClaim is the name of the field in the token     
 #      entitiesIdClaim : entitiesId
 #      gettingEntitiesFromToken: true
+      gettingFirstAndLastNameFromToken: false
 ###
 
 ### activate the following if you want the groups of the user to come from the token and not mongoDB

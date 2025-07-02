@@ -89,20 +89,27 @@ public class OAuth2UsersConfiguration {
                     return virtualUser;
                 });
                 if (groupsProperties.getMode() == GroupsMode.JWT) {
-                    // override the groups list from JWT mode, otherwise, default mode is
+                    // override the groups list from JWT mode, otherwise the default mode is
                     // OPERATOR_FABRIC
                     user.setGroups(getGroupsList(jwt));
                 }
 
-                if (jwtProperties.isGettingEntitiesFromToken())
+                if (jwtProperties.isGettingEntitiesFromToken() && user != null) {
                     user.setEntities(getEntitiesFromToken(jwt));
+                }
                 // User email is always taken from the JWT; it is not set via the Opfab user
                 // administration feature.
                 // This may evolve in the future to allow user administration to set the email
                 // via the UI.
                 String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
-                if (email != null)
+                if (email != null && user != null) {
                     user.setEmail(email);
+                }
+
+                if (jwtProperties.isGettingFirstAndLastNameFromToken() && user != null) {
+                    user.setFirstName(extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim()));
+                    user.setLastName(extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim()));
+                }
 
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 

@@ -27,6 +27,7 @@ public class JwtProperties {
 
     private String entitiesIdClaim = "entitiesId";
     private boolean gettingEntitiesFromToken = false;
+    private boolean gettingFirstAndLastNameFromToken = false;
 
     public String getLoginClaim() {
         return loginClaim;
@@ -56,14 +57,18 @@ public class JwtProperties {
         return gettingEntitiesFromToken;
     }
 
+    public boolean isGettingFirstAndLastNameFromToken() {
+        return gettingFirstAndLastNameFromToken;
+    }
+
     /*
      * WARNING the setter is needed because the name of the field in the
-     * configuration file are not the same as the field name in the class
+     * configuration file is not the same as the field name in the class
      * The name of the field in the configuration file is kebab-case and
      * the name of the field in the class is camelCase.
-     * It seems spring make an automatic conversion from kebab-case to camelCase
+     * It seems spring makes an automatic conversion from kebab-case to camelCase
      * when using setter injection
-     * so for example : when using the field login-claim in the configuration file
+     * so for example, when using the field login-claim in the configuration file,
      * spring will call the setter setLoginClaim in the class JwtProperties
      */
     public void setLoginClaim(String loginClaim) {
@@ -92,5 +97,9 @@ public class JwtProperties {
 
     public void setGettingEntitiesFromToken(boolean gettingEntitiesFromToken) {
         this.gettingEntitiesFromToken = gettingEntitiesFromToken;
+    }
+
+    public void setGettingFirstAndLastNameFromToken(boolean gettingFirstAndLastNameFromToken) {
+        this.gettingFirstAndLastNameFromToken = gettingFirstAndLastNameFromToken;
     }
 }
