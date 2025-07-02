@@ -249,7 +249,7 @@ If a user exists in the authentication system but not in Opfab, their profile wi
 By default, `OperatorFabric` manages groups (and/or entities) through the user\'s collection in the database.
 Another mode can be defined, the JWT mode. The groups (and/or entities) come from the authentication token.
 
-To activate this option , you need to set some parameter in the common.yml file : 
+To activate this option, you need to set some parameter in the common.yml file :
   
 |===
 |name|default|mandatory?|Description
@@ -257,12 +257,13 @@ To activate this option , you need to set some parameter in the common.yml file 
 |operatorfabric.security.jwt.groups.mode|OPERATOR_FABRIC|no| Set the group mode, possible values JWT or OPERATOR_FABRIC 
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandard.path||no| path in the JWT to retrieve the claim that defines a group
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardArray.path||no| path in the JWT to retrieve the claim that defines an array of groups
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of group
-|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of group
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.path||no| path in the JWT to retrieve the claim that defines a list of groups
+|operatorfabric.security.jwt.groups.rolesClaim.rolesClaimStandardList.separator||no| set the separator value of the list of groups
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
 |operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
-|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values : true/false)
+|operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values: true/false)
+|operatorfabric.security.jwt.gettingFirstAndLastNameFromToken|false|no| boolean indicating if you want the first name and last name of the user to come from the token and not mongoDB (possible values: true/false)
 |===
 
 _application.yml_
