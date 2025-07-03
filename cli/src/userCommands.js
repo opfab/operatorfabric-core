@@ -26,6 +26,7 @@ const userCommands = {
                         { title: 'Add to group', value: 'add-to-group' },
                         { title: 'Load a list of users', value: 'load' },
                         { title: 'Delete a user', value: 'delete' },
+                        { title: 'Get the last action date for a user', value: 'last-user-action' },
                         { title: 'Remove from entity', value: 'remove-from-entity' },
                         { title: 'Remove from group', value: 'remove-from-group' },
                         { title: 'Set not notified', value: 'set-not-notified' },
@@ -52,6 +53,9 @@ const userCommands = {
                 break;
             case 'delete':
                 await this.deleteUser(args[1]);
+                break;
+            case 'last-user-action':
+                await this.lastUserAction(args[1]);
                 break;
             case 'load':
                 await this.loadUserList(args[1]);
@@ -125,6 +129,23 @@ const userCommands = {
             ``,
             `User ${user} not found`
         );
+    },
+
+    async lastUserAction(user) {
+        user = await utils.missingTextPrompt('User', user);
+        const result = await utils.sendRequest(
+            `users/lastUserAction/${user}`,
+            'GET',
+            undefined,
+            ``,
+            `Failed to fetch last user action for user ${user}`,
+            `Last user action not found for login: ${user}`
+        );
+
+        if (result.ok) {
+            const lastUserAction = await result.text();
+            console.info('Last user action for user ' + user + ' : ' + lastUserAction);
+        }
     },
 
     async loadUserList(filePath) {
@@ -254,6 +275,7 @@ Commands list :
             add-to-entity           Add a <user> to an <entity> : opfab user add-to-entity <entityId> <user>
             add-to-group            Add a <user> to a <group> : opfab user add-to-group <groupId> <user>
             delete                  Delete a <user> : opfab user delete <user>
+            last-user-action        Get the last action date for a <user> : opfab user last-user-action <user>
             load                    Add or update a list of users : opfab user load <usersFilePath>
             remove-from-entity      Remove a <user> from an <entity> : opfab user remove-from-entity <entityId> <user>
             remove-from-group       Remove a <user> from a <group> : opfab user remove-from-group <groupId> <user>

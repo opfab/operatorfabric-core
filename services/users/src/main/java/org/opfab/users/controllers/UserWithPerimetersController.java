@@ -9,6 +9,7 @@
 
 package org.opfab.users.controllers;
 
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.model.*;
@@ -39,16 +40,17 @@ public class UserWithPerimetersController {
     private CurrentUserWithPerimetersService currentUserWithPerimetersService;
 
     public UserWithPerimetersController(UserRepository userRepository, GroupRepository groupRepository,
-                    PerimeterRepository perimeterRepository, EntityRepository entityRepository,
-                    UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
-                    EventBus eventBus,
-                    @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
-                    @Value("${operatorfabric.users.getEmailFromUserInsteadOfSettings:false}") boolean getEmailFromUserInsteadOfSettings) {
+                                        PerimeterRepository perimeterRepository, EntityRepository entityRepository,
+                                        UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
+                                        EventBus eventBus,
+                                        @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
+                                        @Value("${operatorfabric.users.getEmailFromUserInsteadOfSettings:false}") boolean getEmailFromUserInsteadOfSettings,
+                                        LastUserActionRepository lastUserActionRepository) {
 
             NotificationService notificationService = new NotificationService(userRepository, eventBus);
             UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
                             perimeterRepository, notificationService);
-            UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository);
+            UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
             UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService,
                             notificationService, userActionLogService, userActionLogActivated);
             this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService,

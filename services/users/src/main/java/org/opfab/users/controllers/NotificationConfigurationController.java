@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@
 
 package org.opfab.users.controllers;
 
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.repositories.UserRepository;
@@ -35,10 +36,11 @@ public class NotificationConfigurationController {
     private final NotificationService notificationService;
 
     public NotificationConfigurationController(UserRepository userRepository,
-            UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
-            EventBus eventBus, @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
+                                               UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
+                                               EventBus eventBus, @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
+                                               LastUserActionRepository lastUserActionRepository) {
         this.notificationService = new NotificationService(userRepository, eventBus);
-        UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository);
+        UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
         this.userSettingsService = new UserSettingsService(userSettingsRepository, null, notificationService,
                 userActionLogService, userActionLogActivated);
     }

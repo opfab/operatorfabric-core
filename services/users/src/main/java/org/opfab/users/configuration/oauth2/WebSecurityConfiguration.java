@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -52,6 +52,7 @@ public class WebSecurityConfiguration {
     public static final String ENTITIES_PATH = "/entities/**";
     public static final String PERIMETERS_PATH = "/perimeters/**";
     public static final String USER_ACTION_LOGS = "/userActionLogs";
+    public static final String LAST_USER_ACTION = "/lastUserAction";
     public static final String NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotified/**";
     public static final String EMAIL_NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotifiedbymail/**";
 
@@ -103,6 +104,7 @@ public class WebSecurityConfiguration {
                     .requestMatchers(ENTITIES_PATH).access(hasAnyRole(ADMIN_ROLE))
                     .requestMatchers(PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
                     .requestMatchers(USER_ACTION_LOGS).access(hasAnyRole(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
+                    .requestMatchers(LAST_USER_ACTION).access(hasAnyRole(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
                     .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
                     .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
                     .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)

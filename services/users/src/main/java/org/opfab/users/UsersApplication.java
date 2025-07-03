@@ -10,6 +10,7 @@
 package org.opfab.users;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.users.mongo.repositories.EntityRepositoryImpl;
 import org.opfab.users.mongo.repositories.CachedGroupRepositoryImpl;
@@ -31,7 +32,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Import({ UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EntityRepositoryImpl.class,
         CachedGroupRepositoryImpl.class,
         PerimeterRepositoryImpl.class, UserRepositoryImpl.class, UserSettingsRepositoryImpl.class, RabbitEventBus.class,
-        MongoConfiguration.class })
+        MongoConfiguration.class, LastUserActionRepositoryImpl.class })
 public class UsersApplication {
 
     public static void main(String[] args) {

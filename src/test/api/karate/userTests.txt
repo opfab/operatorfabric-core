@@ -44,6 +44,7 @@
       users/entities/transitive-entities-in-currentUser.feature \
       users/synchronizeWithToken.feature \
       users/getUserActionLogs.feature \
+      users/getLastUserAction.feature \
       users/notificationConfiguration.feature \
 
 

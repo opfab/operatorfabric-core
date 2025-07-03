@@ -10,6 +10,7 @@
 package org.opfab.cards.publication;
 
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.cards.publication.mongo.CardRepositoryImpl;
@@ -24,7 +25,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @SpringBootApplication
 @Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
-        UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class })
+        UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class,
+        LastUserActionRepositoryImpl.class})
 public class CardPublicationApplication {
 
     public static void main(String[] args) {

@@ -12,6 +12,7 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.configuration.jwt.groups.GroupsMode;
@@ -62,16 +63,17 @@ public class UsersController implements UserExtractor {
 
     @Autowired
     public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository,
-            GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
-            UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
-            GroupsProperties groupsProperties,
-            @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated) {
+                           GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
+                           UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
+                           GroupsProperties groupsProperties,
+                           @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
+                           LastUserActionRepository lastUserActionRepository) {
         this.jwtProperties = jwtProperties;
         this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
         this.usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,
                 notificationService);
-        this.userActionLogService = new UserActionLogService(userActionLogRepository);
+        this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
         this.userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService,
                 this.userActionLogService, userActionLogActivated);
     }

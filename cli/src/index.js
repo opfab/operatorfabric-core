@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -139,6 +139,7 @@ omelette('opfab')
             'add-to-entity': ['#EMPTY_COMPLETION'],
             'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION'],
+            'last-user-action': ['#EMPTY_COMPLETION'],
             load: [],
             'remove-from-entity': ['#EMPTY_COMPLETION'],
             'remove-from-group': ['#EMPTY_COMPLETION'],
@@ -147,7 +148,7 @@ omelette('opfab')
             'set-activity-area': ['#EMPTY_COMPLETION'],
             'set-notified': ['#EMPTY_COMPLETION'],
             'set-notified-mail': ['#EMPTY_COMPLETION'],
-            'unset-activity-area': ['#EMPTY_COMPLETION']
+            'unset-activity-area': ['#EMPTY_COMPLETION'],
         },
         version: ['#EMPTY_COMPLETION']
     })
