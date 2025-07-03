@@ -32,31 +32,25 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {sub} from 'date-fns';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgClass} from '@angular/common';
+import {NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../multi-select/MultiSelectComponent';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
+import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 @Component({
     selector: 'of-archives-logging-filters',
     templateUrl: './ArchivesLoggingFiltersComponent.html',
     styleUrls: ['./ArchivesLoggingFiltersComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        TranslateModule,
-        NgIf,
-        MultiSelectComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        NgClass,
-        NgxDaterangepickerMd
-    ]
+    imports: [TranslateModule, NgIf, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgxDaterangepickerMd]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy {
     @Input() public card: Card;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
     @Input() hideChildStates: boolean;
+    @Input() hidePublisherAndRecipientsFields = false;
     @Input() tags: any[];
     @Output() sendRequest = new EventEmitter<string>();
     @Output() resetFormEvent = new EventEmitter<string>();
@@ -107,6 +101,22 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         labelKey: 'shared.filters.tags',
         placeholderKey: 'shared.filters.selectTagText',
         sortOptions: true,
+        nbOfDisplayValues: 1
+    };
+
+    entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
+
+    publisherSelected: Array<string> = [];
+    publisherMultiSelectConfig = {
+        labelKey: 'shared.filters.emitter',
+        placeholderKey: 'shared.filters.selectEntityText',
+        nbOfDisplayValues: 1
+    };
+
+    entityRecipientsSelected: Array<string> = [];
+    entityRecipientsMultiSelectConfig = {
+        labelKey: 'shared.filters.recipients',
+        placeholderKey: 'shared.filters.selectEntityText',
         nbOfDisplayValues: 1
     };
 
@@ -169,6 +179,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processGroupSelected = [];
         this.processSelected = [];
         this.stateSelected = [];
+        this.publisherSelected = [];
+        this.entityRecipientsSelected = [];
     }
 
     loadValuesforTags() {
@@ -203,6 +215,10 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             this.processesWithoutProcessGroupMultiSelectOptions,
             this.processMultiSelectOptionsPerProcessGroups
         );
+
+        EntitiesService.getEntities().forEach((entity) => {
+            this.entitiesMultiSelectOptions.push(new MultiSelectOption(entity.id, entity.name));
+        });
 
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
@@ -270,20 +286,6 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             element.forEach((val) => ids.push(val));
             this.filters.set(key, ids);
         }
-    }
-
-    dateFilterToMap(key: string, element: any) {
-        if (element.length) {
-            this.filters.set(key, [Date.parse(element + ':00')]);
-        }
-    }
-
-    stateFilterToMap(element: any) {
-        const processStateKeys = [];
-        element.forEach((val) => {
-            processStateKeys.push(val);
-        });
-        this.filters.set('processStateKey', processStateKeys);
     }
 
     processGroupFilterToMap(element: any) {
@@ -395,6 +397,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         this.processGroupSelected = [];
         this.processSelected = [];
         this.stateSelected = [];
+        this.publisherSelected = [];
+        this.entityRecipientsSelected = [];
         this.parentForm.controls.publishDateRange.setValue({
             startDate: this.defaultPublishMinDate,
             endDate: this.defaultPublishMaxDate

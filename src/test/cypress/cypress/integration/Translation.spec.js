@@ -119,6 +119,8 @@ describe('Test translations', function() {
         tagLabel,
         processLabel,
         stateLabel,
+        publisherLabel,
+        entityRecipientsLabel,
         publishDateRangeLabel,
         activeDateRangeLabel
     ) {
@@ -127,6 +129,8 @@ describe('Test translations', function() {
         checkLabel('#opfab-tags', tagLabel);
         checkLabel('#opfab-process', processLabel);
         checkLabel('#opfab-state', stateLabel);
+        checkLabel('#opfab-publisher', publisherLabel);
+        checkLabel('#opfab-entity-recipients', entityRecipientsLabel);
         checkDatePickerLabel('#opfab-publish-date-range', publishDateRangeLabel);
         checkDatePickerLabel('#opfab-active-date-range', activeDateRangeLabel);
     }
@@ -136,6 +140,7 @@ describe('Test translations', function() {
         selectTagText,
         selectProcessText,
         selectStateText,
+        selectEntityText,
         searchText,
         resetText
     ) {
@@ -143,6 +148,8 @@ describe('Test translations', function() {
         checkPlaceholderText('#opfab-tags', selectTagText);
         checkPlaceholderText('#opfab-process', selectProcessText);
         checkPlaceholderText('#opfab-state', selectStateText);
+        checkPlaceholderText('#opfab-publisher', selectEntityText);
+        checkPlaceholderText('#opfab-entity-recipients', selectEntityText);
 
         cy.get('#opfab-archives-logging-btn-search').should('have.text', searchText);
         cy.get('#opfab-archives-logging-btn-reset').should('have.text', resetText);
@@ -321,12 +328,22 @@ describe('Test translations', function() {
         opfab.loginWithUser('operator1_fr');
 
         changeLanguage(ENGLISH);
-        checkArchivesScreenLabels('SERVICE', 'TAGS', 'PROCESS', 'STATE', 'PUBLISH DATE RANGE', 'ACTIVE DATE RANGE');
+        checkArchivesScreenLabels(
+            'SERVICE',
+            'TAGS',
+            'PROCESS',
+            'STATE',
+            'EMITTER',
+            'RECIPIENTS',
+            'PUBLISH DATE RANGE',
+            'ACTIVE DATE RANGE'
+        );
         checkArchivesScreenTexts(
             'Select a Service',
             'Select a Tag',
             'Select a Process',
             'Select a State',
+            'Select an Entity',
             ' SEARCH ',
             ' RESET '
         );
@@ -337,6 +354,8 @@ describe('Test translations', function() {
             'ÉTIQUETTES',
             'PROCESSUS',
             'ÉTAT',
+            'ÉMETTEUR',
+            'DESTINATAIRES',
             'PÉRIODE DE PUBLICATION',
             "PÉRIODE D'ACTIVITÉ"
         );
@@ -345,6 +364,7 @@ describe('Test translations', function() {
             'Sélectionner une Étiquette',
             'Sélectionner un Processus',
             'Sélectionner un État',
+            'Sélectionner une Entité',
             ' RECHERCHER ',
             ' RÉINITIALISER '
         );
@@ -355,6 +375,8 @@ describe('Test translations', function() {
             'LABELS',
             'PROCES',
             'STATUS',
+            'ZENDER',
+            'ONTVANGERS',
             'PUBLICATIEDATUMBEREIK',
             'ACTIEVE DATUMBEREIK'
         );
@@ -363,6 +385,7 @@ describe('Test translations', function() {
             'Selecteer een Label',
             'Selecteer een Proces',
             'Selecteer een Status',
+            'Selecteer een Entiteit',
             ' ZOEK ',
             ' HERSTEL '
         );

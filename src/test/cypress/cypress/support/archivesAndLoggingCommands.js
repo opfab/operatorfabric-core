@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -146,12 +146,20 @@ export class ArchivesAndLoggingCommands extends OpfabCommands {
     };
 
     selectProcess = function (processName) {
-        this.opfab.selectOptionsFromMultiselect('#opfab-process', processName)
+        this.opfab.selectOptionsFromMultiselect('#opfab-process', processName);
     };
 
     selectState = function (stateName, searchResultNumber = 0) {
-        this.opfab.selectOptionsFromMultiselect('#opfab-state', stateName, false, searchResultNumber)
+        this.opfab.selectOptionsFromMultiselect('#opfab-state', stateName, false, searchResultNumber);
     };
+
+    selectPublisher = function (entityName) {
+        this.opfab.selectOptionsFromMultiselect('#opfab-publisher', entityName);
+    }
+
+    selectEntityRecipient = function (entityName) {
+        this.opfab.selectOptionsFromMultiselect('#opfab-entity-recipients', entityName);
+    }
 
     checkNoResultForSearch = function () {
         cy.get('of-archives').contains('Your search did not match any result.');
