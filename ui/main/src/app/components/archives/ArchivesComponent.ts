@@ -70,6 +70,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     readonly paginationPageSizeOptions = [10, 20, 50, 100];
 
+    hidePublisherAndRecipientsFields: boolean;
     tags: any[] = [];
     historySize: number;
     archiveForm = new FormGroup({
@@ -77,6 +78,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         state: new FormControl([]),
         process: new FormControl([]),
         processGroup: new FormControl([]),
+        publisher: new FormControl([]),
+        entityRecipients: new FormControl([]),
         publishDateRange: new FormControl({}),
         activeDateRange: new FormControl({})
     });
@@ -143,6 +146,9 @@ export class ArchivesComponent implements OnDestroy, OnInit {
             this.tags = customTags ?? ConfigService.getConfigValue('archive.filters.tags.list');
             this.changeDetector.markForCheck();
         });
+        this.hidePublisherAndRecipientsFields = ConfigService.getConfigValue(
+            'archive.filters.hidePublisherAndRecipientsFields'
+        );
         this.results = [];
         this.updatesByCardId = [];
     }

@@ -55,6 +55,18 @@ describe('Archives screen tests', function () {
         checkNumberOfLineDisplayedIs(1);
         archivesAndLogging.clickOnResetButton();
 
+        // We check filtering by publisher is working
+        archivesAndLogging.selectPublisher('Control Center FR North');
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(1);
+        archivesAndLogging.clickOnResetButton();
+
+        // We check filtering by entity recipients is working
+        archivesAndLogging.selectEntityRecipient('Control Center FR South');
+        archivesAndLogging.clickOnSearchButton();
+        checkNumberOfLineDisplayedIs(2);
+        archivesAndLogging.clickOnResetButton();
+
         // We delete the test cards, and we check that we still have the corresponding archived cards
         script.deleteAllCards();
         archivesAndLogging.clickOnSearchButton();

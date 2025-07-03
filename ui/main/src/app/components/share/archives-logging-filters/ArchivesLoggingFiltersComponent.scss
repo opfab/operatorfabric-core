@@ -9,7 +9,41 @@
 
 .opfab-archives-logging {
     background-color: var(--opfab-bgcolor-darker);
+    display: flex;
+    gap: 40px;
     padding-left: 5%;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    min-height: 200px;
+
+    > div {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+
+        > div {
+            max-height: 48px;
+        }
+    }
+}
+
+.opfab-archives-logging .opfab-buttons {
+    justify-content: space-between;
+    gap: 0;
+
+    > div {
+        display: flex;
+        max-height: none;
+    }
+
+    button {
+        margin: 0;
+    }
+}
+
+.opfab-vertical-bar {
+    border-left: 1px solid var(--opfab-form-border-color);
+    width: 1px;
 }
 
 // ADAPT MARGINS TO SCREEN SIZE
@@ -17,48 +51,6 @@
 @media all and (width <= 1700px) {
     .opfab-archives-logging {
         padding-left: 2%;
-    }
-}
-
-.opfab-vertical-bar {
-    border-left-width: 1px;
-    border-left-style: solid;
-    height: 150px;
-    width: 1px;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 30px;
-    border-color: var(--opfab-form-border-color);
-}
-
-.opfab-buttons {
-    margin-left: 60px;
-    margin-top: 120px;
-}
-
-.opfab-btn-search-admin-mode {
-    margin-bottom: 0;
-}
-
-// ADAPT MARGINS TO SCREEN SIZE
-
-@media all and (width <= 1700px) {
-    .opfab-archives {
-        padding-left: 2%;
-    }
-}
-
-// Remove vertical line when screen to small
-@media all and (width <= 1600px) {
-    .opfab-vertical-bar {
-        border-left-width: 0;
-        margin: 0;
-    }
-}
-
-@media all and (width <= 1550px) {
-    .opfab-buttons {
-        margin-left: 20px;
     }
 }
 
