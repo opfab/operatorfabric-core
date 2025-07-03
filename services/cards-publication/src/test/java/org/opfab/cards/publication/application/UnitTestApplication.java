@@ -13,6 +13,7 @@ package org.opfab.cards.publication.application;
 
 import org.opfab.cards.publication.configuration.CustomScreenDataFields;
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.kafka.card.CardCommandFactory;
@@ -38,7 +39,7 @@ import org.springframework.context.annotation.Import;
 , CardCommandFactory.class, CardObjectMapper.class, JacksonConfig.class
 , Common.class , CardController.class, 
 ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EventBusSpy.class,
-        CardRepositoryMock.class,Services.class, CustomScreenDataFields.class})
+        CardRepositoryMock.class,Services.class, CustomScreenDataFields.class, LastUserActionRepositoryImpl.class})
 public class UnitTestApplication {
 
     public static void main(String[] args) {

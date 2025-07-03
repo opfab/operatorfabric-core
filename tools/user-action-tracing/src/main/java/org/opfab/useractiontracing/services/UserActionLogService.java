@@ -9,7 +9,9 @@
 
 package org.opfab.useractiontracing.services;
 
+import org.opfab.useractiontracing.model.LastUserAction;
 import org.opfab.useractiontracing.model.UserActionLog;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.model.UserActionEnum;
 import org.springframework.data.domain.Page;
@@ -27,9 +29,11 @@ public class UserActionLogService {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserActionLogService.class);
 
     private UserActionLogRepository userActionLogRepository;
+    private LastUserActionRepository lastUserActionRepository;
 
-    public UserActionLogService(UserActionLogRepository userActionLogRepository) {
+    public UserActionLogService(UserActionLogRepository userActionLogRepository, LastUserActionRepository lastUserActionRepository) {
         this.userActionLogRepository = userActionLogRepository;
+        this.lastUserActionRepository = lastUserActionRepository;
     }
 
     public void insertUserActionLog(String login, UserActionEnum actionType, List<String> entities, String cardUid,
@@ -47,6 +51,11 @@ public class UserActionLogService {
 
     public void insertUserActionLog(UserActionLog action) {
         this.userActionLogRepository.save(action);
+
+        LastUserAction lastUserAction = new LastUserAction();
+        lastUserAction.login = action.login;
+        lastUserAction.lastActionDate = action.date;
+        this.lastUserActionRepository.save(lastUserAction);
     }
 
     public List<UserActionLog> getUserActionLogs() {

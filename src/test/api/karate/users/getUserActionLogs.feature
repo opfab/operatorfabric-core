@@ -29,9 +29,6 @@ Feature: Get user action logs
     When method get
     Then status 401
 
-
-
-
   Scenario: Get user actions log as simple user
     Given url opfabUrl + 'users/userActionLogs'
     And header Authorization = 'Bearer ' + authTokenAsTSO
