@@ -124,7 +124,7 @@ It is possible from the template to redirect the user to another "card detail" i
 
 === Function displayLoadingSpinner
 
-Once the card is loaded, there may be some processing that is time-consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template .
+Once the card is loaded, there may be some processing that is time-consuming. In this case, it is possible to show a spinner using the method displayLoadingSpinner and hideLoadingSpinner in the card template.
 
 ```
         opfab.currentCard.displayLoadingSpinner();
@@ -158,21 +158,21 @@ You can access the current selected card as a js object using the getCard() meth
 
 === Function isUserAllowedToEdit
 
-To check if current user has the permission to edit the current card, you can call the isUserAllowedToEdit() method.
+To check if the current user has the permission to edit the current card, you can call the isUserAllowedToEdit() method.
 ```
    const editAllowed = opfab.currentCard.isUserAllowedToEdit()
 ```
 
 === Function editCard
 
-It is possible to open current card edition modal, if current user has the permission, by calling the editCard() method.
+It is possible to open current card edition modal, if the current user has the permission, by calling the editCard() method.
 ```
     opfab.currentCard.editCard()
 ```
 
 === Function getDisplayContext
 
-To adapt the template content to the display context it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function getDisplayContext(). The function returns a string with one of the following values :
+To adapt the template content to the display context, it is possible to get from OperatorFabric the page context where the template will be rendered by calling the javascript function getDisplayContext(). The function returns a string with one of the following values :
 
 - 'realtime' : realtime page context (feed, monitoring)
 
@@ -204,7 +204,7 @@ If inside your template, you want to get the ids of the entities the user can an
 
 === Function isResponseLocked
 
-To know if template is locked (i.e. user can not respond unless he unlocks the card)
+To know if the template is locked (i.e. user can not respond unless he unlocks the card)
 ```
     const isResponseLocked =  opfab.currentCard.isResponseLocked()
 ```
@@ -222,7 +222,7 @@ https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resour
 
 === Function isUserMemberOfAnEntityRequiredToRespond
 
-The template can know if the current user is member of an Entity required to respond by calling the isUserMemberOfAnEntityRequiredToRespond function.
+The template can know if the current user is a member of an Entity required to respond by calling the isUserMemberOfAnEntityRequiredToRespond function.
 An example of usage can be found in the file https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
 
 
@@ -232,7 +232,7 @@ An example of usage can be found in the file https://github.com/opfab/operatorfa
 
 === Function listenToResponseLock
 
-Register a function to be informed when template is locked (i.e. user has responded to the current card)
+Register a function to be informed when the template is locked (i.e. user has responded to the current card)
 
 ```
     opfab.currentCard.listenToResponseLock( () => {// do some stuff});
@@ -276,7 +276,7 @@ It can be used by a template to refresh styles and reload embedded charts.
 
 === Function listenToScreenSize
 
-To adapt the template content on screen size it is possible to receive from OperatorFabric information on the size of the window where the template will be rendered. To receive screen size information you need to implement a listener function which will receive as input a string parameter with one of the following values :
+To adapt the template content on screen size, it is possible to receive from OperatorFabric information on the size of the window where the template will be rendered. To receive screen size information, you need to implement a listener function which will receive as input a string parameter with one of the following values :
 
 - 'md' : medium size window
 - 'lg' : large size window
@@ -292,7 +292,7 @@ To adapt the template content on screen size it is possible to receive from Oper
 === Function listenToTemplateRenderingComplete
 
 
-It is possible to be informed when opfab has finished all tasks regarding rendering template by registering a listener function .The function will be called after the call of the other listener (applyChildCard, lockAnswer ,lttdExpired and screenSize)
+It is possible to be informed when opfab has finished all tasks regarding rendering template by registering a listener function .The function will be called after the call of the other listener (applyChildCard, lockAnswer, lttdExpired and screenSize)
 
 It can be used by a template to launch some processing when loading is complete
 
@@ -302,7 +302,7 @@ It can be used by a template to launch some processing when loading is complete
 
 === Function registerFunctionToGetUserResponse
 
-Register the template function to call to get user response. This function will be called by opfab when user clicks on the "send response" button. More explanation can be found in the <<response_cards, response card chapter>>.
+Register the template function to call to get user response. This function will be called by opfab when the user clicks on the "send response" button. More explanation can be found in the <<response_cards, response card chapter>>.
 
 For example : 
 
@@ -326,7 +326,7 @@ For example :
                 };
                 return {
                     valid: true,
-                    card: card,
+                    responseCard: card,
                     viewCardInCalendar: false
                 };
 
@@ -400,7 +400,7 @@ The template can know the list of entities selected by the users as recipients o
 
 === Function getStartDate
 
-The template can know the current startDate of the card in creation or edition by calling the _opfab.currentUserCard.getStartDate()_ function.The function will return a number corresponding to the startDate as epoch date value.
+The template can know the current startDate of the card in creation or edition by calling the _opfab.currentUserCard.getStartDate()_ function. The function will return a number corresponding to the startDate as epoch date value.
 
 ```
         const startDate = opfab.currentUserCard.getStartDate();
@@ -481,7 +481,7 @@ For example:
 
 === Function setDropdownEntityRecipientList
 
-When sending a user card, by default it is possible to choose the recipients from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
+When sending a user card, by default, it is possible to choose the recipients from all the available entities. To limit the list of available recipients, it is possible to configure the list of possible recipients via javascript in the user template.
 
 For example : 
 
@@ -493,11 +493,11 @@ For example :
 ....
 
 
-In this example the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
+In this example, the list of available recipients will contain: "ENTITY_FR" (level 0), all the first level children of "ENTITY_FR" (level 1) and "IT_SUPERVISOR_ENTITY".
 
 === Function setDropdownEntityRecipientForInformationList
 
-When sending a user card, by default it is possible to choose the recipients for information from all the available entities. To limit the list of available recipients it is possible to configure the list of possible recipients via javascript in the user template.
+When sending a user card, by default, it is possible to choose the recipients for information from all the available entities. To limit the list of available recipients, it is possible to configure the list of possible recipients via javascript in the user template.
 
 For example : 
 
