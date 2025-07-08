@@ -88,6 +88,16 @@ It is possible, by configuration, to bypass authentication for third-party tool 
 
 OperatorFabric is designed to be used with card templates provided by the end user. These templates should be considered as code and reviewed by the end user before being used in a production environment. Failure to do so could lead to security issues.
 
+In particular, if you use js in the template , you should be aware that it can lead to XSS (Cross-Site Scripting) vulnerabilities if you do not properly sanitize the input. To do so the opfab api provide a function to sanitize input : `opfab.utils.escapeHtml`
+
+The handlebars template is escaped by default, so you should not have to worry about XSS vulnerabilities if you use the handlebars template syntax '{{}}' to display data. However, if you use the handlebars `{{{}}}` syntax to display raw HTML, you must ensure that the input is properly sanitized to avoid XSS vulnerabilities.
+
+=== Card List Custom Screen
+
+The custom screen definition is a js file ,as for the template, it should be considered as code and reviewed by the end user before being used in a production environment.
+
+In particular, if you are implementing the 'getHTMLValue' function to display data, you should be aware that it can lead to XSS (Cross-Site Scripting) vulnerabilities if you do not properly sanitize the input. 
+    
 
 == Security audit 
 

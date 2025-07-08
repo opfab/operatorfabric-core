@@ -27,7 +27,9 @@ export class Utilities {
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+            .replace(/'/g, '&#39;')
+            .replace(/`/g, '&#96;')
+            .replace(/=/g, '&#61;');
     }
 
     public static getI18nPrefixFromProcess(process: Process): string {
