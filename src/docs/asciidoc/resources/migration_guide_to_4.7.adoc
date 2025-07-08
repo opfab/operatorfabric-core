@@ -23,7 +23,7 @@ Previously, the object was structured as follows:
 {
     valid: true/false,
     errorMsg: string,
-    responseCardData: string,
+    responseCardData: {},
     responseState: string,
     publisher: string,
     actions: [string]
@@ -37,7 +37,7 @@ Now, all elements related to the response card are encapsulated within a `respon
     valid: true/false,
     errorMsg: string,
     responseCard: {
-        data: string,
+        data: {},
         state: string,
         publisher: string,
         actions: [string]
