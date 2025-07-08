@@ -350,7 +350,7 @@ describe('ActivityAreaView', () => {
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         activityAreaView.setEntityConnected('ENTITY1', true);
-        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeTruthy;
+        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeTruthy();
     });
 
     it('GIVEN a user WHEN set entity connected an even number of times THEN Activity Area does not need to be saved ', async () => {
@@ -361,7 +361,7 @@ describe('ActivityAreaView', () => {
         activityAreaView.setEntityConnected('ENTITY1', false);
         activityAreaView.setEntityConnected('ENTITY1', true);
         activityAreaView.setEntityConnected('ENTITY1', false);
-        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeFalsy;
+        expect(activityAreaView.doesActivityAreasNeedToBeSaved()).toBeFalsy();
     });
 
     it('GIVEN activity area WHEN user clicks on cluster checkbox THEN all cluster lines should be selected', async () => {
