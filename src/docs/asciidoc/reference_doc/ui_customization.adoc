@@ -473,10 +473,14 @@ For `HTML` field type, the HTML tags need to be injected by the `getHTMLValue` m
     cardField: 'titleTranslated',
     fieldType: 'HTML',
     getHTMLValue: (card) => {
-        return `<span style="color:red">${card.titleTranslated}</span>`;
+        const title = opfab.utils.escapeHtml(card.titleTranslated);
+        return `<span style="color:red">${title}</span>`;
     }
 }
 ```
+
+Warning: Be cautious when using the `getHTMLValue` method, as it can lead to XSS (Cross-Site Scripting) vulnerabilities if you do not properly sanitize the input. Use `opfab.utils.escapeHtml` to sanitize the input before injecting it into the HTML.
+
 === Cell size
 
 To better control cell size, you can use the following fields in the column definition:
