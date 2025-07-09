@@ -45,8 +45,17 @@ export class CustomCardListView {
         this.resultTable = new ResultTable(this.customScreenDefinition);
         this.buttonActions = new ButtonActions(this.customScreenDefinition);
         const filterValues = new FilterValues();
-        filterValues.startDate = RealTimeDomainService.getCurrentDomain()?.startDate;
-        filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
+
+        if (this.customScreenDefinition?.initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            filterValues.startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
+            filterValues.endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
+        } else {
+            filterValues.startDate = RealTimeDomainService.getCurrentDomain()?.startDate;
+            filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
+        }
+
         filterValues.processes = [];
         filterValues.includeCardsWithResponseFromMyEntities = true;
         filterValues.includeCardsWithResponsesFromAllEntities = true;

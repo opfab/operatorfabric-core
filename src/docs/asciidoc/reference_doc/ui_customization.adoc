@@ -429,9 +429,13 @@ You can define the filters to be displayed in the header of the screen by adding
 You can define pre-selected values : 
 
 - for the type of state multiselect filter by setting the field `defaultSelectedTypeOfState`. The possible values are `INPROGRESS`, `FINISHED`, `CANCELED`.
-- for the read and ack multiselect fitler by setting the field `defaultSelectedReadAndAck`. The possible values are `READ`, `NOT_READ`, `ACKNOWLEDGED`, `NOT_ACKNOWLEDGED`.
+- for the read and ack multiselect filter by setting the field `defaultSelectedReadAndAck`. The possible values are `READ`, `NOT_READ`, `ACKNOWLEDGED`, `NOT_ACKNOWLEDGED`.
 
+You can define the initial business period you want to display for each custom screen, using the field `initialBusinessPeriod`.
+The possible values are:
 
+- `FEED` (default value): the period is based on the feed period
+- `FROM_TODAY_TO_YEAR_END`: the period is from now to the end of the year
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
@@ -528,6 +532,7 @@ const customScreenExample = {
         id: 'testId2',
         name: 'testName',
         responseOnlyAllowedForEntitiesRequiredToRespond: false,
+        initialBusinessPeriod: 'FROM_TODAY_TO_YEAR_END',
 
         .....
 

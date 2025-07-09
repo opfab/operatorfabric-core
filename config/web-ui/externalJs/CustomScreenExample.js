@@ -140,6 +140,7 @@
         id: 'testId2',
         name: 'testName',
         headerFilters: ['PROCESS'],
+        initialBusinessPeriod: 'FROM_TODAY_TO_YEAR_END',
         results: {
             columns: [
                 {

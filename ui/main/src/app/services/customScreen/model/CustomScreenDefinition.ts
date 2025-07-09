@@ -27,6 +27,7 @@ export class CustomScreenDefinition {
     defaultSelectedReadAndAck?: string[];
     includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
     excludeCardsEmittedByCurrentUserEntities?: boolean;
+    initialBusinessPeriod?: string;
 }
 
 export class Column {
