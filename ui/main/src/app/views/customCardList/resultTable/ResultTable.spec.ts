@@ -121,6 +121,11 @@ describe('CustomScreenView - ResultTable', () => {
                         field: 'select',
                         headerName: 'Select',
                         fieldType: FieldType.SELECT
+                    },
+                    {
+                        field: 'businessPeriod',
+                        headerName: 'Business Period',
+                        fieldType: FieldType.BUSINESS_PERIOD
                     }
                 ]
             });
@@ -138,7 +143,15 @@ describe('CustomScreenView - ResultTable', () => {
                 {field: 'processName', headerName: 'Process Name', type: 'processName', context: {}},
                 {field: 'coloredCircleTest', headerName: 'circle', type: 'coloredCircle', context: {}},
                 {field: 'comment', headerName: 'Comment', type: 'input', context: {}},
-                {field: 'select', headerName: 'Select', type: 'select', context: {}}
+                {field: 'select', headerName: 'Select', type: 'select', context: {}},
+                {
+                    field: 'businessPeriod',
+                    headerName: 'Business Period',
+                    type: 'period',
+                    context: {},
+                    autoHeight: true, // the business period is displayed on two lines
+                    wrapText: true
+                }
             ]);
         });
 
@@ -441,6 +454,35 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([{cardId: 'card1', date: {text: '01/01/2021 2:00 AM', value: 1609462800000}}]);
         });
 
+        it('with formatted business period if field type is BUSINESS_PERIOD', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'businessPeriod',
+                        fieldType: FieldType.BUSINESS_PERIOD
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    startDate: new Date('2021-01-01T02:00'), // epoch: 1609462800000
+                    endDate: new Date('2021-01-02T02:00') // epoch: 1609549200000
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    businessPeriod: {
+                        text: '01/01/2021 2:00 AM - 01/02/2021 2:00 AM',
+                        htmlValue:
+                            '<div class="opfab-no-extra-line-spacing">01/01/2021 2:00 AM <br> 01/02/2021 2:00 AM</div>',
+                        value: {startDate: 1609462800000, endDate: 1609549200000}
+                    }
+                }
+            ]);
+        });
         it('with the type of state if field type is type_of_state', async () => {
             const resultTable = getResultTable({
                 columns: [

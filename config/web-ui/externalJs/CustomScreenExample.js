@@ -163,6 +163,12 @@
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
                 },
                 {
+                    field: 'businessPeriod',
+                    fieldType: 'BUSINESS_PERIOD',
+                    headerName: 'BUSINESS PERIOD',
+                    minWidth: 100
+                },
+                {
                     field: 'testField',
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
