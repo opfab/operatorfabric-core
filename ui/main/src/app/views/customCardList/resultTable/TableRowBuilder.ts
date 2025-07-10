@@ -52,6 +52,9 @@ export class TableRowBuilder {
                 return;
             }
             switch (column.fieldType) {
+                case FieldType.BUSINESS_PERIOD:
+                    data[column.field] = this.getBusinessPeriod(card);
+                    break;
                 case FieldType.PUBLISHER:
                     data[column.field] = this.getPublisherLabel(card);
                     break;
@@ -100,6 +103,26 @@ export class TableRowBuilder {
         if (this.customScreenDefinition.responseButtons?.length > 0)
             data['isResponsePossible'] = this.isResponsePossibleForCard(card);
         return data;
+    }
+
+    private getBusinessPeriod(card: Card): {text: string; htmlValue: string; value: any} {
+        const text =
+            DateTimeFormatterService.getFormattedDateAndTime(card.startDate) +
+            ' - ' +
+            (DateTimeFormatterService.getFormattedDateAndTime(card.endDate) ?? '');
+
+        const htmlValue =
+            '<div class="opfab-no-extra-line-spacing">' +
+            DateTimeFormatterService.getFormattedDateAndTime(card.startDate) +
+            ' <br> ' +
+            (DateTimeFormatterService.getFormattedDateAndTime(card.endDate) ?? '') +
+            '</div>';
+
+        return {
+            text,
+            htmlValue,
+            value: {startDate: card.startDate.valueOf(), endDate: card.endDate?.valueOf()}
+        };
     }
 
     private getDateAndTime(card: Card, field: string): {text: string; value: string} {

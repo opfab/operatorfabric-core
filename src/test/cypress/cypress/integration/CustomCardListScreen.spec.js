@@ -90,7 +90,7 @@ describe('Custom Card List Screen', function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToCustomScreen2();
 
-            numberOfColumsShouldBe(8);
+            numberOfColumsShouldBe(9);
             numberOfRowsShouldBe(6);
             cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
 

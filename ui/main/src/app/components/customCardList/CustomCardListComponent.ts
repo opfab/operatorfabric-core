@@ -362,6 +362,34 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                         return params.data[params.column.colId].text;
                     }
                 },
+                period: {
+                    sortable: true,
+                    resizable: false,
+                    wrapText: true,
+                    cellRenderer: 'htmlCellRenderer',
+                    comparator: (valueA: any, valueB: any) => {
+                        // First compare startDate
+                        if (valueA.value.startDate < valueB.value.startDate) {
+                            return -1;
+                        }
+                        if (valueA.value.startDate > valueB.value.startDate) {
+                            return 1;
+                        }
+                        // If startDate are equal, compare endDate
+                        if (valueA.value.endDate < valueB.value.endDate) {
+                            return -1;
+                        }
+                        if (valueA.value.endDate > valueB.value.endDate) {
+                            return 1;
+                        }
+
+                        return 0;
+                    },
+                    filter: true,
+                    filterValueGetter: (params: any) => {
+                        return params.data[params.column.colId].text;
+                    }
+                },
                 responses: {
                     sortable: true,
                     comparator: (valueA: any, valueB: any) => {

@@ -435,20 +435,21 @@ You can define pre-selected values :
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
+- `ACKNOWLEDGMENT`: Displays a blue check if the card has been acknowledged.
+- `BUSINESS_PERIOD`: Displays the business period of the card on two lines
 - `COLORED_CIRCLE`: Displays a colored circle. The value is to be defined with a custom method `getValue` that shall contain two fields:
   ** `color`: The color of the circle.
   ** `numericalValue`: The numerical value of the circle that will be used for sorting and filtering.
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
+- `HTML`: Renders the HTML contained in the `getValue` method.
 - `INPUT`: Displays an input field. The value of the input field will be used for response cards if the custom screen has response buttons (see below).
+- `PROCESS_NAME`: Displays the name of the card's process.
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.
 - `RESPONSE_FROM_MY_ENTITIES`: Displays a blue arrow if one of the user's entity has responded to the card.
-- `ACKNOWLEDGMENT`: Displays a blue check if the card has been acknowledged.
-- `STATE_NAME`: Displays the name of the card's state.
-- `PROCESS_NAME`: Displays the name of the card's process.
 - `SEVERITY`: Displays the severity as a color rectangle.
+- `STATE_NAME`: Displays the name of the card's state.
 - `STRING`: Displays a string value.
-- `HTML`: Renders the HTML contained in the `getValue` method.
 - `TYPE_OF_STATE`: Displays the name of the type of state (`INPROGRESS`, `FINISHED`, `CANCELED`) with a corresponding color. The color is defined as follows:
   * `INPROGRESS`: orange
   * `FINISHED`: 

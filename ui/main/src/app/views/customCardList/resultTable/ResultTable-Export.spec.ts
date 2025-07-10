@@ -183,6 +183,30 @@ describe('CustomScreenView - ResultTable - Export', () => {
         expect(dataForExport).toEqual([{ColorCircle: 12}]);
     });
 
+    it('Should export business period value for BUSINESS_PERIOD field type', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'BusinessPeriod',
+                    fieldType: FieldType.BUSINESS_PERIOD
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date('2021-01-01T02:00'),
+                endDate: new Date('2021-01-02T02:00'),
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([{BusinessPeriod: '01/01/2021 2:00 AM - 01/02/2021 2:00 AM'}]);
+    });
     it('Should export string value for HTML field type', () => {
         const resultTable = getResultTable({
             columns: [

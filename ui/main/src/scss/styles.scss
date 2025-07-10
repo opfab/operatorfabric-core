@@ -57,6 +57,11 @@ body {
     margin-left: -0.75rem;
 }
 
+.opfab-no-extra-line-spacing {
+  line-height:1.5;
+  margin-bottom:.5rem;
+  margin-top:.5rem
+}
 /* stylelint-disable selector-class-pattern */
 // Colors for state types
 // Only used now by monitoring screen , shall be removed when monitoring screen is removed
@@ -653,3 +658,4 @@ ngb-pagination {
 }
 
 // END CUSTOM STYLE FOR DATE RANGE PICKER
+

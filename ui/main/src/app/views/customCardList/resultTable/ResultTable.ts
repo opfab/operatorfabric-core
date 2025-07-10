@@ -47,6 +47,12 @@ export class ResultTable {
                 }
 
                 switch (column.fieldType) {
+                    case FieldType.BUSINESS_PERIOD:
+                        col.type = 'period';
+                        // Period is displayed on two lines in the cell
+                        col['autoHeight'] = true;
+                        col['wrapText'] = true;
+                        break;
                     case FieldType.SEVERITY:
                         col.headerName = '';
                         col.type = 'severity';
