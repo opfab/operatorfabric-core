@@ -32,7 +32,8 @@
             (gridReady)="onGridReady($event)"
             [gridOptions]="gridOptions"
             [rowData]="rowData"
-            class="opfab-admin-table ag-theme-opfab opfab-cell-overflow-visible"
+            class="ag-theme-opfab opfab-cell-overflow-visible"
+            style="height: calc(100vh - 350px)"
             (filterChanged)="onFilterChanged($event)"
             [enableCellTextSelection]="true">
         </ag-grid-angular>

@@ -149,7 +149,8 @@ export abstract class AdminTableDirective implements OnDestroy {
                     flex: 4
                 }
             },
-            popupParent: document.querySelector('body')
+            popupParent: document.querySelector('body'),
+            domLayout: 'normal'
         };
     }
 

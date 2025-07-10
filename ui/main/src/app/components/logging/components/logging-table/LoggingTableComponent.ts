@@ -158,7 +158,8 @@ export class LoggingTableComponent implements OnDestroy {
                 }
             },
             columnDefs: this.columnDefs,
-            popupParent: document.querySelector('body')
+            popupParent: document.querySelector('body'),
+            domLayout: 'normal'
         };
     }
 
