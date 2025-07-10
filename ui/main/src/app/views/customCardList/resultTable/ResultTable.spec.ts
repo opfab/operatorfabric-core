@@ -1052,7 +1052,8 @@ describe('CustomScreenView - ResultTable', () => {
                             {value: 'option1', label: 'Label option1'},
                             {value: 'option2', label: 'Label option2'}
                         ],
-                        allowNewOptionForSelect: true
+                        allowNewOptionForSelect: true,
+                        text: 'Label option1'
                     }
                 }
             ]);
@@ -1072,7 +1073,8 @@ describe('CustomScreenView - ResultTable', () => {
                             {value: 'option1', label: 'Label option1'},
                             {value: 'option2', label: 'Label option2'}
                         ],
-                        allowNewOptionForSelect: true
+                        allowNewOptionForSelect: true,
+                        text: ''
                     }
                 }
             ]);

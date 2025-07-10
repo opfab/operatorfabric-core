@@ -8,7 +8,7 @@
  */
 
 import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
-import {CustomScreenDefinition, FieldType, Column} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {Column, CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
@@ -147,10 +147,13 @@ export class TableRowBuilder {
         }
 
         if (column.fieldType === FieldType.SELECT) {
+            const text = column.possibleValues?.find((value: any) => value.value === fieldValue)?.label ?? fieldValue;
+
             return {
                 value: fieldValue,
                 possibleValues: column.possibleValues,
-                allowNewOptionForSelect: column.allowNewOptionForSelect
+                allowNewOptionForSelect: column.allowNewOptionForSelect,
+                text: text
             };
         }
         return fieldValue;
