@@ -96,6 +96,9 @@ export class ResultTable {
                     case FieldType.HTML:
                         col.type = 'html';
                         break;
+                    case FieldType.NUMBER:
+                        col.type = 'number';
+                        break;
                     default:
                         break;
                 }

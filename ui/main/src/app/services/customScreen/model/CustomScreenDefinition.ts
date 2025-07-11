@@ -78,7 +78,8 @@ export enum FieldType {
     SEVERITY = 'SEVERITY',
     STATE_NAME = 'STATE_NAME',
     STRING = 'STRING',
-    TYPE_OF_STATE = 'TYPE_OF_STATE'
+    TYPE_OF_STATE = 'TYPE_OF_STATE',
+    NUMBER = 'NUMBER'
 }
 
 export enum HeaderFilter {

@@ -285,6 +285,12 @@
                     multiLinesInCell: true
                 },
                 {
+                    field: 'startDate',
+                    headerName: 'START DATE AS EPOCH',
+                    cardField: 'startDate',
+                    fieldType: 'NUMBER'
+                },
+                {
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
                 },
                 {

@@ -201,7 +201,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.setInitialBusinessPeriod();
         this.setButtonsConfiguration();
         this.setProcessFilter();
-        this.setAgridConfiguration();
+        this.setAgGridConfiguration();
         this.startListeningToResults();
 
         this.headerForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(() => {
@@ -251,7 +251,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setAgridConfiguration() {
+    private setAgGridConfiguration() {
         const severityCellClassRules = {
             'opfab-sev-alarm': (field) => field.value === 'ALARM',
             'opfab-sev-action': (field) => field.value === 'ACTION',
@@ -412,10 +412,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     cellRenderer: 'responsesCellRenderer'
                 },
 
-                // The cell should show a circle with the color defined in the field color
+                // The cell should show a circle with the color defined in the field color,
                 // and the numerical value defined in the field numericalValue is used for sorting and filtering
                 // the use of agNumberColumnFilter is necessary to be able to filter the numerical value
-                // using for example the range filter
+                // using, for example, the range filter
                 coloredCircle: {
                     sortable: true,
                     filter: 'agNumberColumnFilter',
@@ -468,6 +468,11 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     cellRenderer: 'selectCellRenderer',
                     sortable: false,
                     filter: false,
+                    resizable: false
+                },
+                number: {
+                    sortable: true,
+                    filter: true,
                     resizable: false
                 }
             },
