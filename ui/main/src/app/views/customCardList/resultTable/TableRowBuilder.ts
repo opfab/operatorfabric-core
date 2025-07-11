@@ -82,6 +82,7 @@ export class TableRowBuilder {
                 case FieldType.PROCESS_NAME:
                     data['processName'] = ProcessesService.getProcess(card.process)?.name;
                     break;
+                case FieldType.NUMBER:
                 case FieldType.STRING:
                     if (column.getValue) {
                         data[column.field] = column.getValue(card);
@@ -92,14 +93,13 @@ export class TableRowBuilder {
                 case FieldType.HTML:
                     data[column.field] = this.getHTMLValue(card, column);
                     break;
-
                 default:
                     data[column.field] = this.getNestedField(card, column.cardField);
             }
         });
         data['cardId'] = card.id;
         if (this.customScreenDefinition.showAcknowledgmentButton)
-            data['isAcknowledgmentPossible'] = this.isAcknowlegmentPossibleForCard(card);
+            data['isAcknowledgmentPossible'] = this.isAcknowledgmentPossibleForCard(card);
         if (this.customScreenDefinition.responseButtons?.length > 0)
             data['isResponsePossible'] = this.isResponsePossibleForCard(card);
         return data;
@@ -247,7 +247,7 @@ export class TableRowBuilder {
         return {rowValue, htmlValue};
     }
 
-    private isAcknowlegmentPossibleForCard(card: Card): boolean {
+    private isAcknowledgmentPossibleForCard(card: Card): boolean {
         return AcknowledgePermission.isAcknowledgmentAllowed(
             UsersService.getCurrentUserWithPerimeters(),
             card,
