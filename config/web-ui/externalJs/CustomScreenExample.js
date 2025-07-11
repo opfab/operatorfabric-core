@@ -187,10 +187,10 @@
                     field: 'reason',
                     cardField: 'data.reason',
                     possibleValues: [
-                        { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
-                        { label: 'Constraints on the network', value: 'Constraints on the network' },
-                        { label: 'Low margin on the network', value: 'Low margin on the network' },
-                        { label: 'Critical situation', value: 'Critical situation' }
+                        { label: 'Time frame is too short to decide', value: 'time_frame_is_too_short_to_decide' },
+                        { label: 'Constraints on the network', value: 'constraints_on_the_network' },
+                        { label: 'Low margin on the network', value: 'low_margin_on_the_network' },
+                        { label: 'Critical situation', value: 'critical_situation' }
                     ],
                     allowNewOptionForSelect: true,
                     isFieldFromCurrentUserChildCard: true,
@@ -308,10 +308,10 @@
                     field: 'reason',
                     cardField: 'data.reason',
                     possibleValues: [
-                        { label: 'Time frame is too short to decide', value: 'Time frame is too short to decide' },
-                        { label: 'Constraints on the network', value: 'Constraints on the network' },
-                        { label: 'Low margin on the network', value: 'Low margin on the network' },
-                        { label: 'Critical situation', value: 'Critical situation' }
+                        { label: 'Time frame is too short to decide', value: 'time_frame_is_too_short_to_decide' },
+                        { label: 'Constraints on the network', value: 'constraints_on_the_network' },
+                        { label: 'Low margin on the network', value: 'low_margin_on_the_network' },
+                        { label: 'Critical situation', value: 'critical_situation' }
                     ],
                     isFieldFromCurrentUserChildCard: true,
                     headerName: 'REASON',

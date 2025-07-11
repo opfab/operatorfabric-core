@@ -74,7 +74,7 @@
             } 
         };
 
-        // If the user choses to answer no, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
+        // If the user chooses to answer no, we decide to move the process to a specific state, for example to ask a follow-up question (what's their preferred option).
         if (answer){
             result.responseCard['state'] = 'refuseResponseState';
             result.responseCard['severity'] = "ALARM"
@@ -83,15 +83,27 @@
         }
         return result
     }
-    //end::functionToGetUserResponse_example[]
+//end::functionToGetUserResponse_example[]
 
     cardTemplate = {
 
         answerSelect: null,
+        answersOptions: [
+                        { label: "Time frame is too short to decide", value: "time_frame_is_too_short_to_decide" },
+                        { label: "Constraints on the network", value: "constraints_on_the_network" },
+                        { label: "Low margin on the network", value: "low_margin_on_the_network" },
+                        { label: "Critical situation", value: "critical_situation" },
+                        { label: "Other (Please specify)", value: "other" }
+                    ],
 
         init: function() {
             this.initMultiSelect();
             this.initCardTemplate();
+        },
+
+        getLabelFromValue: function(value) {
+            const option = this.answersOptions.find(opt => opt.value === value);
+            return option ? option.label : 'Unknown';
         },
 
         initMultiSelect: async function() {
@@ -103,15 +115,7 @@
                 allowNewOption: true
             });
 
-            const answersOptions = [
-                { label: "Time frame is too short to decide", value: "Time frame is too short to decide" },
-                { label: "Constraints on the network", value: "Constraints on the network" },
-                { label: "Low margin on the network", value: "Low margin on the network" },
-                { label: "Critical situation", value: "Critical situation" },
-                { label: "Other (Please specify)", value: "Other" }
-            ];
-
-            this.answerSelect.setOptions(answersOptions);
+            this.answerSelect.setOptions(this.answersOptions);
 
         },
 
@@ -148,7 +152,7 @@
                         responses += `<tr> <td id="response_from_${c.publisher}"> ${entityName} </td>`;
                         if (c.data.propositionRefused) responses += '<td style="color: red;"> NOK </td>';
                         else responses += '<td style="color: green;"> OK </td>';
-                        if (c.data.reason) responses += `<td> ${c.data.reason} </td>`;
+                        if (c.data.reason) responses += `<td> ${this.getLabelFromValue(c.data.reason)} </td>`;
                         else responses += "<td>  </td>";
                         if (c.data.comment) responses += `<td> ${c.data.comment} </td>`;
                         else responses += "<td>  </td>";
