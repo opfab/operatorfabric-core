@@ -11,9 +11,8 @@
 /* You can add global styles to this file, and also import other style files */
 @use '../../node_modules/ag-grid-community/styles' as ag;
 
-
 p {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 body {
@@ -58,9 +57,9 @@ body {
 }
 
 .opfab-no-extra-line-spacing {
-  line-height:1.5;
-  margin-bottom:.5rem;
-  margin-top:.5rem
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
 }
 /* stylelint-disable selector-class-pattern */
 // Colors for state types
@@ -234,7 +233,7 @@ ngb-pagination {
 }
 
 .modal-content {
-  color: var(--opfab-textcolor);
+    color: var(--opfab-textcolor);
 }
 
 .opfab-close-modal-icon {
@@ -418,7 +417,7 @@ ngb-pagination {
     }
 
     .ag-body {
-      background-color: var(--opfab-bgcolor-darker);
+        background-color: var(--opfab-bgcolor-darker);
     }
 
     // This is a workaround to avoid duplicated bottom border after page change
@@ -536,6 +535,35 @@ ngb-pagination {
     .ag-center-cols-viewport {
         min-height: unset !important;
     }
+
+    // Change ag checkbox style to opfab style
+    .ag-checkbox-input-wrapper {
+        background-color: transparent;
+        box-shadow: none;
+        position: relative;
+        border: 1px solid #979797;
+        border-radius: 2px;
+        height: 17px;
+        width: 17px;
+
+        &::before,
+        &::after {
+            display: none;
+        }
+
+        &.ag-checked::after {
+            display: block;
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: -6px;
+            width: 10px;
+            height: 20px;
+            border: solid var(--opfab-color-blue);
+            border-width: 0 4px 4px 0;
+            transform: rotate(45deg);
+        }
+    }
 }
 
 .opfab-monitoring-ag-grid-row {
@@ -558,7 +586,6 @@ ngb-pagination {
         text-decoration: none;
     }
 }
-
 
 // QUILLJS STYLE
 .ql-snow .ql-editor {
@@ -658,4 +685,3 @@ ngb-pagination {
 }
 
 // END CUSTOM STYLE FOR DATE RANGE PICKER
-
