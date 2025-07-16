@@ -70,10 +70,9 @@ describe('Test translations', function() {
         cy.get('#opfab-navbar-menu-monitoring').should('have.text', monitoringTitle);
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-uid_test_0').should('have.text', singleMenuTitle);
-        cy.get('#opfab-navbar-menu-label-menu2').should('have.text', secondMenuTitle);
+        cy.get('#opfab-navbar-menu-menu2').should('have.text', secondMenuTitle);
 
         // Test dropdown menus titles
-        cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
         cy.get('#opfab-navbar-menu-dropdown-uid_test_2').should('have.text', opfabDocTitle);
     }
 

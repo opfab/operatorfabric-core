@@ -111,7 +111,8 @@ export class NavbarComponent {
         NavigationService.navigateTo(menuId);
     }
 
-    public clickOnMenu(menu: NavbarMenuElement, openInNewTab: boolean = false): void {
+    public clickOnMenu(menu: NavbarMenuElement, openInNewTab: boolean = false, event?: any): void {
+        if (event) event.currentTarget.blur();
         switch (menu.id) {
             case 'about':
                 this.modalService.open(this.aboutTemplate, {centered: true});
