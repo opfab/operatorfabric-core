@@ -35,10 +35,8 @@ describe('Business menu', () => {
             clickLinkInsideCard();
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=NIGHT');
 
-            openBusinessDropdownMenu();
             clickOnDropdownMenu('uid_test_2');
             opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=NIGHT');
-            openBusinessDropdownMenu();
 
             openBusinessSingleMenu();
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?opfab_theme=NIGHT');
@@ -60,7 +58,6 @@ describe('Business menu', () => {
             clickLinkInsideCard();
             opfab.checkUrlDisplayedIs('https://en.wikipedia.org/w/index.php?search=chart&fulltext=1&opfab_theme=DAY');
 
-            openBusinessDropdownMenu();
             clickOnDropdownMenu('uid_test_2');
             opfab.checkUrlDisplayedIs('https://opfab.github.io/?opfab_theme=DAY');
 
@@ -73,12 +70,8 @@ describe('Business menu', () => {
         cy.get('#opfab-div-card-template-processed').find('a').eq(0).click();
     }
 
-    function openBusinessDropdownMenu() {
-        cy.get('#opfab-navbar-menu-menu2').trigger('mouseenter');
-    }
-
     function clickOnDropdownMenu(menuId) {
-        cy.get('#opfab-navbar-menu-dropdown-' + menuId).click({ force: true });
+        cy.get('#opfab-navbar-menu-dropdown-' + menuId).focus().click();
     }
 
 

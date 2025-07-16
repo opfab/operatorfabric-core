@@ -71,11 +71,9 @@
                 </li>
                 <li
                     *ngIf="menuElement.dropdownMenu?.length > 0"
-                    id="opfab-navbar-menu-{{ menuElement.id }}"
                     class="opfab-navigation-dropdown-menu"
-                    [class.active]="isSubMenuActive(menuElement)"
-                    tabindex="0">
-                    <a id="opfab-navbar-menu-label-{{ menuElement.id }}">{{ menuElement.label }}</a>
+                    [class.active]="isSubMenuActive(menuElement)">
+                    <a id="opfab-navbar-menu-{{ menuElement.id }}">{{ menuElement.label }}</a>
                     <em class="fa fa-caret-down" style="padding-left: 5px"></em>
                     <ul>
                         <li *ngFor="let subMenuElement of menuElement.dropdownMenu">
@@ -83,8 +81,8 @@
                                 id="opfab-navbar-menu-dropdown-{{ subMenuElement.id }}"
                                 class="opfab-navigation-link"
                                 [class.active]="subMenuElement.id === currentMenuId"
-                                (click)="clickOnMenu(subMenuElement)"
-                                (keydown.enter)="clickOnMenu(subMenuElement)"
+                                (click)="clickOnMenu(subMenuElement, false, $event)"
+                                (keydown.enter)="clickOnMenu(subMenuElement, false, $event)"
                                 tabindex="0"
                                 >{{ subMenuElement.label }}</a
                             >
@@ -92,8 +90,8 @@
                                 *ngIf="subMenuElement.linkType === 'BOTH'"
                                 id="opfab-navbar-menu-dropdown-icon-{{ subMenuElement.id }}"
                                 class="opfab-icon-external-link"
-                                (click)="clickOnMenu(subMenuElement, true)"
-                                (keydown.enter)="clickOnMenu(subMenuElement, true)"
+                                (click)="clickOnMenu(subMenuElement, true, $event)"
+                                (keydown.enter)="clickOnMenu(subMenuElement, true, $event)"
                                 tabindex="0">
                                 <em class="fas fa-external-link-alt"></em>
                             </a>

@@ -123,18 +123,15 @@ export class OpfabGeneralCommands extends OpfabCommands {
     };
 
     navigateToCustomScreen1 = function() {
-        cy.get('#opfab-navbar-menu-label-menu2').click();
-        cy.get('#opfab-navbar-menu-dropdown-testId').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId').focus().click();
     };
 
     navigateToCustomScreen2 = function() {
-        cy.get('#opfab-navbar-menu-label-menu2').click();
-        cy.get('#opfab-navbar-menu-dropdown-testId2').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId2').focus().click();
     };
 
     navigateToCustomScreen3 = function() {
-        cy.get('#opfab-navbar-menu-label-menu2').click();
-        cy.get('#opfab-navbar-menu-dropdown-testId3').click();
+        cy.get('#opfab-navbar-menu-dropdown-testId3').focus().click();
     };
 
     navigateToRealTimeUsers = function() {

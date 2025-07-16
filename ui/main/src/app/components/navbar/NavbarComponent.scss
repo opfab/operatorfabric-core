@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 .opfab-navbar-container {
     padding-top: 20px;
     min-height: 80px;
@@ -103,7 +102,7 @@
 }
 
 .opfab-icons-menu li {
-    padding-left:15px;
+    padding-left: 15px;
 }
 
 /* DROPDOWN MENUS */
@@ -114,39 +113,40 @@
     color: var(--opfab-navbar-color);
     cursor: pointer;
 
+    &.active > a {
+        color: var(--opfab-navbar-color-active);
+        font-weight: bold;
+    }
+
+    > ul {
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        margin-top: 10px;
+        padding: 1rem;
+        overflow: visible;
+        background-color: var(--opfab-navbar-right-menu-bgcolor);
+        border: 1px solid var(--opfab-navbar-dropdown-menu-border-color);
+        border-radius: 10px;
+        list-style: none;
+        cursor: default;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
     &:hover,
     &:focus-within {
         color: var(--opfab-navbar-color-hover);
+
+        ul {
+            opacity: 1;
+            pointer-events: auto;
+        }
     }
-}
-
-.opfab-navigation-dropdown-menu.active {
-    color: var(--opfab-navbar-color-active);
-    font-weight: bold;
-}
-
-.opfab-navigation-dropdown-menu > ul {
-    border : 1px solid var(--opfab-navbar-dropdown-menu-border-color);
-    position: absolute;
-    border-radius: 10px;
-    left: 0;
-    z-index: 1;
-    overflow: visible;
-    background-color: var(--opfab-navbar-right-menu-bgcolor);
-    display: none;
-    list-style: none;
-    margin-top: 10px;
-    padding: 1rem;
-    font-weight: normal;
-    cursor: default;
-}
-
-.opfab-navigation-dropdown-menu:hover ul, 
-.opfab-navigation-dropdown-menu:focus-within ul {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
 }
 
 .opfab-navbar-info {
@@ -155,7 +155,7 @@
     margin-right: 50px; /* space for environment name */
 }
 
-/* ENVIRONMENT NAME */ 
+/* ENVIRONMENT NAME */
 
 .opfab-environment-name-container {
     position: absolute;
@@ -219,8 +219,7 @@
     }
 }
 
-
-/* ICONS */ 
+/* ICONS */
 
 .opfab-menu-icon {
     display: inline-block;
@@ -319,7 +318,6 @@
 .opfab-menu-icon-calendar:hover {
     background: var(--opfab-navbar-color-hover);
 }
-
 
 .opfab-about-logo {
     display: inline-block;
