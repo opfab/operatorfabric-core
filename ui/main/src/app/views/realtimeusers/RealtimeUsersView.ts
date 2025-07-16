@@ -30,6 +30,7 @@ export class RealtimeUsersView {
     private readonly connectedUsersGroups: Map<string, string[]> = new Map<string, string[]>();
     private readonly pageLoaded = new ReplaySubject<RealtimePage>(1);
     private updateInterval;
+    private readonly userNameToDisplay = new Map<string, string>();
 
     constructor(private readonly configServer: ConfigServer) {
         this.init();
@@ -87,25 +88,26 @@ export class RealtimeUsersView {
     }
 
     private updateConnectedUsers() {
-        let connectedUserName = '';
-
         UsersService.loadConnectedUsers().subscribe((connectedUsers) => {
             this.connectedUsersPerEntity.clear();
+            this.userNameToDisplay.clear();
 
             connectedUsers.forEach((connectedUser) => {
                 if (connectedUser.entitiesConnected) {
+                    if (connectedUser.firstName && connectedUser.lastName) {
+                        this.userNameToDisplay.set(
+                            connectedUser.login,
+                            connectedUser.firstName + ' ' + connectedUser.lastName
+                        );
+                    } else {
+                        this.userNameToDisplay.set(connectedUser.login, connectedUser.login);
+                    }
                     this.connectedUsersGroups.set(connectedUser.login, connectedUser.groups ?? []);
                     connectedUser.entitiesConnected.forEach((entityConnected) => {
                         const connectedUsersToEntity = this.connectedUsersPerEntity.get(entityConnected) ?? [];
 
-                        if (connectedUser.firstName && connectedUser.lastName) {
-                            connectedUserName = connectedUser.firstName + ' ' + connectedUser.lastName;
-                        } else {
-                            connectedUserName = connectedUser.login;
-                        }
-
-                        if (!connectedUsersToEntity.includes(connectedUserName)) {
-                            connectedUsersToEntity.push(connectedUserName);
+                        if (!connectedUsersToEntity.includes(connectedUser.login)) {
+                            connectedUsersToEntity.push(connectedUser.login);
                             this.connectedUsersPerEntity.set(entityConnected, connectedUsersToEntity);
                         }
                     });
@@ -124,8 +126,13 @@ export class RealtimeUsersView {
                             line.entityId,
                             screen.onlyDisplayUsersInGroups
                         );
+
                         line.connectedUsersCount = connectedUsers.length;
-                        line.connectedUsers = connectedUsers.join(', ');
+                        line.connectedUsers = connectedUsers
+                            .map((user) => {
+                                return this.userNameToDisplay.get(user) ?? user;
+                            })
+                            .join(', ');
                     });
                 });
             });
