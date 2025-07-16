@@ -37,7 +37,14 @@ describe('Realtimeusers', () => {
             {login: 'user1', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group1']},
             {login: 'user2', entitiesConnected: ['ENTITY1_FR', 'ENTITY1_NL'], groups: ['group2']},
             {login: 'user3', entitiesConnected: ['ENTITY1_NL'], groups: ['group2', 'group3']},
-            {login: 'user4'}
+            {login: 'user4'},
+            {
+                login: 'userWithLastAndFirstName',
+                firstName: 'firstName',
+                lastName: 'lastName',
+                entitiesConnected: ['ENTITY1_IT'],
+                groups: ['group3']
+            }
         ];
         usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
@@ -155,19 +162,14 @@ describe('Realtimeusers', () => {
         expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, user2');
     });
 
-    it('If a user with first name and last name connects, they should be displayed instead of his login', () => {
-        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(1);
-        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1');
-
-        const connectedUsers = [
-            {login: 'user1', entitiesConnected: ['IT_SUPERVISOR_ENTITY']},
-            {login: 'user2', firstName: 'John', lastName: 'Smith', entitiesConnected: ['IT_SUPERVISOR_ENTITY']}
-        ];
-        usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
-
-        clock.tick(2500);
-        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsersCount).toEqual(2);
-        expect(page.currentScreen.columns[1].entityPages[0].lines[0].connectedUsers).toEqual('user1, John Smith');
+    it('If a user with first name and last name connects, it should be displayed instead of his login', () => {
+        // userWithLastAndFirstName in ENTITY1_IT
+        expect(page.currentScreen.columns[0].entityPages[1].lines[0].connectedUsers).toEqual('firstName lastName');
+    });
+    it('If a user member of a group in onlyDisplayUsersInGroups with first name and last name connects, it should be displayed instead of his login', () => {
+        // userWithLastAndFirstName in ENTITY1_IT
+        view.setSelectedScreen('2');
+        expect(page.currentScreen.columns[0].entityPages[0].lines[0].connectedUsers).toEqual('firstName lastName');
     });
 
     const realtimeScreensTestConfig = {
@@ -196,6 +198,7 @@ describe('Realtimeusers', () => {
             },
             {
                 screenName: 'Italian Control Centers',
+                onlyDisplayUsersInGroups: ['group3'],
                 screenColumns: [
                     {
                         entitiesGroups: ['ENTITY_IT']
