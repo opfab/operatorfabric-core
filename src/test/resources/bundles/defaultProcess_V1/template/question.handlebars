@@ -103,7 +103,7 @@
 
         getLabelFromValue: function(value) {
             const option = this.answersOptions.find(opt => opt.value === value);
-            return option ? option.label : 'Unknown';
+            return option ? option.label : option.value;
         },
 
         initMultiSelect: async function() {
