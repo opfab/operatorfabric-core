@@ -28,7 +28,7 @@ export class QuestionCardTemplate extends HTMLElement {
 
         this.innerHTML = `
         <br/>
-        <h2 id="richQuestion" style="text-align: justify;">${richQuestion}</h2>
+        <h2 id="richQuestion" style="text-align: justify; font-size: 24px;">${richQuestion}</h2>
         <div id="template_response_input_component">
             <br/>
             <div class="opfab-input">
@@ -55,7 +55,7 @@ export class QuestionCardTemplate extends HTMLElement {
         this.questionCardTemplateView.listenToResponses((responses) => {
             let html = '';
             if (responses?.forEach && responses.length > 0) {
-                html += `<center><h3> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
+                html += `<center><h3 style="font-size: 24px"> ${opfab.utils.getTranslation('builtInTemplate.questionCard.responsesReceivedLabel')} </h3> <br/>`;
                 html += '<div class="opfab-table">';
                 html += `<table width="100%"> <tr>`;
                 html += `<th>  ${opfab.utils.getTranslation('builtInTemplate.questionCard.entityColumnLabel')} </th>`;
