@@ -23,7 +23,18 @@ import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
 
 describe('Settings view ', () => {
     async function setUserConf() {
-        const userWithPerimeters = new UserWithPerimeters(new User('user', '', ''), new Array(), null, new Map());
+        const userWithPerimeters = new UserWithPerimeters(
+            new User('user', '', '', '', [], [], 'userEmail@mail.com'),
+            new Array(),
+            null,
+            new Map(),
+            new Map(),
+            false,
+            false,
+            false,
+            false,
+            'userWithPerimeterEmail@mail.com'
+        );
         await setUserPerimeter(userWithPerimeters);
     }
 
@@ -94,6 +105,20 @@ describe('Settings view ', () => {
         it('should return the default value of 5 if replayInterval is not set', async () => {
             await loadWebUIConf({settings: {}});
             expect(settingsView.getSetting('replayInterval')).toBe(5);
+        });
+        it('should return the email from user if getEmailFromUserInsteadOfSettings is true', async () => {
+            await setUserConf();
+            await loadWebUIConf({
+                settings: {getEmailFromUserInsteadOfSettings: true, email: 'emailFromSettings@mail.com'}
+            });
+            expect(settingsView.getSetting('email')).toBe('userWithPerimeterEmail@mail.com');
+        });
+        it('should return email from settings if getEmailFromUserInsteadOfSettings is false', async () => {
+            await setUserConf();
+            await loadWebUIConf({
+                settings: {getEmailFromUserInsteadOfSettings: false, email: 'emailFromSettings@mail.com'}
+            });
+            expect(settingsView.getSetting('email')).toBe('emailFromSettings@mail.com');
         });
     });
 

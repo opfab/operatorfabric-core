@@ -572,6 +572,7 @@
     "firstName" : "",
     "lastName" : "",
     "emailVerified" : false,
+    "email" : "testemail@mail.com",
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR" ]

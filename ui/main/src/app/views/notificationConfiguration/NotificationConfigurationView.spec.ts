@@ -10,10 +10,11 @@
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {NotificationConfigurationView} from './NotificationConfigurationView';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
-import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
+import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {NotificationConfigurationPage} from './NotificationConfigurationPage';
+import {User} from '@ofServices/users/model/User';
 
 describe('Notification configuration view ', () => {
     let notificationConfigurationPage: NotificationConfigurationPage;
@@ -410,6 +411,30 @@ describe('Notification configuration view ', () => {
             expect(
                 notificationConfigurationPage.processesWithNoProcessGroup[1].states[1].notificationByEmail
             ).toBeFalse();
+        });
+    });
+
+    describe('email user settings', () => {
+        it('email configuration should be enabled if email is from user instead of settings', async () => {
+            await loadWebUIConf({});
+            ConfigService.setConfigValue('settings.sendCardsByEmail', true);
+            ConfigService.setConfigValue('settings.getEmailFromUserInsteadOfSettings', true);
+
+            const userWithPerimeters = new UserWithPerimeters(
+                new User('user', '', '', '', [], [], 'userEmail@mail.com'),
+                new Array(),
+                null,
+                new Map(),
+                new Map(),
+                false,
+                false,
+                false,
+                false,
+                'userWithPerimeterEmail@mail.com'
+            );
+            await setUserPerimeter(userWithPerimeters);
+            notificationConfigurationPage = getNotificationConfigurationPage();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
         });
     });
 
