@@ -702,7 +702,7 @@ This function returns 3 fields :
 
 === Function getCards
 
-You can use this function to get a list of cards filtered on the specified filter.
+You can use this function to get a list of cards filtered on the specified filter. The cards will be retrieved via a request to the backend.
 
 ```
 opfab.cards.getCards(cardsFilter).then(...);
@@ -758,6 +758,22 @@ The `responseCard` object has the following fields:
 
 
 
+== LightCards API
+
+A light card is a card that does not contain the fields present in "data", except for those fields used in custom screens and declared in `common.yml` (`operatorfabric.customscreen.dataFields`) in the backend configuration. The advantage is that light cards are kept in memory and do not require backend access, unlike the Card API.
+
+=== Function getCurrentUserChildCardsForParentCard
+
+You can use this function to get the child cards of the current user's entities for a given parent card.
+
+
+```
+const childCards = opfab.lightCards.getCurrentUserChildCardsForParentCard(parentCardId);
+
+```
+The function returns an array of child cards.
+
+The `parentCardId` parameter is the id of the card for which you want to retrieve the child cards.
 
 
 

@@ -347,7 +347,7 @@ export class LightCardsStore {
 
                 if (
                     this.isLightChildCardFromCurrentUserEntity(removed[0]) &&
-                    this.getChildCardsFromCurrentUserEntity(children).length === 0
+                    this.getCardsFromCurrentUserEntity(children).length === 0
                 ) {
                     const parentCard = this.lightCards.get(parentCardId);
                     parentCard.hasChildCardFromCurrentUserEntity = false;
@@ -356,9 +356,9 @@ export class LightCardsStore {
         });
     }
 
-    private getChildCardsFromCurrentUserEntity(children: Card[]) {
+    private getCardsFromCurrentUserEntity(cards: Card[]) {
         const userEntities = UsersService.getCurrentUserWithPerimeters().userData.entities;
-        return children.filter((c) => userEntities.includes(c.publisher));
+        return cards.filter((c) => userEntities.includes(c.publisher));
     }
 
     public addEntitiesAcksForLightCard(cardId: string, entitiesAcksToAdd: string[]) {
@@ -442,6 +442,10 @@ export class LightCardsStore {
             card.hasBeenAcknowledged = AcknowledgeStatus.isCardAcknowledgedForCurrentUser(card);
             this.lightCardsEvents.next(this.lightCards);
         }
+    }
+
+    public getCurrentUserChildCardsForParentCard(parentCardId: string): Card[] {
+        return this.getCardsFromCurrentUserEntity(this.getChildCards(parentCardId) || []);
     }
 
     destroy() {

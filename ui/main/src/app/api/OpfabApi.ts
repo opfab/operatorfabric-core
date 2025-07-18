@@ -18,6 +18,7 @@ import {CurrentCardAPI} from './CurrentCardApi';
 import {CurrentUserCardAPI} from './CurrentUserCardApi';
 import {initUiAPI} from './UIApi';
 import {initCardsAPI} from './CardsApi';
+import {initLightCardsAPI} from './LightCardsApi';
 
 declare const opfab: any;
 
@@ -32,6 +33,7 @@ export class OpfabAPI {
         initUserAPI();
         initUiAPI();
         initCardsAPI();
+        initLightCardsAPI();
         CurrentCardAPI.init();
         CurrentUserCardAPI.init();
         BusinessConfigAPI.init();
