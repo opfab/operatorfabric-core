@@ -18,9 +18,7 @@ The configuration is divided into two parts, the configuration of the business s
 
 Opfab comes with a default embedded configuration, but certain parameters need to be provided and configured.
 
-The configuration is centralized in the *config* directory of the GitHub repository. The dev subdirectory contains
-configurations specific to development environments, while the *docker* subdirectory contains a specific configuration
-meant for use in a full docker environment.
+The configuration is centralized in the *config* directory of the GitHub repository. This directory contains a README.md file that explains its contents.
 
 == Business service configuration
 
