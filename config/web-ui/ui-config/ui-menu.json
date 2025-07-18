@@ -13,6 +13,17 @@
             "opfabCoreMenuId": "monitoring"
         },
         {
+            "id": "menuMonitoring",
+            "label": "title.monitoring",
+            "entries": [
+                {
+                    "customMenuId": "uid_test_0",
+                    "customScreenId": "monitoringId",
+                    "label": "entry.monitoring"
+                }
+            ]
+        },
+        {
             "opfabCoreMenuId": "processmonitoring",
             "showOnlyForGroups": ["Manager"]
         },
@@ -145,6 +156,7 @@
                 "title": {
                     "single": "First menu",
                     "multi": "Second menu",
+                    "monitoring": "Monitoring menu",
                     "admin": "Admin menu"
                 },
                 "entry": {
@@ -154,7 +166,8 @@
                     "admin": "Admin menu entry",
                     "custom": "Custom screen",
                     "custom2": "Custom screen 2",
-                    "custom3": "Custom screen 3"
+                    "custom3": "Custom screen 3",
+                    "monitoring": "Monitoring Custom screen"
                 }
             }
         },
@@ -164,6 +177,7 @@
                 "title": {
                     "single": "Premier menu",
                     "multi": "Deuxième menu",
+                    "monitoring": "Menu Monitoring",
                     "admin": "Menu admin"
                 },
                 "entry": {
@@ -173,7 +187,8 @@
                     "admin": "Menu admin élément",
                     "custom": "Écran personnalisé",
                     "custom2": "Écran personnalisé 2",
-                    "custom3": "Écran personnalisé 3"
+                    "custom3": "Écran personnalisé 3",
+                    "monitoring": "Écran personnalisé Monitoring"
                 }
             }
         },
@@ -183,6 +198,7 @@
                 "title": {
                     "single": "Eerste menu",
                     "multi": "Tweede menu",
+                    "monitoring": "Monitoring menu",
                     "admin": "Admin menu"
                 },
                 "entry": {
@@ -192,7 +208,8 @@
                     "admin": "Admin menu-item",
                     "custom": "Aangepast scherm",
                     "custom2": "Aangepast scherm 2",
-                    "custom3": "Aangepast scherm 3"
+                    "custom3": "Aangepast scherm 3",
+                    "monitoring": "Aangepast scherm Monitoring"
                 }
             }
         }
