@@ -2,17 +2,17 @@
   "realm" : "dev",
   "users" : [ {
     "id" : "42fdf784-1aaa-4b50-ad9d-2f13c5e86e35",
-    "createdTimestamp" : 1697466318807,
     "username" : "admin",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "ADMIN" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697466318807,
+    "totp" : false,
     "credentials" : [ {
       "id" : "bc39606b-73b0-416c-bb00-b43743791607",
       "type" : "password",
@@ -28,17 +28,17 @@
     "groups" : [ ]
   }, {
     "id" : "a9c9f514-05fc-4b1d-a073-937c228067c3",
-    "createdTimestamp" : 1697537367548,
     "username" : "itsupervisor1",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "ADMIN;Supervisor" ],
       "entitiesId" : [ "IT_SUPERVISOR_ENTITY" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697537367548,
+    "totp" : false,
     "credentials" : [ {
       "id" : "f4309b58-1caa-4fa3-ba87-a46cf28229e7",
       "type" : "password",
@@ -54,17 +54,17 @@
     "groups" : [ ]
   }, {
     "id" : "62358727-9046-4f8a-a103-f2ae85fb3c04",
-    "createdTimestamp" : 1697537508661,
     "username" : "operator1_crisisroom",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Supervisor" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697537508661,
+    "totp" : false,
     "credentials" : [ {
       "id" : "79081612-4f3c-404b-8ee8-fa6b813b6123",
       "type" : "password",
@@ -80,17 +80,17 @@
     "groups" : [ ]
   }, {
     "id" : "2fc577f7-9244-40e0-9a27-55985ee0e47f",
-    "createdTimestamp" : 1697537808340,
     "username" : "operator1_eu",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY1_EU" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697537808340,
+    "totp" : false,
     "credentials" : [ {
       "id" : "11c86d32-0baa-4895-9417-9be988dab6fd",
       "type" : "password",
@@ -106,17 +106,17 @@
     "groups" : [ ]
   }, {
     "id" : "55f2f057-9d2e-4a08-b672-39f5151c6b4e",
-    "createdTimestamp" : 1697537889336,
     "username" : "operator1_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer;Supervisor" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY3_FR" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697537889336,
+    "totp" : false,
     "credentials" : [ {
       "id" : "88d9d99c-ecbf-4ab7-82a0-46b5098d6e1b",
       "type" : "password",
@@ -132,17 +132,17 @@
     "groups" : [ ]
   }, {
     "id" : "8e2d4fbe-54f0-4eda-b44b-c2624a950910",
-    "createdTimestamp" : 1697537951517,
     "username" : "operator1_it",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_IT" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697537951517,
+    "totp" : false,
     "credentials" : [ {
       "id" : "c16bd945-141a-412c-85c0-41f830949fff",
       "type" : "password",
@@ -158,17 +158,17 @@
     "groups" : [ ]
   }, {
     "id" : "05985c62-3e0d-44b4-a649-87bf06239b58",
-    "createdTimestamp" : 1697538016883,
     "username" : "operator1_nl",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Planner,Maintainer" ],
       "entitiesId" : [ "ENTITY1_NL" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538016883,
+    "totp" : false,
     "credentials" : [ {
       "id" : "c55500de-fa91-4d46-8c56-9c60ce68ffd4",
       "type" : "password",
@@ -184,17 +184,17 @@
     "groups" : [ ]
   }, {
     "id" : "6f8684b8-0276-4d79-a1e5-24018ac5c005",
-    "createdTimestamp" : 1697538070150,
     "username" : "operator2_eu",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY2_EU" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538070150,
+    "totp" : false,
     "credentials" : [ {
       "id" : "628ee2f1-2820-41cd-ac57-6087ffdb69cf",
       "type" : "password",
@@ -210,18 +210,18 @@
     "groups" : [ ]
   }, {
     "id" : "2951ebcb-f804-48b1-9659-cfbdf87301b4",
-    "createdTimestamp" : 1697538125717,
     "username" : "operator2_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
     "email" : "operator2_fr@test.com",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Planner;Maintainer;Manager" ],
       "entitiesId" : [ "ENTITY2_FR;IT_SUPERVISOR_ENTITY" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538125717,
+    "totp" : false,
     "credentials" : [ {
       "id" : "56211d65-789b-4f75-aa78-44d250436976",
       "type" : "password",
@@ -237,17 +237,17 @@
     "groups" : [ ]
   }, {
     "id" : "60fe99c0-2528-4c0d-a3b8-123f23fa5af1",
-    "createdTimestamp" : 1697538179657,
     "username" : "operator2_it",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Planner;Maintainer" ],
       "entitiesId" : [ "ENTITY2_IT" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538179657,
+    "totp" : false,
     "credentials" : [ {
       "id" : "7994fc26-dbc2-40ad-915e-d3811bf61ef2",
       "type" : "password",
@@ -263,17 +263,17 @@
     "groups" : [ ]
   }, {
     "id" : "745d2b83-7653-41bd-b8fe-dae3edfb206a",
-    "createdTimestamp" : 1697538238156,
     "username" : "operator2_nl",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Planner,Maintainer" ],
       "entitiesId" : [ "ENTITY2_NL" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538238156,
+    "totp" : false,
     "credentials" : [ {
       "id" : "2467e44a-b6c7-4700-990a-4545e763feef",
       "type" : "password",
@@ -289,16 +289,16 @@
     "groups" : [ ]
   }, {
     "id" : "f6a185cc-c211-4837-a833-2424415812bb",
-    "createdTimestamp" : 1697538298292,
     "username" : "operator3_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "RTE;ADMIN;Maintainer" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538298292,
+    "totp" : false,
     "credentials" : [ {
       "id" : "b4781247-e520-4578-8508-23055c96bf46",
       "type" : "password",
@@ -314,17 +314,17 @@
     "groups" : [ ]
   }, {
     "id" : "3a96b78b-200a-49f5-ac7c-83bf13f62e85",
-    "createdTimestamp" : 1697538379188,
     "username" : "operator3_it",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_IT" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538379188,
+    "totp" : false,
     "credentials" : [ {
       "id" : "ad6465c7-5168-429e-a39e-1462012a78a3",
       "type" : "password",
@@ -340,17 +340,17 @@
     "groups" : [ ]
   }, {
     "id" : "88645886-aa9a-4744-a3ef-1a7a8de0dcc2",
-    "createdTimestamp" : 1697538440740,
     "username" : "operator4_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR;ENTITY3_FR;ENTITY4_FR" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538440740,
+    "totp" : false,
     "credentials" : [ {
       "id" : "77d62e06-b29a-416e-8596-e13dd4ffaab9",
       "type" : "password",
@@ -366,16 +366,16 @@
     "groups" : [ ]
   }, {
     "id" : "34d5d0e6-8738-4c10-b03b-3924abcf9476",
-    "createdTimestamp" : 1697538628685,
     "username" : "operator5_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "RTE;ADMIN;Maintainer" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538628685,
+    "totp" : false,
     "credentials" : [ {
       "id" : "a800635a-9fe4-4015-b784-1379f4eb1dd9",
       "type" : "password",
@@ -391,13 +391,13 @@
     "groups" : [ ]
   }, {
     "id" : "070569fe-76ce-4fde-8761-0cf67668b8c1",
-    "createdTimestamp" : 1697538671881,
     "username" : "operator6_fr",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697538671881,
+    "totp" : false,
     "credentials" : [ {
       "id" : "dd26a9b2-4ba0-40ae-8a1c-376b65dc8e14",
       "type" : "password",
@@ -413,23 +413,23 @@
     "groups" : [ ]
   }, {
     "id" : "e61c061c-14fe-49aa-b9ee-af46bf55c403",
-    "createdTimestamp" : 1697538716385,
     "username" : "opfab",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer;Manager;ADMIN" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538716385,
+    "totp" : false,
     "credentials" : [ {
       "id" : "62ab3cd5-54f4-43c2-8675-cb818b4ed12f",
       "type" : "password",
       "userLabel" : "My password",
       "createdDate" : 1697538727573,
-      "secretData" : "{\"value\":\"mFhLtm1J1n4McaAEbztugnW3w46Rb5u7T2l9SWgDId8=\",\"salt\":\"J9LUACSe/vGFoj7lNRALwQ==\",\"additionalParameters\":{}}",
-      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+      "secretData" : "{\"value\":\"Yb23cxhkEUXQGhkAw7XuYMFIDbe7rTcgwI8aAKWoCuI=\",\"salt\":\"U+980vb/xJbfhtn6mrwsyA==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":5,\"algorithm\":\"argon2\",\"additionalParameters\":{\"hashLength\":[\"32\"],\"memory\":[\"7168\"],\"type\":[\"id\"],\"version\":[\"1.3\"],\"parallelism\":[\"1\"]}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
@@ -438,16 +438,16 @@
     "groups" : [ ]
   }, {
     "id" : "027e4185-dd54-47ef-903c-6a5d8961aca4",
-    "createdTimestamp" : 1697538766704,
     "username" : "publisher_test",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer;Manager" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538766704,
+    "totp" : false,
     "credentials" : [ {
       "id" : "16d22ee6-00f1-4202-93f4-c22bc3a77c2c",
       "type" : "password",
@@ -463,11 +463,11 @@
     "groups" : [ ]
   }, {
     "id" : "3aa29bb1-81c6-4e21-89c9-ed42d6f59b27",
-    "createdTimestamp" : 1697472556247,
     "username" : "service-account-opfab-client",
-    "enabled" : true,
-    "totp" : false,
     "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697472556247,
+    "totp" : false,
     "serviceAccountClientId" : "opfab-client",
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
@@ -480,13 +480,13 @@
     "groups" : [ ]
   }, {
     "id" : "09ee0255-cffc-45a6-91cb-820d7fac3311",
-    "createdTimestamp" : 1697538816407,
     "username" : "user_test_api_1",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697538816407,
+    "totp" : false,
     "credentials" : [ {
       "id" : "c4e2f4b2-bea7-41ac-8907-d3b5ae04049c",
       "type" : "password",
@@ -502,13 +502,13 @@
     "groups" : [ ]
   }, {
     "id" : "b02286e8-cbcf-4cf3-a737-307bf1f03652",
-    "createdTimestamp" : 1697538843540,
     "username" : "user_test_api_2",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697538843540,
+    "totp" : false,
     "credentials" : [ {
       "id" : "0864313c-b4b5-4a76-9075-5461a23e02c4",
       "type" : "password",
@@ -524,13 +524,13 @@
     "groups" : [ ]
   }, {
     "id" : "9730b181-3413-446c-b22d-e70392760762",
-    "createdTimestamp" : 1697538878061,
     "username" : "user_test_api_3",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697538878061,
+    "totp" : false,
     "credentials" : [ {
       "id" : "702a2253-7772-4cf3-9d21-a3af7b7b9982",
       "type" : "password",
@@ -546,13 +546,13 @@
     "groups" : [ ]
   }, {
     "id" : "4d94568a-0999-449d-bb00-c17093531fcd",
-    "createdTimestamp" : 1697538907682,
     "username" : "user_test_api_4",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697538907682,
+    "totp" : false,
     "credentials" : [ {
       "id" : "a1707452-bec4-4f09-8711-b104718e63d0",
       "type" : "password",
@@ -568,17 +568,17 @@
     "groups" : [ ]
   }, {
     "id" : "086b0517-2abf-4477-bd5e-26772022accf",
-    "createdTimestamp" : 1697538945089,
     "username" : "user_test_jwt",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
     "attributes" : {
       "groups" : [ "Dispatcher;Maintainer" ],
       "entitiesId" : [ "ENTITY1_FR;ENTITY2_FR" ]
     },
+    "enabled" : true,
+    "createdTimestamp" : 1697538945089,
+    "totp" : false,
     "credentials" : [ {
       "id" : "9da10d54-e282-457c-82c3-b0915326833f",
       "type" : "password",
@@ -594,13 +594,13 @@
     "groups" : [ ]
   }, {
     "id" : "f54425bf-5bf7-4441-a975-daffe5ce238c",
-    "createdTimestamp" : 1697539000367,
     "username" : "userwithnogroupnoentity",
-    "enabled" : true,
-    "totp" : false,
-    "emailVerified" : false,
     "firstName" : "",
     "lastName" : "",
+    "emailVerified" : false,
+    "enabled" : true,
+    "createdTimestamp" : 1697539000367,
+    "totp" : false,
     "credentials" : [ {
       "id" : "26e6838c-ae7b-43a4-8374-5b56cf6078dd",
       "type" : "password",
