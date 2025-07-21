@@ -159,7 +159,7 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-description').type('entity description');
 
-        cy.get('.label-list').find('input').eq(0).type('Label1{enter}');
+        cy.get('.label-list').find('input').eq(0).focus().type('Label1{enter}');
 
         cy.get('#opfab-roles').click();
         cy.get('#opfab-roles').find('.vscomp-option-text').eq(3).click({force: true});
@@ -209,7 +209,7 @@ describe('AdmininstrationPages', () => {
         cy.get('.label-list').find('.label-chip').eq(0).should('contain.text', 'Label1');
 
         // Add Label2
-        cy.get('.label-list').find('input').eq(0).type('Label2{enter}');
+        cy.get('.label-list').find('input').eq(0).focus().type('Label2{enter}');
 
         // Remove Label1
         cy.get('.label-list').find('span').eq(0).click();
