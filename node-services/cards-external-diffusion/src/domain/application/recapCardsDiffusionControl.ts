@@ -86,7 +86,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                         if (mode === 'daily' && userWithPerimeters.sendDailyEmail) {
                             await this.sendEmailRecap(
                                 visibleCards,
-                                userWithPerimeters.email,
+                                userWithPerimeters.emailForCardSending,
                                 emailToPlainText,
                                 this.dailyEmailTitle,
                                 this.dailyEmailBodyPrefix,
@@ -96,7 +96,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                         } else if (mode === 'weekly' && userWithPerimeters.sendWeeklyEmail) {
                             await this.sendEmailRecap(
                                 visibleCards,
-                                userWithPerimeters.email,
+                                userWithPerimeters.emailForCardSending,
                                 emailToPlainText,
                                 this.weeklyEmailTitle,
                                 this.weeklyEmailBodyPrefix,

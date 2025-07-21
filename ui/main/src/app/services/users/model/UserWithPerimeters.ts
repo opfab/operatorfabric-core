@@ -22,7 +22,7 @@ export class UserWithPerimeters {
         readonly emailToPlainText?: boolean,
         readonly sendDailyEmail?: boolean,
         readonly sendWeeklyEmail?: boolean,
-        readonly email?: string
+        readonly emailForCardSending?: string
     ) {}
 }
 

@@ -33,7 +33,7 @@ public class CurrentUserWithPerimeters {
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
     private Boolean sendWeeklyEmail;
-    private String email;
+    private String emailForCardSending;
     private String timezoneForEmails;
 
     @Valid
@@ -87,12 +87,12 @@ public class CurrentUserWithPerimeters {
         this.sendWeeklyEmail = sendWeeklyEmail;
     }
 
-    public String getEmail() {
-        return email;
+    public String getEmailForCardSending() {
+        return emailForCardSending;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmailForCardSending(String emailForCardSending) {
+        this.emailForCardSending = emailForCardSending;
     }
 
     public String getTimezoneForEmails() {

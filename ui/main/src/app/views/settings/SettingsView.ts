@@ -38,7 +38,7 @@ export class SettingsView {
 
             case 'email':
                 if (this.isEmailFromUserInsteadOfSettings()) {
-                    return UsersService.getCurrentUserWithPerimeters().email;
+                    return UsersService.getCurrentUserWithPerimeters().emailForCardSending;
                 } else {
                     return ConfigService.getConfigValue('settings.' + setting);
                 }
