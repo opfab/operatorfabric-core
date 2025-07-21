@@ -196,7 +196,7 @@ Scenario: Check mail for operator 1 is sent
     And match response.items[0].To[0].Mailbox == 'operator1_fr'
     And match response.items[0].To[0].Domain == 'opfab.com'
     And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
-    And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title - card summary') == 0
+    And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title') == 0
     And match response.items[0].Content.Body contains 'A MESSAGE'
     # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
     And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE' 

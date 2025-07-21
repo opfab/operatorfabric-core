@@ -160,8 +160,6 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                 ' - ' +
                 (this.showCardUrls ? urlOfCard : '') +
                 this.escapeHtml(card.titleTranslated) +
-                ' - ' +
-                this.escapeHtml(card.summaryTranslated) +
                 (this.showCardUrls ? '</a>' : '') +
                 '<br><br>\n';
         }

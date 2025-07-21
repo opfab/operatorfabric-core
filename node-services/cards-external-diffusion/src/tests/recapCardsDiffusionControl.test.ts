@@ -214,10 +214,10 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
         expect(mailService.sent[0].body).toMatch(
-            `INFORMATION - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS1} ">Title1 - Summary1</a>`
+            `INFORMATION - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS1} ">Title1</a>`
         );
         expect(mailService.sent[0].body).toMatch(
-            `ALARM - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS2} ">Title1 - Summary1</a>`
+            `ALARM - <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS2} ">Title1</a>`
         );
         expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });
@@ -280,11 +280,11 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
-        expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1 - Summary1`);
+        expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1`);
         expect(mailService.sent[0].body).toMatch(
             `http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS1}`
         );
-        expect(mailService.sent[0].body).toMatch(`ALARM - Title1 - Summary1`);
+        expect(mailService.sent[0].body).toMatch(`ALARM - Title1`);
         expect(mailService.sent[0].body).toMatch(
             `http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID_FOR_PROCESS2}`
         );
@@ -350,8 +350,8 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].body).toMatch(`Daily Email Body Prefix`);
-        expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1 - Summary1`);
-        expect(mailService.sent[0].body).toMatch(`ALARM - Title1 - Summary1`);
+        expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1`);
+        expect(mailService.sent[0].body).toMatch(`ALARM - Title1`);
         expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
     });
 
