@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,14 +33,14 @@ describe('Card routing', function () {
 
     const currentUserWithReceiveAndWriteRight = {
         userData: user,
-        email: 'test@opfab.com',
+        emailForCardSending: 'test@opfab.com',
         processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
         computedPerimeters: perimetersWithReceiveAndWriteRight
     };
 
     const currentUserWithReceiveRight = {
         userData: user,
-        email: 'test@opfab.com',
+        emailForCardSending: 'test@opfab.com',
         processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
         computedPerimeters: perimetersWithReceiveRight
     };
@@ -311,14 +311,14 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightNoMailForProcessState = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['messageState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
 
         const currentUserWithReceiveRightNoMailForProcessState = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['messageState']},
             computedPerimeters: perimetersWithReceiveRight
         };
@@ -347,14 +347,14 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightWithFilteringNotification = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['processState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
         const currentUserWithReceiveRightWithFilteringNotification = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['processState']},
             computedPerimeters: perimetersWithReceiveRight
@@ -362,14 +362,14 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightWithFilteringNotificationNotForProcessState = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['otherState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
         const currentUserWithReceiveRightWithFilteringNotificationNotForProcessState = {
             userData: user,
-            email: 'test@opfab.com',
+            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['otherState']},
             computedPerimeters: perimetersWithReceiveRight

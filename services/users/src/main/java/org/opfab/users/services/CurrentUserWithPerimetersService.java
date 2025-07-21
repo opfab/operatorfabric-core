@@ -90,9 +90,9 @@ public class CurrentUserWithPerimetersService {
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setSendWeeklyEmail(operationResult.getResult().getSendWeeklyEmail());
             if (this.getEmailFromUserInsteadOfSettings) {
-                userWithPerimeterData.setEmail(userData.getEmail() == null ? "" : userData.getEmail());
+                userWithPerimeterData.setEmailForCardSending(userData.getEmail() == null ? "" : userData.getEmail());
             } else {
-                userWithPerimeterData.setEmail(operationResult.getResult().getEmail());
+                userWithPerimeterData.setEmailForCardSending(operationResult.getResult().getEmail());
             }
             userWithPerimeterData.setTimezoneForEmails(operationResult.getResult().getTimezoneForEmails());
         }

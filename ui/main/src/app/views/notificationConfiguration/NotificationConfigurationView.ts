@@ -67,7 +67,7 @@ export class NotificationConfigurationView {
     private isEmailFromUserInsteadOfSettingsAndFieldIsNotEmpty(): boolean {
         return (
             ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false) &&
-            UsersService.getCurrentUserWithPerimeters().email?.length > 0
+            UsersService.getCurrentUserWithPerimeters().emailForCardSending?.length > 0
         );
     }
 
