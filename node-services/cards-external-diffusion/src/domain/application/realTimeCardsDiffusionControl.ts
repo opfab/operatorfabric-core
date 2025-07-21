@@ -107,7 +107,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         if (resp.isValid()) {
             const userWithPerimeters: UserWithPerimeters = resp.getData();
             const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
-            const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 this.logger.debug(
@@ -118,29 +117,19 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 );
                 const cardsForUser: Card[] = await this.getCardsForUser(cards, userWithPerimeters);
                 for (const cardForUser of cardsForUser) {
-                    await this.sendCardIfAllowed(
-                        cardForUser,
-                        userWithPerimeters.emailForCardSending,
-                        emailToPlainText,
-                        timezoneForEmails
-                    );
+                    await this.sendCardIfAllowed(cardForUser, userWithPerimeters.emailForCardSending, emailToPlainText);
                 }
             }
         }
     }
 
-    async sendCardIfAllowed(
-        card: Card,
-        userEmail: string | undefined,
-        emailToPlainText: boolean,
-        timezoneForEmails: string
-    ): Promise<void> {
+    async sendCardIfAllowed(card: Card, userEmail: string | undefined, emailToPlainText: boolean): Promise<void> {
         if (userEmail == null) return;
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(card, userEmail, emailToPlainText, timezoneForEmails);
+                    await this.sendMail(card, userEmail, emailToPlainText);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
                     await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
@@ -171,20 +160,17 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.emailForCardSending;
     }
 
-    async sendMail(card: Card, to: string, emailToPlainText: boolean, timezoneForEmails: string): Promise<void> {
+    async sendMail(card: Card, to: string, emailToPlainText: boolean): Promise<void> {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
-        let subject =
-            this.subjectPrefix +
-            ' - ' +
-            card.titleTranslated +
-            ' - ' +
-            card.summaryTranslated +
-            ' - ' +
-            this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails);
-        if (card.endDate != null)
-            subject += ' - ' + this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails);
-        let body = await this.processCardTemplate(card, timezoneForEmails);
-        if (emailToPlainText) body = htmlToText(body, {wordwrap: false});
+
+        const subject = this.subjectPrefix + ' - ' + card.titleTranslated;
+
+        let body = await this.processCardTemplate(card);
+
+        if (emailToPlainText) {
+            body = htmlToText(body, {wordwrap: false});
+        }
+
         try {
             await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
             this.registerNewSending(to);
@@ -206,7 +192,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    async processCardTemplate(card: Card, timezoneForEmails: string): Promise<string> {
+    async processCardTemplate(card: Card): Promise<string> {
         const urlOfCard =
             '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
 
@@ -215,12 +201,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             ' ' +
             (this.showCardUrls ? urlOfCard : '') +
             this.escapeHtml(card.titleTranslated) +
-            ' - ' +
-            this.escapeHtml(card.summaryTranslated) +
-            ' - ' +
-            this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) +
-            ' - ' +
-            this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails) +
             (this.showCardUrls ? '</a>' : '');
         try {
             const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
