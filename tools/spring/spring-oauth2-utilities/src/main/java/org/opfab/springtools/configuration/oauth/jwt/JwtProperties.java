@@ -26,6 +26,7 @@ public class JwtProperties {
     private String emailClaim = "email";
 
     private String entitiesIdClaim = "entitiesId";
+    private boolean entitiesIdClaimSingleString = false;
     private boolean gettingEntitiesFromToken = false;
     private boolean gettingFirstAndLastNameFromToken = false;
 
@@ -53,6 +54,10 @@ public class JwtProperties {
         return entitiesIdClaim;
     }
 
+    public boolean isEntitiesIdClaimSingleString() {
+        return entitiesIdClaimSingleString;
+    }
+
     public boolean isGettingEntitiesFromToken() {
         return gettingEntitiesFromToken;
     }
@@ -68,8 +73,8 @@ public class JwtProperties {
      * the name of the field in the class is camelCase.
      * It seems spring makes an automatic conversion from kebab-case to camelCase
      * when using setter injection
-     * so for example, when using the field login-claim in the configuration file,
-     * spring will call the setter setLoginClaim in the class JwtProperties
+     * so for example, when injecting the field login-claim from the configuration file,
+     * spring will call the setter setLoginClaim() in the class JwtProperties
      */
     public void setLoginClaim(String loginClaim) {
         this.loginClaim = loginClaim;
@@ -93,6 +98,10 @@ public class JwtProperties {
 
     public void setEntitiesIdClaim(String entitiesIdClaim) {
         this.entitiesIdClaim = entitiesIdClaim;
+    }
+
+    public void setEntitiesIdClaimSingleString(boolean entitiesIdClaimSingleString) {
+        this.entitiesIdClaimSingleString = entitiesIdClaimSingleString;
     }
 
     public void setGettingEntitiesFromToken(boolean gettingEntitiesFromToken) {

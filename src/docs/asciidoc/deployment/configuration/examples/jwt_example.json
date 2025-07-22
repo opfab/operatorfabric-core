@@ -52,7 +52,7 @@
   "ATTR1": "roleATTR1",
   "preferred_username": "example_user",
   "given_name": "example_firtstname",
-  "entitiesId": "ENTITY1",
+  "entitiesId": ["ENTITY1", "ENTITY2"],
   "family_name": "example_lastname",
   "email": "example_user@mail.com",
   "roleFieldList": "roleA;roleB;roleC"

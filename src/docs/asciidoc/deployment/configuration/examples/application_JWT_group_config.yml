@@ -2,6 +2,7 @@ operatorfabric:
   security:
     jwt:
       entitiesIdClaim: entitiesId
+      entitiesIdClaimSingleString : false
       gettingEntitiesFromToken: true
       groups:
         mode: JWT # value possible JWT | OPERATOR_FABRIC
