@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -110,8 +110,8 @@ When a device is disabled (isEnabled = false) , OperatorFabric will not send any
 +
 The default value of the "isEnabled" field is true.
 +
-. How to map an OperatorFabric signal key footnote:[currently, that means a severity, but in the future it could also
-be a process id, or anything identifying the signal to be played] to a signal (sound, light) on the external system
+. How to map an OperatorFabric signal key (currently, that means a severity, but in the future it could also
+be a process id, or anything identifying the signal to be played) to a signal (sound, light) on the external system
 +
 .signalMapping
 [source,json,]

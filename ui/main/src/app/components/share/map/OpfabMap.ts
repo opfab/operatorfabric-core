@@ -18,6 +18,8 @@ import {Severity} from 'app/model/Severity';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import WKT from 'ol/format/WKT';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities';
+import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import Overlay from 'ol/Overlay';
 import {Style, Fill, Stroke, Circle} from 'ol/style';
@@ -66,7 +68,8 @@ export abstract class OpfabMap {
             let filter = '';
             if (style === GlobalStyleService.NIGHT) {
                 //change map color to Dark Mode
-                filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
+                if (ConfigService.getConfigValue('feed.geomap.darkMode', true))
+                    filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
             }
             this.map.on('postcompose', () => {
                 if (document.querySelector('canvas')) {
@@ -97,27 +100,7 @@ export abstract class OpfabMap {
             controls: defaultControls({attribution: false}).extend([attribution])
         });
 
-        const bgUrl = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.url', null);
-        const bgTileSize = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.tileSize', null);
-        if (bgUrl && bgTileSize) {
-            const bgCrossOrigin = ConfigService.getConfigValue('feed.geomap.bglayer.xyz.crossOrigin', null);
-            this.map.addLayer(
-                new TileLayer({
-                    source: new XYZ({
-                        url: bgUrl,
-                        tileSize: bgTileSize,
-                        crossOrigin: bgCrossOrigin
-                    })
-                })
-            );
-        } else {
-            this.map.addLayer(
-                new TileLayer({
-                    source: new OSM()
-                })
-            );
-        }
-
+        this.addLayers();
         if (enableGraph) {
             this.map.addControl(new GraphControl(null));
         }
@@ -125,7 +108,6 @@ export abstract class OpfabMap {
         this.map.on('singleclick', function (evt) {
             displayLightCardIfNecessary(evt);
         });
-
         function displayLightCardIfNecessary(evt) {
             const featureArray = [];
             if (self.map.hasFeatureAtPixel(evt.pixel)) {
@@ -138,6 +120,71 @@ export abstract class OpfabMap {
                     self.changeDetector.markForCheck();
                 }
             }
+        }
+    }
+
+    addLayers() {
+        const layers = ConfigService.getConfigValue('feed.geomap.layers', []);
+        if (layers && layers.length > 0) {
+            layers.forEach((layer) => {
+                if (layer.type === 'wmts') {
+                    if (!layer.capabilitiesUrl || !layer.layer || !layer.matrixSet) {
+                        logger.error(`Invalid WMTS layer configuration: missing required properties`, layer);
+                        return;
+                    }
+                    this.addWMTSLayer(layer.capabilitiesUrl, layer.layer, layer.matrixSet);
+                } else if (layer.type === 'xyz') {
+                    if (!layer.url) {
+                        logger.error(`Invalid XYZ layer configuration: missing url`, layer);
+                        return;
+                    }
+                    this.map.addLayer(
+                        new TileLayer({
+                            source: new XYZ({
+                                url: layer.url,
+                                tileSize: layer.tileSize,
+                                crossOrigin: layer.crossOrigin
+                            })
+                        })
+                    );
+                } else if (layer.type === 'osm') {
+                    this.map.addLayer(new TileLayer({source: new OSM()}));
+                } else if (layer.type !== 'geojson') {
+                    logger.warn(`Unknown layer type: ${layer.type}`);
+                }
+            });
+        }
+    }
+
+    async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string) {
+        const parser = new WMTSCapabilities();
+        try {
+            const response = await fetch(capabilitiesUrl);
+
+            if (!response.ok) {
+                logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);
+            }
+
+            const text = await response.text();
+            const result = parser.read(text);
+
+            // Validate that the layer exists in capabilitiesUrl
+            if (!result.Contents?.Layer?.find((l) => l.Identifier === layer)) {
+                logger.error(`Layer '${layer}' not found in WMTS capabilities ${capabilitiesUrl}`);
+                return;
+            }
+            const options = optionsFromCapabilities(result, {
+                layer: layer,
+                matrixSet: matrixSet
+            });
+            self.map.addLayer(
+                new TileLayer({
+                    opacity: 1,
+                    source: new WMTS(options)
+                })
+            );
+        } catch (error) {
+            logger.error(`Failed to add WMTS layer '${layer}':`, error);
         }
     }
 
@@ -243,7 +290,9 @@ export abstract class OpfabMap {
                 })
             });
 
-            const geojsonLayers = ConfigService.getConfigValue('feed.geomap.layer.geojson', []);
+            const geojsonLayers = ConfigService.getConfigValue('feed.geomap.layers', []).filter(
+                (layer) => layer.type === 'geojson'
+            );
 
             geojsonLayers.forEach((geojson) => {
                 const layerSource = new VectorSource({
