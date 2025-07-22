@@ -262,6 +262,10 @@ To activate this option, you need to set some parameter in the common.yml file :
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.path||no| path in the JWT to check if that path does exist, if it does, use the roleValue as a group 
 |operatorfabric.security.jwt.groups.rolesClaim.rolesClaimCheckExistPath.roleValue||no| set the value of the group if the path exists
 |operatorfabric.security.jwt.entitiesIdClaim||no| set the name of the field in the token
+|operatorfabric.security.jwt.entitiesIdClaimSingleString||no
+a| boolean specifying the expected format of the entitiesId field in the token. +
+- true: a single string with all entities, separated by a semicolon +
+- false: an array of strings, each one is an entity
 |operatorfabric.security.jwt.gettingEntitiesFromToken||no| boolean indicating if you want the entities of the user to come from the token and not mongoDB (possible values: true/false)
 |operatorfabric.security.jwt.gettingFirstAndLastNameFromToken|false|no| boolean indicating if you want the first name and last name of the user to come from the token and not mongoDB (possible values: true/false)
 |===

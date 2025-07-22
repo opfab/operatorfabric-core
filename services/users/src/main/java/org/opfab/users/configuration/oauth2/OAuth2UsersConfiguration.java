@@ -190,11 +190,12 @@ public class OAuth2UsersConfiguration {
     }
 
     private List<String> getEntitiesFromToken(Jwt jwt) {
-        String entitiesId = jwt.getClaimAsString(jwtProperties.getEntitiesIdClaim());
-        List<String> enititiesIdList = new ArrayList<>();
-        if (entitiesId != null)
-            enititiesIdList.addAll(Arrays.asList(entitiesId.split(";")));
-        return enititiesIdList;
-
+        List<String> entitiesIdClaim = jwt.getClaimAsStringList(jwtProperties.getEntitiesIdClaim());
+        if (entitiesIdClaim == null)
+            return new ArrayList<>();
+        if (jwtProperties.isEntitiesIdClaimSingleString())
+            return Arrays.asList(entitiesIdClaim.get(0).split(";"));
+        else
+            return entitiesIdClaim;
     }
 }
