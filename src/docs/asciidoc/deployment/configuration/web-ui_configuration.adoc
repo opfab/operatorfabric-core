@@ -33,7 +33,7 @@ The line customized in the nginx configuration file must end with à semicolon (
 [[ui_properties]]
 == UI properties
 
-The properties lie in the `web-ui.json`. The following table describes their meaning and how to use them. An example file can be found in the config/docker directory.
+The properties lie in the `web-ui.json`. The following table describes their meaning and how to use them, the properties regarding the geomap feature are found in the <<ui_properties_geomap, next section>>.  An example file can be found in the config/web-ui/ui-config directory.
 
 |===
 |name|default|mandatory?|Description
@@ -138,21 +138,6 @@ a|card time display mode in the feed. Values :
 |feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowledgment filtering option in feed page, possible values are : "notack", "ack", "all".
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
 |feed.enableGroupedCards|false|no|_(Experimental feature)_: If true cards with the same tags are grouped together. Clicking on the grouped card will show the other cards with the same tags in the feed.
-|feed.geomap.bglayer.xyz.crossOrigin|null|no|Custom xyz/tiled background layer crossOrigin setting.
-|feed.geomap.bglayer.xyz.tileSize|null|no|Custom xyz/tiled background layer tile size (Int value, example: 256. Required when using custom background layer).
-|feed.geomap.bglayer.xyz.url|null|no|Custom xyz/tiled background layer service URL, Replaces OSM background layer (Add endpoint with {x}{y}{z} variables. Example: "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png".
-|feed.geomap.defaultDataProjection|EPSG:4326|no| The default data projection of `card.wktGeometry` to use when no wktProjection is embedded in the card.
-|feed.geomap.enable|false|no|_(Experimental feature)_: If true a geographical map will be shown and cards that have geographical coordinates will be drawn on the map.
-|feed.geomap.enableGraph|false|no|Show a graph on the map with number of cards per severity.
-|feed.geomap.highlightPolygonStrokeWidth|2|no| Define the stroke width when highlighting polygon in the geomap view of a card.
-|feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
-|feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
-|feed.geomap.initialZoom|1|no| Initial zoom level of the map.
-|feed.geomap.layer.geojson|null|no|List of GeoJSON layers to add to the map with optional style attribute. The style object can have styling properties for stroke, fill, image, and text styles as defined in OpenLayer flat style (https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html). Example: [{"url":"assets/layers/service-area.geojson"},{"url":"https://localhost:8000/network-lines.geojson", "style": {"stroke-color": "blue"}}]
-|feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
-|feed.geomap.popupContent|publishDateAndTitle|no| Define the content of the geomap popup. Possible values are : `publishDateAndTitle` (default value) or `summary`.
-|feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
-|feed.geomap.zoomToLocation|14|no| Zoom level when zooming to a location of a selected card.
 |feed.showSearchFilter|false|no| If set to false, the search filter is hidden.
 |feed.timeline.domains|["RT", "J", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "RT", "J", "7D", "W", "M", "Y".
 
@@ -237,6 +222,9 @@ a|authentication mode, available options:
 
 |===
 
+
+
+
 IMPORTANT:
 ====
 To declare settings parameters, you now need to group all fields under `settings: { }`
@@ -286,3 +274,68 @@ By this valid one :
 
 
 
+[[ui_properties_geomap]]
+=== Geomap Configuration
+
+
+In the web-ui.json, the geomap can be configure with the following properties: 
+
+|===
+|name|default|mandatory?|Description
+
+|feed.geomap.defaultDataProjection|EPSG:4326|no| The default data projection of `card.wktGeometry` to use when no wktProjection is embedded in the card.
+|feed.geomap.enable|false|no|_(Experimental feature)_: If true a geographical map will be shown and cards that have geographical coordinates will be drawn on the map.
+|feed.geomap.darkMode|true|no|Active a filter for dark mode (if false dark mode and light have the same colors).
+|feed.geomap.enableGraph|false|no|Show a graph on the map with number of cards per severity.
+|feed.geomap.highlightPolygonStrokeWidth|2|no| Define the stroke width when highlighting polygon in the geomap view of a card.
+|feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
+|feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
+|feed.geomap.initialZoom|1|no| Initial zoom level of the map.
+|feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
+|feed.geomap.popupContent|publishDateAndTitle|no| Define the content of the geomap popup. Possible values are : `publishDateAndTitle` (default value) or `summary`.
+|feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
+|feed.geomap.zoomToLocation|14|no| Zoom level when zooming to a location of a selected card.
+
+|===
+
+The layers and tiles of the map can be configured using the `feed.geomap.layers` property. This property accepts an array of objects, each representing a layer with a `type` property and additional configuration options depending on the layer type. The following layer types are supported:
+
+    - `osm`: OpenStreetMap tiles. No additional configuration required.
+    - `geojson`: GeoJSON layers. Requires a `url` for the GeoJSON file and optionally a `style` object for feature styling. The `style` object supports stroke, fill, image, and text styles as defined in the OpenLayers flat style format (see: https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html).
+    - `xyz`: XYZ tiles. Requires a `url` endpoint with `{x}`, `{y}`, and `{z}` variables (e.g., "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png"). You may also specify:
+
+        ** `tileSize`: Integer value (e.g., 256). Required for custom background layers.
+        ** `crossOrigin`: Optional. Default is `null`.
+    - `wmts`: WMTS layers. Requires `capabilitiesUrl`, `layer`, and `matrixSet`.
+
+Example configuration for the `feed.geomap.layers` property:
+```
+"layers": [
+                {
+                    "type":"osm"
+                },
+                {
+                    "type":"wmts",
+                    "capabilitiesUrl":"https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+                    "layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+                    "matrixSet":"PM_0_19"
+                },
+                {
+                    "type": "geojson",
+                    "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+                    "style": {
+                        "stroke-color": "red"
+                    }
+                },
+                {
+                    "type": "geojson",
+                    "url": "assets/layers/geojson-layer2.json"
+                }
+
+            ]
+
+
+```
+
+
+The example configuration references a GeoJSON layer from  Open Data GRD (https://opendata.agenceore.fr) and a wmts layer from IGN (https://geoservices.ign.fr) both published under open licence v2.0 https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf 

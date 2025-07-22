@@ -34,16 +34,18 @@ The specifications of the Well-known Text Representation of coordinate reference
 can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
 
 
-You can customize the map by setting parameters in the `web-ui.json` configuration file. For example:
+You can customize the map by setting parameters in the `web-ui.json` configuration file.
 
-- The map uses OpenStreetMap tiles by default, but you can specify different tiles using the `feed.geomap.bglayer.xyz` parameters.
-- You can add GeoJSON layers to the map using the `feed.geomap.layer.geojson` parameter in web-ui.json. For each layer it is possible to specify the url and an optional style. The style object can have styling properties for stroke, fill, image, and text styles as defined in OpenLayer flat style (https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html)
+The layers and tiles of the map can be configured using the `feed.geomap.layers` parameter. The following types are supported: 
 
+    - `osm` for OpenStreetMap tiles 
+    - `geojson` for GeoJSON layers.
+    - `xyz` for XYZ tiles.
+    - `wmts` for WMTS layers.
 
 Refer to the 
-ifdef::single-page-doc[<<ui_properties, web-ui configuration>>]
-ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#ui_properties, web-ui configuration>>]
+ifdef::single-page-doc[<<ui_properties_geomap, geomap web-ui configuration>>]
+ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#ui_properties_geomap, geomap web-ui configuration>>]
 section for more information and additional customization options.
 
 
-The example configuration references a GeoJSON layer from  Open Data GRD (https://opendata.agenceore.fr) published under open licence v2.0 https://www.etalab.gouv.fr/wp-content/uploads/2017/04/ETALAB-Licence-Ouverte-v2.0.pdf 

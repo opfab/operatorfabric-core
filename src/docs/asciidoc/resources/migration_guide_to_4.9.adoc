@@ -1,0 +1,55 @@
+// Copyright (c) 2025 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.8.X to release 4.9.0
+
+== Geomap configuration 
+
+As a new layer type (`wmts`) has been added, the geomap configuration has been updated for improved clarity in layer management. All layers are now stored in a single property.
+
+You must update your configuration to match this new structure.
+
+
+The layers and tiles of the map can now be configured using the `feed.geomap.layers` property. This property accepts an array of objects, each representing a layer with a `type` property and additional configuration options depending on the layer type. The following layer types are supported:
+
+    - `osm`: OpenStreetMap tiles. No additional configuration required.
+    - `geojson`: GeoJSON layers. Requires a `url` for the GeoJSON file and optionally a `style` object for feature styling. The `style` object supports stroke, fill, image, and text styles as defined in the OpenLayers flat style format (see: https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html).
+    - `xyz`: XYZ tiles. Requires a `url` endpoint with `{x}`, `{y}`, and `{z}` variables (e.g., "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png"). You may also specify:
+
+        ** `tileSize`: Integer value (e.g., 256). Required for custom background layers.
+        ** `crossOrigin`: Optional. Default is `null`.
+    - `wmts`: WMTS layers. Requires `capabilitiesUrl`, `layer`, and `matrixSet`.
+
+Example configuration for the `feed.geomap.layers` property:
+```
+"layers": [
+                {
+                    "type":"osm"
+                },
+                {
+                    "type":"wmts",
+                    "capabilitiesUrl":"https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+                    "layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+                    "matrixSet":"PM_0_19"
+                },
+                {
+                    "type": "geojson",
+                    "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+                    "style": {
+                        "stroke-color": "red"
+                    }
+                },
+                {
+                    "type": "geojson",
+                    "url": "assets/layers/geojson-layer2.json"
+                }
+
+            ]
+
+
+```
+
