@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@SuppressWarnings("java:S2189") // SonarCloud: we could not end the heartbeat loops as it should be running
+@SuppressWarnings("java:S2189") // SonarCloud: we should not end the heartbeat loop as it should be running
                                 // forever
 public class CardSubscriptionService implements EventListener {
 
