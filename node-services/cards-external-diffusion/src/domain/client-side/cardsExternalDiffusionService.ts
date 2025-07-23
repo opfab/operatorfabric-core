@@ -76,7 +76,8 @@ export default class CardsExternalDiffusionService {
             .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
             .setCustomConfig(serviceConfig.customConfig)
             .setShowCardUrls(serviceConfig.showCardUrls ?? true)
-            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false);
+            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false)
+            .setShowCardTitleInBody(serviceConfig.showCardTitleInBody ?? true);
 
         if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()

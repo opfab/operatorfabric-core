@@ -42,3 +42,4 @@ operatorfabric:
       defaultTimeZone: 'Europe/Paris'
       showCardUrls: true
       forceEmailsInPlainText: false
+      showCardTitleInBody: true

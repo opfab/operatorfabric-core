@@ -30,4 +30,5 @@ export default class ConfigDTO {
     public customConfig: any;
     public showCardUrls: boolean;
     public forceEmailsInPlainText: boolean;
+    public showCardTitleInBody: boolean;
 }
