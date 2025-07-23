@@ -108,8 +108,18 @@ public class CardController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public Void deleteCards(@RequestParam String endDateBefore) {
+    public Void deleteCards(@RequestParam String endDateBefore, Principal principal) {
+
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+
         cardDeletionService.deleteCardsByEndDateBefore(parseAsInstant(endDateBefore));
+
+        logUserAction(user.getUserData().getLogin(),
+                UserActionEnum.DELETE_CARD,
+                user.getUserData().getEntities(), null,
+                "Card deletion by end date before " + parseAsInstant(endDateBefore));
+
         return null;
     }
 
@@ -138,6 +148,11 @@ public class CardController {
                     Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
                 response.setStatus(404);
+            } else {
+                Card card = deletedCard.get();
+                logUserAction(user.getUserData().getLogin(),
+                        UserActionEnum.DELETE_CARD,
+                        user.getUserData().getEntities(), card.uid, null);
             }
         } catch (Exception e) {
             response.setStatus(403);
@@ -158,8 +173,16 @@ public class CardController {
                 Optional.ofNullable(token));
         if (!deletedCard.isPresent())
             response.setStatus(404);
-        else
+        else {
             response.setStatus(200);
+            if (user != null) {
+                Card card = deletedCard.get();
+                logUserAction(user.getUserData().getLogin(),
+                        UserActionEnum.DELETE_CARD,
+                        user.getUserData().getEntities(), card.uid, null);
+            }
+
+        }
 
         return null;
     }
