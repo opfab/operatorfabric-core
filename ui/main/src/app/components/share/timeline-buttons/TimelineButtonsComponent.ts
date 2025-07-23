@@ -34,7 +34,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public endDateForBusinessPeriodDisplay;
 
     @Input()
-    public isMonitoringScreen: boolean;
+    public displayBusinessPeriodAndArrows: boolean;
 
     @Output()
     public domainChange: EventEmitter<any> = new EventEmitter();
@@ -153,7 +153,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     /**
      :
-     * apply arrow button clicked : switch the graph context with the zoom level configured
+     * apply arrow button clicked: switch the graph context with the zoom level configured
      * at the left or right of our actual button selected
      * @param direction receive by child component custom-timeline-chart
      */

@@ -3,7 +3,6 @@
   "name": "Test process for cypress",
   "version": "1",
   "uiVisibility": {
-    "monitoring": false,
     "processMonitoring": false,
     "logging": false,
     "calendar": false

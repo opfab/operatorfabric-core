@@ -120,14 +120,14 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
         const pageType = NavigationService.getCurrentPageType();
         if (
             pageType === PageType.CALENDAR ||
-            pageType === PageType.MONITORING ||
+            pageType === PageType.PROCESSMONITORING ||
             pageType === PageType.DASHBOARD ||
             pageType === PageType.CUSTOMSCREEN
         )
             this.templateOffset = 35;
         if (
             pageType !== PageType.CALENDAR &&
-            pageType !== PageType.MONITORING &&
+            pageType !== PageType.PROCESSMONITORING &&
             pageType !== PageType.DASHBOARD &&
             pageType !== PageType.CUSTOMSCREEN
         )

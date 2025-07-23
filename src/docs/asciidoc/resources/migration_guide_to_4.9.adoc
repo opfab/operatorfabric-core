@@ -56,3 +56,75 @@ Example configuration for the `feed.geomap.layers` property:
 == Entities in Token
 
 When retrieving entities from a token, the recommended approach is to use an array attribute containing entity IDs as strings. The previous method, which uses a single string with semicolon-separated IDs, remains available for backward compatibility. To enable the old mode, set the parameter `operatorfabric.security.jwt.entitiesIdClaimSingleString` to `true` in your YAML services configuration.
+
+== Deletion of monitoring screen
+
+The monitoring screen is not needed anymore as a similar screen can be defined via custom screens.
+Here is a custom screen configuration that can replace the monitoring screen :
+
+```
+{
+    const CustomScreenMonitoring = {
+        id: 'monitoringId',
+        name: 'monitoring',
+        headerFilters: ['PROCESS', 'TYPE_OF_STATE', 'RESPONSE_FROM_MY_ENTITIES'],
+
+        results: {
+            columns: [
+                {
+                    field: 'severity',
+                    cardField: 'severity',
+                    fieldType: 'SEVERITY'
+                },
+                {
+                    field: 'TIME',
+                    headerName: 'TIME',
+                    cardField: 'publishDate',
+                    fieldType: 'DATE_AND_TIME',
+                    minWidth: 150,
+                    flex: 0.5
+                },
+                {
+                    field: 'title',
+                    headerName: 'TITLE',
+                    cardField: 'titleTranslated',
+                    fieldType: 'STRING',
+                    flex: 1,
+                    minWidth: 150
+                },
+                {
+                    field: 'summary',
+                    headerName: 'SUMMARY',
+                    cardField: 'summaryTranslated',
+                    fieldType: 'STRING',
+                    flex: 2,
+                    minWidth: 150,
+                    showTooltips: true
+                },
+                {
+                    fieldType: 'TYPE_OF_STATE',
+                    headerName: 'PROCESS STATUS',
+                    flex: 0.6,
+                    minWidth: 150
+                },
+                {
+                    field: 'publisher',
+                    headerName: 'EMITTER',
+                    cardField: 'publisher',
+                    fieldType: 'PUBLISHER',
+                    flex: 1,
+                    minWidth: 150
+                },
+                {
+                    headerName: 'ANSWERS',
+                    fieldType: 'RESPONSES',
+                    flex: 2,
+                    minWidth: 400
+                }
+            ]
+        }
+    };
+    opfab.businessconfig.registerCustomScreen(CustomScreenMonitoring);
+}
+```
+

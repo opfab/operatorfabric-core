@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,9 +65,9 @@ describe('LoginPage', () => {
         cy.get('#opfab-login-msg').contains('Wrong login or password');
     });
 
-    it('login with default entry page set to "monitoring "should open monitoring screen after login', () => {
+    it('login with default entry page set to "customscreen/testId" should open customscreen/testId after login', () => {
         //go to login page
-        script.setPropertyInConf('defaultEntryPage', '\\"monitoring\\"');
+        script.setPropertyInConf('defaultEntryPage', '\\"customscreen/testId\\"');
         cy.visit('/');
 
         cy.get('#opfab-login').should('be.visible');
@@ -80,10 +80,11 @@ describe('LoginPage', () => {
         //press login button
         cy.get('#opfab-login-btn-submit').click();
 
-        //Check that the browser has been redirected to the monitoring page
-        cy.hash().should('eq', '#/monitoring');
+        //Check that the browser has been redirected to the customscreen/testId screen
+        cy.hash().should('eq', '#/customscreen/testId');
         cy.contains('Cards with response from my entity');
     });
+
     it ('login with user with no group shall popup a message and logout', () => {
         //go to login page
         cy.visit('/');

@@ -16,8 +16,8 @@ For each process/state, the user can choose to be notified or not when receiving
 notified then the card will not be visible:
 
 * in the feed or the timeline
-* in the monitoring screen
 * in the calendar screen
+* in the custom screens
 
 However, it will be visible in the archives screen.
 

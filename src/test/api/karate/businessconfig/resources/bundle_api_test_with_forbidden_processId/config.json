@@ -2,7 +2,6 @@
 	"id":"api_test_with_forbidden_processId/",
 	"version":"1",
 	"uiVisibility": {
-		"monitoring": true,
 		"logging": true,
 		"calendar": true
 	},

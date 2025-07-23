@@ -61,21 +61,6 @@ body {
     margin-bottom: 0.5rem;
     margin-top: 0.5rem;
 }
-/* stylelint-disable selector-class-pattern */
-// Colors for state types
-// Only used now by monitoring screen , shall be removed when monitoring screen is removed
-.opfab-type-of-state-INPROGRESS {
-    color: var(--opfab-color-darker-orange);
-}
-
-.opfab-type-of-state-FINISHED {
-    color: var(--opfab-color-green);
-}
-
-.opfab-type-of-state-CANCELED {
-    color: var(--opfab-color-red);
-}
-/* stylelint-enable selector-class-pattern */
 
 // CUSTOM SCROLLBAR STYLE
 // for chromium based browser
@@ -564,10 +549,6 @@ ngb-pagination {
             transform: rotate(45deg);
         }
     }
-}
-
-.opfab-monitoring-ag-grid-row {
-    cursor: pointer;
 }
 
 .opfab-link {

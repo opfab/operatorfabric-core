@@ -22,7 +22,10 @@ describe('Monitoring processus screen tests', function () {
     const archivesAndLogging = new ArchivesAndLoggingCommands();
 
     before('Set up configuration', function () {
+        script.deleteAllSettings();
         script.deleteAllCards();
+        script.cleanDownloadsDir();
+        script.resetUIConfigurationFiles();
         script.loadTestConf();
         script.send6TestCards();
     });

@@ -74,13 +74,6 @@ task copyRealTimeScreensFile(type: Exec){
     args "-c", "cp realtimescreens.json $project.projectDir/build/test-data/"
 }
 
-task copyMonitoringFile(type: Exec){
-    description 'copy monitoring.json file for businessconfig party configuration data for tests in build/test-data'
-    workingDir "$project.projectDir/src/test/docker/volume/businessconfig-storage"
-    executable "bash"
-    args "-c", "cp monitoring.json $project.projectDir/build/test-data/businessconfig-storage/monitoring.json"
-}
-
 task createDevData(type: Copy){
     description 'prepare data in build/dev-data for running OpFab in dev mode'
     from 'src/main/docker/volume/businessconfig-storage'
@@ -115,8 +108,7 @@ copyProcessGroupsFile.dependsOn prepareTestDataDir
 copyProcessGroupsFile2.dependsOn prepareTestDataDir
 copyProcessGroupsFile3.dependsOn prepareTestDataDir
 copyRealTimeScreensFile.dependsOn prepareTestDataDir
-copyMonitoringFile.dependsOn prepareTestDataDir
-test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyRealTimeScreensFile,copyMonitoringFile
+test.dependsOn prepareTestDataDir,compressBundle1Data,compressBundle2Data,copyProcessGroupsFile,copyProcessGroupsFile2,copyProcessGroupsFile3,copyRealTimeScreensFile
 bootRun.dependsOn createDevData
 
 

@@ -17,7 +17,7 @@ To customize the UI, declare specific parameters in the `web-ui.json` file as li
 
 The `ui-menu.json` file is used:
 
-* To manage the visibility of core OperatorFabric menus (feed, monitoring, etc.)
+* To manage the visibility of core OperatorFabric menus (feed, archives, etc.)
 * To declare specific business menus to be displayed in the navigation bar of OperatorFabric
 
 This file contains 4 fields :
@@ -52,16 +52,13 @@ listed groups.
 |===
 |Location of menu |Menu |Id
 
-.5+|Navigation bar
+.4+|Navigation bar
 
 |Feed
 |feed
 
 |Archives
 |archives
-
-|Monitoring
-|monitoring
 
 |Dashboard
 |dashboard

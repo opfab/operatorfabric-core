@@ -22,7 +22,6 @@ export class Process {
 
 export class UiVisibility {
     constructor(
-        readonly monitoring: boolean,
         readonly processMonitoring: boolean,
         readonly logging: boolean,
         readonly calendar: boolean

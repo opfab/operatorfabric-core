@@ -30,7 +30,7 @@ export class OpfabEventStreamService {
     private static readonly businessConfigChange = new Subject<void>();
     private static readonly userConfigChange = new Subject<void>();
     private static readonly businessDataChange = new Subject<void>();
-    private static readonly monitoringConfigChange = new Subject<void>();
+    private static readonly processMonitoringConfigChange = new Subject<void>();
 
     private static eventStreamClosed = false;
 
@@ -66,9 +66,9 @@ export class OpfabEventStreamService {
                         OpfabEventStreamService.businessConfigChange.next();
                         logger.info(`EventStreamService - BUSINESS_CONFIG_CHANGE received`);
                         break;
-                    case 'MONITORING_CONFIG_CHANGE':
-                        OpfabEventStreamService.monitoringConfigChange.next();
-                        logger.info(`EventStreamService - MONITORING_CONFIG_CHANGE received`);
+                    case 'PROCESSMONITORING_CONFIG_CHANGE':
+                        OpfabEventStreamService.processMonitoringConfigChange.next();
+                        logger.info(`EventStreamService - PROCESSMONITORING_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
                         OpfabEventStreamService.userConfigChange.next();
@@ -207,8 +207,8 @@ export class OpfabEventStreamService {
         return OpfabEventStreamService.userConfigChange.asObservable();
     }
 
-    static getMonitoringConfigChangeRequests(): Observable<void> {
-        return OpfabEventStreamService.monitoringConfigChange.asObservable();
+    static getProcessMonitoringConfigChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.processMonitoringConfigChange.asObservable();
     }
 
     static getLoadingInProgress(): Observable<boolean> {

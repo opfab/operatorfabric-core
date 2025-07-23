@@ -6,35 +6,11 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-
-= Monitoring
-
-The monitoring screen is a realtime view of processes based on current cards received by the user (i.e. the last version of cards visible by the user). It can be seen as another view of the feed.
-
-Not all the cards are visible, it depends on the business process they are part of. For a card to be visible in this screen, the parameter `uiVisibility.monitoring` must be set to `true` in the config.json file of its process.
-
-== Export configuration 
-
-An Excel export function is available in the monitoring screen, the content of the export can be configured. 
-To do so, a json file describing the expected output can be sent to the businessconfig service through the /businessconfig/monitoring endpoint.
-
-In opfab git repository, you can find in directory https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/monitoringConfig[src/test/resources/monitoringConfig]  : 
-  
-  - a script to load a monitoring configuration `loadMonitoringConfig.sh`
-
-  - an example of configuration in `monitoringConfig.json` (for the response fields to be filled , you need to respond to a card question in process messageOrQuestionExample )
-
-
-A description of the structure of the configuration can be found in 
-ifdef::single-page-doc[link:../api/businessconfig/[the businessconfig api documentation]]
-ifndef::single-page-doc[link:/documentation/current/api/businessconfig/[the businessconfig api documentation]]
-
-
-== Process monitoring
+= Process monitoring
 
 NOTE: This feature is experimental
 
-The process monitoring screen has the following similarities with the monitoring screen :
+The process monitoring screen has the following features :
 
 - it is a realtime view of processes based on current cards received by the user
 (i.e. the last version of cards visible by the user)
@@ -100,13 +76,13 @@ Depending on the permissions of the groups to which the user is attached, he can
 
 In the process monitoring config file it is possible to configure the page size `filters.pageSize` and the list of available tags used in the UI to filter the results `filters.tags`.
 
-If geographical map view is enabled ('feed.geomap.enableMap' set to 'true' in web-ui.json) it is possible to view the cards on the map by checking the "View Results on a Geographical Map" checkbox.
+If the geographical map view is enabled ('feed.geomap.enableMap' set to 'true' in web-ui.json) it is possible to view the cards on the map by checking the "View Results on a Geographical Map" checkbox.
 
 
 Here is the description of the fields :
 
-- "field" : the name of the field in the card (or in the database) you want to display
-- "type" : field type to be used for formatting. Possible values : `date`, `array`. Set to `date` if you want to display a date/time field, set it to `array` to display an array as a comma separated list.
-- "colName" : name of the column on the UI
-- "size" : size of the column on the UI, proportionally to each other
+- "field": the name of the field in the card (or in the database) you want to display
+- "type": field type to be used for formatting. Possible values : `date`, `array`. Set to `date` if you want to display a date/time field, set it to `array` to display an array as a comma separated list.
+- "colName": name of the column on the UI
+- "size": size of the column on the UI, proportionally to each other
 
