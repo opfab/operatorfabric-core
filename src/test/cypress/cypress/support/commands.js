@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,10 +56,6 @@ Cypress.Commands.add('upload_file', (fileName, fileType = ' ', selector) => {
     });
 });
 
-
-Cypress.Commands.add('loadMonitoringConfig', (config) => {
-    cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
-});
 
 Cypress.Commands.add('sendMessageToSubscriptions', (message) => {
     cy.exec('cd .. && ./resources/sendMessageToSubscriptions.sh ' + message);

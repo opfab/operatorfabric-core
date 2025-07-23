@@ -3,7 +3,6 @@
   "name": "Task",
   "version": "1",
   "uiVisibility": {
-    "monitoring": false,
     "processMonitoring": false,
     "logging": false,
     "calendar": true

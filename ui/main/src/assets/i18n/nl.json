@@ -206,7 +206,6 @@
         "dashboard": "Dashboard",
         "logging": "Logboek",
         "admin": "Administratie",
-        "monitoring": "Bewaking",
         "processmonitoring": "Bewakingsproces",
         "logout": "Uitloggen",
         "changepassword": "Wachtwoord wijzigen",
@@ -394,21 +393,6 @@
         "cardLoadingInProgress": "Bezig met laden van de kaart  ...",
         "tooManyRows": "Te veel kaarten gevonden, niet alle kaarten worden getoond.",
         "collapsibleUpdates": "Opvouwbare updates"
-    },
-    "monitoring": {
-        "hideFilters": "Verberg Filters",
-        "showFilters": "Toon Filters",
-        "noSelection": "NB",
-        "moreRows": "rijen over",
-        "filters": {
-            "typeOfState": {
-                "selectTypeOfStateText": "Selecteer een Proces status"
-            }
-        },
-        "tips": {
-            "hasAResponseFromYourEntity": "Uw entiteit heeft al gereageerd."
-        },
-        "seeDetails": "DETAILS BEKIJKEN"
     },
     "processMonitoring": {
         "viewResultOnMap": "Bekijk Resultaten op een Geografische Kaart"

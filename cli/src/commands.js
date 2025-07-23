@@ -21,7 +21,6 @@ const businessData = require('./businessDataCommands.js');
 const log = require('./logCommands.js');
 const supervisor = require('./supervisorCommands.js');
 const bundleCommand = require('./bundleCommands.js');
-const monitoringConfig = require('./monitoringConfigCommands.js');
 const processMonitoring = require('./processMonitoringCommands.js');
 const connectedUser = require('./connectedUserCommands.js');
 const user = require('./userCommands.js');
@@ -68,10 +67,6 @@ const commands = {
                 break;
             case 'logout':
                 login.logout();
-                break;
-            case 'monitoring-config':
-                this.exitIfNotLoggedIn();
-                await monitoringConfig.processMonitoringConfigCommand(args.slice(1));
                 break;
             case 'process-monitoring':
                 this.exitIfNotLoggedIn();
@@ -206,7 +201,6 @@ const commands = {
         log                     Get or set log level for services  
         login                   Log in to opfab
         logout                  Log out to opfab
-        monitoring-config       Load or delete a configuration for monitoring screen
         perimeter               Create or delete perimeters
         process-group           Load or clear processgroups
         process-monitoring      Load configuration for monitoring processus screen
@@ -260,9 +254,6 @@ const commands = {
                     break;
                 case 'supervisor':
                     supervisor.printHelp();
-                    break;
-                case 'monitoring-config':
-                    monitoringConfig.printHelp();
                     break;
                 case 'process-monitoring':
                     processmonitoring.printHelp();

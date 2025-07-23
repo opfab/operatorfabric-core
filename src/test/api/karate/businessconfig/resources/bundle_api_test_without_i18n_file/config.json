@@ -2,7 +2,6 @@
 	"id":"api_test",
 	"version":"1",
 	"uiVisibility": {
-		"monitoring": true,
 		"logging": true,
 		"calendar": true
 	},

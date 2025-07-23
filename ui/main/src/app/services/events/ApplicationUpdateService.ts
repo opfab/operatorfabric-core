@@ -79,9 +79,8 @@ export class ApplicationUpdateService {
     }
 
     private static listenForMonitoringConfigUpdate() {
-        OpfabEventStreamService.getMonitoringConfigChangeRequests().subscribe(() => {
+        OpfabEventStreamService.getProcessMonitoringConfigChangeRequests().subscribe(() => {
             logger.info(`Update monitoring configuration`, LogOption.LOCAL_AND_REMOTE);
-            ConfigService.loadMonitoringConfig().subscribe();
             ConfigService.loadProcessMonitoringConfig().subscribe();
         });
     }

@@ -11,7 +11,6 @@ package org.opfab.businessconfig.controllers;
 
 import org.opfab.businessconfig.model.*;
 import org.opfab.businessconfig.model.Process;
-import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.LastUserActionRepository;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -60,17 +58,15 @@ public class BusinessconfigController implements UserExtractor {
     public static final String LOCATION = "Location";
     public static final String IMPOSSIBLE_TO_UPDATE_BUNDLE = "Impossible to update bundle";
     private ProcessesService processService;
-    private MonitoringService monitoringService;
     private final UserActionLogService userActionLogService;
     private static final Logger log = LoggerFactory.getLogger(BusinessconfigController.class);
 
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
-    public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService,
+    public BusinessconfigController(ProcessesService processService,
                                     UserActionLogRepository userActionLogRepository,
                                     LastUserActionRepository lastUserActionRepository) {
         this.processService = processService;
-        this.monitoringService = monitoringService;
         this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
 
@@ -295,20 +291,6 @@ public class BusinessconfigController implements UserExtractor {
                     new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted bundle", e.getMessage()),
                     message, e);
         }
-    }
-
-    @GetMapping(value = "/monitoring", produces = { "application/json" })
-    public Monitoring getMonitoring(HttpServletRequest request, HttpServletResponse response) {
-        return monitoringService.getMonitoring();
-    }
-
-    @PostMapping(value = "/monitoring", produces = { "application/json" }, consumes = {
-            "application/json" })
-    public Void postMonitoring(HttpServletRequest request, HttpServletResponse response,
-            @Valid @RequestBody Monitoring monitoring) throws IOException {
-        monitoringService.setMonitoring(monitoring);
-        response.setStatus(201);
-        return null;
     }
 
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file,

@@ -187,12 +187,6 @@ describe('Feed notification configuration tests', function () {
             cy.get('#opfab-card-list').contains(c).should('exist');
         });
 
-        // Cards should exist on the monitoring page
-        opfab.navigateToMonitoring();
-        cardsToTestRegex.forEach((c) => {
-            cy.get('of-monitoring-table').contains(c).should('exist');
-        });
-
         // Unselect some notifications
         cy.get('#opfab-navbar-drop-user-menu').click(); // Click top right dropdown menu
         cy.get('#opfab-navbar-right-menu-feedconfiguration').click(); // Click notification reception
@@ -213,18 +207,6 @@ describe('Feed notification configuration tests', function () {
         cardsToTestRegex.forEach((c) => {
             cy.get('#opfab-card-list').contains(c).should('not.exist');
         });
-
-        // Cards should not exist on the monitoring page
-        opfab.navigateToMonitoring();
-        cardsToTestRegex.forEach((c) => {
-            cy.get('of-monitoring-table').contains(c).should('not.exist'); // wait for dialog to go away
-        });
-
-        // Pagination should display ' Results number  : <5 - cardsToTest> '
-        cy.get('.opfab-pagination').should(
-            'contain.text',
-            ' Results number  : ' + parseInt(5 - cardsToTestRegex.length)
-        );
     });
 
     it('When sending new cards, check only monitored cards are shown', function () {
@@ -243,12 +225,6 @@ describe('Feed notification configuration tests', function () {
         // All cards minus the cards to check should be visible
         cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
 
-        // Cards should not exist on the monitoring page
-        opfab.navigateToMonitoring();
-        // Monitoring results table
-        cardsToTestRegex.forEach((c) => {
-            cy.get('of-monitoring-table').contains(c).should('not.exist');
-        });
     });
 
     it('Check envelop icon is present only if mail option is checked and mail address is filled', function () {

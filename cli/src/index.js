@@ -72,7 +72,6 @@ omelette('opfab')
             log: ['#EMPTY_COMPLETION'],
             login: ['#EMPTY_COMPLETION'],
             logout: ['#EMPTY_COMPLETION'],
-            'monitoring-config': ['#EMPTY_COMPLETION'],
             perimeter: ['#EMPTY_COMPLETION'],
             'process-group': ['#EMPTY_COMPLETION'],
             'process-monitoring': ['#EMPTY_COMPLETION'],
@@ -107,10 +106,6 @@ omelette('opfab')
         },
         login: ['#EMPTY_COMPLETION'],
         logout: ['#EMPTY_COMPLETION'],
-        'monitoring-config': {
-            load: [],
-            delete: ['#EMPTY_COMPLETION']
-        },
         perimeter: {
             create: [],
             'add-to-group': ['#EMPTY_COMPLETION'],

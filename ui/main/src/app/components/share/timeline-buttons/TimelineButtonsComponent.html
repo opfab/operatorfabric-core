@@ -7,7 +7,7 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-menu-timeline">
-    <div *ngIf="hideTimeLine || isMonitoringScreen" class="opfab-business-period">
+    <div *ngIf="hideTimeLine || displayBusinessPeriodAndArrows" class="opfab-business-period">
         <span translate>timeline.businessPeriod</span> : {{ startDateForBusinessPeriodDisplay }}<span
             *ngIf="this.currentDomainId !== 'J'">
             &#45;&#45; {{ endDateForBusinessPeriodDisplay }}
@@ -15,7 +15,7 @@
     </div>
     <div id="opfab-menu-timeline-links">
         <ul style="padding-top: 0.15em">
-            <li *ngIf="hideTimeLine || isMonitoringScreen">
+            <li *ngIf="hideTimeLine || displayBusinessPeriodAndArrows">
                 <a id="timeline-left-arrow" (click)="moveDomain(false)" style="cursor: pointer"> &lt;&lt; </a>
             </li>
 
@@ -29,7 +29,7 @@
                 </a>
             </li>
 
-            <li *ngIf="hideTimeLine || isMonitoringScreen">
+            <li *ngIf="hideTimeLine || displayBusinessPeriodAndArrows">
                 <a id="timeline-right-arrow" (click)="moveDomain(true)" style="cursor: pointer"> &gt;&gt; </a>
             </li>
 

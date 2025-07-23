@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MonitoringConfig} from '../model/MonitoringConfig';
 import {RealTimeScreens} from '../model/RealTimeScreensConfig';
 import {Observable} from 'rxjs';
 import {ServerResponse} from '../../../server/ServerResponse';
@@ -16,7 +15,6 @@ import {ProcessMonitoringConfig} from '../model/ProcessMonitoringConfig';
 export abstract class ConfigServer {
     abstract getWebUiConfiguration(): Observable<ServerResponse<any>>;
     abstract getMenuConfiguration(): Observable<ServerResponse<any>>;
-    abstract getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>>;
     abstract getProcessMonitoringConfiguration(): Observable<ServerResponse<ProcessMonitoringConfig>>;
     abstract getLocale(locale: string): Observable<ServerResponse<any>>;
     abstract getRealTimeScreenConfiguration(): Observable<ServerResponse<RealTimeScreens>>;

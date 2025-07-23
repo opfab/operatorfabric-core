@@ -206,7 +206,6 @@
         "archives": "Archives",
         "logging": "Logging",
         "admin": "Administration",
-        "monitoring": "Monitoring",
         "processmonitoring": "Monitoring processus",
         "logout": "Logout",
         "changepassword": "Change password",
@@ -394,21 +393,6 @@
         "cardLoadingInProgress": "Loading card  ...",
         "tooManyRows": "Too many cards , not all cards visible.",
         "collapsibleUpdates": "Collapsible updates"
-    },
-    "monitoring": {
-        "hideFilters": "Hide Filters",
-        "showFilters": "Show Filters",
-        "noSelection": "NA",
-        "moreRows": "rows more",
-        "filters": {
-            "typeOfState": {
-                "selectTypeOfStateText": "Select a Process status"
-            }
-        },
-        "tips": {
-            "hasAResponseFromYourEntity": "Your entity has already responded."
-        },
-        "seeDetails": "SEE DETAILS"
     },
     "processMonitoring": {
         "viewResultOnMap": "View Results on a Geographical Map"

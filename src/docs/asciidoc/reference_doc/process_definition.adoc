@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -58,10 +58,10 @@ include::../../../../services/businessconfig/src/main/docker/volume/businessconf
 - `id`: id of the process;
 - `name`: process name;
 - `version`: enables the correct display of the card data, even for the old ones.
-The server store the previous versions in its file system.
+The server stores the previous versions in its file system.
 This field value should match a businessconfig configuration for a correct rendering;
 - `states`: lists the available states which each declares associated actions, associated templates and if cards could be acknowledged by users;
-- `uiVisibility`: in the monitoring, logging and calendar screens, not all the cards are visible, it depends on the business process they are part of. For a card to be visible in these screens, the corresponding parameter must be set to true.
+- `uiVisibility`: in the logging and calendar screens, not all the cards are visible, it depends on the business process they are part of. For a card to be visible in these screens, the corresponding parameter must be set to true.
 
 The mandatory field are `id`,`name` and `version`.
 
@@ -138,8 +138,8 @@ A process definition is itself a dictionary of states, each key maps to a state 
 ==== Templates
 
 For demonstration purposes, there will be two simple templates.
-For more advance feature go to the section detailing the handlebars templates and associated helpers available in OperatorFabric.
-As the card used in this example are created above, the bundle template folder needs to contain 2 templates: `template1.handlebars` and `template2.handlebars`.
+For more advance feature, go to the section detailing the handlebar templates and associated helpers available in OperatorFabric.
+As the card used in this example is created above, the bundle template folder needs to contain 2 templates: `template1.handlebars` and `template2.handlebars`.
 
 *Examples of template (i18n versions)*
 

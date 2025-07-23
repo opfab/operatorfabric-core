@@ -151,7 +151,7 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
     private reopenCardDetailOnceEditionIsFinished() {
         if (
             NavigationService.getCurrentPageType() !== PageType.CALENDAR &&
-            NavigationService.getCurrentPageType() !== PageType.MONITORING &&
+            NavigationService.getCurrentPageType() !== PageType.PROCESSMONITORING &&
             NavigationService.getCurrentPageType() !== PageType.DASHBOARD &&
             NavigationService.getCurrentPageType() !== PageType.CUSTOMSCREEN
         ) {

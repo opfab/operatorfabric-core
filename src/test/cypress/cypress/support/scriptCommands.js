@@ -104,10 +104,6 @@ export class ScriptCommands extends OpfabCommands {
         cy.exec('cd ../../.. && ./bin/waitForOpfabToStart.sh ');
     };
 
-    loadMonitoringConfig = function (config) {
-        cy.exec('cd .. && ./resources/monitoringConfig/loadMonitoringConfig.sh ' + config);
-    };
-
     sendMessageToSubscriptions = function (message) {
         cy.exec('cd .. && ./resources/sendMessageToSubscriptions.sh ' + message);
     };

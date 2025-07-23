@@ -59,7 +59,6 @@ describe('Test translations', function() {
     function checkMenuTitles(
         feedTitle,
         archivesTitle,
-        monitoringTitle,
         loggingTitle,
         singleMenuTitle,
         secondMenuTitle,
@@ -67,7 +66,6 @@ describe('Test translations', function() {
     ) {
         cy.get('#opfab-navbar-menu-feed').should('have.text', feedTitle);
         cy.get('#opfab-navbar-menu-archives').should('have.text', archivesTitle);
-        cy.get('#opfab-navbar-menu-monitoring').should('have.text', monitoringTitle);
         cy.get('#opfab-navbar-menu-logging').should('have.text', loggingTitle);
         cy.get('#opfab-navbar-menu-uid_test_0').should('have.text', singleMenuTitle);
         cy.get('#opfab-navbar-menu-menu2').should('have.text', secondMenuTitle);
@@ -154,33 +152,6 @@ describe('Test translations', function() {
         cy.get('#opfab-archives-logging-btn-reset').should('have.text', resetText);
     }
 
-    function checkMonitoringFilterTexts(
-        serviceLabel,
-        servicePlaceholder,
-        processLabel,
-        processPlaceholder,
-        processStatusLabel,
-        processStatusPlaceholder,
-        searchText,
-        resetText
-    ) {
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-
-        checkLabel('#opfab-processGroup', serviceLabel);
-        checkPlaceholderText('#opfab-processGroup', servicePlaceholder);
-        checkLabel('#opfab-process', processLabel);
-        checkPlaceholderText('#opfab-process', processPlaceholder);
-        checkLabel('#opfab-typeOfState', processStatusLabel);
-        checkPlaceholderText('#opfab-typeOfState', processStatusPlaceholder);
-
-        cy.contains('#opfab-monitoring-btn-search', searchText);
-        cy.contains('#opfab-monitoring-btn-reset', resetText);
-    }
-
-    function checkMonitoringResultTexts(cardsWithResponseText) {
-        cy.get('#opfab-show-cards-with-response').should('have.text', cardsWithResponseText);
-    }
-
     function checkBusinessPeriodLinks(realTimeText, dayText, sevenDaysText, weekText, monthText, yearText) {
         cy.get('#opfab-timeline-link-period-RT').should('have.text', ' ' + realTimeText + ' ');
         cy.get('#opfab-timeline-link-period-J').should('have.text', ' ' + dayText + ' ');
@@ -253,7 +224,6 @@ describe('Test translations', function() {
         checkMenuTitles(
             'Card Feed',
             'Archives',
-            'Monitoring',
             'Logging',
             'Single menu entry',
             'Second menu',
@@ -264,7 +234,6 @@ describe('Test translations', function() {
         checkMenuTitles(
             'Flux de cartes',
             'Archives',
-            'Monitoring',
             'Logging',
             'Unique élément',
             'Deuxième menu',
@@ -275,7 +244,6 @@ describe('Test translations', function() {
         checkMenuTitles(
             'Kaart Feed',
             'Archieven',
-            'Bewaking',
             'Logboek',
             'Enkel menu-item',
             'Tweede menu',
@@ -390,49 +358,6 @@ describe('Test translations', function() {
         );
     });
 
-    it('Check Monitoring screen translations', function() {
-        opfab.loginWithUser('operator1_fr');
-
-        changeLanguage(ENGLISH);
-        checkMonitoringFilterTexts(
-            'SERVICE',
-            'Select a Service',
-            'PROCESS',
-            'Select a Process',
-            'PROCESS STATUS',
-            'Select a Process status',
-            'SEARCH',
-            'RESET'
-        );
-        checkMonitoringResultTexts('Cards with response from my entity ');
-
-        changeLanguage(FRENCH);
-        checkMonitoringFilterTexts(
-            'SERVICE',
-            'Sélectionner un Service',
-            'PROCESSUS',
-            'Sélectionner un Processus',
-            'ÉTAT DU PROCESSUS',
-            'Sélectionner un État de processus',
-            'RECHERCHER',
-            'RÉINITIALISER'
-        );
-        checkMonitoringResultTexts('Cartes avec réponse de mon entité ');
-
-        changeLanguage(DUTCH);
-        checkMonitoringFilterTexts(
-            'DIENST',
-            'Selecteer een Dienst',
-            'PROCES',
-            'Selecteer een Proces',
-            'PROCES STATUS',
-            'Selecteer een Proces status',
-            'ZOEK',
-            'HERSTEL'
-        );
-        checkMonitoringResultTexts('Kaarten met reactie van mijn entiteit ');
-    });
-
     it('Check Business period translations', function() {
         const currentDate = new Date(2020, 11, 31, 23, 46); // Date must be in the past to avoid session close with token expiration
         opfab.loginWithClock(currentDate);
@@ -444,20 +369,12 @@ describe('Test translations', function() {
         cy.get('#opfab-timeline-title').should('have.text', ' 31 December 2020 ');
         checkBusinessPeriodLinks('Real Time', 'Day', '7 Days', 'Week', 'Month', 'Year');
 
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Business period : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
-        cy.tick(1000);
-
         changeLanguage(FRENCH, true);
         cy.tick(1000);
         cy.get('#opfab-navbar-menu-feed').click();
         cy.tick(5000);
         cy.get('#opfab-timeline-title').should('have.text', ' 31 décembre 2020 ');
         checkBusinessPeriodLinks('Temps réel', 'Jour', '7 Jours', 'Semaine', 'Mois', 'Année');
-
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Période métier : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
-        cy.tick(1000);
 
         changeLanguage(DUTCH, true);
         cy.tick(1000);
@@ -466,8 +383,6 @@ describe('Test translations', function() {
         cy.get('#opfab-timeline-title').should('have.text', ' 31 december 2020 ');
         checkBusinessPeriodLinks('Realtime', 'Dag', '7 Dagen', 'Week', 'Maand', 'Jaar');
 
-        cy.get('#opfab-navbar-menu-monitoring').should('exist').click();
-        cy.get('.opfab-business-period').should('have.text', 'Bedrijfsperiode : 21:30 31/12/2020 -- 09:00 01/01/2021 ');
     });
 
     it('Check Feed filter translations', function() {

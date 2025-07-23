@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,6 @@ import java.nio.file.Paths;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.opfab.utilities.PathUtils.copy;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -260,17 +259,6 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$.realTimeScreens", hasSize(0)));
-        }
-
-        @Test
-        void notAllowMonitoringToBePosted() throws Exception {
-
-                mockMvc.perform(post("/monitoring").contentType(MediaType.APPLICATION_JSON)
-                                .content("{}")).andExpect(status().isForbidden());
-
-                mockMvc.perform(get("/monitoring")).andExpect(status().isOk())
-                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                                .andExpect(jsonPath("$.export.fields[0].columnName", is(notNullValue())));
         }
 
         @Nested

@@ -10,9 +10,6 @@
             "opfabCoreMenuId": "dashboard"
         },
         {
-            "opfabCoreMenuId": "monitoring"
-        },
-        {
             "opfabCoreMenuId": "processmonitoring",
             "showOnlyForGroups": ["Manager"]
         },

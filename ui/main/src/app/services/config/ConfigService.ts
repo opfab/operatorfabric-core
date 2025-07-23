@@ -13,7 +13,6 @@ import {Observable, of, Subject} from 'rxjs';
 import {Locale} from '@ofServices/config/model/Locale';
 import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
 import {ConfigServer} from './server/ConfigServer';
-import {MonitoringConfig} from './model/MonitoringConfig';
 import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
@@ -21,7 +20,6 @@ import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
 export class ConfigService {
     private static configServer: ConfigServer;
     private static config;
-    private static monitoringConfig: MonitoringConfig;
     private static processMonitoringConfig: ProcessMonitoringConfig;
 
     private static menuConfig: UIMenuFile;
@@ -94,21 +92,6 @@ export class ConfigService {
             .pipe(map((serverResponse) => serverResponse.data?.locales));
     }
 
-    public static loadMonitoringConfig(): Observable<MonitoringConfig> {
-        return ConfigService.configServer.getMonitoringConfiguration().pipe(
-            map((serverResponse) => {
-                const monitoringConfig = serverResponse.data;
-                if (monitoringConfig) {
-                    ConfigService.monitoringConfig = monitoringConfig;
-                    LoggerService.info('Monitoring config loaded');
-                } else LoggerService.info('No monitoring config to load');
-                if (serverResponse.status !== ServerResponseStatus.OK)
-                    LoggerService.error('An error occurred when loading monitoringConfig');
-                return monitoringConfig;
-            })
-        );
-    }
-
     public static loadProcessMonitoringConfig(): Observable<ProcessMonitoringConfig> {
         return ConfigService.configServer.getProcessMonitoringConfiguration().pipe(
             map((serverResponse) => {
@@ -122,10 +105,6 @@ export class ConfigService {
                 return processMonitoringConfig;
             })
         );
-    }
-
-    public static getMonitoringConfig(): MonitoringConfig {
-        return ConfigService.monitoringConfig;
     }
 
     public static getProcessMonitoringConfig(): ProcessMonitoringConfig {

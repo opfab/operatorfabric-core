@@ -61,7 +61,7 @@ describe('Process Monitoring view ', () => {
                 processNames[0],
                 undefined,
                 statesForProcess1,
-                new UiVisibility(true, true, true, true)
+                new UiVisibility(true, true, true)
             ),
             new Process(
                 'process2',
@@ -69,7 +69,7 @@ describe('Process Monitoring view ', () => {
                 processNames[1],
                 undefined,
                 statesForProcess2,
-                new UiVisibility(true, true, true, true)
+                new UiVisibility(true, true, true)
             ),
             new Process(
                 'process3',
@@ -77,7 +77,7 @@ describe('Process Monitoring view ', () => {
                 'process name 3',
                 undefined,
                 statesForProcess3,
-                new UiVisibility(true, false, true, true)
+                new UiVisibility(false, true, true)
             ),
 
             new Process('process4', 'v2', 'process name 4', undefined, undefined),
@@ -87,7 +87,7 @@ describe('Process Monitoring view ', () => {
                 '',
                 undefined,
                 statesForProcessWithNoName,
-                new UiVisibility(true, true, true, true)
+                new UiVisibility(true, true, true)
             )
         ];
 

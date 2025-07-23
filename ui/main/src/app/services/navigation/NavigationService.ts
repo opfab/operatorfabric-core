@@ -20,7 +20,7 @@ export enum PageType {
     SETTING,
     ABOUT,
     CALENDAR,
-    MONITORING,
+    PROCESSMONITORING,
     USERCARD,
     DASHBOARD,
     CUSTOMSCREEN
@@ -36,7 +36,7 @@ export class NavigationService {
         ['setting', PageType.SETTING],
         ['about', PageType.ABOUT],
         ['calendar', PageType.CALENDAR],
-        ['monitoring', PageType.MONITORING],
+        ['processmonitoring', PageType.PROCESSMONITORING],
         ['usercard', PageType.USERCARD],
         ['dashboard', PageType.DASHBOARD],
         ['customscreen', PageType.CUSTOMSCREEN]

@@ -711,7 +711,7 @@ public class ProcessesService implements ResourceLoaderAware {
                 rootPath.toString() + "/processmonitoring.json");
 
         processMonitoringCache = processMonitoring;
-        this.eventBus.sendEvent(PROCESS_EVENT_KEY, "MONITORING_CONFIG_CHANGE");
+        this.eventBus.sendEvent(PROCESS_EVENT_KEY, "PROCESSMONITORING_CONFIG_CHANGE");
     }
 
     public ProcessMonitoring getProcessMonitoring() {

@@ -257,7 +257,6 @@ export class ApplicationLoader {
             ProcessesService.loadAllProcessesWithLatestVersion(),
             ProcessesService.loadAllProcessesWithAllVersions(),
             ProcessesService.loadProcessGroups(),
-            ConfigService.loadMonitoringConfig(),
             ConfigService.loadProcessMonitoringConfig()
         ];
         return firstValueFrom(Utilities.subscribeAndWaitForAllObservablesToEmitAnEvent(requestsToLaunch$));

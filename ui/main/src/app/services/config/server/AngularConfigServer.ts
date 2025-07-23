@@ -11,7 +11,6 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
-import {MonitoringConfig} from '../model/MonitoringConfig';
 import {RealTimeScreens} from '../model/RealTimeScreensConfig';
 import {ServerResponse} from 'app/server/ServerResponse';
 import {map, Observable} from 'rxjs';
@@ -26,7 +25,6 @@ import {ProcessMonitoringConfig} from '../model/ProcessMonitoringConfig';
 export class AngularConfigServer extends AngularServer implements ConfigServer {
     private readonly configUrl: string;
     private readonly menuUrl: string;
-    private readonly monitoringConfigUrl: string;
     private readonly processMonitoringConfigUrl: string;
     private readonly localUrl: string;
     private readonly realTimeScreensUrl: string;
@@ -35,7 +33,6 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
         super();
         this.configUrl = `${environment.url}config/web-ui.json`;
         this.menuUrl = `${environment.url}config/ui-menu.json`;
-        this.monitoringConfigUrl = `${environment.url}businessconfig/monitoring`;
         this.processMonitoringConfigUrl = `${environment.url}businessconfig/processmonitoring`;
         this.localUrl = `${environment.url}assets/i18n`;
         this.realTimeScreensUrl = `${environment.url}businessconfig/realtimescreens`;
@@ -58,10 +55,6 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
 
     getMenuConfiguration(): Observable<ServerResponse<any>> {
         return this.processHttpResponse(this.httpClient.get<UIMenuFile>(this.menuUrl));
-    }
-
-    getMonitoringConfiguration(): Observable<ServerResponse<MonitoringConfig>> {
-        return this.processHttpResponse(this.httpClient.get<MonitoringConfig>(this.monitoringConfigUrl));
     }
 
     getProcessMonitoringConfiguration(): Observable<ServerResponse<ProcessMonitoringConfig>> {

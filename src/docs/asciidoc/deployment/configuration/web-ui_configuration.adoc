@@ -134,7 +134,7 @@ a|card time display mode in the feed. Values :
 - PUBLICATION: displays card with publication date;
 - LTTD: displays card with lttd date;
 - NONE: nothing displayed.
-|feed.card.titleUpperCase|true|no| If set to true, the card titles are in UPPERCASE. (Option applies to the 'Card Feed', 'Archives' and 'Monitoring')
+|feed.card.titleUpperCase|true|no| If set to true, the card titles are in UPPERCASE. (Option applies to the 'Card Feed' and 'Archives'.)
 |feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowledgment filtering option in feed page, possible values are : "notack", "ack", "all".
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
 |feed.enableGroupedCards|false|no|_(Experimental feature)_: If true cards with the same tags are grouped together. Clicking on the grouped card will show the other cards with the same tags in the feed.
