@@ -47,6 +47,7 @@ export default class ConfigService {
                 this.config.customConfig = defaultConfig.customConfig;
                 this.config.showCardUrls = defaultConfig.showCardUrls;
                 this.config.forceEmailsInPlainText = defaultConfig.forceEmailsInPlainText;
+                this.config.showCardTitleInBody = defaultConfig.showCardTitleInBody;
                 this.save();
             }
         } catch (err) {

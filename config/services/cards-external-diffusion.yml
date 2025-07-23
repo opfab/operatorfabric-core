@@ -15,5 +15,6 @@ operatorfabric:
       opfabUrlInMailContent: http://localhost:2002
       showCardUrls: true
       forceEmailsInPlainText: false
+      showCardTitleInBody: true
 #  logConfig:
 #    logLevel: debug

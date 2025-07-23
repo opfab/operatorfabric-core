@@ -200,7 +200,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             this.bodyPrefix +
             ' ' +
             (this.showCardUrls ? urlOfCard : '') +
-            this.escapeHtml(card.titleTranslated) +
+            (this.showCardTitleInBody ? this.escapeHtml(card.titleTranslated) : '') +
             (this.showCardUrls ? '</a>' : '');
         try {
             const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(

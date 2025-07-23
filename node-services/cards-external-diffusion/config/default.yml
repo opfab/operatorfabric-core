@@ -57,6 +57,7 @@ operatorfabric:
       defaultTimeZone: 'Europe/Paris'
       showCardUrls: true
       forceEmailsInPlainText: false
+      showCardTitleInBody: true
       customConfig: 
         customParam1 : 'myValue1'
         customParam2 : 'myValue2'
