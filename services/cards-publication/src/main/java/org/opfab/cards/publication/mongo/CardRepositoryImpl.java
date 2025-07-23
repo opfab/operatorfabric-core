@@ -78,7 +78,10 @@ public class CardRepositoryImpl implements CardRepository {
                 where("process").is(process),
                 where("processInstanceId").is(processInstanceId),
                 where("deletionDate").isNull()));
-        template.updateFirst(query, Update.update("deletionDate", deletionDate),
+        // previous version of the code used updateFirst 
+        // but in certain cases it happened that multiple version of the same card do not have deletionDate
+        // see https://github.com/opfab/operatorfabric-core/issues/8664
+        template.updateMulti(query, Update.update("deletionDate", deletionDate),
                 ArchivedCard.class);
     }
 
