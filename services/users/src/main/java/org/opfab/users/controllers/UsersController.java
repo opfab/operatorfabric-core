@@ -12,6 +12,7 @@ package org.opfab.users.controllers;
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
@@ -61,6 +62,8 @@ public class UsersController implements UserExtractor {
     private final NotificationService notificationService;
     private final UserActionLogService userActionLogService;
 
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
+
     @Autowired
     public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository,
                            GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
@@ -105,16 +108,24 @@ public class UsersController implements UserExtractor {
 
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-    public User createUser(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User user)
+    public User createUser(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User userToCreate)
             throws ApiErrorException {
 
-        OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
+        User user = this.extractUserFromJwtToken(request);
+
+        OperationResult<EntityCreationReport<User>> result = usersService.createUser(userToCreate);
         if (result.isSuccess()) {
+            String comment = "Update user ";
+
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location",
                         request.getContextPath() + "/users/" + result.getResult().getEntity().getLogin());
                 response.setStatus(201);
+                comment = "Create user ";
             }
+
+            logUserAction(user.getLogin(), user.getEntities(), comment + userToCreate.getLogin());
+
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
@@ -137,12 +148,16 @@ public class UsersController implements UserExtractor {
     public Void deleteUser(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("login") String login)
             throws ApiErrorException {
-        OperationResult<String> result = usersService.deleteUser(login);
-        if (result.isSuccess())
-            return null;
-        else
-            throw createExceptionFromOperationResult(result);
+        User user = this.extractUserFromJwtToken(request);
 
+        OperationResult<String> result = usersService.deleteUser(login);
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(), "Delete user " + login);
+            return null;
+        }
+        else {
+            throw createExceptionFromOperationResult(result);
+        }
     }
 
     @GetMapping(value = "/{login}/perimeters", produces = { "application/json" })
@@ -210,6 +225,12 @@ public class UsersController implements UserExtractor {
     private ApiErrorException buildApiException(HttpStatus httpStatus, String errorMessage) {
         return new ApiErrorException(
                 new ApiError(httpStatus, errorMessage));
+    }
+
+    private void logUserAction(String login, List<String> entities, String comment) {
+        if (userActionLogActivated) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.USER, entities, null, comment);
+        }
     }
 
 }

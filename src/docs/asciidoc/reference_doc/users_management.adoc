@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -200,6 +200,7 @@ OperatorFabric allows you to view most relevant user actions:
 - SEND_CARD
 - SEND_RESPONSE
 - NOTIFICATION_CONFIG
+- USER
 
 For each action the following information are available: 
 
