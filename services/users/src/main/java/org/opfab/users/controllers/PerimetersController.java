@@ -11,6 +11,11 @@ package org.opfab.users.controllers;
 
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
+import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -18,6 +23,7 @@ import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.PerimetersService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,17 +43,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/perimeters")
-public class PerimetersController {
+public class PerimetersController implements UserExtractor {
 
     private static final String NO_MATCHING_PERIMETER_ID_MSG = "Payload Perimeter id does not match URL Perimeter id";
 
     private PerimetersService perimetersService;
+    private final UserActionLogService userActionLogService;
+
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
-            UserRepository userRepository,
-            EventBus eventBus) {
+                                UserRepository userRepository, EventBus eventBus,
+                                UserActionLogRepository userActionLogRepository,
+                                LastUserActionRepository lastUserActionRepository) {
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
         perimetersService = new PerimetersService(perimeterRepository, groupRepository, notificationService);
+        this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
 
     @GetMapping(produces = { "application/json" })
@@ -83,6 +94,8 @@ public class PerimetersController {
             @Valid @RequestBody Perimeter perimeter)
             throws ApiErrorException {
 
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
         if (result.isSuccess()) {
             if (!result.getResult().isUpdate()) {
@@ -90,6 +103,9 @@ public class PerimetersController {
                 response.setStatus(201);
             } else
                 response.setStatus(200);
+
+            logUserAction(user.getLogin(), user.getEntities(), "Create perimeter " + perimeter.getId());
+
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
@@ -101,6 +117,8 @@ public class PerimetersController {
             @PathVariable("id") String perimeterId,
             @Valid @RequestBody Perimeter perimeter) throws ApiErrorException {
 
+        User user = this.extractUserFromJwtToken(request);
+
         // id from perimeter body parameter should match id path parameter
         if (!perimeter.getId().equals(perimeterId)) {
             throw new ApiErrorException(
@@ -108,11 +126,17 @@ public class PerimetersController {
         }
         OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
         if (result.isSuccess()) {
+            String comment = "Update perimeter ";
+
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location", request.getContextPath() + "/perimeters/" + perimeter.getId());
                 response.setStatus(201);
+                comment = "Create perimeter ";
             } else
                 response.setStatus(200);
+
+            logUserAction(user.getLogin(), user.getEntities(), comment + perimeter.getId());
+
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
@@ -123,11 +147,15 @@ public class PerimetersController {
             @PathVariable("id") String perimeterId)
             throws ApiErrorException {
 
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = perimetersService.deletePerimeter(perimeterId);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(), "Delete perimeter " + perimeterId);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @PatchMapping(value = "/{id}/groups", produces = { "application/json" }, consumes = { "application/json" })
@@ -143,15 +171,19 @@ public class PerimetersController {
     }
 
     @PutMapping(value = "/{id}/groups", produces = { "application/json" }, consumes = { "application/json" })
-
     public Void updatePerimeterGroups(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("id") String perimeterId,
             @Valid @RequestBody List<String> groups) throws ApiErrorException {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = perimetersService.updatePerimeterGroups(perimeterId, groups);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(),
+                    "Update perimeter groups for perimeter " + perimeterId + " with groups " + groups);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @DeleteMapping(value = "/{id}/groups", produces = { "application/json" })
@@ -175,7 +207,12 @@ public class PerimetersController {
         if (!operationResult.isSuccess())
             throw createExceptionFromOperationResult(operationResult);
         return null;
+    }
 
+    private void logUserAction(String login, List<String> entities, String comment) {
+        if (userActionLogActivated) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.USER, entities, null, comment);
+        }
     }
 
 }

@@ -11,14 +11,18 @@ package org.opfab.users.controllers;
 
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.EntityCreationReport;
-import org.opfab.users.model.Entity;
-import org.opfab.users.model.OperationResult;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
+import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.EntitiesService;
 import org.opfab.users.services.NotificationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,16 +42,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/entities")
-public class EntitiesController {
+public class EntitiesController implements UserExtractor {
 
     private static final String NO_MATCHING_ENTITY_ID_MSG = "Payload Entity id does not match URL Entity id";
 
     private EntitiesService entitiesService;
+    private final UserActionLogService userActionLogService;
+
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public EntitiesController(EntityRepository entityRepository, UserRepository userRepository,
-            EventBus eventBus) {
+                              EventBus eventBus, UserActionLogRepository userActionLogRepository,
+                              LastUserActionRepository lastUserActionRepository) {
         this.entitiesService = new EntitiesService(entityRepository, userRepository,
                 new NotificationService(userRepository, eventBus));
+        this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
 
     @GetMapping(produces = { "application/json" })
@@ -80,12 +89,21 @@ public class EntitiesController {
             @Valid @RequestBody Entity entity)
             throws ApiErrorException {
 
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<EntityCreationReport<Entity>> result = entitiesService.createEntity(entity);
         if (result.isSuccess()) {
+            String comment = "Update entity ";
+
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location", request.getContextPath() + "/entities/" + entity.getId());
                 response.setStatus(201);
+                comment = "Create entity ";
             }
+
+            logUserAction(user.getLogin(), user.getEntities(),
+                    comment + (entity.getName().isEmpty() ? entity.getId() : entity.getName()));
+
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
@@ -108,11 +126,15 @@ public class EntitiesController {
 
     @DeleteMapping(value = "/{id}", produces = { "application/json" })
     public Void deleteEntity(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id) {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = entitiesService.deleteEntity(id);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(), "Delete entity " + id);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @PatchMapping(value = "/{id}/users", produces = { "application/json" }, consumes = {
@@ -130,11 +152,16 @@ public class EntitiesController {
             "application/json" })
     public Void updateEntityUsers(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("id") String id, @Valid @RequestBody List<String> users) {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = entitiesService.updateEntityUsers(id, users);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(),
+                    "Update entity users for entity " + id + " with users " + users);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @DeleteMapping(value = "/{id}/users", produces = { "application/json" })
@@ -155,5 +182,11 @@ public class EntitiesController {
         if (!operationResult.isSuccess())
             throw createExceptionFromOperationResult(operationResult);
         return null;
+    }
+
+    private void logUserAction(String login, List<String> entities, String comment) {
+        if (userActionLogActivated) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.USER, entities, null, comment);
+        }
     }
 }

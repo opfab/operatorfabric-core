@@ -11,6 +11,11 @@ package org.opfab.users.controllers;
 
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
+import org.opfab.users.configuration.oauth2.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.GroupRepository;
@@ -18,6 +23,7 @@ import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.GroupsService;
 import org.opfab.users.services.NotificationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,17 +43,23 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/groups")
-public class GroupsController {
+public class GroupsController implements UserExtractor {
 
     private static final String NO_MATCHING_GROUP_ID_MSG = "Payload Group id does not match URL Group id";
 
     private GroupsService groupsService;
+    private final UserActionLogService userActionLogService;
+
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public GroupsController(GroupRepository groupRepository, UserRepository userRepository,
-            PerimeterRepository perimeterRepository, EventBus eventBus) {
+                            PerimeterRepository perimeterRepository, EventBus eventBus,
+                            UserActionLogRepository userActionLogRepository,
+                            LastUserActionRepository lastUserActionRepository) {
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
         this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository,
                 notificationService);
+        this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
 
     @GetMapping(produces = { "application/json" })
@@ -79,12 +91,22 @@ public class GroupsController {
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
     public Group createGroup(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody Group group)
             throws ApiErrorException {
+
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<EntityCreationReport<Group>> result = groupsService.createGroup(group);
         if (result.isSuccess()) {
+            String comment = "Update group ";
+
             if (!result.getResult().isUpdate()) {
                 response.addHeader("Location", request.getContextPath() + "/groups/" + group.getId());
                 response.setStatus(201);
+                comment = "Create group ";
             }
+
+            logUserAction(user.getLogin(), user.getEntities(),
+                    comment + (group.getName().isEmpty() ? group.getId() : group.getName()));
+
             return result.getResult().getEntity();
         } else
             throw createExceptionFromOperationResult(result);
@@ -106,11 +128,15 @@ public class GroupsController {
     @DeleteMapping(value = "/{id}", produces = { "application/json" })
     public Void deleteGroup(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") String id)
             throws ApiErrorException {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = groupsService.deleteGroup(id);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(), "Delete group " + id);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @PatchMapping(value = "/{id}/users", produces = { "application/json" }, consumes = { "application/json" })
@@ -144,11 +170,16 @@ public class GroupsController {
     @PutMapping(value = "/{id}/users", produces = { "application/json" }, consumes = { "application/json" })
     public Void updateGroupUsers(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("id") String id, @Valid @RequestBody List<String> users) throws ApiErrorException {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = groupsService.updateGroupUsers(id, users);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(),
+                     "Update group users for group " + id + " with users " + users );
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @GetMapping(value = "/{id}/perimeters", produces = { "application/json" })
@@ -164,11 +195,16 @@ public class GroupsController {
     @PutMapping(value = "/{id}/perimeters", produces = { "application/json" }, consumes = { "application/json" })
     public Void updateGroupPerimeters(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("id") String id, @Valid @RequestBody List<String> perimeters) throws ApiErrorException {
+        User user = this.extractUserFromJwtToken(request);
+
         OperationResult<String> result = groupsService.updateGroupPerimeters(id, perimeters);
-        if (result.isSuccess())
+        if (result.isSuccess()) {
+            logUserAction(user.getLogin(), user.getEntities(),
+                    "Update group perimeters for group " + id + " with perimeters " + perimeters);
             return null;
-        else
+        } else {
             throw createExceptionFromOperationResult(result);
+        }
     }
 
     @PatchMapping(value = "/{id}/perimeters", produces = { "application/json" }, consumes = { "application/json" })
@@ -179,5 +215,11 @@ public class GroupsController {
             return null;
         else
             throw createExceptionFromOperationResult(result);
+    }
+
+    private void logUserAction(String login, List<String> entities, String comment) {
+        if (userActionLogActivated) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.USER, entities, null, comment);
+        }
     }
 }

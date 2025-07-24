@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ import {ScriptCommands} from '../support/scriptCommands';
 import {UserCardCommands} from '../support/userCardCommands';
 import {CardCommands} from '../support/cardCommands';
 import {FeedCommands} from '../support/feedCommands';
+import {AgGridCommands} from '../support/agGridCommands';
 
 describe('User action logs page', () => {
     const opfab = new OpfabGeneralCommands();
@@ -19,6 +20,7 @@ describe('User action logs page', () => {
     const usercard = new UserCardCommands();
     const card = new CardCommands();
     const feed = new FeedCommands();
+    const agGrid = new AgGridCommands();
 
     before('Set up configuration', function () {
         script.loadTestConf();
@@ -42,25 +44,29 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(13);
+        checkNumberOfResultsIs(18);
         checkNumberOfLinesInTableIs(10);
         checkTableLineContains(0, 'OPEN_SUBSCRIPTION', 'admin');
-        checkTableLineContains(1, 'CLOSE_SUBSCRIPTION', 'operator2_fr');
-        checkTableLineContains(2, 'NOTIFICATION_CONFIG', 'operator2_fr');
-        checkTableLineContains(3, 'UNACK_CARD', 'operator2_fr');
-        checkTableLineContains(4, 'SEND_RESPONSE', 'operator2_fr');
-        checkTableLineContains(5, 'READ_CARD', 'operator2_fr');
-        checkTableLineContains(6, 'ACK_CARD', 'operator2_fr');
-        checkTableLineContains(7, 'READ_CARD', 'operator2_fr');
-        checkTableLineContains(8, 'OPEN_SUBSCRIPTION', 'operator2_fr');
-        checkTableLineContains(9, 'CLOSE_SUBSCRIPTION', 'operator1_fr');
-
+        checkTableLineContains(1, 'CLOSE_SUBSCRIPTION', 'admin');
+        checkTableLineContains(2, 'USER', 'admin', 'Delete user atestuser');
+        checkTableLineContains(3, 'USER', 'admin', 'Update user atestuser');
+        checkTableLineContains(4, 'USER', 'admin', 'Create user atestuser');
+        checkTableLineContains(5, 'OPEN_SUBSCRIPTION', 'admin');
+        checkTableLineContains(6, 'CLOSE_SUBSCRIPTION', 'operator2_fr');
+        checkTableLineContains(7, 'NOTIFICATION_CONFIG', 'operator2_fr');
+        checkTableLineContains(8, 'UNACK_CARD', 'operator2_fr');
+        checkTableLineContains(9, 'SEND_RESPONSE', 'operator2_fr');
 
         cy.get('ngb-pagination').find('.page-link').eq(2).click();
-        checkNumberOfLinesInTableIs(3);
-        checkTableLineContains(0, 'SEND_CARD', 'operator1_fr');
-        checkTableLineContains(1, 'SEND_CARD', 'operator1_fr');
-        checkTableLineContains(2, 'OPEN_SUBSCRIPTION', 'operator1_fr');
+        checkNumberOfLinesInTableIs(8);
+        checkTableLineContains(0, 'READ_CARD', 'operator2_fr');
+        checkTableLineContains(1, 'ACK_CARD', 'operator2_fr');
+        checkTableLineContains(2, 'READ_CARD', 'operator2_fr');
+        checkTableLineContains(3, 'OPEN_SUBSCRIPTION', 'operator2_fr');
+        checkTableLineContains(4, 'CLOSE_SUBSCRIPTION', 'operator1_fr');
+        checkTableLineContains(5, 'SEND_CARD', 'operator1_fr');
+        checkTableLineContains(6, 'SEND_CARD', 'operator1_fr');
+        checkTableLineContains(7, 'OPEN_SUBSCRIPTION', 'operator1_fr');
 
         selectUsername(['operator1_fr', 'operator2_fr']);
         selectAction(['SEND_CARD', 'READ_CARD']);
@@ -80,7 +86,7 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(15);
+        checkNumberOfResultsIs(20);
         checkNumberOfLinesInTableIs(10);
 
         clickOnExportButton();
@@ -94,23 +100,30 @@ describe('User action logs page', () => {
             expect(files[0]).to.match(/^UserActionLogs_export_\d*\.xlsx/);
             // check file content
             cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
-                expect(rows.length).to.equal(15);
+                expect(rows.length).to.equal(20);
 
                 checkExportLineContains(rows[0], 'OPEN_SUBSCRIPTION', 'admin');
                 checkExportLineContains(rows[1], 'CLOSE_SUBSCRIPTION', 'admin');
                 checkExportLineContains(rows[2], 'OPEN_SUBSCRIPTION', 'admin');
-                checkExportLineContains(rows[3], 'CLOSE_SUBSCRIPTION', 'operator2_fr');
-                checkExportLineContains(rows[4], 'NOTIFICATION_CONFIG', 'operator2_fr');
-                checkExportLineContains(rows[5], 'UNACK_CARD', 'operator2_fr');
-                checkExportLineContains(rows[6], 'SEND_RESPONSE', 'operator2_fr');
-                checkExportLineContains(rows[7], 'READ_CARD', 'operator2_fr');
-                checkExportLineContains(rows[8], 'ACK_CARD', 'operator2_fr');
-                checkExportLineContains(rows[9], 'READ_CARD', 'operator2_fr');
-                checkExportLineContains(rows[10], 'OPEN_SUBSCRIPTION', 'operator2_fr');
-                checkExportLineContains(rows[11], 'CLOSE_SUBSCRIPTION', 'operator1_fr');
-                checkExportLineContains(rows[12], 'SEND_CARD', 'operator1_fr');
-                checkExportLineContains(rows[13], 'SEND_CARD', 'operator1_fr');
-                checkExportLineContains(rows[14], 'OPEN_SUBSCRIPTION', 'operator1_fr');
+                checkExportLineContains(rows[3], 'CLOSE_SUBSCRIPTION', 'admin');
+
+                checkExportLineContains(rows[4], 'USER', 'admin', 'Delete user atestuser');
+                checkExportLineContains(rows[5], 'USER', 'admin', 'Update user atestuser');
+                checkExportLineContains(rows[6], 'USER', 'admin', 'Create user atestuser');
+                checkExportLineContains(rows[7], 'OPEN_SUBSCRIPTION', 'admin');
+                checkExportLineContains(rows[8], 'CLOSE_SUBSCRIPTION', 'operator2_fr');
+
+                checkExportLineContains(rows[9], 'NOTIFICATION_CONFIG', 'operator2_fr');
+                checkExportLineContains(rows[10], 'UNACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[11], 'SEND_RESPONSE', 'operator2_fr');
+                checkExportLineContains(rows[12], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[13], 'ACK_CARD', 'operator2_fr');
+                checkExportLineContains(rows[14], 'READ_CARD', 'operator2_fr');
+                checkExportLineContains(rows[15], 'OPEN_SUBSCRIPTION', 'operator2_fr');
+                checkExportLineContains(rows[16], 'CLOSE_SUBSCRIPTION', 'operator1_fr');
+                checkExportLineContains(rows[17], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[18], 'SEND_CARD', 'operator1_fr');
+                checkExportLineContains(rows[19], 'OPEN_SUBSCRIPTION', 'operator1_fr');
             });
         });
     });
@@ -119,13 +132,14 @@ describe('User action logs page', () => {
         opfab.loginWithUser('admin');
         opfab.navigateToUserActionLogs();
         clickOnSearchButton();
-        checkNumberOfResultsIs(17);
+        checkNumberOfResultsIs(22);
         clickOnLineNumber(0);
         cy.get('of-simplified-card-view').should('not.exist');
-        clickOnLineNumber(7);
+        cy.get('ngb-pagination').find('.page-link').eq(2).click();
+        clickOnLineNumber(2);
         cy.get('of-simplified-card-view').should('exist');
         closeCardDetail();
-        clickOnLineNumber(8);
+        clickOnLineNumber(3);
         cy.get('of-simplified-card-view').should('exist');
 
         // Check the response has been integrated in the template
@@ -157,6 +171,65 @@ describe('User action logs page', () => {
         feed.openFirstCard();
         card.unacknowledge();
         changeNotificationConfiguration();
+        opfab.logout();
+        opfab.loginWithUser('admin');
+        addUser();
+        updateUser();
+        deleteUser();
+    }
+
+    function addUser() {
+        opfab.navigateToAdministration();
+        cy.get('#add-item').click();
+        cy.get('#opfab-login').type('atestuser');
+        cy.get('#opfab-firstName').type('name');
+        cy.get('#opfab-lastName').type('surname');
+        cy.get('#opfab-comment').type('comment');
+        cy.get('#opfab-groups').click();
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-groups').click();
+        cy.get('#opfab-entities').click();
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
+        cy.get('#opfab-entities').click();
+        cy.get('#opfab-admin-user-btn-add').click();
+    }
+
+    function updateUser() {
+        // Create an alias to shorten the code
+        cy.get('ag-grid-angular').find('.ag-header-container').find('.ag-header-row-column').as('users-table-headers');
+
+        // Sorting login column by ascending order
+        cy.get('@users-table-headers').find('.ag-header-cell').eq(0).click();
+        cy.wait(500);
+
+        // Edit previously created user
+        agGrid.clickCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
+
+        cy.get('of-edit-user-modal').should('exist');
+        cy.get('.modal-title').should('contain.text', 'atestuser');
+
+        cy.get('#opfab-firstName').type(' updated');
+
+        cy.get('#opfab-groups').click();
+        // Deselect old group
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new group
+        cy.get('#opfab-groups').find('.vscomp-option-text').eq(3).click({force: true});
+        cy.get('#opfab-groups').click();
+
+        cy.get('#opfab-entities').click();
+        // Deselect old entity
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
+        // Select new entity
+        cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({force: true});
+        cy.get('#opfab-entities').click();
+
+        cy.get('#opfab-admin-user-btn-save').click();
+    }
+
+    function deleteUser() {
+        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        cy.get('#opfab-btn-ok').click();
     }
 
     function sendQuestionCard() {
@@ -200,14 +273,20 @@ describe('User action logs page', () => {
         cy.get('.opfab-useractionlogs-table-line').should('have.length', numberOfLines);
     }
 
-    function checkTableLineContains(index, action, user) {
+    function checkTableLineContains(index, action, user, comment = null) {
         cy.get('.opfab-useractionlogs-table-line').eq(index).find('td').eq(1).should('have.text', action);
         cy.get('.opfab-useractionlogs-table-line').eq(index).find('td').eq(2).should('have.text', user);
+        if (comment !== null) {
+            cy.get('.opfab-useractionlogs-table-line').eq(index).find('td').eq(5).should('have.text', comment);
+        }
     }
 
-    function checkExportLineContains(row, action, user) {
+    function checkExportLineContains(row, action, user, comment = null) {
         expect(row['Action']).to.equal(action);
         expect(row['Username']).to.equal(user);
+        if (comment !== null) {
+            expect(row['Comment']).to.equal(comment);
+        }
     }
 
     function selectUsername(logins) {
