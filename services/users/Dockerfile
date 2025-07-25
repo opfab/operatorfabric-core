@@ -2,8 +2,8 @@ FROM azul/zulu-openjdk-alpine:21.0.8-jre@sha256:d7a733bafd9167495ec6193a21f95afc
 VOLUME /tmp
 ARG JAR_FILE
 RUN apk --no-cache add bash
-ENV SPRING_CONFIG_NAME common,application,users
-ENV SPRING_CONFIG_LOCATION classpath:/application.yml,./config/,./external-config/
+ENV SPRING_CONFIG_NAME=common,application,users
+ENV SPRING_CONFIG_LOCATION=classpath:/application.yml,./config/,./external-config/
 COPY build/docker/add-certificates.sh /add-certificates.sh
 COPY build/docker/java-config-docker-entrypoint.sh /docker-entrypoint.sh
 COPY build/libs/${JAR_FILE} app.jar
