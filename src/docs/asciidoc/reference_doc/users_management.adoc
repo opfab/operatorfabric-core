@@ -201,6 +201,7 @@ OperatorFabric allows you to view most relevant user actions:
 - SEND_RESPONSE
 - NOTIFICATION_CONFIG
 - USER
+- BUSINESS_CONFIG
 
 For each action the following information are available: 
 
