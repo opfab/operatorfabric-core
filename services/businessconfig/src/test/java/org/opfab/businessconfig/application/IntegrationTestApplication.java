@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,13 +17,21 @@ import org.opfab.businessconfig.controllers.CustomExceptionHandler;
 import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
 import org.opfab.test.EventBusSpy;
+import org.opfab.useractiontracing.UserActionLogsConfiguration;
+import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
+import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
+import org.opfab.useractiontracing.services.LastUserActionService;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class, BusinessconfigController.class,EventBusSpy.class})
+@Import({ProcessesService.class, MonitoringService.class, CustomExceptionHandler.class, JacksonConfig.class,
+        BusinessconfigController.class, EventBusSpy.class, UserActionLogsConfiguration.class,
+        UserActionLogRepositoryImpl.class, UserActionLogService.class, LastUserActionService.class,
+        LastUserActionRepositoryImpl.class})
 
 public class IntegrationTestApplication {
 

@@ -13,9 +13,16 @@ import org.opfab.businessconfig.model.*;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.services.MonitoringService;
 import org.opfab.businessconfig.services.ProcessesService;
+import org.opfab.useractiontracing.model.UserActionEnum;
+import org.opfab.useractiontracing.repositories.LastUserActionRepository;
+import org.opfab.useractiontracing.repositories.UserActionLogRepository;
+import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.businessconfig.configuration.oauth2.UserExtractor;
+import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.utilities.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping({ "/businessconfig", "/" }) // /businessconfig is a legacy path, shall be removed in a future version
-public class BusinessconfigController {
+public class BusinessconfigController implements UserExtractor {
 
     public static final String UNABLE_TO_LOAD_FILE_MSG = "Unable to load submitted file";
     public static final String UNABLE_TO_POST_FILE_MSG = "Unable to post submitted file";
@@ -54,11 +61,17 @@ public class BusinessconfigController {
     public static final String IMPOSSIBLE_TO_UPDATE_BUNDLE = "Impossible to update bundle";
     private ProcessesService processService;
     private MonitoringService monitoringService;
+    private final UserActionLogService userActionLogService;
     private static final Logger log = LoggerFactory.getLogger(BusinessconfigController.class);
 
-    public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService) {
+    private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
+
+    public BusinessconfigController(ProcessesService processService, MonitoringService monitoringService,
+                                    UserActionLogRepository userActionLogRepository,
+                                    LastUserActionRepository lastUserActionRepository) {
         this.processService = processService;
         this.monitoringService = monitoringService;
+        this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
 
     @GetMapping(value = "/processes/{processId}/css/{cssFileName}", produces = { "application/json",
@@ -146,6 +159,8 @@ public class BusinessconfigController {
             "multipart/form-data" })
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         try (InputStream is = file.getInputStream()) {
             Process result = processService.updateProcess(is);
             if (result == null) {
@@ -156,6 +171,9 @@ public class BusinessconfigController {
             }
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.id());
             response.setStatus(201);
+
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Create bundle " + result.id());
+
             return result;
         } catch (FileNotFoundException e) {
             log.error("File not found while loading bundle file", e);
@@ -174,13 +192,20 @@ public class BusinessconfigController {
             "multipart/form-data" })
     public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
-        return uploadFile(request, response, file, "processgroups", null);
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
+        uploadFile(request, response, file, "processgroups", null);
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update process groups");
+        return null;
     }
 
     @DeleteMapping(value = "/processes", produces = { "application/json" })
     public Void clearProcesses(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         processService.clear();
         response.setStatus(204);
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete all bundles");
         return null;
     }
 
@@ -218,10 +243,15 @@ public class BusinessconfigController {
     public Void deleteBundle(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("processId") String processId)
             throws ApiErrorException {
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         try {
             processService.delete(processId);
             // leaving response body empty
             response.setStatus(204);
+
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete bundle " + processId);
+
             return null;
         } catch (FileNotFoundException e) {
             log.error("Bundle directory not found when wanted to delete bundle", e);
@@ -242,10 +272,16 @@ public class BusinessconfigController {
     public Void deleteBundleVersion(HttpServletRequest request, HttpServletResponse response,
             @PathVariable("processId") String processId,
             @PathVariable("version") String version) throws ApiErrorException {
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         try {
             processService.deleteVersion(processId, version);
             // leaving response body empty
             response.setStatus(204);
+
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete bundle " + processId
+                    + " version " + version);
+
             return null;
         } catch (FileNotFoundException e) {
             log.error("Bundle directory not found when wanted to delete bundle", e);
@@ -314,7 +350,12 @@ public class BusinessconfigController {
             "multipart/form-data" })
     public Void uploadRealTimeScreens(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
-        return uploadFile(request, response, file, "realtimescreens", null);
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
+        uploadFile(request, response, file, "realtimescreens", null);
+
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update realtime screen");
+        return null;
     }
 
     @GetMapping(value = "/realtimescreens", produces = { "application/json" })
@@ -356,7 +397,11 @@ public class BusinessconfigController {
 
     @DeleteMapping(value = "/businessData", produces = { "application/json" })
     public Void deleteAllBusinessData(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         processService.deleteAllBusinessData();
+
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete all business data");
         return null;
     }
 
@@ -365,7 +410,13 @@ public class BusinessconfigController {
     public Void uploadBusinessData(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file,
             @PathVariable("resourceName") String resourceName) {
-        return uploadFile(request, response, file, "businessdata", resourceName);
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
+        uploadFile(request, response, file, "businessdata", resourceName);
+
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update business data " +
+                resourceName);
+        return null;
     }
 
     @DeleteMapping(value = "/businessData/{resourceName}", produces = {
@@ -374,10 +425,15 @@ public class BusinessconfigController {
             @PathVariable("resourceName") String resourceName)
             throws ApiErrorException {
 
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
         try {
             processService.deleteFile(resourceName);
             // leaving response body empty
             response.setStatus(204);
+
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete business data " +
+                    resourceName);
             return null;
         } catch (FileNotFoundException e) {
             log.error("Resource not found", e);
@@ -398,12 +454,23 @@ public class BusinessconfigController {
             "multipart/form-data" })
     public Void uploadProcessMonitoring(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
-        return uploadFile(request, response, file, "processmonitoring", null);
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
+        uploadFile(request, response, file, "processmonitoring", null);
+
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update process monitoring");
+        return null;
     }
 
     @GetMapping(value = "/processmonitoring", produces = { "application/json" })
     public ProcessMonitoring getProcessMonitoring(HttpServletRequest request, HttpServletResponse response) {
         return processService.getProcessMonitoring();
+    }
+
+    private void logUserAction(String login, List<String> entities, String comment) {
+        if (userActionLogActivated) {
+            userActionLogService.insertUserActionLog(login, UserActionEnum.BUSINESS_CONFIG, entities, null, comment);
+        }
     }
 
 }
