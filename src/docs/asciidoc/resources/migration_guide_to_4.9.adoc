@@ -53,3 +53,6 @@ Example configuration for the `feed.geomap.layers` property:
 
 ```
 
+== Entities in Token
+
+When retrieving entities from a token, the recommended approach is to use an array attribute containing entity IDs as strings. The previous method, which uses a single string with semicolon-separated IDs, remains available for backward compatibility. To enable the old mode, set the parameter `operatorfabric.security.jwt.entitiesIdClaimSingleString` to `true` in your YAML services configuration.
