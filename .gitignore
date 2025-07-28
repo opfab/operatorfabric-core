@@ -74,6 +74,7 @@ classes
 
 # Opfab binary directories
 services/*/bin
+client/bin
 tools/spring/spring-oauth2-utilities/bin
 src/test/externalApp/bin
 src/test/dummyModbusDevice/bin
