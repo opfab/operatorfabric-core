@@ -7,6 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
+import {ConfigService} from '@ofServices/config/ConfigService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {startOfWeek, sub} from 'date-fns';
@@ -22,6 +23,12 @@ export class DateRangePickerConfig {
     }
 
     public static getCustomRanges() {
+        if (ConfigService.getConfigValue('dateRangePickerConfig', 'default') === 'ahead')
+            return DateRangePickerConfig.getAheadRange();
+        return DateRangePickerConfig.getDefaultCustomRanges();
+    }
+
+    private static getDefaultCustomRanges() {
         const currentDate = new Date(),
             y = currentDate.getFullYear(),
             m = currentDate.getMonth();
@@ -73,6 +80,33 @@ export class DateRangePickerConfig {
             [lastMonthTranslation]: [startPreviousMonth, endPreviousMonth],
             [thisYearTranslation]: [startCurrentYear, endCurrentYear],
             [lastYearTranslation]: [startPreviousYear, endPreviousYear]
+        };
+    }
+
+    private static getAheadRange() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+
+        // Calculate upcoming Saturday
+        const dayOfWeek = now.getDay();
+        const daysUntilSaturday = (6 - dayOfWeek + 7) % 7 || 7; // always at least 1 day ahead
+        const upcomingSaturday = new Date(year, month, now.getDate() + daysUntilSaturday, 0, 0, 0, 0);
+
+        // Next Friday after upcoming Saturday
+        const nextFriday = new Date(upcomingSaturday);
+        nextFriday.setDate(upcomingSaturday.getDate() + 6);
+        nextFriday.setHours(23, 59, 59, 999);
+
+        const startNextMonth = new Date(year, month + 1, 1);
+        const endCurrentYear = new Date(year, 11, 31);
+        const startNextYear = new Date(year + 1, 0, 1);
+        const endNextYear = new Date(year + 1, 11, 31);
+
+        return {
+            ['W-1']: [upcomingSaturday, nextFriday],
+            ['M-1']: [startNextMonth, endCurrentYear],
+            ['Y-1']: [startNextYear, endNextYear]
         };
     }
 }
