@@ -8,8 +8,8 @@
  */
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {NotificationConfigurationView} from 'app/views/notificationConfiguration/NotificationConfigurationView';
-import {NotificationConfigurationPage} from 'app/views/notificationConfiguration/NotificationConfigurationPage';
+import {NotificationConfigurationView} from 'app/components/notificationconfiguration/view/NotificationConfigurationView';
+import {NotificationConfigurationPage} from 'app/components/notificationconfiguration/view/NotificationConfigurationPage';
 import {TranslateModule} from '@ngx-translate/core';
 import {NgIf, NgFor, NgTemplateOutlet} from '@angular/common';
 

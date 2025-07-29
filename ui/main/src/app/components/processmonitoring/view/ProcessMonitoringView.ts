@@ -10,7 +10,7 @@
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {ProcessGroups, ProcessToMonitor, StatePerProcessToMonitor} from './ProcessMonitoringPage';
 import {UsersService} from '@ofServices/users/UsersService';
-import {Utilities} from '../../utils/Utilities';
+import {Utilities} from '../../../utils/Utilities';
 import {Process} from '@ofServices/processes/model/Processes';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {add, endOfWeek, format, parse, startOfWeek, sub} from 'date-fns';

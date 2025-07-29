@@ -8,8 +8,8 @@
  */
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Dashboard} from 'app/views/dashboard/DashboardView';
-import {DashboardPage} from 'app/views/dashboard/DashboardPage';
+import {Dashboard} from 'app/components/dashboard/view/DashboardView';
+import {DashboardPage} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ConfigService} from 'app/services/config/ConfigService';

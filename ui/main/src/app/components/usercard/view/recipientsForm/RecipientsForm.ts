@@ -12,7 +12,7 @@ import {InputFieldName, MultiselectItem, UserCardUIControl} from '../UserCardMod
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {Utilities} from '../../../utils/Utilities';
+import {Utilities} from '../../../../utils/Utilities';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';

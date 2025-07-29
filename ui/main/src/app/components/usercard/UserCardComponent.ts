@@ -17,8 +17,13 @@ import {map} from 'rxjs/operators';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {CardsService} from '@ofServices/cards/CardsService';
 import {Observable} from 'rxjs';
-import {UserCardView} from 'app/views/userCard/UserCardView';
-import {EditionMode, InputFieldName, MultiselectItem, UserCardUIControl} from 'app/views/userCard/UserCardModel';
+import {UserCardView} from 'app/components/usercard/view/UserCardView';
+import {
+    EditionMode,
+    InputFieldName,
+    MultiselectItem,
+    UserCardUIControl
+} from 'app/components/usercard/view/UserCardModel';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';

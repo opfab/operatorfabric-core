@@ -16,10 +16,10 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
 import {getOneLightCard, loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from 'app/model/Severity';
-import {Utilities} from '../../utils/Utilities';
+import {Utilities} from '../../../utils/Utilities';
 import {FilterType} from '@ofStore/lightcards/model/Filter';
-import {FilteredLightCardsStore} from '../../store/lightcards/FilteredLightcardsStore';
-import {OpfabStore} from '../../store/OpfabStore';
+import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
+import {OpfabStore} from '../../../store/OpfabStore';
 
 describe('Dashboard', () => {
     let dashboard: Dashboard;

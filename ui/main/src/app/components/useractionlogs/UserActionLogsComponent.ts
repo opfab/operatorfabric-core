@@ -19,9 +19,9 @@ import {
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
-import {UserActionLogsView} from 'app/views/useractionlogs/UserActionLogsView';
-import {UserActionLogsResult} from 'app/views/useractionlogs/UserActionLogsResult';
-import {UserActionLogsPageDescription} from 'app/views/useractionlogs/UserActionLogsPageDescription';
+import {UserActionLogsView} from 'app/components/useractionlogs/view/UserActionLogsView';
+import {UserActionLogsResult} from 'app/components/useractionlogs/view/UserActionLogsResult';
+import {UserActionLogsPageDescription} from 'app/components/useractionlogs/view/UserActionLogsPageDescription';
 import {NgIf, NgFor} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
