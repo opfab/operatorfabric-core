@@ -21,7 +21,7 @@ import {
     RealtimePageEntityGroup,
     RealtimePageLine
 } from './RealtimePage';
-import {Utilities} from '../../utils/Utilities';
+import {Utilities} from '../../../utils/Utilities';
 
 export class RealtimeUsersView {
     private realtimePage: RealtimePage;

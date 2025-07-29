@@ -9,7 +9,7 @@
 
 import {NgFor} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {AboutView} from 'app/views/core/about/AboutView';
+import {AboutView} from 'app/components/core/about/view/AboutView';
 
 @Component({
     selector: 'of-about',

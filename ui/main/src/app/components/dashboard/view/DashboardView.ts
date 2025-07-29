@@ -8,7 +8,7 @@
  */
 
 import {Severity} from 'app/model/Severity';
-import {Utilities} from '../../utils/Utilities';
+import {Utilities} from '../../../utils/Utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
@@ -20,8 +20,8 @@ import {
     DashboardCircle,
     CustomScreenLink
 } from './DashboardPage';
-import {FilteredLightCardsStore} from '../../store/lightcards/FilteredLightcardsStore';
-import {OpfabStore} from '../../store/OpfabStore';
+import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
+import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
 import {ConfigService} from '@ofServices/config/ConfigService';
 

@@ -9,8 +9,8 @@
 
 import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ActivityAreaView} from 'app/views/activityarea/ActivityAreaView';
-import {ActivityAreaPage} from 'app/views/activityarea/ActivityAreaPage';
+import {ActivityAreaView} from 'app/components/activityarea/view/ActivityAreaView';
+import {ActivityAreaPage} from 'app/components/activityarea/view/ActivityAreaPage';
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';

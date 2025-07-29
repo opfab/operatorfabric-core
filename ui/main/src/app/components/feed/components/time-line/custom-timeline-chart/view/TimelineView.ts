@@ -9,9 +9,9 @@
 
 import {Circle, Circles} from './Circles';
 import {XAxis} from './XAxis';
-import {FilteredLightCardsStore} from '../../store/lightcards/FilteredLightcardsStore';
+import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
 import {Observable, Subject, takeUntil} from 'rxjs';
-import {OpfabStore} from '../../store/OpfabStore';
+import {OpfabStore} from '../../../../../../store/OpfabStore';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 
 export class TimelineView {

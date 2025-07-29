@@ -21,7 +21,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {TimelineView} from 'app/views/timeline/TimelineView';
+import {TimelineView} from 'app/components/feed/components/time-line/custom-timeline-chart/view/TimelineView';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
 import {NgFor, NgIf, AsyncPipe} from '@angular/common';

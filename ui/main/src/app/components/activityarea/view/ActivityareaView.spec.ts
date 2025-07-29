@@ -15,14 +15,14 @@ import {UsersServerMock} from '@tests/mocks/UsersServer.mock';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {CurrentUserStore} from '../../store/CurrentUserStore';
+import {CurrentUserStore} from '../../../store/CurrentUserStore';
 import {firstValueFrom} from 'rxjs';
 import {ActivityAreaView} from './ActivityAreaView';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {getOneLightCard, setEntities} from '@tests/helpers';
 import {Severity} from 'app/model/Severity';
-import {OpfabStore} from '../../store/OpfabStore';
+import {OpfabStore} from '../../../store/OpfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
 describe('ActivityAreaView', () => {

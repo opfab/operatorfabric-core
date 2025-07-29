@@ -46,7 +46,7 @@ import {CardFooterTextComponent} from '../card-footer-text/CardFooterTextCompone
 import {CardResponseComponent} from '../card-response/CardResponseComponent';
 import {CardAckComponent} from '../card-ack/CardAckComponent';
 import {OpfabTitleCasePipe} from '../../../share/pipes/OpfabTitleCasePipe';
-import {CardBodyView} from 'app/views/card/CardBodyView';
+import {CardBodyView} from 'app/components/card/components/card-body/view/CardBodyView';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';

@@ -21,7 +21,7 @@ import {map, Observable, of, switchMap} from 'rxjs';
 import {UserActionLogLine} from './UserActionLogLine';
 import {UserActionLogsResult} from './UserActionLogsResult';
 import {UserActionLogsPageDescription} from './UserActionLogsPageDescription';
-import {ExcelExport} from '../../utils/ExcelExport';
+import {ExcelExport} from '../../../utils/ExcelExport';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {UserActionLogsService} from '@ofServices/userActionLogs/UserActionLogsService';
 

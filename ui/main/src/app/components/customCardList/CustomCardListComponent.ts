@@ -26,7 +26,7 @@ import {
 } from 'ag-grid-community';
 import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
 import {ExcelExport} from 'app/utils/ExcelExport';
-import {CustomCardListView} from 'app/views/customCardList/CustomCardListView';
+import {CustomCardListView} from 'app/components/customCardList/view/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 import {Subject, takeUntil} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
@@ -40,7 +40,7 @@ import {AgGrid} from 'app/utils/AgGrid';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {debounceTime} from 'rxjs/operators';
 import {HTMLCellRendererComponent} from './cellRenderers/HTMLCellRendererComponent';
-import {FilterValues} from 'app/views/customCardList/FilterValues';
+import {FilterValues} from 'app/components/customCardList/view/FilterValues';
 import {CustomTooltipComponent} from './CustomToolTipComponent';
 import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
 import {AcknowledgmentCellRendererComponent} from './cellRenderers/AcknowledgmentCellRendererComponent';
