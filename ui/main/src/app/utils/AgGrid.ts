@@ -45,7 +45,10 @@ export class AgGrid {
             // dynamically change the pagination page size, if we keep the default value (10),
             // when a vertical scroll is present and for example the user pass from
             // 10 to 100 items per page, the grid will not display all the 100 items
-            rowBuffer: 100,
+            // Furthermore, if the value is <150, the grid will not process a full selection
+            // of every row when row number is at 100, and some events may not trigger.
+            // See issue #8708
+            rowBuffer: 200,
 
             getLocaleText: function (params) {
                 // To avoid clashing with opfab assets, all keys defined by ag-grid are prefixed with "ag-grid."
