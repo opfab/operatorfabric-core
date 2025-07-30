@@ -12,11 +12,15 @@ The frontend API is intended to provide a way for template to communicate with t
 
 - Users API : API to get information about users and entities
 - BusinessConfig API : API to get business configuration information
+- Handlebars API : API to register custom helpers
 - Navigate API : API to ask opfab to navigate to a specific view
 - CurrentCard API : API to get information regarding the current card 
 - CurrentUserCard API : API to get information regarding the current user card (card in creation or edition)
+- AlertMessage API : API to send alert messages
+- UI API : API to access elements from the interface
 - Cards API : API to get or send cards
 - Utils API : utilities functions
+- LightCards API : API to access light cards properties
 
 == Users API 
 
