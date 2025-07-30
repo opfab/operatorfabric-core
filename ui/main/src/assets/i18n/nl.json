@@ -35,6 +35,7 @@
             "selectTagText": "Selecteer een Label",
             "selectEntityText": "Selecteer een Entiteit",
             "selectReadAndAckText": "Selecteer of gelezen of bevestigd",
+            "selectTypeOfStateText": "Selecteer een Proces status",
             "toDateBeforeFromDate": "'Tot' moet na 'Van' liggen.",
             "businessDateRange": "BEDRIJFSDATUMBEREIK",
             "publishDateRange": "PUBLICATIEDATUMBEREIK",

@@ -35,6 +35,7 @@
             "selectTagText": "Sélectionner une Étiquette",
             "selectEntityText": "Sélectionner une Entité",
             "selectReadAndAckText": "Sélectionner si lu ou acquitté",
+            "selectTypeOfStateText": "Sélectionner un État de processus",
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
             "businessDateRange": "PÉRIODE MÉTIER",
             "publishDateRange": "PÉRIODE DE PUBLICATION",
