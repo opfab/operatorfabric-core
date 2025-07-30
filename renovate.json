@@ -1,12 +1,7 @@
 {
-  "extends": [
-    "config:base",
-    ":gitSignOff",
-    ":switchToGradleLite",
-    "schedule:nonOfficeHours"
-  ],
+  "extends": ["config:recommended", ":gitSignOff", "schedule:nonOfficeHours"],
   "branchPrefix": "FE-Renovate_",
-  "baseBranches": ["develop"],
+  "baseBranchPatterns": ["develop"],
   "prConcurrentLimit": 12,
   "ignorePaths": [
     "**/node_modules/**",
@@ -14,27 +9,24 @@
     "**/vendor/**",
     "src/tooling/**"
   ],
-  "gradle-lite": {
-    "fileMatch": ["versions.properties"]
-  },
   "major": {
     "packageRules": [
       {
-        "matchPackagePrefixes": [
-          "@angular/",
-          "@angular-devkit/",
-          "azul/zulu-openjdk-alpine"
-        ],
-        "enabled": false
+        "enabled": false,
+        "matchPackageNames": [
+          "@angular/{/,}**",
+          "@angular-devkit/{/,}**",
+          "azul/zulu-openjdk-alpine{/,}**"
+        ]
       }
     ]
   },
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
       "digest": {
         "enabled": false
-      }
+      },
+      "matchPackageNames": ["*"]
     },
     {
       "matchDepTypes": ["devDependencies"],
@@ -42,23 +34,18 @@
     },
     {
       "groupName": "angular",
-      "matchPackagePrefixes": [
-        "@angular/",
-        "@angular-devkit/"
-      ]
+      "matchPackageNames": ["@angular/{/,}**", "@angular-devkit/{/,}**"]
     },
     {
       "groupName": "confluent",
-      "matchPackagePrefixes": [
-        "io.confluent"
-      ]
+      "matchPackageNames": ["io.confluent{/,}**"]
     },
     {
       "groupName": "ag-grid",
-      "matchPackagePrefixes": [
-        "ag-grid-angular",
-        "ag-grid-community"
-      ]
+      "matchPackageNames": ["ag-grid-angular{/,}**", "ag-grid-community{/,}**"]
     }
-  ]
+  ],
+  "gradle": {
+    "managerFilePatterns": ["/versions.properties/"]
+  }
 }
