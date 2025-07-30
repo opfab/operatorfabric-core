@@ -198,6 +198,7 @@ OperatorFabric allows you to view most relevant user actions:
 - READ_CARD
 - UNREAD_CARD
 - SEND_CARD
+- DELETE_CARD
 - SEND_RESPONSE
 - NOTIFICATION_CONFIG
 - USER
