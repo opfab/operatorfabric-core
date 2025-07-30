@@ -644,6 +644,8 @@
         "filterOoo": "Filter...",
         "equals": "Gelijk aan",
         "notEqual": "Niet gelijk aan",
+        "before": "Voor",
+        "after": "Na",
         "contains": "Bevat",
         "notContains": "Bevat niet",
         "greaterThan": "Groter dan",
