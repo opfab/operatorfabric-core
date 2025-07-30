@@ -116,7 +116,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     typeOfStateSelected: Array<string> = [];
     typeOfStateMultiSelectConfig = {
         labelKey: 'shared.typeOfState.typeOfState',
-        placeholderKey: 'monitoring.filters.typeOfState.selectTypeOfStateText',
+        placeholderKey: 'shared.filters.selectTypeOfStateText',
         sortOptions: true,
         nbOfDisplayValues: 1
     };

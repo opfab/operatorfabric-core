@@ -35,6 +35,7 @@
             "selectTagText": "Select a Tag",
             "selectEntityText": "Select an Entity",
             "selectReadAndAckText": "Select if Read or Acknowledged",
+            "selectTypeOfStateText": "Select a Process status",
             "toDateBeforeFromDate": "'To' date must be after 'From' date.",
             "businessDateRange": "BUSINESS DATE RANGE",
             "publishDateRange":"PUBLISH DATE RANGE",
