@@ -219,6 +219,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
         EntitiesService.getEntities().forEach((entity) => {
             this.entitiesMultiSelectOptions.push(new MultiSelectOption(entity.id, entity.name));
         });
+        this.entitiesMultiSelectOptions.sort((a, b) => a.label?.localeCompare(b.label));
 
         // we must filter visibleProcesses to keep only the processes in the perimeter of the user
         const processesIds = [];
