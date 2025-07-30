@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -217,7 +217,7 @@ describe('Sound notification test', function () {
         cy.tick(1000);
         feed.checkNumberOfDisplayedCardsIs(0);
         sendCardWithSeverityAlarm();
-        cy.get('#opfab-alert-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated (Timeline or card feed)');
+        cy.get('#opfab-alert-detail-msg').find('span').eq(0).contains('You have received a card hidden by the filters you have activated');
         cy.tick(100);
         sound.checkNumberOfEmittedSoundIs(1);
         feed.checkNumberOfDisplayedCardsIs(0);
