@@ -207,7 +207,7 @@ class CardOperationsControllerShould {
                 .expectComplete()
                 .verify();
         StepVerifier
-                .create(repository.save(createSimpleCard(processNo++, nowPlusOne, nowPlusTwo, nowPlusThree, "operator3",
+                .create(repository.save(createSimpleCard(processNo, nowPlusOne, nowPlusTwo, nowPlusThree, "operator3",
                         new String[] { "rte", "operator" }, new String[] { "entity1", "entity2" })))
                 .expectNextCount(1)
                 .expectComplete()
