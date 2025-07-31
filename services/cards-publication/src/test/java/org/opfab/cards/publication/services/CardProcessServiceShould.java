@@ -311,9 +311,6 @@ class CardProcessServiceShould {
             card.startDate = Instant.now().minus(1, ChronoUnit.DAYS);
             cardProcessingService.processCard(card);
 
-            ArrayList<String> externalRecipients = new ArrayList<>();
-            externalRecipients.add(API_TEST_EXTERNAL_RECIPIENT_1);
-
             childCard = new Card();
             childCard.publisher = "newPublisherId";
             childCard.processVersion = "0";
@@ -419,13 +416,6 @@ class CardProcessServiceShould {
         ArrayList<String> entityRecipients = new ArrayList<>();
         entityRecipients.add("Dispatcher");
         entityRecipients.add("Planner");
-
-        List<Integer> daysOfWeek = new ArrayList<>();
-        List<Integer> months = new ArrayList<>();
-        daysOfWeek.add(2);
-        daysOfWeek.add(3);
-        months.add(2);
-        months.add(3);
 
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("arg1", "value1");
