@@ -17,15 +17,18 @@ export class DatesForm {
     private static readonly ONE_MINUTE = 60000;
     private static readonly ONE_DAY = 60000 * 60 * 24;
 
-    private endDate: number;
-    private endDateVisible: boolean;
-    private expirationDate: number;
-    private expirationDateVisible: boolean;
-    private lttd: number;
-    private lttdVisible: boolean;
+    // SonarQube reports these fields should be readonly, but they are reassigned via setFieldVisibility.
+    // Each line is marked with NOSONAR to suppress false positives.
+    private endDate: number; // NOSONAR
+    private endDateVisible: boolean; // NOSONAR
+    private expirationDate: number; // NOSONAR
+    private expirationDateVisible: boolean; // NOSONAR
+    private lttd: number; // NOSONAR
+    private lttdVisible: boolean; // NOSONAR
+    private startDate: number; // NOSONAR
+    private startDateVisible: boolean; // NOSONAR
+
     private processId: string;
-    private startDate: number;
-    private startDateVisible: boolean;
     private stateId: string;
 
     private readonly dateFields = ['startDate', 'endDate', 'lttd', 'expirationDate'];
