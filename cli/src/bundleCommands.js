@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,9 +20,9 @@ const bundleCommand = {
                     name: 'value',
                     message: 'Bundle action',
                     choices: [
-                        {title: 'Load', value: 'load'},
-                        {title: 'Delete', value: 'delete'},
-                        {title: 'Delete all', value: 'delete-all'}
+                        { title: 'Load', value: 'load' },
+                        { title: 'Delete', value: 'delete' },
+                        { title: 'Delete all', value: 'delete-all' }
                     ]
                 })
             ).value;
@@ -75,7 +75,7 @@ const bundleCommand = {
                         await utils.sendFile('businessconfig/processes', gzippedBundle, false);
                         console.log(`Bundle ${bundleDirectory} loaded`);
                     } catch (error) {
-                        console.log(`Bundle ${bundleDirectory} not loaded`);
+                        console.log(`Bundle ${bundleDirectory} not loaded: ${error}`);
                     }
                 } else {
                     console.log(`Error: ${bundleDirectory} is not a directory`);
