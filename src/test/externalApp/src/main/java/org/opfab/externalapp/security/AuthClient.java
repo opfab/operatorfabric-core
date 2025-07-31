@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ public class AuthClient {
 
     private ObjectMapper objectMapper;
 
-    public AuthClient(RestTemplateBuilder builder,ObjectMapper objectMapper) {
+    public AuthClient(RestTemplateBuilder builder, ObjectMapper objectMapper) {
         this.builder = builder;
         this.objectMapper = objectMapper;
     }
@@ -40,17 +40,16 @@ public class AuthClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("username", "operator1_fr");
         map.add("password", "test");
         map.add("grant_type", "password");
- 
+
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         AuthToken token = objectMapper.readValue(response.getBody(), AuthToken.class);
         return token.getAccess_token();
     }
-
 
 }

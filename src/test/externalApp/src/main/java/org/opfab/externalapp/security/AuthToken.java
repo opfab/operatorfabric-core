@@ -11,10 +11,10 @@ package org.opfab.externalapp.security;
 
 public class AuthToken {
 
-    private String access_token;
+    private String accessToken;
 
     public String getAccess_token() {
-        return this.access_token;
+        return this.accessToken;
     }
 
 }
