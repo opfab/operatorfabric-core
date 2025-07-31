@@ -94,7 +94,7 @@ class CardRepositoryShould {
         user3.setLogin("admin");
         user3.setFirstName("Test");
         user3.setLastName("User");
-        ;
+
         adminUser = new CurrentUserWithPerimeters();
         adminUser.setUserData(user3);
         adminUser.setComputedPerimeters(Arrays.asList(perimeter));
