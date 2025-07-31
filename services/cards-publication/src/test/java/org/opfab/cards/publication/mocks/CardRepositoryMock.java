@@ -30,14 +30,10 @@ public class CardRepositoryMock implements CardRepository {
     Map<String, Card> cardsByUid = new HashMap<>();
     Map<String, ArchivedCard> archiveCardsByUid = new HashMap<>();
 
-    public CardRepositoryMock() {
-    }
-
     public void clear() {
         cardsById.clear();
         cardsByUid.clear();
         archiveCardsByUid.clear();
-
     }
 
     @Override
@@ -46,7 +42,6 @@ public class CardRepositoryMock implements CardRepository {
         if (card == null)
             return Optional.empty();
         return Optional.of(card);
-
     }
 
     @Override
