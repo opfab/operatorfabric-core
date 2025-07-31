@@ -134,7 +134,7 @@ public class ExternalAppServiceImpl implements ExternalAppService {
         for (int i = 0; i < recipients.size(); i++) {
             ret.append(recipients.get(i) + " ");
         }
-        if (ret.length() >= 1) {
+        if (!ret.isEmpty()) {
             return ret.substring(0, ret.length() - 1);
         }
         return ret.toString();
