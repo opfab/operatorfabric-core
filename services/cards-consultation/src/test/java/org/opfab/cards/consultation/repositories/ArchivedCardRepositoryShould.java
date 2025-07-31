@@ -214,7 +214,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     private Predicate<ArchivedCard> computeCardPredicate() {
-        Predicate<ArchivedCard> predicate = c -> !(c.id == null);
+        Predicate<ArchivedCard> predicate = c -> c.id != null;
         predicate = predicate.and(c -> firstPublisher.equals(c.publisher));
         predicate = predicate.and(c -> c.userRecipients.contains(LOGIN_1));
         predicate = predicate.and(c -> c.groupRecipients.contains("rte"));
