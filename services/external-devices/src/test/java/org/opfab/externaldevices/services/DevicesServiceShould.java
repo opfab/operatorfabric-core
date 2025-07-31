@@ -50,7 +50,7 @@ class DevicesServiceShould {
     private DeviceConfiguration deviceConfigurationData;
     private DeviceConfiguration deviceConfigurationData2;
     private final ExternalDeviceDriver externalDeviceDriver = mock(ExternalDeviceDriver.class);
-    private final ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);;
+    private final ExternalDeviceDriver externalDeviceDriver2 = mock(ExternalDeviceDriver.class);
 
     private static final String TEST_DEVICE_ID = "testDeviceId";
     private static final String TEST_DEVICE_ID_2 = "testDeviceId2";
