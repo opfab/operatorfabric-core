@@ -167,6 +167,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     ]);
     private readonly processMonitoringDefaultConfig: ProcessMonitoringConfig;
     private processMonitoringFields: ProcessMonitoringField[];
+    private selectedProcessIfOnlyOneIsSelected: string;
     private readonly processMonitoringFieldsDefaultConfig: ProcessMonitoringField[];
     private readonly processMonitoringFieldsForProcesses: Map<string, ProcessMonitoringField[]>;
     selectedCardId: string;
@@ -311,12 +312,14 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     public processChoiceChanged(processes: string[]) {
+        this.selectedProcessIfOnlyOneIsSelected = '';
+        this.processMonitoringFields = this.processMonitoringFieldsDefaultConfig;
+
         if (processes?.length === 1) {
-            this.processMonitoringFields =
-                this.processMonitoringFieldsForProcesses?.get(processes[0]) ??
-                this.processMonitoringFieldsDefaultConfig;
-        } else {
-            this.processMonitoringFields = this.processMonitoringFieldsDefaultConfig;
+            if (this.processMonitoringFieldsForProcesses?.get(processes[0])) {
+                this.processMonitoringFields = this.processMonitoringFieldsForProcesses?.get(processes[0]);
+                this.selectedProcessIfOnlyOneIsSelected = processes[0];
+            }
         }
     }
 
