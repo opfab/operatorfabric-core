@@ -21,18 +21,20 @@ import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/TimeCellRendererComponent';
 import {SenderCellRendererComponent} from '../cell-renderers/SenderCellRendererComponent';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
-import {SelectedCardService} from '../../../../services/selectedCard/SelectedCardService';
+import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {AgGridAngular} from 'ag-grid-angular';
-import {NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {CardComponent} from '../../../card/CardComponent';
 import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/config/model/ProcessMonitoringConfig';
 import {AgGrid} from 'app/utils/AgGrid';
+import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 
 @Component({
     selector: 'of-processmonitoring-table',
     templateUrl: './ProcessMonitoringTableComponent.html',
+    styleUrls: ['./ProcessMonitoringTableComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent]
+    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent, NgForOf]
 })
 export class ProcessmonitoringTableComponent {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
@@ -45,6 +47,7 @@ export class ProcessmonitoringTableComponent {
     @Input() processStateNameMap: Map<string, string>;
     @Input() processStateDescriptionMap: Map<string, string>;
     @Input() processMonitoringFields: ProcessMonitoringField[];
+    @Input() selectedProcessIfOnlyOneIsSelected: string;
 
     @Output() pageChange = new EventEmitter<number>();
     @Output() filterChange = new EventEmitter<{filterModel: FilterModel; colId: string}>();
@@ -56,7 +59,13 @@ export class ProcessmonitoringTableComponent {
     gridOptions;
     public gridApi;
 
-    private columnDefs: ColDef[] = [];
+    protected columnDefs: ColDef[] = [];
+
+    protected showColumnPanel = false;
+    private columnsVisibilityLocalStorage: {
+        fields?: {field: string; visible: boolean}[];
+        fieldsForProcesses?: {process: string; fields: {field: string; visible: boolean}[]}[];
+    } = {};
 
     constructor(
         private readonly translate: TranslateService,
@@ -131,6 +140,23 @@ export class ProcessmonitoringTableComponent {
         if (this.processMonitoringFields) {
             const columnSizeAverage = this.computeColumnSizeAverage();
 
+            const stored = UserPreferencesService.getPreference('opfab.processMonitoring.columnsVisibility');
+            try {
+                this.columnsVisibilityLocalStorage = stored ? JSON.parse(stored) : {};
+            } catch {
+                this.columnsVisibilityLocalStorage = {};
+            }
+            this.fillColumnsVisibilityLocalStorageIfNotExist();
+
+            let columnsVisibility = this.columnsVisibilityLocalStorage.fields;
+
+            if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
+                const index = this.findProcessInColumnsVisibilityLocalStorage(this.selectedProcessIfOnlyOneIsSelected);
+                if (index >= 0) {
+                    columnsVisibility = this.columnsVisibilityLocalStorage.fieldsForProcesses[index].fields;
+                }
+            }
+
             this.processMonitoringFields.forEach((column) => {
                 if (column.type === ProcessMonitoringFieldEnum.DATE) {
                     this.columnDefs.push({
@@ -141,7 +167,8 @@ export class ProcessmonitoringTableComponent {
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false,
-                        colId: column.field
+                        colId: column.field,
+                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
                     });
                 } else {
                     this.columnDefs.push({
@@ -152,13 +179,55 @@ export class ProcessmonitoringTableComponent {
                         cellClass: 'opfab-ag-cell-with-no-padding',
                         flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false,
-                        colId: column.field
+                        colId: column.field,
+                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
                     });
                 }
             });
         }
 
         this.gridApi.setGridOption('columnDefs', this.columnDefs);
+    }
+
+    private findProcessInColumnsVisibilityLocalStorage(processToFind: string): number {
+        return (
+            this.columnsVisibilityLocalStorage?.fieldsForProcesses?.findIndex(
+                (element) => element.process === processToFind
+            ) ?? -1
+        );
+    }
+
+    private fillColumnsVisibilityLocalStorageIfNotExist() {
+        if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
+            const index = this.findProcessInColumnsVisibilityLocalStorage(this.selectedProcessIfOnlyOneIsSelected);
+
+            if (index === -1) {
+                this.columnsVisibilityLocalStorage = {
+                    ...this.columnsVisibilityLocalStorage,
+                    fieldsForProcesses: this.columnsVisibilityLocalStorage.fieldsForProcesses ?? []
+                };
+                this.columnsVisibilityLocalStorage.fieldsForProcesses.push({
+                    process: this.selectedProcessIfOnlyOneIsSelected,
+                    fields: this.computeFieldsVisibility()
+                });
+            }
+        } else if (
+            !this.columnsVisibilityLocalStorage.fields ||
+            this.columnsVisibilityLocalStorage.fields.length === 0
+        ) {
+            this.columnsVisibilityLocalStorage.fields = this.computeFieldsVisibility();
+        }
+    }
+
+    private computeFieldsVisibility(): {field: string; visible: boolean}[] {
+        const fields = [];
+        this.processMonitoringFields.forEach((column) => {
+            fields.push({
+                field: column.field,
+                visible: column.defaultVisibility !== false
+            });
+        });
+        return fields;
     }
 
     computeColumnSizeAverage(): number {
@@ -184,10 +253,38 @@ export class ProcessmonitoringTableComponent {
         };
         this.modalRef = this.modalService.open(this.cardDetailTemplate, options);
 
-        // Clear card selection when modal is dismissed by pressing escape key or clicking outside of modal
-        // Closing event is already handled in card detail component
+        // Clear card selection when modal is dismissed by pressing the escape key or clicking outside modal
+        // Closing event is already handled in the card detail component
         this.modalRef.dismissed.subscribe(() => {
             SelectedCardService.clearSelectedCardId();
         });
+    }
+
+    protected toggleColumnVisible(col: ColDef) {
+        col.hide = !col.hide;
+        this.gridApi.setColumnsVisible([col.colId], !col.hide);
+
+        if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
+            const index = this.findProcessInColumnsVisibilityLocalStorage(this.selectedProcessIfOnlyOneIsSelected);
+
+            if (index >= 0) {
+                const field = this.columnsVisibilityLocalStorage.fieldsForProcesses[index].fields.find(
+                    (field) => field.field === col.colId
+                );
+                if (field) {
+                    field.visible = !col.hide;
+                }
+            }
+        } else {
+            const field = this.columnsVisibilityLocalStorage.fields.find((field) => field.field === col.colId);
+            if (field) {
+                field.visible = !col.hide;
+            }
+        }
+
+        UserPreferencesService.setPreference(
+            'opfab.processMonitoring.columnsVisibility',
+            JSON.stringify(this.columnsVisibilityLocalStorage)
+        );
     }
 }

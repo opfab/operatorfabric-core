@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,7 +20,8 @@ export class ProcessMonitoringField {
         readonly field: string,
         readonly colName: string,
         readonly type: string,
-        readonly size: number
+        readonly size: number,
+        readonly defaultVisibility: boolean
     ) {}
 }
 
