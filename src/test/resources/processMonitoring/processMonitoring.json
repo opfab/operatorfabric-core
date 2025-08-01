@@ -5,7 +5,7 @@
       { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400},
       { "field": "data.stateName", "colName": "My field", "size": 300},
       { "field": "summaryTranslated", "colName": "Summary", "size": 250},
-      { "field": "data.error", "colName": "My second field", "size": 100}
+      { "field": "data.error", "colName": "My second field", "size": 100, "defaultVisibility": false}
     ],
     "fieldsForProcesses": [
       {
@@ -20,7 +20,7 @@
         { "field": "startDate", "type": "date", "colName": "Start Date", "size": 200},
         { "field": "endDate", "type": "date", "colName": "End Date", "size": 200},
         { "field": "titleTranslated", "colName": "Title", "size": 250},
-        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400}
+        { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400, "defaultVisibility":  false}
       ]}
     ],
     "filters": {
