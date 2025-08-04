@@ -148,7 +148,9 @@
 
                 return {
                     valid: true,
-                    responseCardData: responseCardData // keep the deprecated way for testing only
+                    responseCard: {
+                      data: responseCardData
+                    }
                 };
             });
         }

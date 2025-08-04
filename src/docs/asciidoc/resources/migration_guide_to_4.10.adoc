@@ -1,0 +1,49 @@
+// Copyright (c) 2025 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.9.X to release 4.10.0
+
+== Response card in handlebars templates
+
+If this has not been done in a previous migration, the object that should be returned by
+the method registered via `opfab.currentCard.registerFunctionToGetUserResponse` is to be
+changed.
+
+Previously, the object was structured as follows:
+
+----
+{
+    valid: true/false,
+    errorMsg: string,
+    responseCardData: {},
+    responseState: string,
+    publisher: string,
+    actions: [string]
+}
+----
+
+Now, all elements related to the response card are encapsulated within a `responseCard` object:
+
+----
+{
+    valid: true/false,
+    errorMsg: string,
+    responseCard: {
+        data: {},
+        state: string,
+        publisher: string,
+        actions: [string]
+    }
+}
+----
+
+Note that the `responseState` field has been renamed to `state`.
+
+The old structure has been supported as a fallback for a limited time, now it is removed, so you have to update your
+code to use the new structure.
+
+
