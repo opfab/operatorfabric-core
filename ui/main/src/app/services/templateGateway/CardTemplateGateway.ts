@@ -102,34 +102,7 @@ export class CardTemplateGateway {
     }
 
     public static getUserResponseFromTemplate(emitter: string) {
-        const response = Utilities.cloneObj(CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter));
-        return CardTemplateGateway.convertDeprecatedUserResponseDataIfNeeded(response);
-    }
-
-    private static convertDeprecatedUserResponseDataIfNeeded(response: any): any {
-        if (response.responseCard) return response;
-        response.responseCard = {};
-        if (response.responseCardData) {
-            logger.warn('card response : responseCardData is deprecated, please use responseCard.data instead');
-            response.responseCard.data = response.responseCardData;
-            response.responseCardData = undefined;
-        }
-        if (response.publisher) {
-            logger.warn('card response : publisher is deprecated, please use responseCard.publisher instead');
-            response.responseCard.publisher = response.publisher;
-            response.publisher = undefined;
-        }
-        if (response.responseState) {
-            logger.warn('card response : responseState is deprecated, please use responseCard.state instead');
-            response.responseCard.state = response.responseState;
-            response.responseState = undefined;
-        }
-        if (response.actions) {
-            logger.warn('card response : actions is deprecated, please use responseCard.actions instead');
-            response.responseCard.actions = response.actions;
-            response.actions = undefined;
-        }
-        return response;
+        return Utilities.cloneObj(CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter));
     }
 
     public static hideLoadingSpinner() {
