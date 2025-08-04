@@ -89,12 +89,13 @@
                         confirm: confirm,
                         message: message
                     };
-                return { //keep deprecated format for testing only
+                return {
                     valid: true,
-                    publisher : publisher,
-                    responseCardData: responseCardData,
-                    actions: ['PROPAGATE_READ_ACK_TO_PARENT_CARD']
-
+                    responseCard: {
+                      data: responseCardData,
+                      actions: ['PROPAGATE_READ_ACK_TO_PARENT_CARD'],
+                      publisher : publisher
+                    }
                 };
 
             });
