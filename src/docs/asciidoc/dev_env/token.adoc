@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2020-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -55,53 +55,6 @@ ires_in":1799,"scope":"read
 user_info","jti":"02d82e85-13f0-4678-974d-18eb06215a65"}
 ----
 
-=== Httpie
-
-----
-http --form POST http://localhost:2002/auth/token username=admin password=test 
-grant_type=password
-----
-
-example of expected result:
-
-----
-.HTTP/1.1 200 OK
-Cache-Control: no-store
-Content-Type: application/json;charset=utf-8
-Date: Fri, 15 Mar 2019 13:57:19 GMT
-Pragma: no-cache
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-transfer-encoding: chunked
-
-{
-    "access_token": 
-"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2MDAzOS
-wiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliMS03Yz
-g3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkIiwic2
-NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2qFa5Bd
-3PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lHDd8ST
-8fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNXJ4Bge
-8scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfD
-J6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q",
-    "expires_in": 1799,
-    "jti": "624309b1-7c87-4cdc-8443-0124515f87f8",
-    "refresh_token": 
-"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlIjpbInJlYWQiLC
-J1c2VyX2luZm8iXSwiYXRpIjoiNjI0MzA5YjEtN2M4Ny00Y2RjLTg0NDMtMDEyNDUxNWY4N2Y4IiwiZX
-hwIjoxNTUyNzAxNDM5LCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImp0aS
-I6ImRiYzMxNTJiLTM4YTUtNGFmZC1hY2VmLWVkZTI4MjJkOTE3YyIsImNsaWVudF9pZCI6ImNsaWVudE
-lkUGFzc3dvcmQifQ.Ezd8kbfNQHOOvUCNNN4UmOOkncHiT9QVEM63FiW1rq0uXDa3xfBGil8geM5MsP0
-7Q2He-mynkFb8sGNDrAXTdO-8r5o4a60zWrktrMg2QH4icC1lyeZpiwZxe6675QpLpSeMlXt9PdYj-pb
-14lrRookxXP5xMQuIMteZpbtby7LuuNAbNrjveZ1bZ4WMi7zltUzcYUuqHlP1AYPteGRrJVKXiuPpoDv
-gwMsEk2SkgyyACI7SdZZs8IT9IGgSsIjjgTMQKzj8P6yYxNLUynEW4o5y1s2aAOV0xKrzkln9PchH9zN
-qO-fkjTVRjy_LBXGq9zkn0ZeQ3BUe1GuthvGjaA",
-    "scope": "read user_info",
-    "token_type": "bearer"
-}
-----
-
 == Extract token
 
 From the previous results, the data needed to be considered to be authenticated by OperatorFabric services is the content of the `"access_token"` attribute of the body response.
@@ -121,20 +74,6 @@ OXT3bUhQwPOgggZDO0lv2U1klwB94c8Cb6rErzd3yjJ8wcVcnFLO4KxrjYZZxdKVAz0CkMKqng4kQeQm
 _1UShsQXGLl48ezbjXyJn6mAl0oS4ExeiVsx_kYGEdqjyb5CiNaAzyx0J-J5jVDSJew1rj5EiSybuy83
 PZwhluhxq0D2zPK1OSzqiezsd5kX5V8XI4MipDhaAbPYroL94banZTn9RmmAKZCAYVM-mmHbjk8mF89f
 L9rKf9EUNhxOG6GE0MDqB3LLLcyQ6sYUmpqdP5Z94IkAN-FpC7k93_-RDw
-----
-
-=== Httpie
-
-----
-Authorization:Bearer 
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2MDAzOSw
-iYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliMS03Yzg
-3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkIiwic2N
-vcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2qFa5Bd3
-PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lHDd8ST8
-fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNXJ4Bge8
-scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeApKdfDJ
-6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
 ----
 
 == Check a token
@@ -166,54 +105,6 @@ which gives the following example of result:
     "authorities":["ROLE_ADMIN","ROLE_USER"],
     "jti":"02d82e85-13f0-4678-974d-18eb06215a65",
     "client_id":"clientIdPassword"
-}
-----
-
-=== Httpie
-
-from previous example:
-
-----
-http --form POST http://localhost:2002/auth/check_token 
-token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU1MjY2M
-DAzOSwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJqdGkiOiI2MjQzMDliM
-S03Yzg3LTRjZGMtODQ0My0wMTI0NTE1Zjg3ZjgiLCJjbGllbnRfaWQiOiJjbGllbnRJZFBhc3N3b3JkI
-iwic2NvcGUiOlsicmVhZCIsInVzZXJfaW5mbyJdfQ.VO4OZL7ycqNez0cHzM5WPuklr0r6SAOkUdUV2q
-Fa5Bd3PWx3DFHAHUxkfSX0-R4OO6iG2Zu7abzToAZNVLwk107LH_lWXOMQBriGx3d2aSgCf1yx_wI3lH
-Dd8ST8fxV7uNeolzywYavSpMGfgz9GXLzmnyeuPH4oy7eyPk9BwWVi0d7a_0d-EfhE1T8eaiDfymzzNX
-J4Bge8scPy-93HmWpqORtJaFq1qy4QgU28N2LgHFEEEWCSzfhYXH-LngTCP3-JSNcox1hI51XBWEqoeA
-pKdfDJ6o4szR71SIFCBERxCH9TyUxsFywWL3e-YnXMiP2J08eB8O4YwhYQEFqB8Q
-----
-
-which gives the following example of result:
-
-----
-
-HTTP/1.1 200 OK
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Content-Type: application/json;charset=utf-8
-Date: Fri, 15 Mar 2019 14:19:31 GMT
-Expires: 0
-Pragma: no-cache
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-transfer-encoding: chunked
-
-{
-    "active": true,
-    "authorities": [
-        "ROLE_ADMIN",
-        "ROLE_USER"
-    ],
-    "client_id": "clientIdPassword",
-    "exp": 1552660039,
-    "jti": "624309b1-7c87-4cdc-8443-0124515f87f8",
-    "scope": [
-        "read",
-        "user_info"
-    ],
-    "sub": "admin"
 }
 ----
 
