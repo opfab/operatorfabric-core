@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -40,8 +40,8 @@ export default class SupervisorService {
         await this.supervisorApplication.saveSupervisedEntity(supervisedEntity);
     }
 
-    public async deleteSupervisedEntity(entityId: string): Promise<void> {
-        await this.supervisorApplication.deleteSupervisedEntity(entityId);
+    public async deleteSupervisedEntity(entityId: string): Promise<boolean> {
+        return await this.supervisorApplication.deleteSupervisedEntity(entityId);
     }
 
     public patch(update: object): ConfigDTO {

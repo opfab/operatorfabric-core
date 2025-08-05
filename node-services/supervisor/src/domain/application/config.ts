@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -93,13 +93,17 @@ export default class Config {
         this.supervisorConfig.entitiesToSupervise.push(supervisedEntity);
     }
 
-    public async deleteSupervisedEntity(entityId: string): Promise<void> {
-        await this.supervisorDatabaseService.deleteSupervisedEntity(entityId);
-
+    public async deleteSupervisedEntity(entityId: string): Promise<boolean> {
         const index = this.supervisorConfig.entitiesToSupervise.findIndex((entity) => entity.entityId === entityId);
-        if (index >= 0) {
-            this.supervisorConfig.entitiesToSupervise.splice(index, 1);
+
+        if (index === -1) {
+            return false;
         }
+
+        await this.supervisorDatabaseService.deleteSupervisedEntity(entityId);
+        this.supervisorConfig.entitiesToSupervise.splice(index, 1);
+
+        return true;
     }
 
     private loadFromFile(): void {

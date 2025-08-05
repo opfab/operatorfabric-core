@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,9 +43,13 @@ export default class SupervisorApplication {
         this.resetConnectionChecker();
     }
 
-    public async deleteSupervisedEntity(entityId: string): Promise<void> {
-        await this.config.deleteSupervisedEntity(entityId);
-        this.resetConnectionChecker();
+    public async deleteSupervisedEntity(entityId: string): Promise<boolean> {
+        const wasDeleted = await this.config.deleteSupervisedEntity(entityId);
+
+        if (wasDeleted) {
+            this.resetConnectionChecker();
+        }
+        return wasDeleted;
     }
 
     public patch(update: object): ConfigDTO {
