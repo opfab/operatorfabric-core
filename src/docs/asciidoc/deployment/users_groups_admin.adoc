@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -20,11 +20,6 @@ As there is no `Administration GUI` for the moment, it must be performed through
 
 First of all, list the users (who are the recipients in OperatorFabric) of the system with the following commands:
 
-Httpie
-....
-http http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/type"
-....
-cURL
 ....
 curl -v http://localhost:2103/users -H "Authorization:Bearer $token" -H "Content-Type:application/type"
 ....
@@ -105,11 +100,7 @@ HTTP/1.1 200 OK
 === Create a new User
 
 We are sure that no John-doe-operator exists in our OperatorFabric instance.
-We can add him in our OperatorFabric instance using the following command use httpie:
-....
-echo '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}' | http POST http://localhost:2103/users "Authorization:Bearer $token" "Content-Type:application/json"
-....
-Or here cURL:
+We can add him in our OperatorFabric instance using the following command, using cURL:
 ....
 curl -X POST http://localhost:2103/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}'
 ....
@@ -128,12 +119,6 @@ HTTP/1.1 200 OK
 
 It's always a good thing to verify if all the information has been correctly recorded in the system:
 
-with httpie:
-....
-http -b http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-or with cURL:
 ....
 curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
@@ -158,14 +143,7 @@ We need
 ifdef::single-page-doc[link:../api/users/index.html#/users/updateUser[to update the existing user]]
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/users/updateUser[to update the existing user]]
 with `john-doe-operator` login.
-To correct this mistake, the following commands can be used:
-
-with httpie:
-....
-echo '{"login":"john-doe-operator","lastName":"Doe","firstName":"John"}' | http PUT http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-or with cURL:
+To correct this mistake, the following command can be used, using cURL:
 ....
 curl -X PUT http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"login":"john-doe-operator","firstName":"John","lastName":"Doe"}'
 ....
@@ -209,12 +187,6 @@ ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroups[list the
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/fetchGroups[list the groups]]
 existing in the server.
 
-Httpie
-....
-http http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/type"
-....
-
-cURL
 ....
 curl http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
@@ -269,12 +241,6 @@ ifdef::single-page-doc[link:../api/users/index.html#/groups/createGroup[added to
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/createGroup[added to the system]]
 using the following command:
 
-using httpie:
-....
-echo '{"id":"OPERATORS","decription":"This is the brand new group of operator"}' | http POST http://localhost:2103/groups "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-using cURL:
 ....
 curl -X POST http://localhost:2103/groups -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","decription":"This is the brand new group of operator"}'
 ....
@@ -298,12 +264,6 @@ ifdef::single-page-doc[link:../api/users/index.html#/groups/fetchGroup[displayin
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/fetchGroup[displaying the details of the group]]
 called `OPERATORS`, use the following command:
 
-using httpie:
-....
-http http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-using cURL:
 ....
 curl http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
@@ -328,12 +288,6 @@ ifdef::single-page-doc[link:../api/users/index.html#/groups/updateGroup[to updat
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/groups/updateGroup[to update the group]]
 with the correct spelling, the new group of operator gets a proper description:
 
-with httpie:
-....
-echo '{"id":"OPERATORS","description":"This is the brand-new group of operator"}' | http -b PUT http://localhost:2103/groups/OPERATORS "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-with cURL:
 ....
 curl -X PUT http://localhost:2103/groups/OPERATORS -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"OPERATORS","description":"This is the brand-new group of operator"}'
 ....
@@ -355,12 +309,6 @@ ifdef::single-page-doc[link:../api/users/index.html#/users/addGroupUsers[to make
 ifndef::single-page-doc[link:/documentation/current/api/users/index.html#/users/addGroupUsers[to make the user a member of the group]]
 . To achieve this, use the following command:
 
-with httpie:
-....
-echo '["john-doe-operator"]' | http PATCH http://localhost:2103/groups/OPERATORS/users "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-with cURL:
 ....
 curl -X PATCH http://localhost:2103/groups/OPERATORS/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '["john-doe-operator"]'
 ....
@@ -371,11 +319,7 @@ HTTP/1.1 200 OK
 ....
 
 Let's verify that the changes are correctly recorded by fetching the :
-....
-http http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
-....
 
-with cURL
 ....
 curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
@@ -399,12 +343,6 @@ It's now possible to send cards either specifically to `john-doe-operator` or mo
 
 When John Doe is no longer in charge of hypervising cards for `OPERATORS` group, this group has to be removed from his login by using the following command:
 
-with httpie:
-....
-http DELETE http://localhost:2103/groups/OPERATORS/users/john-doe-operator "Authorization:Bearer $token"
-....
-
-with cURL:
 ....
 curl -X DELETE -H "Authorization:Bearer $token" http://localhost:2103/groups/OPERATORS/users/john-doe-operator
 ....
@@ -425,12 +363,6 @@ HTTP/1.1 200 OK
 ....
 A last command to verify that `OPERATORS` is no longer linked to `john-doe-operator`:
 
-with httpie:
-....
-http http://localhost:2103/users/john-doe-operator "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-with cURL:
 ....
 curl http://localhost:2103/users/john-doe-operator -H "Authorization:Bearer $token" -H "Content-Type:application/json"
 ....
@@ -459,13 +391,6 @@ On a positive cycle detection cancels the addition or the patch.
 
 ==== Add a new Entity without a cycle in the parent declaration
 
-using httpie:
-....
-echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1_FR"]}' \
-| http POST http://localhost:2103/entities "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-using cURL:
 ....
 curl http://localhost:2103/entities -H "Authorization:Bearer $token" -H "Content-Type:application/json" \
 --data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["ENTITY1_FR"]}'
@@ -489,13 +414,6 @@ HTTP/1.1 200 OK
 For simplicity, in this example the new entity will declare itself as a parent.
 This auto-referencing triggers a cycle detection.
 
-using httpie:
-
-....
-echo '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["NEW_ENTITY"]}' | http POST http://localhost:2103/entities "Authorization:Bearer $token" "Content-Type:application/json"
-....
-
-using cURL:
 ....
 curl http://localhost:2103/entities -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"id":"NEW_ENTITY","name":"Last New Entity","description":"This is the last new entity","parents": ["NEW_ENTITY"]}'
 ....
