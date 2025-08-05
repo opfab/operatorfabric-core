@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -110,6 +110,7 @@ app.get('/start', (req, res) => {
         .then((isAdmin) => {
             if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
             else {
+                logger.info('Start card reminder service asked');
                 cardsReminderService.start();
                 res.send('Start service');
             }
@@ -202,7 +203,7 @@ app.use(function (err: any, req: any, res: any, next: any): void {
         logger.warn('SECURITY : try to access resource ' + req.originalUrl + ' without valid token');
         res.status(401).send('Invalid token');
     } else {
-        logger.error('Catched error ' + err);
+        logger.error('Caught error ' + err);
         next(err);
     }
 });
