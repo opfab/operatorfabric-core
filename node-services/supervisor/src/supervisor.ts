@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -206,8 +206,12 @@ app.delete('/supervisedEntities/:id', (req, res) => {
             } else {
                 supervisorService
                     .deleteSupervisedEntity(req.params.id)
-                    .then(() => {
-                        res.send();
+                    .then((wasDeleted) => {
+                        if (wasDeleted) {
+                            res.send();
+                        } else {
+                            res.status(404).send({message: 'Entity ' + req.params.id + ' not found'});
+                        }
                     })
                     .catch((err) => {
                         res.status(500).send();

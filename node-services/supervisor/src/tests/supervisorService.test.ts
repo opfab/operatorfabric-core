@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -127,8 +127,33 @@ describe('supervisor config service', function () {
         );
 
         await supervisorService.init();
-        await supervisorService.deleteSupervisedEntity('ENTITY4');
+        const wasDeleted = await supervisorService.deleteSupervisedEntity('ENTITY4');
+        expect(wasDeleted).toEqual(true);
         expect(supervisorService.getSupervisorConfig().entitiesToSupervise).toEqual([
+            {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
+        ]);
+    });
+
+    it('Delete unexisting supervised Entity', async function () {
+        const defaultConfig = getDefaultConfig();
+        const supervisorDatabaseService = new SupervisorDatabaseServerStub();
+        supervisorDatabaseService.supervisedEntities = [
+            {entityId: 'ENTITY4', supervisors: ['ENTITY1']},
+            {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
+        ];
+        const supervisorService = new SupervisorService(
+            defaultConfig,
+            null,
+            supervisorDatabaseService,
+            new OpfabServicesInterfaceStub(),
+            logger
+        );
+
+        await supervisorService.init();
+        const wasDeleted = await supervisorService.deleteSupervisedEntity('UNEXISTING_ENTITY');
+        expect(wasDeleted).toEqual(false);
+        expect(supervisorService.getSupervisorConfig().entitiesToSupervise).toEqual([
+            {entityId: 'ENTITY4', supervisors: ['ENTITY1']},
             {entityId: 'ENTITY3', supervisors: ['ENTITY2']}
         ]);
     });
