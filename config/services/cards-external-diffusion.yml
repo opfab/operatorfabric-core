@@ -1,7 +1,7 @@
 operatorfabric:
   mail:
-    host: mailhog
-    port: 1025
+    host: greenmail
+    port: 3025
     auth:
       user: guest
       pass: guest

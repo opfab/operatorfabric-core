@@ -1,0 +1,41 @@
+// Copyright (c) 2025 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Greenmail servers
+
+Greenmail is an open source test suite of email servers for testing purposes.
+Opfab uses Greenmail to test mail notification service.
+Greenmail allows retrieving the messages sent with the JSON API.
+
+== Greenmail docker container
+
+A Greenmail docker container is configured in Opfab docker-compose.yaml:
+
+[source,yaml]
+----
+  greenmail:
+    image: greenmail/standalone:2.1.4
+    ports:
+      - 3025:3025
+      - 3110:3110
+      - 3143:3143
+      - 3465:3465
+      - 3993:3993
+      - 3995:3995
+      - 8080:8080
+----
+
+The container exposes port 3025 for SMTP protocol and port 8080 for HTTP REST API.
+Greenmail REST API allows listing, retrieving and deleting messages.
+
+For example, to retrieve the list of received messages, send an http GET request to:
+`http://localhost:8080/api/user/{user}/messages/`
+
+
+
+
+
