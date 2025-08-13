@@ -64,12 +64,12 @@ cd "$SCRIPT_DIR" || exit 1
             sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
             # Use a specific configuration for cards-publication without Kafka
             cp services/cards-publication-nokafka.yml services/cards-publication.yml
-            docker compose up -d cards-consultation cards-publication users businessconfig mongodb rabbitmq keycloak web-ui cards-external-diffusion cards-reminder supervisor mailhog
+            docker compose up -d cards-consultation cards-publication users businessconfig mongodb rabbitmq keycloak web-ui cards-external-diffusion cards-reminder supervisor greenmail
             ;;
         java)
             echo "Java mode : Starting Java application directly with permissive CORS"
             sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
-            docker compose -f docker-compose.yml up -d mongodb rabbitmq keycloak mailhog zookeeper kafka web-ui cards-external-diffusion cards-reminder supervisor ext-app dummy-modbus-device_1 dummy-modbus-device_2
+            docker compose -f docker-compose.yml up -d mongodb rabbitmq keycloak greenmail zookeeper kafka web-ui cards-external-diffusion cards-reminder supervisor ext-app dummy-modbus-device_1 dummy-modbus-device_2
             cd ../bin
             ./run_all.sh start
             ;;

@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -27,6 +27,11 @@
 |27017 |mongo |Mongo api port
 |5672 |rabbitmq |Amqp api port
 |15672 |rabbitmq |Rabbitmq api port
-|1025 |MailHog |MailHog SMTP port (for testing only)
-|8025 |MailHog |MailHog web UI and API http (REST) (for testing only)
+|3025 |Greenmail |Greenmail SMTP port (for testing only)
+|3110 |Greenmail |Greenmail POP3 port (for testing only)
+|3143 |Greenmail |Greenmail IMAP port (for testing only)
+|3465 |Greenmail |Greenmail SMTPS port (for testing only)
+|3993 |Greenmail |Greenmail IMAPS port (for testing only)
+|3995 |Greenmail |Greenmail POP3S port (for testing only)
+|8080 |Greenmail |Greenmail API http (REST) (for testing only)
 |===

@@ -188,23 +188,22 @@ Scenario: Check mail for operator 1 is sent
     Then status 200
 
     * configure retry = { count: 45, interval: 1000 }
-    Given url 'http://localhost:8025/api/v2/messages'
+    Given url 'http://localhost:8080/api/user/operator1_fr%40opfab.com/messages/'
 	And header Authorization = 'Bearer ' + authTokenOperator1
-    And retry until responseStatus == 200  && response.count == 1
+    And retry until responseStatus == 200 && response.length == 1
     When method get
     Then status 200
-    And match response.items[0].To[0].Mailbox == 'operator1_fr'
-    And match response.items[0].To[0].Domain == 'opfab.com'
-    And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
-    And match response.items[0].Content.Headers.Subject[0].indexOf('Opfab card received  - card Title') == 0
-    And match response.items[0].Content.Body contains 'A MESSAGE'
+    And match response[0].mimeMessage contains 'To: operator1_fr@opfab.com'
+    And match response[0].contentType == 'text/html; charset=utf-8'
+    And match response[0].subject == 'Opfab card received  - card Title'
     # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
-    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE' 
+    And match response[0].mimeMessage contains 'A MESSAGE'
+    And match response[0].mimeMessage contains 'YXBpX3Rlc3QucHJvY2VzczE'
 
     # Delete sent email
-    Given url 'http://localhost:8025/api/v1/messages'
+    Given url 'http://localhost:8080/api/mail/purge'
 	And header Authorization = 'Bearer ' + authTokenOperator1
-    When method delete
+    When method post
     Then status 200
 
 
@@ -239,19 +238,18 @@ Scenario: Post card for operator2
 Scenario: Check email has been sent as plain text
 
     * configure retry = { count: 45, interval: 1000 }
-    Given url 'http://localhost:8025/api/v2/messages'
+    Given url 'http://localhost:8080/api/user/operator2_fr%40opfab.com/messages/'
 	And header Authorization = 'Bearer ' + authTokenOperator2
-    And retry until responseStatus == 200  && response.count == 1
+    And retry until responseStatus == 200  && response.length == 1
     When method get
     Then status 200
-    And match response.items[0].To[0].Mailbox == 'operator2_fr'
-    And match response.items[0].To[0].Domain == 'opfab.com'
-    And match response.items[0].Content.Headers.Content-Type[0] == 'text/plain; charset=utf-8'
+    And match response[0].mimeMessage contains 'To: operator2_fr@opfab.com'
+    And match response[0].contentType == 'text/plain; charset=utf-8'
 
     # Delete sent email
-    Given url 'http://localhost:8025/api/v1/messages'
+    Given url 'http://localhost:8080/api/mail/purge'
 	And header Authorization = 'Bearer ' + authTokenOperator1
-    When method delete
+    When method post
     Then status 200
 
 Scenario: Restore email config
@@ -279,22 +277,21 @@ Scenario: Check daily recap email is being sent
 
     # Check daily recap is sent and a card link is in it
     * configure retry = { count: 45, interval: 1000 }
-    Given url 'http://localhost:8025/api/v2/messages'
+    Given url 'http://localhost:8080/api/user/operator1_fr%40opfab.com/messages/'
 	And header Authorization = 'Bearer ' + authTokenOperator2
-    And retry until responseStatus == 200  && response.count == 1
+    And retry until responseStatus == 200  && response.length == 1
     When method get
     Then status 200
-    And match response.items[0].To[0].Mailbox == 'operator1_fr'
-    And match response.items[0].To[0].Domain == 'opfab.com'
-    And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
-    And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the day') == 0
+    And match response[0].mimeMessage contains 'To: operator1_fr@opfab.com'
+    And match response[0].contentType == 'text/html; charset=utf-8'
+    And match response[0].subject == 'Cards received during the day'
     # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
-    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE'
+    And match response[0].mimeMessage contains 'YXBpX3Rlc3QucHJvY2VzczE'
 
     # Delete sent email
-    Given url 'http://localhost:8025/api/v1/messages'
+    Given url 'http://localhost:8080/api/mail/purge'
 	And header Authorization = 'Bearer ' + authTokenOperator1
-    When method delete
+    When method post
     Then status 200
 
 Scenario: Check weekly recap email is being sent
@@ -307,22 +304,21 @@ Scenario: Check weekly recap email is being sent
 
     # Check weekly recap is sent and a card link is in it
     * configure retry = { count: 45, interval: 1000 }
-    Given url 'http://localhost:8025/api/v2/messages'
+    Given url 'http://localhost:8080/api/user/operator1_fr%40opfab.com/messages/'
 	And header Authorization = 'Bearer ' + authTokenOperator2
-    And retry until responseStatus == 200  && response.count == 1
+    And retry until responseStatus == 200  && response.length == 1
     When method get
     Then status 200
-    And match response.items[0].To[0].Mailbox == 'operator1_fr'
-    And match response.items[0].To[0].Domain == 'opfab.com'
-    And match response.items[0].Content.Headers.Content-Type[0] == 'text/html; charset=utf-8'
-    And match response.items[0].Content.Headers.Subject[0].indexOf('Cards received during the week') == 0
+    And match response[0].mimeMessage contains 'To: operator1_fr@opfab.com'
+    And match response[0].contentType == 'text/html; charset=utf-8'
+    And match response[0].subject == 'Cards received during the week'
     # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
-    And match response.items[0].Content.Body contains 'YXBpX3Rlc3QucHJvY2VzczE'
+    And match response[0].mimeMessage contains 'YXBpX3Rlc3QucHJvY2VzczE'
 
     # Delete sent email
-    Given url 'http://localhost:8025/api/v1/messages'
+    Given url 'http://localhost:8080/api/mail/purge'
 	And header Authorization = 'Bearer ' + authTokenOperator1
-    When method delete
+    When method post
     Then status 200
 
 Scenario: Restore perimeter config
