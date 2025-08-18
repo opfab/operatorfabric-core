@@ -79,7 +79,6 @@
       "darkMode":true,
       "mapProjection": "EPSG:3857",
       "defaultDataProjection": "EPSG:4326",
-      "credentialDomains": [],
       "initialLongitude": 5.3255,
       "initialLatitude": 52.1845,
       "initialZoom": 6,

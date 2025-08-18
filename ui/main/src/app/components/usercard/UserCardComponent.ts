@@ -335,7 +335,6 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     }
 
     private reinsertScripts(): void {
-        //bug eslint/prettier
         const scripts = <HTMLCollection>this.element.nativeElement.getElementsByTagName('script');
         Array.from(scripts).forEach((script) => {
             const scriptCopy = document.createElement('script');

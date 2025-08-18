@@ -11,7 +11,7 @@
 
 The geographical map is a feature that allows you to display the geographical location of cards on a map on the feed screen.
 
-To activate the geographical map feature, set the `feed.enableMap` property to `true` in the `web-ui.json` configuration file.
+To activate the geographical map feature, set the `feed.geomap.enableMap` property to `true` in the `web-ui.json` configuration file.
 
 The geographical location of the cards is determined by the `wktGeometry` and `wktProjection` fields in the card's metadata. If a card has a defined `wktGeometry`, its location will be highlighted on the card. The system supports two geometrical shapes: `POINT` and `POLYGON`. A `POINT` will display as a circle on the map, while a `POLYGON` will outline the specified area.
 
@@ -47,6 +47,8 @@ The geographical map supports different coordinate reference systems (projection
 
 The map projection can be configured using the `feed.geomap.mapProjection` parameter. Initial coordinates (`initialLongitude` and `initialLatitude`) can be specified either in WGS84 (EPSG:4326) or in the target projection - the system automatically detects the format and transforms them if necessary.
 
+For Lambert 93 projection, the system includes automatic extent constraint to avoid 404 errors on tiles outside the valid area for France (including Corsica). This can be controlled using the `feed.geomap.constrainLambert93Extent` parameter.
+
 The layers and tiles of the map can be configured using the `feed.geomap.layers` parameter. The following types are supported: 
 
     - `osm` for OpenStreetMap tiles 
@@ -71,6 +73,8 @@ ArcGIS layers support additional parameters:
 - `transparent`: Boolean parameter sent to ArcGIS server requesting transparent background
 - `layers`: Comma-separated list of layer IDs to display (e.g., "0,1,2")
 - `format`: Image format requested from server (e.g., "png", "jpg")
+- `ratio`: Device pixel ratio (default: 1, overrides OpenLayers' default of 1.5 for consistent performance)
+- `visible`: Initial layer visibility (default: true)
 
 **Example ArcGIS configuration:**
 ```json
@@ -81,6 +85,8 @@ ArcGIS layers support additional parameters:
   "opacity": 0.8,
   "layers": "0,1,2",
   "format": "png",
+  "ratio": 1,
+  "visible": true,
   "zIndex": 3
 }
 ```
@@ -131,7 +137,7 @@ Here's a complete example configuration using Web Mercator projection with all s
     "geomap": {
       "enableMap": true,
       "mapProjection": "EPSG:3857",
-      "wktProjection": "EPSG:4326",
+      "defaultDataProjection": "EPSG:4326",
       "initialLongitude": 2.4408,
       "initialLatitude": 46.7211,
       "initialZoom": 6,
@@ -140,7 +146,7 @@ Here's a complete example configuration using Web Mercator projection with all s
       "zoomDuration": 500,
       "highlightPolygonStrokeWidth": 20,
       "popupContent": "summary",
-      "dayNightMode": "DAY",
+      "darkMode": false,
       "layers": [
         {
           "type": "osm",
@@ -196,8 +202,7 @@ Here's an example configuration optimized for France using Lambert 93 projection
       "enableMap": true,
       "mapProjection": "EPSG:2154",
       "defaultDataProjection": "EPSG:2154",
-      "wktProjection": "EPSG:2154",
-      "dayNightMode": "DAY",
+      "darkMode": false,
       "initialLongitude": 651966,
       "initialLatitude": 6862314,
       "initialZoom": 4,
@@ -238,7 +243,7 @@ For backward compatibility, the following legacy configuration format is still s
   "feed": {
     "geomap": {
       "enableMap": true,
-      "wktProjection": "EPSG:4326",
+      "defaultDataProjection": "EPSG:4326",
       "initialLongitude": 2.4408,
       "initialLatitude": 46.7211,
       "initialZoom": 2,
@@ -277,6 +282,7 @@ For backward compatibility, the following legacy configuration format is still s
 - Coordinates can be provided in Lambert 93 format (large numbers) or WGS84 (auto-detected)
 - The extent automatically includes Corsica
 - Constraint to France territory is enabled by default (`constrainLambert93Extent: true`)
+- Layer validation is performed automatically with detailed error logging for invalid configurations
 
 Refer to the 
 ifdef::single-page-doc[<<ui_properties_geomap, geomap web-ui configuration>>]

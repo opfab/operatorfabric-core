@@ -101,17 +101,15 @@ export abstract class OpfabMap {
             }
         };
 
+        // Get default data projection once
+        const defaultDataProjection = ConfigService.getConfigValue('feed.geomap.defaultDataProjection', 'EPSG:4326');
+
         // 1. New optional parameter (priority)
         const mapProjection = ConfigService.getConfigValue('feed.geomap.mapProjection', null);
         if (mapProjection) {
             const config = supportedProjections[mapProjection];
             if (!config) {
                 logger.warn(`Unsupported projection: ${mapProjection}, using EPSG:3857 as default`);
-                // Keep backward compatibility: use EPSG:4326 as data projection when map projection falls back
-                const defaultDataProjection = ConfigService.getConfigValue(
-                    'feed.geomap.defaultDataProjection',
-                    'EPSG:4326'
-                );
                 return {
                     mapProjection: 'EPSG:3857',
                     dataProjection: defaultDataProjection,
@@ -119,16 +117,13 @@ export abstract class OpfabMap {
                 };
             }
             return {
-                mapProjection: mapProjection,
-                dataProjection: mapProjection, // Force coherence
-                config: config
+                mapProjection,
+                dataProjection: defaultDataProjection,
+                config
             };
         }
 
         // 2. Backward compatibility fallback
-        // EPSG:4326 WGS84 default data projection
-        // EPSG:3857 Web Mercator default map projection
-        const defaultDataProjection = ConfigService.getConfigValue('feed.geomap.defaultDataProjection', 'EPSG:4326');
         return {
             mapProjection: 'EPSG:3857',
             dataProjection: defaultDataProjection,
@@ -188,11 +183,13 @@ export abstract class OpfabMap {
                 filter = NIGHT_MODE_FILTER;
             }
 
-            this.map.on('postcompose', () => {
-                if (document.querySelector('canvas')) {
-                    document.querySelector('canvas').style.filter = filter;
+            const viewport = this.map.getViewport?.();
+            const applyFilter = () => {
+                if (viewport) {
+                    viewport.querySelectorAll('canvas').forEach((c: HTMLCanvasElement) => (c.style.filter = filter));
                 }
-            });
+            };
+            this.map.on('postrender', applyFilter as any);
             this.map.updateSize();
         }
     }
@@ -231,6 +228,7 @@ export abstract class OpfabMap {
         });
 
         this.addLayers();
+        this.addGeoJSONLayer(GlobalStyleService.getStyle());
         if (enableGraph) {
             this.map.addControl(new GraphControl(null));
         }
@@ -266,7 +264,7 @@ export abstract class OpfabMap {
             case 'wmts':
                 if (!layer.capabilitiesUrl || !layer.layer || !layer.matrixSet) {
                     logger.error(
-                        `Invalid WMTS layer configuration: missing required properties (capabilitiesUrl, layer, matrixSet)`,
+                        `Invalid WMTS layer configuration: missing required properties (capabilitiesUrl, layer, matrixSet). details=${JSON.stringify(layer)}`,
                         layer
                     );
                     return false;
@@ -329,7 +327,7 @@ export abstract class OpfabMap {
                 } else if (layer.type === 'osm') {
                     this.map.addLayer(
                         new TileLayer({
-                            source: new OSM(),
+                            source: new OSM({crossOrigin: 'anonymous'}),
                             // Support for opacity and zIndex for OSM
                             opacity: layer.opacity !== undefined ? layer.opacity : 1,
                             zIndex: layer.zIndex !== undefined ? layer.zIndex : 0
@@ -348,13 +346,11 @@ export abstract class OpfabMap {
     async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string, layerConfig?: any) {
         const parser = new WMTSCapabilities();
         try {
-            const optionsForCapabilitiesFetching: RequestInit = useCredentialsForCapabilities
-                ? {credentials: 'include'}
-                : {};
-            const response = await fetch(capabilitiesUrl, optionsForCapabilitiesFetching);
+            const response = await fetch(capabilitiesUrl);
 
             if (!response.ok) {
-                logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);
+                logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText}`);
+                return;
             }
 
             const text = await response.text();
@@ -376,9 +372,9 @@ export abstract class OpfabMap {
 
             // Create WMTS layer
             const wmtsLayer = new TileLayer({
-                opacity: opacity,
+                opacity,
                 source: new WMTS(options),
-                zIndex: zIndex
+                zIndex
             });
 
             // For Lambert 93, set extent constraint to avoid 404 errors on tiles outside valid area
@@ -392,7 +388,7 @@ export abstract class OpfabMap {
 
             this.map.addLayer(wmtsLayer);
         } catch (error) {
-            logger.error(`Failed to add WMTS layer '${layer}':`, error);
+            logger.error(`Failed to add WMTS layer '${layer}': ${String(error)}`);
         }
     }
 
@@ -516,7 +512,7 @@ export abstract class OpfabMap {
 
                 const vectorLayer = new VectorLayer({
                     source: layerSource,
-                    style: geojson.style ?? defaultStyle,
+                    style: geojson.style ? this.convertFlatStyleToOpenLayersStyle(geojson.style) : defaultStyle,
                     opacity: geojson.opacity !== undefined ? geojson.opacity : 1,
                     zIndex: geojson.zIndex !== undefined ? geojson.zIndex : 0
                 });
@@ -723,6 +719,25 @@ export abstract class OpfabMap {
         return window.innerWidth < 1000;
     }
 
+    private convertFlatStyleToOpenLayersStyle(flatStyle: any): Style {
+        const styleOptions: any = {};
+
+        if (flatStyle['stroke-color'] || flatStyle['stroke-width']) {
+            styleOptions.stroke = new Stroke({
+                color: flatStyle['stroke-color'] || 'rgba(0, 0, 0, 1)',
+                width: flatStyle['stroke-width'] || 1
+            });
+        }
+
+        if (flatStyle['fill-color']) {
+            styleOptions.fill = new Fill({
+                color: flatStyle['fill-color']
+            });
+        }
+
+        return new Style(styleOptions);
+    }
+
     private addArcGISLayer(layerConfig: any) {
         // Build ArcGIS REST parameters
         const restParams: any = {};
@@ -747,7 +762,7 @@ export abstract class OpfabMap {
         const imageArcGISSource = new ImageArcGISRest({
             url: layerConfig.url,
             params: restParams,
-            ratio: layerConfig.ratio || 1,
+            ratio: layerConfig.ratio ?? 1,
             crossOrigin: 'anonymous'
         });
 
