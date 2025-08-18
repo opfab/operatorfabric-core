@@ -10,8 +10,8 @@
 
 import {Map as OpenLayersMap} from 'ol';
 import View from 'ol/View';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
+import {Tile as TileLayer, Vector as VectorLayer, Image as ImageLayer} from 'ol/layer';
+import {OSM, XYZ, Vector as VectorSource, ImageArcGISRest} from 'ol/source';
 import {fromLonLat} from 'ol/proj';
 import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
@@ -149,6 +149,9 @@ export abstract class OpfabMap {
                     );
                 } else if (layer.type === 'osm') {
                     this.map.addLayer(new TileLayer({source: new OSM()}));
+                } else if (layer.type === 'esri' || layer.type === 'arcgis') {
+                    // ArcGIS REST layer support
+                    this.addArcGISLayer(layer);
                 } else if (layer.type !== 'geojson') {
                     logger.warn(`Unknown layer type: ${layer.type}`);
                 }
@@ -159,7 +162,7 @@ export abstract class OpfabMap {
     async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string) {
         const parser = new WMTSCapabilities();
         try {
-            const response = await fetch(capabilitiesUrl);
+            const response = await fetch(capabilitiesUrl, {credentials: 'include'});
 
             if (!response.ok) {
                 logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);
@@ -505,6 +508,57 @@ export abstract class OpfabMap {
 
     isSmallscreen() {
         return window.innerWidth < 1000;
+    }
+
+    private addArcGISLayer(layerConfig: any) {
+        try {
+            if (!layerConfig.url) {
+                logger.error(`Invalid ArcGIS layer configuration: missing url`, layerConfig);
+                return;
+            }
+
+            // Build ArcGIS REST parameters
+            const restParams: any = {};
+
+            // Layers to display
+            if (layerConfig.layers) {
+                restParams['LAYERS'] = `show:${layerConfig.layers}`;
+            }
+
+            // Format
+            if (layerConfig.format) {
+                restParams['FORMAT'] = layerConfig.format;
+            }
+
+            // Transparent background
+            if (layerConfig.transparent !== undefined) {
+                restParams['TRANSPARENT'] = layerConfig.transparent;
+            }
+
+            // Custom parameters
+            if (layerConfig.params) {
+                Object.assign(restParams, layerConfig.params);
+            }
+
+            const imageArcGISSource = new ImageArcGISRest({
+                url: layerConfig.url,
+                params: restParams,
+                ratio: layerConfig.ratio || 1,
+                crossOrigin: layerConfig.crossOrigin || 'anonymous'
+            });
+
+            const imageLayer = new ImageLayer({
+                source: imageArcGISSource,
+                opacity: layerConfig.opacity !== undefined ? layerConfig.opacity : 1,
+                visible: layerConfig.visible !== false,
+                zIndex: layerConfig.zIndex || 0
+            });
+
+            this.map.addLayer(imageLayer);
+            logger.info(`Added ArcGIS REST layer from: ${layerConfig.url}`);
+        } catch (error) {
+            logger.error(`Failed to add ArcGIS layer:`, error);
+        }
     }
 }
 
