@@ -159,7 +159,7 @@ export abstract class OpfabMap {
     async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string) {
         const parser = new WMTSCapabilities();
         try {
-            const response = await fetch(capabilitiesUrl);
+            const response = await fetch(capabilitiesUrl, {credentials: 'omit'});
 
             if (!response.ok) {
                 logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);
