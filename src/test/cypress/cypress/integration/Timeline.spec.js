@@ -59,7 +59,7 @@ describe('Time line moves', function () {
     it('Check timelime manual moves in Day mode', function () {
         opfab.loginWithClock(new Date(2030, 2, 31, 11, 59));
 
-        setTimeLineDomain('J');
+        setTimeLineDomain('D');
         checkFirstTickLabel(' 00h ');
         checkTitle(' 31 March 2030 ');
         moveRight();
@@ -89,29 +89,29 @@ describe('Time line moves', function () {
         opfab.loginWithClock(new Date(2030, 2, 31, 10, 50));
 
         setTimeLineDomain('7D');
-        checkSecondTickLabel(' 00h ');
-        checkTitle(' 30/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         moveRight();
         checkFirstTickLabel(' 00h ');
-        checkTitle(' 01/04/2030 - 09/04/2030 ');
+        checkTitle(' 01/04/2030 - 08/04/2030 ');
         moveRight();
         checkFirstTickLabel(' 00h ');
-        checkTitle(' 02/04/2030 - 10/04/2030 ');
+        checkTitle(' 02/04/2030 - 09/04/2030 ');
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkSecondTickLabel(' 00h ');
-        checkTitle(' 30/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
 
         moveLeft();
         checkFirstTickLabel(' 00h ');
-        checkTitle(' 30/03/2030 - 07/04/2030 ');
+        checkTitle(' 30/03/2030 - 06/04/2030 ');
         moveLeft();
         checkFirstTickLabel(' 00h ');
-        checkTitle(' 29/03/2030 - 06/04/2030 ');
+        checkTitle(' 29/03/2030 - 05/04/2030 ');
 
         unlockTimeLine(); // timeline shall return to initial position
-        checkSecondTickLabel(' 00h ');
-        checkTitle(' 30/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
     });
 
     it('Check timelime manual moves in month mode', function () {
@@ -224,7 +224,7 @@ describe('Time line moves', function () {
         checkHaveCircle(1);
     });
 
-    it('Check timeline does not moves when locked in real time view', function () {
+    it('Check timeline does not move when locked in real time view', function () {
         const currentDate = new Date(2030, 2, 31, 23, 55);
         opfab.loginWithClock(currentDate);
 
@@ -276,7 +276,7 @@ describe('Time line moves', function () {
         const currentDate = new Date(2030, 2, 31, 23, 35);
         opfab.loginWithClock(currentDate);
 
-        setTimeLineDomain('J');
+        setTimeLineDomain('D');
         checkFirstTickLabel(' 00h ');
         checkTitle(' 31 March 2030 ');
         let deltaTime = currentDate.getTime() - new Date().getTime();
@@ -323,11 +323,11 @@ describe('Time line moves', function () {
         checkHaveCircle(1);
     });
 
-    it('Check timeline does not moves when locked in day view', function () {
+    it('Check timeline does not move when locked in day view', function () {
         const currentDate = new Date(2030, 2, 31, 23, 35);
         opfab.loginWithClock(currentDate);
 
-        setTimeLineDomain('J');
+        setTimeLineDomain('D');
         lockTimeLine();
         checkFirstTickLabel(' 00h ');
 
@@ -380,31 +380,31 @@ describe('Time line moves', function () {
         opfab.loginWithClock(currentDate);
 
         setTimeLineDomain('7D');
-        checkFirstTickLabel(' 08h ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         let deltaTime = currentDate.getTime() - new Date().getTime();
         script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * 60 * 1000});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(' 31/03/30 23:35 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         checkHaveCircle(1);
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 31/03/30 23:50 ');
-        checkFirstTickLabel(' 08h ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         checkHaveCircle(1);
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 00:05 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkSecondTickLabel(' 16h ');
-        checkHaveCircle(1);
+        checkTitle(' 01/04/2030 - 08/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkHaveCircle(0);
 
         cy.tick(12 * HOURS);
         checkTimeCursorText(' 01/04/30 12:05 ');
-        checkTitle(' 01/04/2030 - 09/04/2030 ');
+        checkTitle(' 01/04/2030 - 08/04/2030 ');
         checkFirstTickLabel(' 00h ');
         checkHaveCircle(0);
 
@@ -419,49 +419,49 @@ describe('Time line moves', function () {
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 12:20 ');
-        checkTitle(' 01/04/2030 - 09/04/2030 ');
+        checkTitle(' 01/04/2030 - 08/04/2030 ');
         checkFirstTickLabel(' 00h ');
         checkHaveCircle(1);
 
         cy.tick(24 * HOURS);
         checkTimeCursorText(' 02/04/30 12:20 ');
-        checkTitle(' 02/04/2030 - 10/04/2030 ');
+        checkTitle(' 02/04/2030 - 09/04/2030 ');
         checkFirstTickLabel(' 00h ');
         checkHaveCircle(0);
     });
 
-    it('Check timeline does not moves when locked in 7 day view', function () {
+    it('Check timeline does not move when locked in 7 day view', function () {
         const currentDate = new Date(2030, 2, 31, 23, 35);
         opfab.loginWithClock(currentDate);
 
         setTimeLineDomain('7D');
         lockTimeLine();
-        checkFirstTickLabel(' 08h ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         let deltaTime = currentDate.getTime() - new Date().getTime();
         script.sendCard('cypress/feed/customEvent.json', {startDate: deltaTime, endDate: deltaTime + 5 * 60 * 1000});
         cy.wait(500);
         cy.tick(1 * SECONDS);
         checkTimeCursorText(' 31/03/30 23:35 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         checkHaveCircle(1);
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 31/03/30 23:50 ');
-        checkFirstTickLabel(' 08h ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
+        checkFirstTickLabel(' 00h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
         checkHaveCircle(1);
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 00:05 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkFirstTickLabel(' 08h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
         checkHaveCircle(1);
 
         cy.tick(12 * HOURS);
         checkTimeCursorText(' 01/04/30 12:05 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkFirstTickLabel(' 08h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
         checkHaveCircle(1);
         deltaTime = currentDate.getTime() - new Date().getTime();
         script.sendCard('cypress/feed/customAlarm.json', {
@@ -474,14 +474,14 @@ describe('Time line moves', function () {
 
         cy.tick(15 * MINUTES);
         checkTimeCursorText(' 01/04/30 12:20 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkFirstTickLabel(' 08h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
         checkHaveCircle(2);
 
         cy.tick(24 * HOURS);
         checkTimeCursorText(' 02/04/30 12:20 ');
-        checkTitle(' 31/03/2030 - 08/04/2030 ');
-        checkFirstTickLabel(' 08h ');
+        checkTitle(' 31/03/2030 - 07/04/2030 ');
+        checkFirstTickLabel(' 00h ');
         checkHaveCircle(2);
     });
 
@@ -521,7 +521,7 @@ describe('Time line moves', function () {
         checkHaveCircle(1);
     });
 
-    it('Check timeline does not moves when unlocked in week day view', function () {
+    it('Check timeline does not move when unlocked in week day view', function () {
         const currentDate = new Date(2030, 3, 4, 22, 0);
         opfab.loginWithClock(currentDate);
 
@@ -588,7 +588,7 @@ describe('Time line moves', function () {
         checkHaveCircle(1);
     });
 
-    it('Check timeline does not moves when locked in month view', function () {
+    it('Check timeline does not move when locked in month view', function () {
         const currentDate = new Date(2030, 3, 30, 15, 0);
         opfab.loginWithClock(currentDate);
 
@@ -648,7 +648,7 @@ describe('Time line moves', function () {
         checkHaveCircle(1);
     });
 
-    it('Check timeline does not moves when locked in year view', function () {
+    it('Check timeline does not move when locked in year view', function () {
         const currentDate = new Date(2030, 11, 30, 8, 0);
         opfab.loginWithClock(currentDate);
 
@@ -683,7 +683,7 @@ describe('Time line moves', function () {
         const currentDate = new Date(2030, 2, 31, 23, 55);
         opfab.loginWithClock(currentDate);
 
-        setTimeLineDomain('J');
+        setTimeLineDomain('D');
         checkFirstTickLabel(' 00h ');
         checkTitle(' 31 March 2030 ');
         const deltaTime = currentDate.getTime() - new Date().getTime();

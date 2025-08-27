@@ -203,7 +203,7 @@ describe('Sound notification test', function () {
 
             feed.checkFilterIsNotActive();
             // Set timeline to day domain
-            setTimeLineDomain('J');
+            setTimeLineDomain('D');
             // shift timeline forward by 2 days
             moveTimelineRight();
             moveTimelineRight();

@@ -52,9 +52,9 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     loadDomainConfiguration() {
         const domains = {
-            J: {
-                buttonTitle: 'timeline.buttonTitle.J',
-                domainId: 'J'
+            D: {
+                buttonTitle: 'timeline.buttonTitle.D',
+                domainId: 'D'
             },
             RT: {
                 buttonTitle: 'timeline.buttonTitle.RT',
@@ -77,7 +77,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
                 domainId: 'Y'
             }
         };
-        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['RT', 'J', '7D', 'W', 'M', 'Y']);
+        const domainsConf = ConfigService.getConfigValue('feed.timeline.domains', ['RT', 'D', '7D', 'W', 'M', 'Y']);
         this.buttonList = [];
         domainsConf.map((domain) => {
             if (Object.keys(domains).includes(domain)) {
@@ -97,16 +97,14 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         }
 
         const buttonToActivate = this.buttonList.find((b) => b.domainId === currentDomain);
-        this.changeGraphConf(buttonToActivate, false);
+        this.changeGraphConf(buttonToActivate);
     }
 
     /**
      * Call when click on a zoom button
      * @param conf button clicked
      */
-    changeGraphConf(conf: any, reset: boolean): void {
-        if (reset) RealTimeDomainService.unlockTimeline();
-
+    changeGraphConf(conf: any): void {
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
             logger.info('Set timeline domain to ' + conf.domainId, LogOption.REMOTE);
@@ -114,7 +112,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
-        RealTimeDomainService.setDomainId(this.currentDomainId, reset);
+        RealTimeDomainService.setDomainId(this.currentDomainId);
         this.currentDomain = RealTimeDomainService.getCurrentDomain();
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
@@ -131,7 +129,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         switch (this.currentDomainId) {
             case 'RT':
                 return DateTimeFormatterService.getFormattedDateAndTime(value);
-            case 'J':
+            case 'D':
                 return DateTimeFormatterService.getFormattedDate(value);
             case '7D':
                 return DateTimeFormatterService.getFormattedDateAndTime(value);
@@ -162,10 +160,10 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
                     if (i !== 0) {
-                        this.changeGraphConf(this.buttonList[i - 1], true);
+                        this.changeGraphConf(this.buttonList[i - 1]);
                     }
                 } else if (i !== this.buttonList.length - 1) {
-                    this.changeGraphConf(this.buttonList[i + 1], true);
+                    this.changeGraphConf(this.buttonList[i + 1]);
                 }
                 return;
             }
@@ -183,7 +181,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     unlockTimeline(): void {
         RealTimeDomainService.unlockTimeline();
         // Restore default domain when the user unlocks the timeline
-        this.currentDomain = RealTimeDomainService.setDefaultStartAndEndDomain();
+        this.currentDomain = RealTimeDomainService.computeStartAndEndDomainDates(
+            RealTimeDomainService.getDomainId(),
+            true
+        );
+        this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
+        this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         this.domainChange.emit(true);
     }
 

@@ -154,7 +154,7 @@ describe('Test translations', function() {
 
     function checkBusinessPeriodLinks(realTimeText, dayText, sevenDaysText, weekText, monthText, yearText) {
         cy.get('#opfab-timeline-link-period-RT').should('have.text', ' ' + realTimeText + ' ');
-        cy.get('#opfab-timeline-link-period-J').should('have.text', ' ' + dayText + ' ');
+        cy.get('#opfab-timeline-link-period-D').should('have.text', ' ' + dayText + ' ');
         cy.get('#opfab-timeline-link-period-7D').should('have.text', ' ' + sevenDaysText + ' ');
         cy.get('#opfab-timeline-link-period-W').should('have.text', ' ' + weekText + ' ');
         cy.get('#opfab-timeline-link-period-M').should('have.text', ' ' + monthText + ' ');

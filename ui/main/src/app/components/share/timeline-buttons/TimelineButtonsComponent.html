@@ -9,7 +9,7 @@
 <div class="opfab-menu-timeline">
     <div *ngIf="hideTimeLine || displayBusinessPeriodAndArrows" class="opfab-business-period">
         <span translate>timeline.businessPeriod</span> : {{ startDateForBusinessPeriodDisplay }}<span
-            *ngIf="this.currentDomainId !== 'J'">
+            *ngIf="currentDomainId !== 'D'">
             &#45;&#45; {{ endDateForBusinessPeriodDisplay }}
         </span>
     </div>
@@ -23,7 +23,7 @@
                 <a
                     id="opfab-timeline-link-period-{{ button.domainId }}"
                     [ngClass]="button.selected ? 'link-selected' : 'link-unselect'"
-                    (click)="changeGraphConf(button, true)"
+                    (click)="changeGraphConf(button)"
                     translate>
                     {{ button.buttonTitle }}
                 </a>
