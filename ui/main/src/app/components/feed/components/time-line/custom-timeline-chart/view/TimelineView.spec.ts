@@ -45,7 +45,7 @@ describe('TimeLine view title', () => {
             endDate: new Date(2023, 1, 2, 0, 0).valueOf(),
             overlap: 0
         };
-        timeLineView.setDomain('J', xDomain);
+        timeLineView.setDomain('D', xDomain);
         expect(timeLineView.getTitle()).toEqual('01 February 2023');
     });
 

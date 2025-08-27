@@ -46,7 +46,7 @@ describe('XAxis', () => {
     it('should set xTicks correctly for Day Mode (J) , one tick per half hour', () => {
         const start = new Date(2020, 1, 1, 0, 0);
         const end = new Date(2020, 1, 2, 0, 0);
-        xAxis.setupAxis('J', [start.valueOf(), end.valueOf()]);
+        xAxis.setupAxis('D', [start.valueOf(), end.valueOf()]);
         const xTicks = xAxis.getTicks();
         expect(xTicks[0].valueOf()).toEqual(start.valueOf());
         expect(xTicks[1].valueOf()).toEqual(new Date(2020, 1, 1, 0, 30).valueOf());

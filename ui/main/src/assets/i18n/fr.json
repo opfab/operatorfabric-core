@@ -230,7 +230,7 @@
         "businessPeriod": "Période métier",
         "buttonTitle": {
             "RT": "Temps réel",
-            "J": "Jour",
+            "D": "Jour",
             "7D": "7 Jours",
             "W": "Semaine",
             "M": "Mois",

@@ -47,3 +47,22 @@ The old structure has been supported as a fallback for a limited time, now it is
 code to use the new structure.
 
 
+== Timeline domain J renamed D
+
+To be consistent, the timeline domain J has been renamed D (Day).
+So if necessary, you have to update your config file `web-ui.json`, replacing value `J` with `D` in the field
+`feed.timeline.domains`, for example :
+----
+ "timeline": {
+   "domains": [
+     "RT",
+     "D",
+     "7D",
+     "W",
+     "M",
+     "Y"
+   ]
+ }
+----
+
+

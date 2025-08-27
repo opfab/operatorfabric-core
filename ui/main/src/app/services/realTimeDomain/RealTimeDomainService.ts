@@ -34,9 +34,13 @@ export class RealTimeDomainService {
         if (UserPreferencesService.getPreference('opfab.timeLine.domain') === 'TR') {
             UserPreferencesService.setPreference('opfab.timeLine.domain', 'RT');
         }
+        // Needed for compatibility with versions prior to 4.10.0
+        if (UserPreferencesService.getPreference('opfab.timeLine.domain') === 'J') {
+            UserPreferencesService.setPreference('opfab.timeLine.domain', 'D');
+        }
         RealTimeDomainService.domains = ConfigService.getConfigValue('feed.timeline.domains', [
             'RT',
-            'J',
+            'D',
             '7D',
             'W',
             'M',
@@ -45,7 +49,7 @@ export class RealTimeDomainService {
 
         RealTimeDomainService.currentDomainId =
             UserPreferencesService.getPreference('opfab.timeLine.domain') ?? RealTimeDomainService.getDefaultDomainId();
-        RealTimeDomainService.setDefaultStartAndEndDomain();
+        RealTimeDomainService.computeStartAndEndDomainDates(RealTimeDomainService.currentDomainId, true);
         RealTimeDomainService.followClockTick = true;
     }
 
@@ -57,13 +61,13 @@ export class RealTimeDomainService {
         return RealTimeDomainService.currentDomainId;
     }
 
-    public static setDomainId(domainId: string, reset: boolean) {
+    public static setDomainId(domainId: string) {
+        // If the domain didn't change, the timeline is reset to follow real time
+        // The only way to stop following real time is by navigating with the arrows or clicking the lock
+        const anchorToNow =
+            RealTimeDomainService.currentDomainId === domainId || !RealTimeDomainService.isTimelineLocked();
         RealTimeDomainService.currentDomainId = domainId;
-        if (!RealTimeDomainService.currentDomain || reset) {
-            RealTimeDomainService.setDefaultStartAndEndDomain();
-        } else {
-            RealTimeDomainService.updateCardFilter();
-        }
+        RealTimeDomainService.computeStartAndEndDomainDates(RealTimeDomainService.currentDomainId, anchorToNow);
 
         UserPreferencesService.setPreference('opfab.timeLine.domain', RealTimeDomainService.currentDomainId);
     }
@@ -72,49 +76,52 @@ export class RealTimeDomainService {
         return RealTimeDomainService.currentDomain;
     }
 
-    public static setDefaultStartAndEndDomain() {
+    public static computeStartAndEndDomainDates(targetDomainId: string, anchorToNow: boolean) {
         let startDomain;
         let endDomain;
-        switch (RealTimeDomainService.currentDomainId) {
+        const referenceDate =
+            anchorToNow || !RealTimeDomainService.currentDomain
+                ? new Date()
+                : new Date(RealTimeDomainService.currentDomain.startDate);
+
+        switch (targetDomainId) {
             case 'RT': {
                 startDomain = RealTimeDomainService.getRealTimeStartDate();
                 endDomain = startOfHour(add(new Date(), {hours: 10}));
                 break;
             }
-            case 'J': {
-                startDomain = startOfDay(new Date());
-                endDomain = startOfDay(add(new Date(), {days: 1}));
+            case 'D': {
+                startDomain = startOfDay(referenceDate);
+                endDomain = startOfDay(add(referenceDate, {days: 1}));
                 break;
             }
             case '7D': {
-                startDomain = sub(startOfHour(new Date()), {hours: 12});
-                // set position to a multiple of 4
-                for (let i = 0; i < 4; i++) {
-                    if ((startDomain.getHours() - i) % 4 === 0) {
-                        startDomain = sub(startDomain, {hours: i});
-                        break;
-                    }
-                }
-                endDomain = add(startDomain, {days: 8});
+                startDomain = startOfDay(referenceDate);
+                endDomain = add(startDomain, {days: 7});
                 break;
             }
             case 'W': {
-                startDomain = startOfWeek(new Date(), DateTimeFormatterService.getDateFnsLocaleOption());
-                endDomain = add(startOfWeek(new Date(), DateTimeFormatterService.getDateFnsLocaleOption()), {weeks: 1});
+                startDomain = startOfWeek(referenceDate, DateTimeFormatterService.getDateFnsLocaleOption());
+                endDomain = add(startOfWeek(referenceDate, DateTimeFormatterService.getDateFnsLocaleOption()), {
+                    weeks: 1
+                });
                 break;
             }
             case 'M': {
-                startDomain = startOfMonth(new Date());
-                endDomain = add(startOfMonth(new Date()), {months: 1});
+                startDomain = startOfMonth(referenceDate);
+                endDomain = add(startOfMonth(referenceDate), {months: 1});
                 break;
             }
             case 'Y': {
-                startDomain = startOfYear(new Date());
-                endDomain = add(startOfYear(new Date()), {years: 1});
+                startDomain = startOfYear(referenceDate);
+                endDomain = add(startOfYear(referenceDate), {years: 1});
                 break;
             }
         }
-        return RealTimeDomainService.setStartAndEndDomain(startDomain.valueOf(), endDomain.valueOf(), false);
+        if (anchorToNow) {
+            RealTimeDomainService.unlockTimeline();
+        }
+        return RealTimeDomainService.setStartAndEndDomain(startDomain.getTime(), endDomain.getTime(), false);
     }
 
     private static getRealTimeStartDate() {
@@ -202,10 +209,10 @@ export class RealTimeDomainService {
         switch (RealTimeDomainService.currentDomainId) {
             case 'RT':
                 return add(dateToMove, {hours: 2});
-            case 'J':
+            case 'D':
                 return add(dateToMove, {days: 1});
             case '7D':
-                return add(startOfDay(add(dateToMove, {hours: 8})), {days: 1}); // the feed is not always at the beginning of the day
+                return add(dateToMove, {days: 1});
             case 'W':
                 return add(dateToMove, {days: 7});
             case 'M':
@@ -219,7 +226,7 @@ export class RealTimeDomainService {
         switch (RealTimeDomainService.currentDomainId) {
             case 'RT':
                 return sub(dateToMove, {hours: 2});
-            case 'J':
+            case 'D':
                 return sub(dateToMove, {days: 1});
             case '7D':
                 return sub(startOfDay(add(dateToMove, {hours: 8})), {days: 1}); // the feed is not always at the beginning of the day
@@ -238,7 +245,7 @@ export class RealTimeDomainService {
         let domainDuration = {};
         if (currentDate > RealTimeDomainService.currentDomain.endDate - 60 * 1000) {
             switch (RealTimeDomainService.currentDomainId) {
-                case 'J':
+                case 'D':
                     domainDuration = {days: 1};
                     break;
                 case 'W':
@@ -265,12 +272,18 @@ export class RealTimeDomainService {
         switch (RealTimeDomainService.currentDomainId) {
             case 'RT':
                 if (currentDate > RealTimeDomainService.currentDomain.startDate + 150 * 60 * 1000) {
-                    RealTimeDomainService.currentDomain = RealTimeDomainService.setDefaultStartAndEndDomain();
+                    RealTimeDomainService.currentDomain = RealTimeDomainService.computeStartAndEndDomainDates(
+                        RealTimeDomainService.currentDomainId,
+                        true
+                    );
                 }
                 break;
             case '7D':
                 if (currentDate > RealTimeDomainService.currentDomain.startDate + 16 * 60 * 60 * 1000) {
-                    RealTimeDomainService.currentDomain = RealTimeDomainService.setDefaultStartAndEndDomain();
+                    RealTimeDomainService.currentDomain = RealTimeDomainService.computeStartAndEndDomainDates(
+                        RealTimeDomainService.currentDomainId,
+                        true
+                    );
                 }
                 break;
         }
