@@ -17,7 +17,7 @@ export class NearestDomainId {
     public setDomainList(domainList: Array<string>): void {
         this.domainOrderedList = [
             {id: 'RT', threshold: NearestDomainId.MS_PER_HOUR * 12},
-            {id: 'J', threshold: NearestDomainId.MS_PER_HOUR * 36},
+            {id: 'D', threshold: NearestDomainId.MS_PER_HOUR * 36},
             {id: '7D', threshold: NearestDomainId.MS_PER_DAY * 10},
             {id: 'W', threshold: NearestDomainId.MS_PER_DAY * 10},
             {id: 'M', threshold: NearestDomainId.MS_PER_MONTH * 3},

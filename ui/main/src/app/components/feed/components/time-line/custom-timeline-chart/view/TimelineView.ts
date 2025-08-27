@@ -67,7 +67,7 @@ export class TimelineView {
     private setTitle() {
         switch (this.domainId) {
             case 'RT':
-            case 'J':
+            case 'D':
                 this.title = DateTimeFormatterService.getFormattedDate(this.gridTimeDomain[0], 'dd MMMM yyyy');
                 break;
             case 'M':

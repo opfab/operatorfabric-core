@@ -229,7 +229,7 @@
         "businessPeriod": "Bedrijfsperiode",
         "buttonTitle": {
             "RT": "Realtime",
-            "J": "Dag",
+            "D": "Dag",
             "7D": "7 Dagen",
             "W": "Week",
             "M": "Maand",

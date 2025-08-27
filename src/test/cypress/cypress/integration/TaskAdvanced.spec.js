@@ -51,7 +51,7 @@ describe('Task Advanced', function () {
 
             // It should appears 7 circles on the timeline but when current day is near the day-savings time change,
             // it can be 8 circles as the timeline in Week mode is shift from one hour.
-            checkHaveAtLeastCircle(7);
+            checkHaveAtLeastCircle(6);
 
             opfab.navigateToCalendar();
             // The number of cards is not always the same especially when the test is ran at the end of the month

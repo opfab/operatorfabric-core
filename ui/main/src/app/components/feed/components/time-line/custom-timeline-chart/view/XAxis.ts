@@ -25,7 +25,7 @@ export class XAxis {
 
     private readonly tickSizeMap = {
         RT: {minutes: 15},
-        J: {minutes: 30},
+        D: {minutes: 30},
         '7D': {hours: 4},
         W: {hours: 4},
         M: {days: 1}
@@ -90,7 +90,7 @@ export class XAxis {
             case 'RT':
                 this.computeTickLabelsForRT();
                 break;
-            case 'J':
+            case 'D':
             case 'M':
             case 'Y':
                 this.computeTickLabelsForJMY();
@@ -116,7 +116,7 @@ export class XAxis {
             case 'RT':
                 if (value.getMinutes() === 0) return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
                 return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h30';
-            case 'J':
+            case 'D':
                 return DateTimeFormatterService.getFormattedDate(value, 'HH') + 'h';
             case '7D':
             case 'W':
