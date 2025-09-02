@@ -132,7 +132,12 @@ export abstract class OpfabMap {
                         logger.error(`Invalid WMTS layer configuration: missing required properties`, layer);
                         return;
                     }
-                    this.addWMTSLayer(layer.capabilitiesUrl, layer.layer, layer.matrixSet);
+                    this.addWMTSLayer(
+                        layer.capabilitiesUrl,
+                        layer.layer,
+                        layer.matrixSet,
+                        layer.useCredentialsForCapabilities
+                    );
                 } else if (layer.type === 'xyz') {
                     if (!layer.url) {
                         logger.error(`Invalid XYZ layer configuration: missing url`, layer);
@@ -156,10 +161,18 @@ export abstract class OpfabMap {
         }
     }
 
-    async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string) {
+    async addWMTSLayer(
+        capabilitiesUrl: string,
+        layer: string,
+        matrixSet: string,
+        useCredentialsForCapabilities: boolean
+    ) {
         const parser = new WMTSCapabilities();
         try {
-            const response = await fetch(capabilitiesUrl);
+            const optionsForCapabilitiesFetching: RequestInit = useCredentialsForCapabilities
+                ? {credentials: 'include'}
+                : {};
+            const response = await fetch(capabilitiesUrl, optionsForCapabilitiesFetching);
 
             if (!response.ok) {
                 logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);

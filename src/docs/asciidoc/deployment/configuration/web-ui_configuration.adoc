@@ -306,7 +306,8 @@ The layers and tiles of the map can be configured using the `feed.geomap.layers`
 
         ** `tileSize`: Integer value (e.g., 256). Required for custom background layers.
         ** `crossOrigin`: Optional. Default is `null`.
-    - `wmts`: WMTS layers. Requires `capabilitiesUrl`, `layer`, and `matrixSet`.
+    - `wmts`: WMTS layers. Requires `capabilitiesUrl`, `layer`, and `matrixSet`. You may also specify `useCredentialsForCapabilities` to `true` if capabilities retrieval requires authentication. 
+
 
 Example configuration for the `feed.geomap.layers` property:
 ```
@@ -318,7 +319,8 @@ Example configuration for the `feed.geomap.layers` property:
                     "type":"wmts",
                     "capabilitiesUrl":"https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
                     "layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-                    "matrixSet":"PM_0_19"
+                    "matrixSet":"PM_0_19",
+                    "useCredentialsForCapabilities": false
                 },
                 {
                     "type": "geojson",
