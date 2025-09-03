@@ -67,7 +67,13 @@ services:
     ports:
       - "2181:2181"
     environment:
-      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+    healthcheck:
+      test: ["CMD-SHELL", "echo ruok | nc -w 1 localhost 2181 | grep imok"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
   kafka:
     image: confluentinc/cp-kafka:7.2.15
     ports:
