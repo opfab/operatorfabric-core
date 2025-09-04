@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,8 +65,7 @@ find . -name swagger.yaml | xargs sed -i "s/\(version: *\)$oldVersion/\1$newVers
 
 echo "Using $newVersion for lfeoperatorfabric images in dev and docker environment docker compose files"
 # String example for regexp: image: "lfeoperatorfabric/of-web-ui:0.13.1.RELEASE"
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/docker/docker-compose.yml;
-sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/dev/docker-compose.yml;
+sed -i "s/\( *image *: *\"lfeoperatorfabric\/.*:\)\(.*\)\"/\1$newVersion\"/g" ./config/docker-compose.yml;
 
 echo "Using $newVersion for lfeoperatorfabric/of-opfab-cli"
 sed -i "s/lfeoperatorfabric\/of-opfab-cli:.*/lfeoperatorfabric\/of-opfab-cli:$newVersion/" ./cli/opfabDockerCli.sh;
