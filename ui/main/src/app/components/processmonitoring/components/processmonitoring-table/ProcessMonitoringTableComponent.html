@@ -23,6 +23,7 @@
                 aria-describedby="Monitoring exp. results table"
                 (gridReady)="onGridReady($event)"
                 [gridOptions]="gridOptions"
+                [enableFilterHandlers]="true"
                 [rowData]="result"
                 (filterChanged)="onFilterChanged($event)"
                 (rowClicked)="selectCard($event.data._id)"
