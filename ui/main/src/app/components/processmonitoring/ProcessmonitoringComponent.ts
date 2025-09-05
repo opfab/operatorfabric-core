@@ -423,12 +423,12 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
                 this.firstQueryHasBeenDone = true;
 
-                page.content.forEach((card) => {
+                page?.content.forEach((card) => {
                     this.cardPostProcessing(card);
                 });
-                this.results = page.content;
-                this.totalElements = page.totalElements;
-                this.totalPages = page.totalPages;
+                this.results = page?.content;
+                this.totalElements = page?.totalElements;
+                this.totalPages = page?.totalPages;
                 this.changeDetector.markForCheck();
             },
             error: () => {
@@ -561,7 +561,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             const colId: string = column;
             const type: string = data.filterModel[column].type;
             this.columnFilters.push(
-                new Filter(colId, data.filterModel[column].filterType, FilterMatchTypeEnum[type.toUpperCase()], [
+                new Filter(colId, data.filterModel[column].filterType, FilterMatchTypeEnum[type?.toUpperCase()], [
                     data.filterModel[column].filter
                 ])
             );
