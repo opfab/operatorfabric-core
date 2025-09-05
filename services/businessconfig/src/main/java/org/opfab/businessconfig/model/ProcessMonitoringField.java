@@ -11,11 +11,14 @@ package org.opfab.businessconfig.model;
 
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 @Validated
 public record ProcessMonitoringField (
     String field,
     String colName,
     ProcessMonitoringFieldTypeEnum type,
     Integer size,
-    Boolean defaultVisibility
+    Boolean defaultVisibility,
+    List<String> possibleValues
 ) {}

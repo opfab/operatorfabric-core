@@ -90,9 +90,12 @@ Here is the description of the fields :
 
 - "field": the name of the field in the card (or in the database) you want to display
 - "type": field type to be used for formatting. Possible values : `date`, `array`. Set to `date` if you want to display
-a date/time field, set it to `array` to display an array as a comma separated list.
+a date/time field, set it to `array` to display an array as a comma separated list. Set to `set` if you want to have a
+custom filter for a column. The possible values for the custom filter must be set with the field `possibleValues`.
 - "colName": name of the column on the UI
 - "size": size of the column on the UI, proportionally to each other
 - "defaultVisibility": Indicates whether the field will be displayed, before the user interacts with the column for the
 first time.
+- "possibleValues": List of values to display in the custom filter of a column. Must be used with field `type` set to
+`set`.
 

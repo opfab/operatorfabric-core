@@ -21,7 +21,8 @@ export class ProcessMonitoringField {
         readonly colName: string,
         readonly type: string,
         readonly size: number,
-        readonly defaultVisibility: boolean
+        readonly defaultVisibility: boolean,
+        readonly possibleValues?: string[]
     ) {}
 }
 
@@ -49,5 +50,6 @@ export class ProcessMonitoringFilterTag {
 export enum ProcessMonitoringFieldEnum {
     STRING = 'string',
     DATE = 'date',
-    ARRAY = 'array'
+    ARRAY = 'array',
+    SET = 'set'
 }
