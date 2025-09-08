@@ -874,7 +874,7 @@ definitions:
       field:
         type: string
       type:
-        $ref: '#/definitions/ProcessMonitoringFieldTypeEnum'
+        type: ProcessMonitoringFieldTypeEnum
       colName:
         type: string
       size:

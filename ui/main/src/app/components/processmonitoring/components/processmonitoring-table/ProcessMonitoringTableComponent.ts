@@ -15,8 +15,7 @@ import {
     AllCommunityModule,
     ModuleRegistry,
     provideGlobalGridOptions,
-    FilterModel,
-    DoesFilterPassParams
+    FilterModel
 } from 'ag-grid-community';
 import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/TimeCellRendererComponent';
@@ -30,7 +29,7 @@ import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/co
 import {AgGrid} from 'app/utils/AgGrid';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {LoggerService as logger} from '@ofServices/logs/LoggerService';
-import {CustomFilterComponent} from './CustomFilterComponent';
+import {SetFilterComponent} from './SetFilterComponent';
 
 @Component({
     selector: 'of-processmonitoring-table',
@@ -192,8 +191,7 @@ export class ProcessmonitoringTableComponent {
                     this.columnDefs[this.columnDefs.length - 1] = {
                         ...this.columnDefs.at(this.columnDefs.length - 1),
                         filter: {
-                            component: CustomFilterComponent,
-                            doesFilterPass: this.doesFilterPass
+                            component: SetFilterComponent
                         },
                         filterParams: {
                             possibleValues: column.possibleValues
@@ -204,29 +202,6 @@ export class ProcessmonitoringTableComponent {
         }
 
         this.gridApi.setGridOption('columnDefs', this.columnDefs);
-    }
-
-    private doesFilterPass({model, node, handlerParams}: DoesFilterPassParams<any, any, string>): boolean {
-        if (!model) {
-            return true;
-        }
-
-        const tokens = model
-            .toLowerCase()
-            .split(';')
-            .map((t) => t.trim())
-            .filter((t) => t.length > 0);
-
-        if (tokens.length === 0) {
-            return true;
-        }
-
-        const cell = handlerParams.getValue(node);
-        if (cell == null) {
-            return false;
-        }
-        const haystack = Array.isArray(cell) ? cell.join(',').toLowerCase() : cell.toString().toLowerCase();
-        return tokens.some((t) => haystack.includes(t));
     }
 
     private findProcessInColumnsVisibilityPreference(processToFind: string): number {
