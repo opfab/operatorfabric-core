@@ -27,14 +27,14 @@ import {NgForOf} from '@angular/common';
         </div>
     `
 })
-export class CustomFilterComponent implements IFilterDisplayAngularComp<any, any, string> {
+export class SetFilterComponent implements IFilterDisplayAngularComp<any, any, string> {
     protected checkboxes: {label: string; checked: boolean}[] = [];
     private possibleValues: string[] = [];
 
-    private filterParams: FilterDisplayParams<any, any, string>;
-    private filterText = '';
+    private filterParams: FilterDisplayParams<any, any, any>;
+    private filter: string[] = [];
 
-    agInit(params: FilterDisplayParams<any, any, string>): void {
+    agInit(params: FilterDisplayParams<any, any, any>): void {
         this.filterParams = params;
 
         this.possibleValues = (params as any).possibleValues;
@@ -53,13 +53,13 @@ export class CustomFilterComponent implements IFilterDisplayAngularComp<any, any
     }
 
     onCheckboxChange() {
-        this.filterText = '';
+        this.filter = [];
         this.checkboxes.forEach((cb) => {
             if (cb.checked) {
-                this.filterText += cb.label + ';';
+                this.filter.push(cb.label);
             }
         });
 
-        this.filterParams.onModelChange(this.filterText == null || this.filterText === '' ? null : this.filterText);
+        this.filterParams.onModelChange({type: 'set', filter: this.filter.length > 0 ? this.filter : null});
     }
 }
