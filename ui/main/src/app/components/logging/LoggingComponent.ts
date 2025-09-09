@@ -65,8 +65,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         state: new FormControl([]),
         process: new FormControl([]),
         processGroup: new FormControl([]),
-        publishDateRange: new FormControl({}),
-        activeDateRange: new FormControl({})
+        publishDateRange: new FormControl({})
     });
 
     results: Card[];

@@ -52,6 +52,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     @Input() hideChildStates: boolean;
     @Input() hidePublisherAndRecipientsFields = false;
     @Input() tags: any[];
+    @Input() isLoggingScreen = false;
     @Output() sendRequest = new EventEmitter<string>();
     @Output() resetFormEvent = new EventEmitter<string>();
 
@@ -167,7 +168,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             startDate: this.defaultPublishMinDate,
             endDate: this.defaultPublishMaxDate
         });
-        this.parentForm.controls.activeDateRange.setValue(null);
+        this.parentForm.controls.activeDateRange?.setValue(null);
     }
 
     clearMultiFilters() {
@@ -246,7 +247,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             startDate: this.defaultPublishMinDate,
             endDate: this.defaultPublishMaxDate
         });
-        this.parentForm.controls.activeDateRange.setValue(null);
+        this.parentForm.controls.activeDateRange?.setValue(null);
     }
 
     transformFiltersListToMap = (filters: any): void => {
@@ -385,7 +386,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             startDate: this.defaultPublishMinDate,
             endDate: this.defaultPublishMaxDate
         });
-        this.parentForm.controls.activeDateRange.setValue(null);
+        this.parentForm.controls.activeDateRange?.setValue(null);
     }
 
     query(): void {
@@ -404,7 +405,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             startDate: this.defaultPublishMinDate,
             endDate: this.defaultPublishMaxDate
         });
-        this.parentForm.controls.activeDateRange.setValue(null);
+        this.parentForm.controls.activeDateRange?.setValue(null);
     }
 
     ngOnDestroy() {
