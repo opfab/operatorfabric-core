@@ -56,8 +56,11 @@ export class CustomCardListView {
             filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
         }
 
+        filterValues.includeCardsWithResponseFromMyEntities = !this.customScreenDefinition?.headerFilters?.includes(
+            HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+        );
+
         filterValues.processes = [];
-        filterValues.includeCardsWithResponseFromMyEntities = true;
         filterValues.includeCardsWithResponsesFromAllEntities = true;
         this.setFilters(filterValues);
         this.filter$.next();
