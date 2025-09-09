@@ -185,7 +185,7 @@
                 [timePickerIncrement]="1"
                 formControlName="publishDateRange" />
         </div>
-        <div class="opfab-date-range-input opfab-input" [formGroup]="this.parentForm">
+        <div class="opfab-date-range-input opfab-input" [formGroup]="this.parentForm" *ngIf="!isLoggingScreen">
             <label class="opfab-date-range-label" for="opfab-active-date-range" translate
                 >shared.filters.activeDateRange</label
             >
