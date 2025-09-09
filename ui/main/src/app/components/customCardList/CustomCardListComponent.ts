@@ -76,7 +76,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         processes: new FormControl([]),
         typeOfState: new FormControl([]),
         readAndAck: new FormControl([]),
-        responseFromMyEntities: new FormControl(true),
+        responseFromMyEntities: new FormControl(false),
         responseFromAllEntities: new FormControl(true)
     });
 
