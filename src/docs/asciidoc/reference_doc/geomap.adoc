@@ -13,7 +13,9 @@ The geographical map is a feature that allows you to display the geographical lo
 
 To activate the geographical map feature, set the `feed.enableMap` property to `true` in the `web-ui.json` configuration file.
 
-The geographical location of the cards is determined by the `wktGeometry` and `wktProjection` fields in the card's metadata. If a card has a defined `wktGeometry`, its location will be highlighted on the card. The system supports two geometrical shapes: `POINT` and `POLYGON`. A `POINT` will display as a circle on the map, while a `POLYGON` will outline the specified area. 
+The geographical location of the cards is determined by the `wktGeometry` and `wktProjection` fields in the card's metadata. If a card has a defined `wktGeometry`, its location will be highlighted on the card. The system supports two geometrical shapes: `POINT` and `POLYGON`. A `POINT` will display as a circle on the map, while a `POLYGON` will outline the specified area.
+
+The `wktProjection` field specifies the coordinate reference system of the WKT geometry. If not specified, the system uses the `defaultDataProjection` configuration parameter (default: EPSG:4326). The geometry is automatically transformed to match the map's projection. 
 
 For instance, to display a circle at a specific location, use:
 
@@ -36,12 +38,245 @@ can be found at https://www.ogc.org/standards/wkt-crs[WKT Specification].
 
 You can customize the map by setting parameters in the `web-ui.json` configuration file.
 
+== Map Projections
+
+The geographical map supports different coordinate reference systems (projections):
+
+    - `EPSG:3857` (Web Mercator) - Default projection, suitable for worldwide mapping
+    - `EPSG:2154` (Lambert 93) - French national projection, optimized for France
+
+The map projection can be configured using the `feed.geomap.mapProjection` parameter. Initial coordinates (`initialLongitude` and `initialLatitude`) can be specified either in WGS84 (EPSG:4326) or in the target projection - the system automatically detects the format and transforms them if necessary.
+
 The layers and tiles of the map can be configured using the `feed.geomap.layers` parameter. The following types are supported: 
 
     - `osm` for OpenStreetMap tiles 
-    - `geojson` for GeoJSON layers.
-    - `xyz` for XYZ tiles.
-    - `wmts` for WMTS layers.
+    - `geojson` for GeoJSON layers
+    - `xyz` for XYZ tiles
+    - `wmts` for WMTS layers
+    - `arcgis` or `esri` for ArcGIS REST Map Service layers
+
+All layer types support `opacity` (transparency from 0 to 1) and `zIndex` (stacking order) properties for advanced layer management.
+
+=== Layer Properties
+
+==== Common Properties
+All layer types support these properties:
+
+- `opacity`: Transparency level from 0.0 (transparent) to 1.0 (opaque). Default: 1.0
+- `zIndex`: Stacking order (higher values appear on top). Default: 0
+
+==== ArcGIS Specific Properties
+ArcGIS layers support additional parameters:
+
+- `transparent`: Boolean parameter sent to ArcGIS server requesting transparent background
+- `layers`: Comma-separated list of layer IDs to display (e.g., "0,1,2")
+- `format`: Image format requested from server (e.g., "png", "jpg")
+
+**Example ArcGIS configuration:**
+```json
+{
+  "type": "arcgis",
+  "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+  "transparent": true,
+  "opacity": 0.8,
+  "layers": "0,1,2",
+  "format": "png",
+  "zIndex": 3
+}
+```
+
+== Night/Light Mode Control
+
+The map appearance can be controlled using the `darkMode` parameter:
+
+- `false`: Always light (no CSS filter applied)
+- `true`: Always dark (CSS inversion filter applied)
+- Omit the parameter to automatically follow the application's day/night theme
+
+**Example:**
+```json
+{
+  "feed": {
+    "geomap": {
+      "darkMode": false,
+      // ... other configuration
+    }
+  }
+}
+```
+
+This is useful when you want the map to remain in light mode even when the OpFab interface switches to dark theme. It is also useful when you want the map to remain in dark mode while the application is in light theme (set `darkMode: true`).
+
+== Layer Authentication
+
+OpFab requests map layers with anonymous cross-origin mode by default.
+
+**Recommended approach**: Use a reverse proxy (nginx) for all external services to avoid CORS errors and handle authentication, caching, and rate limiting.
+
+**For public layers**: Configure the proxy to forward requests without authentication headers.
+
+**For secured layers**: Configure the proxy to add authentication headers (API keys, tokens, certificates) before forwarding requests.
+
+Then configure OpFab to use your proxy URLs instead of external service URLs.
+
+== Configuration Examples
+
+=== Web Mercator Projection (Worldwide)
+
+Here's a complete example configuration using Web Mercator projection with all supported layer types:
+
+```json
+{
+  "feed": {
+    "geomap": {
+      "enableMap": true,
+      "mapProjection": "EPSG:3857",
+      "wktProjection": "EPSG:4326",
+      "initialLongitude": 2.4408,
+      "initialLatitude": 46.7211,
+      "initialZoom": 6,
+      "maxZoom": 18,
+      "zoomLevelWhenZoomToLocation": 14,
+      "zoomDuration": 500,
+      "highlightPolygonStrokeWidth": 20,
+      "popupContent": "summary",
+      "dayNightMode": "DAY",
+      "layers": [
+        {
+          "type": "osm",
+          "zIndex": 0
+        },
+        {
+          "type": "xyz",
+          "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          "zIndex": 1
+        },
+        {
+          "type": "wmts",
+          "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+          "layer": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+          "matrixSet": "PM_0_19",
+          "opacity": 0.7,
+          "zIndex": 2
+        },
+        {
+          "type": "arcgis",
+          "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+          "transparent": true,
+          "opacity": 0.8,
+          "zIndex": 3
+        },
+        {
+          "type": "geojson",
+          "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+          "style": {
+            "stroke-color": "red"
+          },
+          "zIndex": 4
+        },
+        {
+          "type": "geojson",
+          "url": "assets/layers/geojson-layer2.json",
+          "zIndex": 5
+        }
+      ]
+    }
+  }
+}
+```
+
+=== Lambert 93 Projection (France)
+
+Here's an example configuration optimized for France using Lambert 93 projection:
+
+```json
+{
+  "feed": {
+    "geomap": {
+      "enableMap": true,
+      "mapProjection": "EPSG:2154",
+      "defaultDataProjection": "EPSG:2154",
+      "wktProjection": "EPSG:2154",
+      "dayNightMode": "DAY",
+      "initialLongitude": 651966,
+      "initialLatitude": 6862314,
+      "initialZoom": 4,
+      "maxZoom": 8,
+      "zoomLevelWhenZoomToLocation": 6,
+      "zoomDuration": 500,
+      "highlightPolygonStrokeWidth": 20,
+      "popupContent": "summary",
+      "layers": [
+        {
+          "type": "wmts",
+          "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+          "layer": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+          "matrixSet": "2154_16",
+          "opacity": 0.7,
+          "zIndex": 1
+        },
+        {
+          "type": "wmts",
+          "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+          "layer": "CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+          "matrixSet": "2154_16",
+          "opacity": 1,
+          "zIndex": 2
+        }
+      ]
+    }
+  }
+}
+```
+
+=== Legacy Configuration (Backward Compatibility)
+
+For backward compatibility, the following legacy configuration format is still supported:
+
+```json
+{
+  "feed": {
+    "geomap": {
+      "enableMap": true,
+      "wktProjection": "EPSG:4326",
+      "initialLongitude": 2.4408,
+      "initialLatitude": 46.7211,
+      "initialZoom": 2,
+      "maxZoom": 12,
+      "zoomLevelWhenZoomToLocation": 10,
+      "layers": [
+        {
+          "type": "osm",
+          "zIndex": 1
+        },
+        {
+          "type": "wmts",
+          "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+          "layer": "CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+          "matrixSet": "PM_0_19",
+          "opacity": 0.7,
+          "zIndex": 1
+        },
+        {
+          "type": "geojson",
+          "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+          "style": {
+            "stroke-color": "red"
+          },
+          "zIndex": 2
+        }
+      ]
+    }
+  }
+}
+```
+
+**Important notes for Lambert 93:**
+
+- Use lower zoom levels: `initialZoom: 2` for France overview, `maxZoom: 12` is usually sufficient
+- Coordinates can be provided in Lambert 93 format (large numbers) or WGS84 (auto-detected)
+- The extent automatically includes Corsica
+- Constraint to France territory is enabled by default (`constrainLambert93Extent: true`)
 
 Refer to the 
 ifdef::single-page-doc[<<ui_properties_geomap, geomap web-ui configuration>>]

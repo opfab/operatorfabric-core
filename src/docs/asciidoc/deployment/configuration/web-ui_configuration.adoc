@@ -285,12 +285,13 @@ In the web-ui.json, the geomap can be configure with the following properties:
 
 |feed.geomap.defaultDataProjection|EPSG:4326|no| The default data projection of `card.wktGeometry` to use when no wktProjection is embedded in the card.
 |feed.geomap.enable|false|no|_(Experimental feature)_: If true a geographical map will be shown and cards that have geographical coordinates will be drawn on the map.
-|feed.geomap.darkMode|true|no|Active a filter for dark mode (if false dark mode and light have the same colors).
+|feed.geomap.darkMode|not defined|no| Controls **how/if** the night filter is applied. `false` = always light (no filter), `true` = always dark (apply filter), not defined = follows application theme / `dayNightMode`.
 |feed.geomap.enableGraph|false|no|Show a graph on the map with number of cards per severity.
 |feed.geomap.highlightPolygonStrokeWidth|2|no| Define the stroke width when highlighting polygon in the geomap view of a card.
 |feed.geomap.initialLatitude|0|no| The initial latitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialLongitude|0|no| The initial longitude of the map when no cards with geographical coordinates are present.
 |feed.geomap.initialZoom|1|no| Initial zoom level of the map.
+|feed.geomap.mapProjection|EPSG:3857|no| The map projection to use for displaying the map. Supported values: `EPSG:3857` (Web Mercator, default) and `EPSG:2154` (Lambert 93 for France). Initial coordinates can be provided in WGS84 (EPSG:4326) or in the target projection - the system automatically detects the format.
 |feed.geomap.maxZoom|11|no| Max zoom level, to prevent zooming in too much when only one card is shown (or multiple cards in close proximity).
 |feed.geomap.popupContent|publishDateAndTitle|no| Define the content of the geomap popup. Possible values are : `publishDateAndTitle` (default value) or `summary`.
 |feed.geomap.zoomDuration|500|no| Time in milliseconds it takes to zoom the map to the specific location. Set to 0 to disable the zoom animation.
@@ -298,43 +299,166 @@ In the web-ui.json, the geomap can be configure with the following properties:
 
 |===
 
-The layers and tiles of the map can be configured using the `feed.geomap.layers` property. This property accepts an array of objects, each representing a layer with a `type` property and additional configuration options depending on the layer type. The following layer types are supported:
+==== Night/Light Mode Parameter
 
-    - `osm`: OpenStreetMap tiles. No additional configuration required.
-    - `geojson`: GeoJSON layers. Requires a `url` for the GeoJSON file and optionally a `style` object for feature styling. The `style` object supports stroke, fill, image, and text styles as defined in the OpenLayers flat style format (see: https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html).
-    - `xyz`: XYZ tiles. Requires a `url` endpoint with `{x}`, `{y}`, and `{z}` variables (e.g., "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png"). You may also specify:
+The map appearance is controlled by a single parameter:
 
-        ** `tileSize`: Integer value (e.g., 256). Required for custom background layers.
-        ** `crossOrigin`: Optional. Default is `null`.
-    - `wmts`: WMTS layers. Requires `capabilitiesUrl`, `layer`, and `matrixSet`.
+- **`darkMode`**
+  * `false`: Always light (no CSS filter applied)
+  * `true`: Always dark (CSS inversion filter applied)
+  * Omit the parameter to automatically follow the application's day/night theme
 
-Example configuration for the `feed.geomap.layers` property:
+**Examples:**
+```json
+// Always bright map, even when OpFab is in dark theme
+"darkMode": false
+
+// Always dark map with inverted tiles
+"darkMode": true
+
+// Follows application theme
+// (no darkMode property)
 ```
-"layers": [
-                {
-                    "type":"osm"
-                },
-                {
-                    "type":"wmts",
-                    "capabilitiesUrl":"https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
-                    "layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-                    "matrixSet":"PM_0_19"
-                },
-                {
-                    "type": "geojson",
-                    "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
-                    "style": {
-                        "stroke-color": "red"
-                    }
-                },
-                {
-                    "type": "geojson",
-                    "url": "assets/layers/geojson-layer2.json"
-                }
 
-            ]
+Precedence (from highest to lowest):
 
+1. Explicit `darkMode` if explicitly set to `true` or `false`
+2. Application theme (night/day) when `darkMode` is not defined
 
+The layers and tiles of the map can be configured using the `feed.geomap.layers` property. This property accepts an array of objects, each representing a layer with a `type` property and additional configuration options depending on the layer type. 
+
+==== Common Layer Properties
+
+All layer types support the following optional properties:
+
+    - `opacity`: Number between 0 and 1 (default: 1). Controls layer transparency.
+    - `zIndex`: Integer (default: 0). Controls layer stacking order. Higher values appear on top.
+
+==== Layer Types
+
+    - `osm`: OpenStreetMap tiles. No additional configuration required beyond common properties.
+    
+    - `geojson`: GeoJSON layers. Requires:
+        ** `url`: URL to the GeoJSON file
+        ** `style`: Optional styling object using OpenLayers flat style format (see: https://openlayers.org/en/latest/apidoc/module-ol_style_flat.html)
+    
+    - `xyz`: XYZ tiles. Requires:
+        ** `url`: Endpoint with `{x}`, `{y}`, and `{z}` variables (e.g., "https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png")
+        ** `tileSize`: Optional integer (e.g., 256). Required for custom background layers
+
+    - `wmts`: WMTS layers. Requires:
+        ** `capabilitiesUrl`: URL to WMTS capabilities document (uses `credentials: 'include'` for domains in `credentialDomains`)
+        ** `layer`: Layer identifier from capabilities
+        ** `matrixSet`: Matrix set identifier from capabilities
+    
+    - `arcgis` or `esri`: ArcGIS REST Map Service layers. Requires:
+        ** `url`: ArcGIS REST service endpoint URL (authentication tokens automatically added for domains in `credentialDomains`)
+        ** `layers`: Optional string specifying which layers to show (e.g., "0,1,2")
+        ** `format`: Optional image format (default: "png")
+        ** `transparent`: Optional boolean (default: true)
+        ** `ratio`: Optional number (default: 1). Device pixel ratio
+        ** `visible`: Optional boolean (default: true). Initial visibility
+
+==== Example Configurations
+
+===== Web Mercator Projection (Standard)
+
+Example configuration for the `feed.geomap.layers` property with all supported layer types using Web Mercator projection:
+
+```json
+"geomap": {
+  "enableMap": true,
+  "mapProjection": "EPSG:3857",
+  "wktProjection": "EPSG:4326",
+  "initialLongitude": 2.4408,
+  "initialLatitude": 46.7211,
+  "initialZoom": 6,
+  "maxZoom": 18,
+  "zoomLevelWhenZoomToLocation": 14,
+  "zoomDuration": 500,
+  "highlightPolygonStrokeWidth": 20,
+  "popupContent": "summary",
+  "dayNightMode": "DAY",
+  "layers": [
+    {
+      "type": "osm",
+      "zIndex": 0
+    },
+    {
+      "type": "xyz",
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "zIndex": 1
+    },
+    {
+      "type": "wmts",
+      "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+      "layer": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+      "matrixSet": "PM_0_19",
+      "opacity": 0.7,
+      "zIndex": 2
+    },
+    {
+      "type": "arcgis",
+      "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+      "transparent": true,
+      "opacity": 0.8,
+      "zIndex": 3
+    },
+    {
+      "type": "geojson",
+      "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+      "style": {
+        "stroke-color": "red"
+      },
+      "zIndex": 4
+    },
+    {
+      "type": "geojson",
+      "url": "assets/layers/geojson-layer2.json",
+      "zIndex": 5
+    }
+  ]
+}
+```
+
+===== Lambert 93 Projection (France)
+
+Example configuration optimized for France using Lambert 93 projection:
+
+```json
+"geomap": {
+  "enableMap": true,
+  "mapProjection": "EPSG:2154",
+  "defaultDataProjection": "EPSG:2154",
+  "wktProjection": "EPSG:2154",
+  "dayNightMode": "DAY",
+  "initialLongitude": 651966,
+  "initialLatitude": 6862314,
+  "initialZoom": 4,
+  "maxZoom": 8,
+  "zoomLevelWhenZoomToLocation": 6,
+  "zoomDuration": 500,
+  "highlightPolygonStrokeWidth": 20,
+  "popupContent": "summary",
+  "layers": [
+    {
+      "type": "wmts",
+      "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+      "layer": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+      "matrixSet": "2154_16",
+      "opacity": 0.7,
+      "zIndex": 1
+    },
+    {
+      "type": "wmts",
+      "capabilitiesUrl": "https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
+      "layer": "CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
+      "matrixSet": "2154_16",
+      "opacity": 1,
+      "zIndex": 2
+    }
+  ]
+}
 ```
 
 
