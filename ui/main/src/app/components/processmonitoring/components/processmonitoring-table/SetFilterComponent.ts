@@ -10,8 +10,7 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
-import type {IFilterDisplayAngularComp} from 'ag-grid-angular';
-import type {FilterDisplayParams} from 'ag-grid-community';
+import {FilterDisplayParams} from 'ag-grid-community';
 import {NgForOf} from '@angular/common';
 
 @Component({
@@ -27,7 +26,7 @@ import {NgForOf} from '@angular/common';
         </div>
     `
 })
-export class SetFilterComponent implements IFilterDisplayAngularComp<any, any, string> {
+export class SetFilterComponent {
     protected checkboxes: {label: string; checked: boolean}[] = [];
     private possibleValues: string[] = [];
 
@@ -44,12 +43,6 @@ export class SetFilterComponent implements IFilterDisplayAngularComp<any, any, s
                 checked: false
             });
         });
-
-        this.refresh();
-    }
-
-    refresh(): boolean {
-        return true;
     }
 
     onCheckboxChange() {
@@ -60,6 +53,10 @@ export class SetFilterComponent implements IFilterDisplayAngularComp<any, any, s
             }
         });
 
-        this.filterParams.onModelChange({type: 'set', filter: this.filter.length > 0 ? this.filter : null});
+        if (this.filter.length > 0) {
+            this.filterParams.onModelChange({type: 'set', filter: this.filter});
+        } else {
+            this.filterParams.onModelChange(null);
+        }
     }
 }
