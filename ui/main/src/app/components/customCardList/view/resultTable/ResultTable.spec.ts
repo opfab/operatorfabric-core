@@ -451,7 +451,9 @@ describe('CustomScreenView - ResultTable', () => {
                 })
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'card1', date: {text: '01/01/2021 2:00 AM', value: 1609462800000}}]);
+            expect(dataArray).toEqual([
+                {cardId: 'card1', date: {stringValue: '01/01/2021 2:00 AM', value: 1609462800000}}
+            ]);
         });
 
         it('with formatted business period if field type is BUSINESS_PERIOD', () => {
@@ -475,7 +477,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     businessPeriod: {
-                        text: '01/01/2021 2:00 AM - 01/02/2021 2:00 AM',
+                        stringValue: '01/01/2021 2:00 AM - 01/02/2021 2:00 AM',
                         htmlValue:
                             '<div class="opfab-no-extra-line-spacing">01/01/2021 2:00 AM <br> 01/02/2021 2:00 AM</div>',
                         value: {startDate: 1609462800000, endDate: 1609549200000}
@@ -518,7 +520,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card1',
                     typeOfState: {
-                        text: 'Translation (en) of shared.typeOfState.INPROGRESS',
+                        stringValue: 'Translation (en) of shared.typeOfState.INPROGRESS',
                         value: 'INPROGRESS',
                         color: 'darker-orange'
                     }
@@ -526,7 +528,7 @@ describe('CustomScreenView - ResultTable', () => {
                 {
                     cardId: 'card2',
                     typeOfState: {
-                        text: '',
+                        stringValue: '',
                         value: undefined,
                         color: 'grey'
                     }
@@ -583,7 +585,7 @@ describe('CustomScreenView - ResultTable', () => {
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([
-                {cardId: 'id1', testField: {rowValue: 'processId1', htmlValue: '<i>processId1</i>'}}
+                {cardId: 'id1', testField: {value: 'processId1', htmlValue: '<i>processId1</i>'}}
             ]);
         });
 
@@ -614,7 +616,7 @@ describe('CustomScreenView - ResultTable', () => {
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([
-                {cardId: 'id1', testField: {rowValue: 'processId1-test', htmlValue: '<i>processId1</i>'}}
+                {cardId: 'id1', testField: {value: 'processId1-test', htmlValue: '<i>processId1</i>'}}
             ]);
         });
 
@@ -625,8 +627,8 @@ describe('CustomScreenView - ResultTable', () => {
                         field: 'myfield',
                         fieldType: FieldType.COLORED_CIRCLE,
                         getValue: (card: Card) => {
-                            if (card.severity === Severity.ALARM) return 'red';
-                            return 'blue';
+                            if (card.severity === Severity.ALARM) return {color: 'red', numericalValue: 4};
+                            return {color: 'blue', numericalValue: 1};
                         }
                     }
                 ]
@@ -643,8 +645,8 @@ describe('CustomScreenView - ResultTable', () => {
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([
-                {cardId: 'card1', myfield: 'red'},
-                {cardId: 'card2', myfield: 'blue'}
+                {cardId: 'card1', myfield: {value: 4, color: 'red'}},
+                {cardId: 'card2', myfield: {value: 1, color: 'blue'}}
             ]);
         });
 
@@ -705,10 +707,12 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([
                 {
                     cardId: 'card1',
-                    responses: [
-                        {entityName: 'entity1 name', color: 'grey'},
-                        {entityName: 'entity3 name', color: 'grey'}
-                    ]
+                    responses: {
+                        value: [
+                            {entityName: 'entity1 name', color: 'grey'},
+                            {entityName: 'entity3 name', color: 'grey'}
+                        ]
+                    }
                 }
             ]);
         });
@@ -735,11 +739,13 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([
                 {
                     cardId: 'card1',
-                    responses: [
-                        {entityName: 'entity1 name', color: 'grey'},
-                        {entityName: 'entity2 name', color: 'grey'},
-                        {entityName: 'entity3 name', color: 'grey'}
-                    ]
+                    responses: {
+                        value: [
+                            {entityName: 'entity1 name', color: 'grey'},
+                            {entityName: 'entity2 name', color: 'grey'},
+                            {entityName: 'entity3 name', color: 'grey'}
+                        ]
+                    }
                 }
             ]);
         });
@@ -763,7 +769,7 @@ describe('CustomScreenView - ResultTable', () => {
                 })
             ];
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
-            expect(dataArray).toEqual([{cardId: 'card1', responses: []}]);
+            expect(dataArray).toEqual([{cardId: 'card1', responses: {value: []}}]);
         });
 
         it('with child entity if parent entity is not allowed to send card', () => {
@@ -788,7 +794,7 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([
                 {
                     cardId: 'card1',
-                    responses: [{entityName: 'child entity', color: 'grey'}]
+                    responses: {value: [{entityName: 'child entity', color: 'grey'}]}
                 }
             ]);
         });
@@ -838,12 +844,14 @@ describe('CustomScreenView - ResultTable', () => {
             expect(dataArray).toEqual([
                 {
                     cardId: 'card1',
-                    responses: [
-                        {entityName: 'child entity', color: 'blue'},
-                        {entityName: 'entity1 name', color: 'red'},
-                        {entityName: 'entity2 name', color: 'orange'},
-                        {entityName: 'entity3 name', color: 'green'}
-                    ]
+                    responses: {
+                        value: [
+                            {entityName: 'child entity', color: 'blue'},
+                            {entityName: 'entity1 name', color: 'red'},
+                            {entityName: 'entity2 name', color: 'orange'},
+                            {entityName: 'entity3 name', color: 'green'}
+                        ]
+                    }
                 }
             ]);
         });
@@ -1053,7 +1061,7 @@ describe('CustomScreenView - ResultTable', () => {
                             {value: 'option2', label: 'Label option2'}
                         ],
                         allowNewOptionForSelect: true,
-                        text: 'Label option1'
+                        stringValue: 'Label option1'
                     }
                 }
             ]);
@@ -1074,7 +1082,7 @@ describe('CustomScreenView - ResultTable', () => {
                             {value: 'option2', label: 'Label option2'}
                         ],
                         allowNewOptionForSelect: true,
-                        text: ''
+                        stringValue: ''
                     }
                 }
             ]);

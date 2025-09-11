@@ -57,19 +57,16 @@ export class ResultTableExport {
                     let cellValue = line[column.field];
                     switch (column.type) {
                         case 'responses':
-                            this.addResponseFieldsToRow(column.headerName, cellValue, row);
+                            this.addResponseFieldsToRow(column.headerName, cellValue.value, row);
                             break;
                         case 'coloredCircle':
-                            cellValue = cellValue?.numericalValue;
-                            row[column.headerName] = cellValue;
-                            break;
                         case 'html':
-                            cellValue = cellValue?.rowValue;
+                            cellValue = cellValue?.value;
                             row[column.headerName] = cellValue;
                             break;
                         default:
-                            if (cellValue?.text) {
-                                cellValue = cellValue.text;
+                            if (cellValue?.stringValue) {
+                                cellValue = cellValue.stringValue;
                             }
                             row[column.headerName] = cellValue;
                     }

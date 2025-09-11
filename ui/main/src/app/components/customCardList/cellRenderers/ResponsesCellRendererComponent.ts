@@ -23,7 +23,7 @@ export class ResponsesCellRendererComponent implements ICellRendererAngularComp 
     public responses: any[];
 
     agInit(params: any): void {
-        this.responses = params.data.responses;
+        this.responses = params.data.responses.value;
     }
 
     // noinspection JSUnusedLocalSymbols
