@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,13 @@ sdk version
 javac -version
 export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx2g"
 ./gradlew --version
-./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker sonar
+# Check if we are in a fork or not
+if [ "$GITHUB_REPOSITORY" = "$GITHUB_HEAD_REPO_FULL_NAME" ]; then
+    ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker sonar
+else
+    echo "This is a fork, we cannot use secrets for launching sonar analysis so we skip it"
+    ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker
+fi  
 status_code=$?
 docker compose -f src/main/docker/test-environment/docker-compose.yml down
 # propagate the status code for github actions
