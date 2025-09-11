@@ -377,7 +377,7 @@
         "systemNotificationCompliant": "Conforme",
         "systemNotificationInformation": "Information",
         "systemNotificationsDisabledInBrowser": "Les notifications du système d'exploitation sont désactivées dans votre navigateur, vous ne serez pas notifié.",
-        "sendCardsByEmail": "Envoi des notifications par mail",
+        "sendCardsByEmail": "Envoi un mail à réception de carte",
         "emailToPlainText": "Envoi des mails en texte brut",
         "sendDailyEmail": "Envoi un mail quotidien récapitulatif des cartes du jour",
         "sendWeeklyEmail": "Envoi un mail hebdomadaire récapitulatif des cartes de la semaine",
