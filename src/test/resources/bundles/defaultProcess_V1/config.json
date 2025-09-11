@@ -40,6 +40,8 @@
             "styles": ["style"],
             "acknowledgmentAllowed": "Always",
             "cancelAcknowledgmentAllowed": false,
+            "emailAttachmentTemplate": "email_attachment_template",
+			"emailAttachmentFileName": "chartLineData.xml",
             "type": "CANCELED"
         },
         "processState": {

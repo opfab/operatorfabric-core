@@ -4563,6 +4563,14 @@
                       "type": "string",
                       "description": "Email address to use as recipient for email notifications",
                     },
+                  "emailAttachmentTemplate": {
+                      "type": "string",
+                      "description": "Name of the handlebar template to use to build the email's attachement",
+                    },
+                    "emailAttachmentFileName": {
+                      "type": "string",
+                      "description": "Name of the attachement file in the email"
+                    },
                   "timezoneForEmails":
                     {
                       "type": "string",

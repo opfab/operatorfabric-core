@@ -60,7 +60,7 @@ export class SendMailServiceStub extends SendMailService {
     numberOfMailsSent = 0;
     sent: any[] = [];
 
-    public async sendMail(subject: string, body: string, from: string, to: string): Promise<any> {
+    public async sendMail(subject: string, body: string, attachment: any[], from: string, to: string): Promise<any> {
         if (to.indexOf('@') > 0) {
             this.numberOfMailsSent++;
 
