@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {Severity} from 'app/model/Severity';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
 import {takeUntil} from 'rxjs/operators';
@@ -29,14 +29,15 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     imports: [NgFor]
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {
+    private readonly route = inject(ActivatedRoute);
+
     private readonly filteredLightCardStore: FilteredLightCardsStore;
     private initialZoomToLocation: any;
 
-    constructor(
-        translateService: TranslateService,
-        superChangeDetector: ChangeDetectorRef,
-        private readonly route: ActivatedRoute
-    ) {
+    constructor() {
+        const translateService = inject(TranslateService);
+        const superChangeDetector = inject(ChangeDetectorRef);
+
         super(translateService, superChangeDetector);
         this.targetElementId = 'ol-map';
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();

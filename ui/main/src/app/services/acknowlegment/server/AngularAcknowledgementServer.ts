@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
@@ -19,10 +19,12 @@ import {ServerResponse} from 'app/server/ServerResponse';
     providedIn: 'root'
 })
 export class AngularAcknowledgeServer extends AngularServer implements AcknowledgeServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly userAckUrl: string;
     readonly cancelUserAckUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.userAckUrl = `${environment.url}cards-publication/cards/userAcknowledgement`;
         this.cancelUserAckUrl = `${environment.url}cards-publication/cards/cancelUserAcknowledgement`;

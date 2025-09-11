@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 import {AngularServer} from '../../../server/AngularServer';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {CardsServer} from '@ofServices/cards/server/CardsServer';
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {CardForPublishing} from '../model/CardForPublishing';
@@ -27,13 +27,15 @@ import {Page} from 'app/model/Page';
     providedIn: 'root'
 })
 export class AngularCardsServer extends AngularServer implements CardsServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly cardConsultationUrl: string;
     private readonly archivesUrl: string;
     private readonly cardPublicationUrl: string;
     private readonly userCardReadUrl: string;
     private readonly userCardUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.cardConsultationUrl = `${environment.url}cards-consultation/cards`;
         this.archivesUrl = `${environment.url}cards-consultation/archives`;

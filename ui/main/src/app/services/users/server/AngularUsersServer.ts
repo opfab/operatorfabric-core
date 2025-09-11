@@ -12,7 +12,7 @@ import {map, Observable} from 'rxjs';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {AngularServer} from '../../../server/AngularServer';
 import {UsersServer} from '@ofServices/users/server/UsersServer';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
@@ -20,6 +20,8 @@ import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
     providedIn: 'root'
 })
 export class AngularUserServer extends AngularServer implements UsersServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly userUrl: string;
     readonly connectionsUrl: string;
     readonly willNewSubscriptionDisconnectAnExistingSubscriptionUrl: string;
@@ -27,7 +29,7 @@ export class AngularUserServer extends AngularServer implements UsersServer {
      * @constructor
      * @param httpClient - Angular built-in
      */
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.userUrl = `${environment.url}users`;
         this.connectionsUrl = `${environment.url}cards-consultation/connections`;

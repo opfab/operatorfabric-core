@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
 import {OpfabNgbModalComponent} from '../../../components/share/modal/OpfabNgbModalComponent';
@@ -17,7 +17,7 @@ import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
     providedIn: 'root'
 })
 export class NgbModalComponent implements ModalComponent {
-    constructor(private readonly modalService: NgbModal) {}
+    private readonly modalService = inject(NgbModal);
 
     openModal(modalConfig: ModalConfig): Promise<string> {
         const modalRef = this.modalService.open(OpfabNgbModalComponent, {centered: true});

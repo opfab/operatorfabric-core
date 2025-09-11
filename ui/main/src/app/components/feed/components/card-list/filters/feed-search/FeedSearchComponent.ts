@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
@@ -22,13 +22,15 @@ import {NgIf} from '@angular/common';
     imports: [NgIf, FormsModule, ReactiveFormsModule]
 })
 export class FeedSearchComponent implements OnInit {
+    private readonly translateService = inject(TranslateService);
+
     @Input() showSearchFilter: boolean;
 
     searchControl = new FormControl();
     placeholder: string;
     private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private readonly translateService: TranslateService) {
+    constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
     }
 

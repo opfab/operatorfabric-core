@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -35,6 +35,8 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class ExternaldevicesModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+
     signalMappingMultiSelectOptions = [];
     selectedSignalMapping = [];
     signalMappingMultiSelectConfig: MultiSelectConfig = {
@@ -50,8 +52,6 @@ export class ExternaldevicesModalComponent implements OnInit {
     devices: DeviceConfiguration[];
     isLoadingExternalDevices: boolean;
     isLoadingSignalMappings: boolean;
-
-    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         const uniqueDeviceIdValidator = [];

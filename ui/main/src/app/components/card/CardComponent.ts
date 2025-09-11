@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
@@ -33,6 +33,8 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     imports: [NgIf, CardBodyComponent, SpinnerComponent, TranslateModule]
 })
 export class CardComponent implements OnInit, OnDestroy {
+    protected modalService = inject(NgbModal);
+
     @Input() parentModalRef: NgbModalRef;
     @Input() screenSize = 'md';
 
@@ -46,7 +48,7 @@ export class CardComponent implements OnInit, OnDestroy {
     detailClosed: boolean;
     hallwayMode: boolean;
 
-    constructor(protected modalService: NgbModal) {
+    constructor() {
         this.hallwayMode = ConfigService.getConfigValue('settings.hallwayMode');
     }
 

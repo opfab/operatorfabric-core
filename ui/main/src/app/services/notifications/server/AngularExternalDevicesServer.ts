@@ -19,12 +19,14 @@ import {Observable} from 'rxjs';
 import {AngularServer} from '../../../server/AngularServer';
 import {environment} from '@env/environment';
 import {ServerResponse} from 'app/server/ServerResponse';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularExternalDevicesServer extends AngularServer implements ExternalDevicesServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly externalDevicesUrl: string;
     readonly notificationsUrl: string;
     readonly configurationsUrl: string;
@@ -32,7 +34,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     readonly devicesConfigurationsUrl: string;
     readonly signalMappingUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.externalDevicesUrl = `${environment.url}externaldevices`;
         this.notificationsUrl = this.externalDevicesUrl + '/notifications';

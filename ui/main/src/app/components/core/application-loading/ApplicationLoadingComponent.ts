@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, OnInit, Output, ViewChild, inject} from '@angular/core';
 import {LogLevel, LoggerService, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {firstValueFrom, Subject, tap} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/ActivityAreaChoiceAfterLoginComponent';
@@ -58,6 +58,30 @@ import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
     ]
 })
 export class ApplicationLoadingComponent implements OnInit {
+    private readonly authService = inject(AuthService);
+    private readonly configServer = inject(ConfigServer);
+    private readonly opfabEventStreamServer = inject(OpfabEventStreamServer);
+    private readonly translationLib = inject(TranslationLib);
+    private readonly remoteLoggerServer = inject(RemoteLoggerServer);
+    private readonly usersServer = inject(UsersServer);
+    private readonly applicationRouter = inject(AngularApplicationRouter);
+    private readonly entitiesServer = inject(EntitiesServer);
+    private readonly groupsServer = inject(GroupsServer);
+    private readonly perimetersServer = inject(PerimetersServer);
+    private readonly processesServer = inject(ProcessesServer);
+    private readonly adminProcessesServer = inject(AdminProcessesServer);
+    private readonly acknowledgeServer = inject(AcknowledgeServer);
+    private readonly businessDataServer = inject(BusinessDataServer);
+    private readonly cardsServer = inject(CardsServer);
+    private readonly supervisedEntitiesServer = inject(SupervisedEntitiesServer);
+    private readonly externalDevicesServer = inject(ExternalDevicesServer);
+    private readonly templateCssServer = inject(TemplateCssServer);
+    private readonly handlebarsTemplateServer = inject(HandlebarsTemplateServer);
+    private readonly userSettingsServer = inject(UserSettingsServer);
+    private readonly modalComponent = inject(ModalComponent);
+    private readonly soundServer = inject(SoundServer);
+    private readonly userActionLogsServer = inject(UserActionLogsServer);
+
     @Output() applicationLoadedDone: Subject<boolean> = new Subject();
 
     @ViewChild('activityAreaChoiceAfterLogin')
@@ -68,31 +92,7 @@ export class ApplicationLoadingComponent implements OnInit {
     public applicationLoader: ApplicationLoader;
     public showLoginScreen = false;
 
-    constructor(
-        private readonly authService: AuthService,
-        private readonly configServer: ConfigServer,
-        private readonly opfabEventStreamServer: OpfabEventStreamServer,
-        private readonly translationLib: TranslationLib,
-        private readonly remoteLoggerServer: RemoteLoggerServer,
-        private readonly usersServer: UsersServer,
-        private readonly applicationRouter: AngularApplicationRouter,
-        private readonly entitiesServer: EntitiesServer,
-        private readonly groupsServer: GroupsServer,
-        private readonly perimetersServer: PerimetersServer,
-        private readonly processesServer: ProcessesServer,
-        private readonly adminProcessesServer: AdminProcessesServer,
-        private readonly acknowledgeServer: AcknowledgeServer,
-        private readonly businessDataServer: BusinessDataServer,
-        private readonly cardsServer: CardsServer,
-        private readonly supervisedEntitiesServer: SupervisedEntitiesServer,
-        private readonly externalDevicesServer: ExternalDevicesServer,
-        private readonly templateCssServer: TemplateCssServer,
-        private readonly handlebarsTemplateServer: HandlebarsTemplateServer,
-        private readonly userSettingsServer: UserSettingsServer,
-        private readonly modalComponent: ModalComponent,
-        private readonly soundServer: SoundServer,
-        private readonly userActionLogsServer: UserActionLogsServer
-    ) {
+    constructor() {
         LoggerService.setLogLevel(LogLevel.DEBUG);
     }
 

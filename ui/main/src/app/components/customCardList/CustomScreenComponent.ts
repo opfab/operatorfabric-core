@@ -8,7 +8,7 @@
  */
 
 import {NgIf} from '@angular/common';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomCardListComponent} from './CustomCardListComponent';
@@ -19,12 +19,12 @@ import {CustomCardListComponent} from './CustomCardListComponent';
     imports: [NgIf, CustomCardListComponent]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {
+    private readonly route = inject(ActivatedRoute);
+
     customScreenId: string;
     displayComponent = false;
 
     private readonly ngUnsubscribe$ = new Subject<void>();
-
-    constructor(private readonly route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {

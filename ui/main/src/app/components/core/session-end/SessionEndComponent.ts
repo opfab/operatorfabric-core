@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {I18n} from 'app/model/I18n';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
@@ -22,9 +22,9 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgIf, TranslateModule]
 })
 export class SessionEndComponent implements OnInit {
-    public isDisconnectedByNewUser = false;
+    private readonly changeDetector = inject(ChangeDetectorRef);
 
-    constructor(private readonly changeDetector: ChangeDetectorRef) {}
+    public isDisconnectedByNewUser = false;
 
     ngOnInit(): void {
         this.subscribeToSessionEnd();

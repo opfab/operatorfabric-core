@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {TranslationLib} from '@ofServices/translation/lib/TranslationLib';
 import {TranslateService} from '@ngx-translate/core';
 
@@ -15,9 +15,8 @@ import {TranslateService} from '@ngx-translate/core';
     providedIn: 'root'
 })
 export class AngularTranslationLib extends TranslationLib {
-    constructor(private readonly translateService: TranslateService) {
-        super();
-    }
+    private readonly translateService = inject(TranslateService);
+
     setTranslation(lang: string, translation: Object, shouldMerge: boolean) {
         this.translateService.setTranslation(lang, translation, shouldMerge);
     }

@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -43,6 +43,10 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditGroupModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+    private readonly dataHandlingService = inject(SharingService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     groupForm: FormGroup<{
         id: FormControl<string | null>;
         name: FormControl<string | null>;
@@ -83,11 +87,7 @@ export class EditGroupModalComponent implements OnInit {
         sortOptions: true
     };
 
-    constructor(
-        private readonly activeModal: NgbActiveModal,
-        private readonly dataHandlingService: SharingService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         Object.values(PermissionEnum).forEach((t) => this.groupPermissions.push({value: String(t), label: String(t)}));
     }
 

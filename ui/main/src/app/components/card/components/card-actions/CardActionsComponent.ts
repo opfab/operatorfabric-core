@@ -16,7 +16,8 @@ import {
     OnInit,
     Output,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
@@ -47,6 +48,8 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     imports: [NgIf, TranslateModule, UserCardComponent, SpinnerComponent]
 })
 export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly modalService = inject(NgbModal);
+
     @Input() card: Card;
     @Input() cardState: State;
     @Input() parentModalRef: NgbModalRef;
@@ -65,8 +68,6 @@ export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
     public deleteInProgress = false;
 
     private readonly unsubscribe$: Subject<void> = new Subject<void>();
-
-    constructor(private readonly modalService: NgbModal) {}
 
     ngOnInit(): void {
         this.templateInitialized.subscribe(() =>

@@ -15,7 +15,8 @@ import {
     ElementRef,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 import {Subject} from 'rxjs';
 
@@ -57,6 +58,9 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     ]
 })
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
+    private readonly modalService = inject(NgbModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     unsubscribe$: Subject<void> = new Subject<void>();
 
     tags: any[] = [];
@@ -106,10 +110,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
         ['information', 4]
     ]);
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.logging) {
                 const itemName = process.name ? process.name : process.id;

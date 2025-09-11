@@ -8,7 +8,7 @@
  */
 
 import {NgFor, NgIf} from '@angular/common';
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule} from '@ngx-translate/core';
@@ -66,6 +66,8 @@ import {Utilities} from '../../utils/Utilities';
     ]
 })
 export class CustomCardListComponent implements OnInit, OnDestroy {
+    private readonly modalService = inject(NgbModal);
+
     @Input() customScreenId: string;
     customCardListView: CustomCardListView;
     isCustomScreenDefinitionExist: boolean;
@@ -179,7 +181,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     loadingInProgress = false;
 
-    constructor(private readonly modalService: NgbModal) {
+    constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
         this.dateRangePickerLocale = DateRangePickerConfig.getLocale();

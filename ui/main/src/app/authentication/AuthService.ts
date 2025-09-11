@@ -8,7 +8,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Message} from '@ofServices/alerteMessage/model/Message';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -27,16 +27,14 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     providedIn: 'root'
 })
 export class AuthService {
+    private readonly oauthServiceForImplicitMode = inject(OAuthService);
+    private readonly httpClient = inject(HttpClient);
+
     private mode: AuthenticationMode = AuthenticationMode.NONE;
     private readonly rejectLoginMessage = new Subject<Message>();
     private login: string;
 
     private authHandler: AuthHandler;
-
-    constructor(
-        private readonly oauthServiceForImplicitMode: OAuthService,
-        private readonly httpClient: HttpClient
-    ) {}
 
     public initializeAuthentication() {
         this.login = localStorage.getItem('identifier');

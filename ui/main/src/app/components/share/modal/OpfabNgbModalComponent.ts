@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, inject} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 import {I18n} from 'app/model/I18n';
@@ -22,9 +22,9 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgIf, NgClass, NgFor, TranslateModule]
 })
 export class OpfabNgbModalComponent {
-    @Input() modalConfig: ModalConfig;
+    private readonly activeModal = inject(NgbActiveModal);
 
-    constructor(private readonly activeModal: NgbActiveModal) {}
+    @Input() modalConfig: ModalConfig;
 
     public close(buttonId: string) {
         this.activeModal.close(buttonId);

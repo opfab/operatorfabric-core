@@ -12,15 +12,17 @@ import {Observable} from 'rxjs';
 import {AngularServer} from '../../../server/AngularServer';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {RemoteLoggerServer} from './RemoteLoggerServer';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AngularRemoteLoggerServer extends AngularServer implements RemoteLoggerServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly remoteLogsUrl: string;
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.remoteLogsUrl = `${environment.url}cards-consultation/logs`;
     }

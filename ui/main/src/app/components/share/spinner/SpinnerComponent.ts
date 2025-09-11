@@ -15,7 +15,8 @@ import {
     OnDestroy,
     OnInit,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {NgIf} from '@angular/common';
@@ -29,6 +30,9 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgIf, TranslateModule]
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
+    private readonly modalService = inject(NgbModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     @Input() loadingText = 'shared.loadingInProgress';
     @Input() timeBeforeDisplayingSpinner = 500;
     @Input() seeInModal = false;
@@ -38,11 +42,6 @@ export class SpinnerComponent implements OnInit, OnDestroy {
     private destroy = false;
 
     mustDisplaySpinner = false;
-
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit() {
         setTimeout(() => {

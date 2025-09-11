@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
@@ -21,6 +21,8 @@ declare const VirtualSelect: any;
     imports: [TranslateModule]
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
+    private readonly translateService = inject(TranslateService);
+
     @Input() public parentForm: UntypedFormGroup;
     @Input() public multiSelectId: string;
     @Input() public config: MultiSelectConfig;
@@ -38,8 +40,6 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     private ngAfterViewInitHasBeenDone = false;
     private virtualSelectComponent: any;
     private disabled: boolean;
-
-    constructor(private readonly translateService: TranslateService) {}
 
     ngAfterViewInit() {
         setTimeout(() => {

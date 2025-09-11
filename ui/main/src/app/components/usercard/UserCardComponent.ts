@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Card} from 'app/model/Card';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
@@ -54,6 +54,9 @@ import {Entity} from '@ofServices/entities/model/Entity';
     ]
 })
 export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterViewInit {
+    private readonly sanitizer = inject(DomSanitizer);
+    private readonly element = inject(ElementRef);
+
     @Input() userCardModal;
     @Input() cardIdToEdit: string = null;
     @Input() cardIdToCopy: string = null;
@@ -138,10 +141,7 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     public sendingCardInProgress = false;
     private intervalIdForConnectedRecipientsUpdate: any;
 
-    constructor(
-        private readonly sanitizer: DomSanitizer,
-        private readonly element: ElementRef
-    ) {
+    constructor() {
         this.userCardView = new UserCardView(this);
         this.cardLoadingInProgress = true;
         this.useDescriptionFieldForEntityList = ConfigService.getConfigValue(

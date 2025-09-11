@@ -20,7 +20,8 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
 import {Card} from 'app/model/Card';
 import {HandlebarsService} from '../../../services/handlebars/HandlebarsService';
@@ -50,6 +51,10 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     imports: [NgIf, SpinnerComponent]
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
+    private readonly element = inject(ElementRef);
+    private readonly sanitizer = inject(DomSanitizer);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     @Input() cardState: State;
     @Input() card: Card;
     @Input() user: User;
@@ -69,12 +74,6 @@ export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy,
     private userContext: UserContext;
     private readonly unsubscribeToGlobalStyle$: Subject<void> = new Subject<void>();
     private templateLoaded: boolean;
-
-    constructor(
-        private readonly element: ElementRef,
-        private readonly sanitizer: DomSanitizer,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     public ngOnInit() {
         this.informTemplateWhenGlobalStyleChange();

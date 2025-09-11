@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
@@ -26,6 +26,8 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, SpinnerComponent, MultiSelectComponent, NgFor]
 })
 export class RealtimeUsersComponent implements OnInit, OnDestroy {
+    private readonly configServer = inject(ConfigServer);
+
     realTimeScreensForm: FormGroup<{
         realTimeScreen: FormControl<string | null>;
     }>;
@@ -40,8 +42,6 @@ export class RealtimeUsersComponent implements OnInit, OnDestroy {
     realtimeusersView: RealtimeUsersView;
     realtimePage: RealtimePage;
     initialScreenOption: string;
-
-    constructor(private readonly configServer: ConfigServer) {}
 
     ngOnInit(): void {
         this.realTimeScreensForm = new FormGroup({

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {Dashboard} from 'app/components/dashboard/view/DashboardView';
 import {DashboardPage} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +28,8 @@ declare const opfab: any;
     imports: [TimelineButtonsComponent, TranslateModule, NgIf, NgFor, NgClass, NgbPopover, CardComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    private readonly modalService = inject(NgbModal);
+
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
     public dashboardPage: DashboardPage;
@@ -40,7 +42,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private hideStateFilter: boolean;
     private processStateRedirects: any;
 
-    constructor(private readonly modalService: NgbModal) {
+    constructor() {
         this.dashboard = new Dashboard();
     }
 

@@ -18,7 +18,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/components/feed/components/time-line/custom-timeline-chart/view/TimelineView';
@@ -56,7 +57,9 @@ export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChange
     public gridWidth: number;
     public gridHeight: number;
 
-    constructor(cd: ChangeDetectorRef) {
+    constructor() {
+        const cd = inject(ChangeDetectorRef);
+
         this.timeLineView = new TimelineView();
         this.changeDetectorRef = cd;
         this.circles$ = this.timeLineView.getCircles();

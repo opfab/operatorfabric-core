@@ -9,7 +9,7 @@
  */
 
 import {AsyncValidatorFn, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject} from '@angular/core';
 import {User} from '@ofServices/users/model/User';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {UsersService} from '@ofServices/users/UsersService';
@@ -31,6 +31,9 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditUserModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     userForm: FormGroup<{
         login: FormControl<string | null>;
         firstName: FormControl<string | null>;
@@ -58,11 +61,6 @@ export class EditUserModalComponent implements OnInit {
     };
 
     @Input() row: User;
-
-    constructor(
-        private readonly activeModal: NgbActiveModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit() {
         const uniqueLoginValidator = [];

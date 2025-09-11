@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {Observable} from 'rxjs';
@@ -20,8 +20,10 @@ import {AdminProcessesServer} from '@ofServices/admin/server/AdminProcessesServe
     providedIn: 'root'
 })
 export class AngularAdminProcessesServer extends AngularServer implements AdminProcessesServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly processesUrl: string;
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
     }

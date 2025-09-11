@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, Renderer2} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, Renderer2, inject} from '@angular/core';
 
 import {Clipboard} from '@angular/cdk/clipboard';
 import {TranslateModule} from '@ngx-translate/core';
@@ -20,6 +20,9 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     imports: [TranslateModule]
 })
 export class RichTextComponent implements OnInit {
+    private readonly clipboard = inject(Clipboard);
+    renderer = inject(Renderer2);
+
     modules = {
         toolbar: [
             [{header: [1, 2, 3, 4, 5, 6, false]}],
@@ -33,11 +36,6 @@ export class RichTextComponent implements OnInit {
     };
 
     delta: string;
-
-    constructor(
-        private readonly clipboard: Clipboard,
-        public renderer: Renderer2
-    ) {}
     ngOnInit(): void {
         const label = TranslationService.getTranslation('devtools.richTextComposer.richTextEditor');
         const container = document.getElementById('richtext');
