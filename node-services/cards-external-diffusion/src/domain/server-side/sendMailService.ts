@@ -22,21 +22,24 @@ export default class SendMailService {
         return this;
     }
 
-    public async sendMail(subject: string, body: string, from: string, to: string, plainText: boolean): Promise<any> {
-        if (plainText) {
-            return await this.transporter.sendMail({
-                from,
-                to,
-                subject,
-                text: body
-            });
-        } else {
-            return await this.transporter.sendMail({
-                from,
-                to,
-                subject,
-                html: body
-            });
+    public async sendMail(
+        subject: string,
+        body: string,
+        attachment: any[],
+        from: string,
+        to: string,
+        plainText: boolean
+    ): Promise<any> {
+        const mail: any = {
+            from,
+            to,
+            subject,
+            ...(plainText ? {text: body} : {html: body})
+        };
+
+        if (attachment.length > 0) {
+            mail.attachments = attachment;
         }
+        return await this.transporter.sendMail(mail);
     }
 }

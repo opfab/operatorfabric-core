@@ -177,14 +177,29 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
         const subject = this.subjectPrefix + ' - ' + card.titleTranslated;
 
-        let body = await this.processCardTemplate(card, timezone);
+        let body = '';
+        let attachment = [];
+        try {
+            const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
+            if (cardContentResponse.isValid()) {
+                const cardContent = cardContentResponse.getData();
+                const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
+                    card.process,
+                    card.processVersion
+                );
+                body = await this.processEmailTemplate(cardContent, cardConfig, timezone);
+                attachment = await this.processAttachmentTemplate(cardContent, cardConfig);
+            }
+        } catch (e) {
+            this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);
+        }
 
         if (emailToPlainText) {
             body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
         }
 
         try {
-            await this.mailService.sendMail(subject, body, this.from, to, emailToPlainText);
+            await this.mailService.sendMail(subject, body, attachment, this.from, to, emailToPlainText);
             this.registerNewSending(to);
             await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {
@@ -204,50 +219,61 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    async processCardTemplate(card: Card, timezone: string): Promise<string> {
+    async processEmailTemplate(cardContent: Card, cardConfig: any, timezone: string): Promise<string> {
         const urlOfCard =
-            '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
+            '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(cardContent.id) + ' ">';
 
         let cardBodyHtml =
             this.bodyPrefix +
             ' ' +
             (this.showCardUrls ? urlOfCard : '') +
-            (this.showCardTitleInBody ? this.escapeHtml(card.titleTranslated) : '') +
+            (this.showCardTitleInBody ? this.escapeHtml(cardContent.titleTranslated) : '') +
             (this.showCardUrls ? '</a>' : '');
-        try {
-            const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
-                card.process,
-                card.processVersion
+
+        const stateName = cardContent.state;
+        if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null) {
+            const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
+                cardContent.process,
+                cardConfig.states[stateName].emailBodyTemplate as string,
+                cardContent.processVersion
             );
-            const stateName = card.state;
-            if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null) {
-                const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
-                if (cardContentResponse.isValid()) {
-                    const cardContent = cardContentResponse.getData();
-                    const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
-                        card.process,
-                        cardConfig.states[stateName].emailBodyTemplate as string,
-                        card.processVersion
-                    );
-                    // Set timezone near templateCompiler call to avoid concurrency issues when sending multiple emails with different timezones.
-                    // Safe in single-threaded Node.js event loop when requests are processed sequentially.
-                    // Did not find a better way to pass timezone to Handlebars helpers.
-                    HandlebarsHelper.timezone = timezone;
-                    cardBodyHtml =
-                        cardBodyHtml + ' <br> ' + templateCompiler({card: cardContent, config: this.customConfig});
-                }
-            }
-            if (this.publisherEntityPrefix != null && card.publisher != null && card.publisherType === 'ENTITY') {
-                const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(card.publisher);
-                cardBodyHtml = cardBodyHtml + ' <br><br>' + this.publisherEntityPrefix + entity.name + '.';
-            }
-            if (this.bodyPostfix != null) {
-                cardBodyHtml = cardBodyHtml + ' <br><br>' + this.bodyPostfix;
-            }
-        } catch (e) {
-            this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);
+            // Set timezone near templateCompiler call to avoid concurrency issues when sending multiple emails with different timezones.
+            // Safe in single-threaded Node.js event loop when requests are processed sequentially.
+            // Did not find a better way to pass timezone to Handlebars helpers.
+            HandlebarsHelper.timezone = timezone;
+            cardBodyHtml = cardBodyHtml + ' <br> ' + templateCompiler({card: cardContent, config: this.customConfig});
+        }
+        if (
+            this.publisherEntityPrefix != null &&
+            cardContent.publisher != null &&
+            cardContent.publisherType === 'ENTITY'
+        ) {
+            const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(cardContent.publisher);
+            cardBodyHtml = cardBodyHtml + ' <br><br>' + this.publisherEntityPrefix + entity.name + '.';
+        }
+        if (this.bodyPostfix != null) {
+            cardBodyHtml = cardBodyHtml + ' <br><br>' + this.bodyPostfix;
         }
         return cardBodyHtml;
+    }
+
+    async processAttachmentTemplate(card: Card, cardConfig: any): Promise<any> {
+        const attachment = [];
+
+        const stateName = card.state;
+        if (cardConfig?.states?.[stateName]?.emailAttachmentTemplate != null) {
+            const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
+                card.process,
+                cardConfig.states[stateName].emailAttachmentTemplate as string,
+                card.processVersion
+            );
+            const filename = cardConfig?.states?.[stateName]?.emailAttachmentFileName ?? 'attachment';
+            attachment.push({
+                filename: filename,
+                content: templateCompiler({card: card, config: this.customConfig})
+            });
+        }
+        return attachment;
     }
 
     async cleanCardsAlreadySent(): Promise<void> {

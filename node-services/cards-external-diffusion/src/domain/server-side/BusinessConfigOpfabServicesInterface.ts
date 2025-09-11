@@ -76,18 +76,18 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         return BusinessConfigOpfabServicesInterface.configCache.get(key);
     }
 
-    public async fetchTemplate(processId: string, emailBodyTemplate: string, version: string): Promise<Function> {
+    public async fetchTemplate(processId: string, emailTemplate: string, version: string): Promise<Function> {
         const key = processId + '.' + version;
         const cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
         if (cachedMap != null) {
-            if (!cachedMap.has(emailBodyTemplate)) {
-                await this.addTemplateToCache(processId, emailBodyTemplate, version, key);
+            if (!cachedMap.has(emailTemplate)) {
+                await this.addTemplateToCache(processId, emailTemplate, version, key);
             }
         } else {
-            await this.addTemplateToCache(processId, emailBodyTemplate, version, key);
+            await this.addTemplateToCache(processId, emailTemplate, version, key);
         }
 
-        const compiler = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key)?.get(emailBodyTemplate);
+        const compiler = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key)?.get(emailTemplate);
         if (compiler != null) {
             return compiler;
         } else {
@@ -99,15 +99,16 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
 
     private async addTemplateToCache(
         processId: string,
-        emailBodyTemplate: string,
+        emailTemplate: string,
         version: string,
         key: string
     ): Promise<void> {
-        const cachedMap: Map<string, Function> | undefined = new Map();
-        const templateResponse = await this.getTemplate(processId, emailBodyTemplate, version);
+        const cachedMap: Map<string, Function> | undefined =
+            BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key) ?? new Map<string, Function>();
+        const templateResponse = await this.getTemplate(processId, emailTemplate, version);
         if (templateResponse.isValid()) {
             const cachedCompiler: Function = Handlebars.compile(templateResponse.getData());
-            cachedMap.set(emailBodyTemplate, cachedCompiler);
+            cachedMap.set(emailTemplate, cachedCompiler);
             BusinessConfigOpfabServicesInterface.templateCompilerCache.set(key, cachedMap);
         }
     }

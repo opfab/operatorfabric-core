@@ -140,7 +140,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         if (userEmailAddress == null) return;
         let emailBody = this.recapFormat(cards, emailBodyPrefix, timezoneForEmails);
         if (emailToPlainText) emailBody = htmlToText(emailBody, {wordwrap: false});
-        await this.mailService.sendMail(emailTitle, emailBody, this.from, userEmailAddress, emailToPlainText);
+        await this.mailService.sendMail(emailTitle, emailBody, [], this.from, userEmailAddress, emailToPlainText);
     }
 
     recapFormat(cards: Card[], emailBodyPrefix: string, timezoneForEmails: string): string {

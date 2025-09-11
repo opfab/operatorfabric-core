@@ -48,6 +48,10 @@ public class ProcessStates {
 
     private String emailBodyTemplate = null;
 
+    private String emailAttachmentTemplate = null;
+
+    private String emailAttachmentFileName = null;
+
     private List<String> styles = null;
 
     private TypeOfStateEnum type = null;
@@ -274,6 +278,32 @@ public class ProcessStates {
         this.emailBodyTemplate = emailBodyTemplate;
     }
 
+    public ProcessStates emailAttachmentTemplate(String emailAttachmentTemplate) {
+        this.emailAttachmentTemplate = emailAttachmentTemplate;
+        return this;
+    }
+
+    public String getEmailAttachmentTemplate() {
+        return emailAttachmentTemplate;
+    }
+
+    public void setEmailAttachmentTemplate(String emailAttachmentTemplate) {
+        this.emailAttachmentTemplate = emailAttachmentTemplate;
+    }
+
+    public ProcessStates emailAttachmentFileName(String emailAttachmentFileName) {
+        this.emailAttachmentFileName = emailAttachmentFileName;
+        return this;
+    }
+
+    public String getEmailAttachmentFileName() {
+        return emailAttachmentFileName;
+    }
+
+    public void setEmailAttachmentFileName(String emailAttachmentFileName) {
+        this.emailAttachmentFileName = emailAttachmentFileName;
+    }
+
     public ProcessStates styles(List<String> styles) {
         this.styles = styles;
         return this;
@@ -386,6 +416,8 @@ public class ProcessStates {
                 Objects.equals(this.userCard, processStates.userCard) &&
                 Objects.equals(this.templateName, processStates.templateName) &&
                 Objects.equals(this.emailBodyTemplate, processStates.emailBodyTemplate) &&
+                Objects.equals(this.emailAttachmentTemplate, processStates.emailAttachmentTemplate) &&
+                Objects.equals(this.emailAttachmentFileName, processStates.emailAttachmentFileName) &&
                 Objects.equals(this.styles, processStates.styles) &&
                 Objects.equals(this.type, processStates.type) &&
                 Objects.equals(this.isOnlyAChildState, processStates.isOnlyAChildState) &&
@@ -399,7 +431,7 @@ public class ProcessStates {
         return Objects.hash(response, acknowledgmentAllowed, consideredAcknowledgedForUserWhen,
                 cancelAcknowledgmentAllowed, showAcknowledgmentFooter, closeCardWhenUserAcknowledges,
                 editCardEnabledOnUserInterface, copyCardEnabledOnUserInterface, deleteCardEnabledOnUserInterface, name,
-                description, showDetailCardHeader, color, userCard, templateName, emailBodyTemplate, styles, type,
+                description, showDetailCardHeader, color, userCard, templateName, emailBodyTemplate, emailAttachmentTemplate, emailAttachmentFileName, styles, type,
                 isOnlyAChildState, validateAnswerButtonLabel, modifyAnswerButtonLabel, automaticPinWhenAcknowledged);
     }
 
@@ -430,6 +462,8 @@ public class ProcessStates {
         sb.append("    userCard: ").append(toIndentedString(userCard)).append("\n");
         sb.append("    templateName: ").append(toIndentedString(templateName)).append("\n");
         sb.append("    emailBodyTemplate: ").append(toIndentedString(emailBodyTemplate)).append("\n");
+        sb.append("    emailAttachmentTemplate: ").append(toIndentedString(emailAttachmentTemplate)).append("\n");
+        sb.append("    emailAttachmentFileName: ").append(toIndentedString(emailAttachmentFileName)).append("\n");
         sb.append("    styles: ").append(toIndentedString(styles)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    isOnlyAChildState: ").append(toIndentedString(isOnlyAChildState)).append("\n");
