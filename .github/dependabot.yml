@@ -1,7 +1,16 @@
-
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/ui/main/"
+    groups:
+      angular:
+        patterns:
+          - "@angular*"
+      fullcalendar:
+        patterns:
+          - "@fullcalendar*"
+      ag-grid:
+        patterns:
+          - "ag-grid*"
     schedule:
       interval: "daily"
