@@ -8,7 +8,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '@env/environment';
 import {UIMenuFile} from '@ofServices/config/model/UIMenuFile';
 import {RealTimeScreens} from '../model/RealTimeScreensConfig';
@@ -23,13 +23,15 @@ import {ProcessMonitoringConfig} from '../model/ProcessMonitoringConfig';
     providedIn: 'root'
 })
 export class AngularConfigServer extends AngularServer implements ConfigServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly configUrl: string;
     private readonly menuUrl: string;
     private readonly processMonitoringConfigUrl: string;
     private readonly localUrl: string;
     private readonly realTimeScreensUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.configUrl = `${environment.url}config/web-ui.json`;
         this.menuUrl = `${environment.url}config/ui-menu.json`;

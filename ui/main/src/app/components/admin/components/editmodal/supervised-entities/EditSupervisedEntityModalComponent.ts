@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/SharingService';
@@ -28,6 +28,9 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditSupervisedEntityModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+    private readonly dataHandlingService = inject(SharingService);
+
     entityForm: FormGroup;
 
     @Input() row: any;
@@ -57,11 +60,6 @@ export class EditSupervisedEntityModalComponent implements OnInit {
 
     private crudService: CrudService;
     allEntitiesSupervised: boolean;
-
-    constructor(
-        private readonly activeModal: NgbActiveModal,
-        private readonly dataHandlingService: SharingService
-    ) {}
 
     ngOnInit() {
         this.entityForm = new FormGroup({

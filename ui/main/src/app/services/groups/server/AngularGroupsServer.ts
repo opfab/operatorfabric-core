@@ -12,16 +12,18 @@ import {Group} from '@ofServices/groups/model/Group';
 import {GroupsServer} from '@ofServices/groups/server/GroupsServer';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {AngularServer} from '../../../server/AngularServer';
 import {ServerResponse} from 'app/server/ServerResponse';
 @Injectable({
     providedIn: 'root'
 })
 export class AngularGroupsServer extends AngularServer implements GroupsServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly groupsUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.groupsUrl = `${environment.url}users/groups`;
     }

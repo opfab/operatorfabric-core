@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
@@ -36,6 +36,8 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     standalone: false
 })
 export class LightCardComponent implements OnInit, OnDestroy {
+    private readonly translateService = inject(TranslateService);
+
     @Input() public open = false;
     @Input() public groupedCardOpen = false;
     @Input() public selection: Observable<string>;
@@ -57,8 +59,6 @@ export class LightCardComponent implements OnInit, OnDestroy {
     isGeoMapEnabled;
 
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
-
-    constructor(private readonly translateService: TranslateService) {}
 
     ngOnInit() {
         this._i18nPrefix = `${this.lightCard.process}.${this.lightCard.processVersion}.`;

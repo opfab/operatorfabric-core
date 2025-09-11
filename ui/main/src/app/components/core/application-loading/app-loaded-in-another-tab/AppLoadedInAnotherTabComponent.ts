@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, TemplateRef, ViewChild, inject} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UrlLockService} from './UrlLockService';
 import {UsersService} from '@ofServices/users/UsersService';
@@ -33,6 +33,8 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgIf, TranslateModule]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {
+    private readonly urlLockService = inject(UrlLockService);
+
     @HostListener('window:beforeunload')
     onBeforeUnload() {
         if (this.isApplicationActive) {
@@ -47,10 +49,6 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
 
     public isDisconnectedByAnotherTab = false;
     private isApplicationActive = false;
-
-    constructor(private readonly urlLockService: UrlLockService) {
-        super();
-    }
 
     public async execute(): Promise<boolean> {
         this.opfabUrl = window.location.href;

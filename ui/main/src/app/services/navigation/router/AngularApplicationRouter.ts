@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {ApplicationRouter} from '@ofServices/navigation/router/ApplicationRouter';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 
@@ -15,9 +15,7 @@ import {NavigationEnd, NavigationStart, Router} from '@angular/router';
     providedIn: 'root'
 })
 export class AngularApplicationRouter extends ApplicationRouter {
-    constructor(private readonly router: Router) {
-        super();
-    }
+    private readonly router = inject(Router);
 
     public navigateTo(url: string, queryParams?: any) {
         if (queryParams) this.router.navigate([url], {queryParams: queryParams});

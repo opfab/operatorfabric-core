@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 import {AngularServer} from '../../../server/AngularServer';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
 import {Page} from 'app/model/Page';
 import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
@@ -21,9 +21,11 @@ import {UserActionLog} from '@ofServices/userActionLogs/model/UserActionLog';
     providedIn: 'root'
 })
 export class AngularUserActionLogsServer extends AngularServer implements UserActionLogsServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly userActionsUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.userActionsUrl = `${environment.url}users/userActionLogs`;
     }

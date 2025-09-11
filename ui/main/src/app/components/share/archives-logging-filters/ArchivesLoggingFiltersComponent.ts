@@ -17,7 +17,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    SimpleChanges
+    SimpleChanges,
+    inject
 } from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Card} from 'app/model/Card';
@@ -46,6 +47,8 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
     imports: [TranslateModule, NgIf, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgxDaterangepickerMd]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy {
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     @Input() public card: Card;
     @Input() parentForm: FormGroup;
     @Input() visibleProcesses: any[];
@@ -130,7 +133,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
     locale: any = {};
     ranges: any = {};
 
-    constructor(private readonly changeDetector: ChangeDetectorRef) {
+    constructor() {
         this.hasCurrentUserRightsToViewAllArchivedCards =
             UsersService.isCurrentUserAdmin() ||
             UsersService.hasCurrentUserAnyPermission([PermissionEnum.VIEW_ALL_CARDS]);

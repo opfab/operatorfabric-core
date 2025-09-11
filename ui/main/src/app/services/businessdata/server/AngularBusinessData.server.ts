@@ -8,7 +8,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '@env/environment';
 import {BusinessDataServer} from '@ofServices/businessdata/server/BusinessDataServer';
 import {ServerResponse} from 'app/server/ServerResponse';
@@ -19,9 +19,11 @@ import {AngularServer} from '../../../server/AngularServer';
     providedIn: 'root'
 })
 export class AngularBusinessDataServer extends AngularServer implements BusinessDataServer {
+    private readonly httpClient = inject(HttpClient);
+
     readonly businessDataUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.businessDataUrl = `${environment.url}businessconfig/businessData`;
     }

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
@@ -23,16 +23,14 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule, NgIf]
 })
 export class LoginComponent implements OnInit {
+    private readonly authService = inject(AuthService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     userForm: FormGroup<{
         identifier: FormControl<string | null>;
         password: FormControl<string | null>;
     }>;
     loginMessage: Message;
-
-    constructor(
-        private readonly authService: AuthService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit() {
         this.authService

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output, inject} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
@@ -29,6 +29,8 @@ import {AgGrid} from 'app/utils/AgGrid';
     imports: [AgGridAngular, NgIf, NgFor, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
+    private readonly translate = inject(TranslateService);
+
     @Input() result: Card[];
     @Input() processGroupVisible: boolean;
     @Input() totalElements: number;
@@ -62,7 +64,7 @@ export class LoggingTableComponent implements OnDestroy {
 
     readonly paginationPageSizeOptions = [10, 20, 50, 100];
 
-    constructor(private readonly translate: TranslateService) {
+    constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
 

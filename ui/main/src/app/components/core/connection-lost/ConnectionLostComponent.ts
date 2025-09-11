@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
@@ -20,14 +20,12 @@ import {TranslateModule} from '@ngx-translate/core';
     imports: [NgIf, TranslateModule]
 })
 export class ConnectionLostComponent implements OnInit {
+    private readonly opfabEventStreamServer = inject(OpfabEventStreamServer);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     connectionLostForMoreThanTenSeconds = false;
     connectionLost = false;
     previousStatus = '';
-
-    constructor(
-        private readonly opfabEventStreamServer: OpfabEventStreamServer,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit(): void {
         this.detectConnectionLost();

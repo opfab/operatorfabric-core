@@ -10,7 +10,7 @@
 import {Observable} from 'rxjs';
 import {environment} from '@env/environment';
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Perimeter} from '@ofServices/perimeters/model/Perimeter';
 import {PerimetersServer} from '@ofServices/perimeters/server/PerimetersServer';
 import {ServerResponse} from 'app/server/ServerResponse';
@@ -20,9 +20,11 @@ import {AngularServer} from '../../../server/AngularServer';
     providedIn: 'root'
 })
 export class AngularPerimetersServer extends AngularServer implements PerimetersServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly perimetersUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.perimetersUrl = `${environment.url}users/perimeters`;
     }

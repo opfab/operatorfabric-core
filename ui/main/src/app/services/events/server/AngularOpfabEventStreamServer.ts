@@ -8,7 +8,7 @@
  */
 
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '@env/environment';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
@@ -23,6 +23,8 @@ import {Guid} from 'guid-typescript';
 
 @Injectable()
 export class AngularOpfabEventStreamServer extends AngularServer implements OpfabEventStreamServer {
+    private readonly httpClient = inject(HttpClient);
+
     private static readonly TWO_MINUTES = 120000;
     private readonly eventStreamUrl: string;
     private readonly closeEventStreamUrl: string;
@@ -40,7 +42,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private firstSubscriptionInitDone = false;
     private eventSource;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         const subscriptionClientId = Guid.create().toString();
         this.eventStreamUrl = `${environment.url}cards-consultation/cardSubscription?clientId=${subscriptionClientId}&version=${packageInfo.opfabVersion}`;

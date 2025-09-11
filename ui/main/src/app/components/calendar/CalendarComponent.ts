@@ -9,7 +9,7 @@
 
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
@@ -34,7 +34,9 @@ import {CardComponent} from '../card/CardComponent';
     imports: [NgIf, FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-    constructor(private readonly modalService: NgbModal) {
+    private readonly modalService = inject(NgbModal);
+
+    constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
             if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
         });

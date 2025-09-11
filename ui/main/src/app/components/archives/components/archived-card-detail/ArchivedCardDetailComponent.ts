@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, inject} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {Card} from 'app/model/Card';
 import {DisplayContext} from 'app/model/DisplayContext';
@@ -25,6 +25,8 @@ import {NgIf} from '@angular/common';
     imports: [SimplifiedCardViewComponent, TranslateModule, NgIf]
 })
 export class ArchivedCardDetailComponent implements OnInit {
+    private readonly translate = inject(TranslateService);
+
     fromEntityOrRepresentativeSelectedCard = null;
     entityRecipientsForFooter = '';
     entityRecipientsForInformationForFooter = '';
@@ -33,8 +35,6 @@ export class ArchivedCardDetailComponent implements OnInit {
 
     @Input() card: Card;
     @Input() childCards: Card[];
-
-    constructor(private readonly translate: TranslateService) {}
 
     ngOnInit() {
         this.computeFromEntity();

@@ -14,7 +14,8 @@ import {
     ElementRef,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -50,6 +51,9 @@ import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/
     ]
 })
 export class UserActionLogsComponent implements OnInit, OnDestroy {
+    private readonly modalService = inject(NgbModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     userActionLogsView: UserActionLogsView;
     userActionLogsPage: UserActionLogsPageDescription;
     userActionLogsResult: UserActionLogsResult;
@@ -78,10 +82,7 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     selectedCard: Card;
     selectedChildCards: Card[];
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         this.userActionLogsView = new UserActionLogsView();
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
     }

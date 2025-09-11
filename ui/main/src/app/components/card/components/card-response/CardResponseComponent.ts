@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
@@ -43,6 +43,8 @@ const enum ResponseI18nKeys {
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class CardResponseComponent implements OnChanges, OnInit {
+    private readonly modalService = inject(NgbModal);
+
     @Input() card: Card;
     @Input() cardState: State;
     @Input() lttdExpiredIsTrue: boolean;
@@ -78,7 +80,7 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
     private askConfirmation: boolean;
 
-    constructor(private readonly modalService: NgbModal) {
+    constructor() {
         const userWithPerimeters = UsersService.getCurrentUserWithPerimeters();
         if (userWithPerimeters) this.user = userWithPerimeters.userData;
     }

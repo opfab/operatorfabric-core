@@ -14,7 +14,8 @@ import {
     ElementRef,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -64,6 +65,9 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     ]
 })
 export class ArchivesComponent implements OnDestroy, OnInit {
+    private readonly modalService = inject(NgbModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     unsubscribe$: Subject<void> = new Subject<void>();
 
     pageSize: number = 10;
@@ -118,10 +122,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
 
     displayContext: any = DisplayContext.ARCHIVE;
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
             let itemName = process.name;
             if (!itemName) itemName = process.id;

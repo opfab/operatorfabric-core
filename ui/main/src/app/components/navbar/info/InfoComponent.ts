@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {UsersService} from '@ofServices/users/UsersService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -25,13 +25,13 @@ import {NgIf, NgFor} from '@angular/common';
     imports: [NgIf, NgFor]
 })
 export class InfoComponent implements OnInit {
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     userName: string;
     userEntities: string[];
     userEntitiesToDisplay: string;
     userEntitiesToDisplayTrimmed: boolean;
     timeToDisplay: string;
-
-    constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.updateTime();

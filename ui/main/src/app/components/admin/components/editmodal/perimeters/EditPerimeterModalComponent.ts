@@ -16,7 +16,7 @@ import {
     FormsModule,
     ReactiveFormsModule
 } from '@angular/forms';
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Perimeter, RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -38,10 +38,10 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, NgFor]
 })
 export class EditPerimeterModalComponent implements OnInit {
-    constructor(
-        private readonly activeModal: NgbActiveModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    private readonly activeModal = inject(NgbActiveModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
+    constructor() {
         Object.keys(RightEnum).forEach((key) => {
             this.rightOptions.push({value: key, label: key});
         });

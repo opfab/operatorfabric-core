@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpUrlEncodingCodec, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
@@ -19,10 +19,12 @@ import {TemplateCssServer} from '@ofServices/templateCss/server/TemplateCssServe
     providedIn: 'root'
 })
 export class AngularTemplateCssServer extends AngularServer implements TemplateCssServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly processesUrl;
     private readonly urlCleaner: HttpUrlEncodingCodec;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
         this.urlCleaner = new HttpUrlEncodingCodec();

@@ -8,7 +8,7 @@
  */
 
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '@env/environment';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {ProcessesServer} from '@ofServices/processes/server/ProcessesServer';
@@ -20,10 +20,12 @@ import {AngularServer} from '../../../server/AngularServer';
     providedIn: 'root'
 })
 export class AngularProcessesServer extends AngularServer implements ProcessesServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly processesUrl: string;
     private readonly processGroupsUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
         this.processGroupsUrl = `${environment.url}businessconfig/processgroups`;

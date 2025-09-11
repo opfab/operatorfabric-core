@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, inject} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -42,6 +42,11 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     imports: [NgFor, NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditEntityModalComponent implements OnInit {
+    private readonly translate = inject(TranslateService);
+    private readonly activeModal = inject(NgbActiveModal);
+    private readonly dataHandlingService = inject(SharingService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     entityForm: FormGroup<{
         id: FormControl<string | null>;
         name: FormControl<string | null>;
@@ -80,13 +85,6 @@ export class EditEntityModalComponent implements OnInit {
     labelsPlaceholder: string;
 
     private crudService: CrudService;
-
-    constructor(
-        private readonly translate: TranslateService,
-        private readonly activeModal: NgbActiveModal,
-        private readonly dataHandlingService: SharingService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit() {
         const uniqueEntityIdValidator = [];

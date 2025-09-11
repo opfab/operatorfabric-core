@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {Card} from 'app/model/Card';
 import {delay, map, takeUntil} from 'rxjs/operators';
@@ -29,6 +29,8 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     imports: [TimeLineComponent, NgIf, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
 export class FeedComponent implements OnInit, OnDestroy {
+    private readonly route = inject(ActivatedRoute);
+
     processFilter: string;
     stateFilter: string;
 
@@ -42,7 +44,7 @@ export class FeedComponent implements OnInit, OnDestroy {
     filtersVisible = false;
     private readonly filteredLightCardStore: FilteredLightCardsStore;
 
-    constructor(private readonly route: ActivatedRoute) {
+    constructor() {
         this.route.queryParams.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.processFilter = params.processFilter;
             this.stateFilter = params.stateFilter;

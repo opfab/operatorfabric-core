@@ -18,7 +18,8 @@ import {
     OnDestroy,
     OnInit,
     SimpleChanges,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 
 import {Card} from 'app/model/Card';
@@ -37,6 +38,10 @@ import {CardComponent} from '../../../card/CardComponent';
     imports: [NgFor, CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
+    private readonly translateService: TranslateService;
+    private readonly modalService = inject(NgbModal);
+    private readonly superChangeDetector: ChangeDetectorRef;
+
     @Input() result: Card[];
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
@@ -44,12 +49,14 @@ export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChange
     maxZoom: number = 11;
     enableGraph: boolean;
 
-    constructor(
-        private readonly translateService: TranslateService,
-        private readonly modalService: NgbModal,
-        private readonly superChangeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
+        const translateService = inject(TranslateService);
+        const superChangeDetector = inject(ChangeDetectorRef);
+
         super(translateService, superChangeDetector);
+        this.translateService = translateService;
+        this.superChangeDetector = superChangeDetector;
+
         this.targetElementId = 'ol-monitoring-map';
     }
 

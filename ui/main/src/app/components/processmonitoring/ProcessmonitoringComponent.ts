@@ -15,7 +15,8 @@ import {
     ElementRef,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    inject
 } from '@angular/core';
 
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -70,6 +71,9 @@ import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
     ]
 })
 export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewInit {
+    private readonly modalService = inject(NgbModal);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     processMonitoringView = new ProcessMonitoringView();
     processList: ProcessToMonitor[];
 
@@ -177,10 +181,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     locale: any = {};
     ranges: any = {};
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         this.processMonitoringDefaultConfig = ConfigService.getProcessMonitoringConfig();
         this.processMonitoringFieldsDefaultConfig = this.processMonitoringDefaultConfig?.fields;
 

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Directive, Injectable} from '@angular/core';
+import {Directive, Injectable, inject} from '@angular/core';
 import {NgbModal, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateService} from '@ngx-translate/core';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
@@ -32,6 +32,9 @@ import {AgGrid} from 'app/utils/AgGrid';
 @Directive()
 @Injectable()
 export abstract class ExternalDevicesConfigurationDirective {
+    protected translateService = inject(TranslateService);
+    protected modalService = inject(NgbModal);
+
     configurations: any[];
     gridOptions: GridOptions;
     public gridApi;
@@ -53,10 +56,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     protected waitingDeviceResponse: boolean;
     protected showSpinner: boolean;
 
-    constructor(
-        protected translateService: TranslateService,
-        protected modalService: NgbModal
-    ) {
+    constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
 

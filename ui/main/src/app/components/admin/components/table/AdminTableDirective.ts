@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectorRef, Directive, Injectable, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Directive, Injectable, OnDestroy, inject} from '@angular/core';
 import {
     ColDef,
     GridOptions,
@@ -61,6 +61,11 @@ export class ActionColumn {
 @Directive()
 @Injectable()
 export abstract class AdminTableDirective implements OnDestroy {
+    protected translateService = inject(TranslateService);
+    protected modalService = inject(NgbModal);
+    protected dataHandlingService = inject(SharingService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     actionButtonsDisplayed: any;
     showAddButton = true;
     processesDefinition: Process[];
@@ -104,12 +109,7 @@ export abstract class AdminTableDirective implements OnDestroy {
     public paginationPageSizeOptions = [5, 10, 25, 50, 100];
     public paginationDefaultPageSize = 10;
 
-    constructor(
-        protected translateService: TranslateService,
-        protected modalService: NgbModal,
-        protected dataHandlingService: SharingService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
 

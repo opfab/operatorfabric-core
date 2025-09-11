@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SettingsView} from 'app/components/settings/view/SettingsView';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -30,6 +30,9 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, MultiSelectComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {
+    private readonly translateService = inject(TranslateService);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     settingsForm: FormGroup;
     settingsView = new SettingsView();
     isExternalDeviceSettingVisible = false;
@@ -46,10 +49,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe$ = new Subject<void>();
     canDeactivateSubject = new Subject<boolean>();
     pendingModification: boolean;
-    constructor(
-        private readonly translateService: TranslateService,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {}
 
     ngOnInit(): void {
         this.getExternalDeviceSettingVisibility();

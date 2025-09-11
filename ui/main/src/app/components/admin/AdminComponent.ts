@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
@@ -21,5 +21,5 @@ import {FormsModule} from '@angular/forms';
     imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet, FormsModule]
 })
 export class AdminComponent {
-    constructor(protected translate: TranslateService) {}
+    protected translate = inject(TranslateService);
 }

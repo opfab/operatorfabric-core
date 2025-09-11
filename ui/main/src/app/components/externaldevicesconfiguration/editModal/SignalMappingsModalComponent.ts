@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -33,6 +33,8 @@ import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
     imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class SignalMappingsModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+
     signalMappingsForm: FormGroup;
 
     @Input() row: any;
@@ -40,8 +42,6 @@ export class SignalMappingsModalComponent implements OnInit {
     selectedDevice;
     signalMappings: SignalMapping[];
     isLoadingSignalMappings: boolean;
-
-    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         const uniqueDeviceIdValidator = [];

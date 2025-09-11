@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,6 @@ import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 describe('AngularTranslationService', () => {
     let service: AngularTranslationLib;
-    let translateService: TranslateService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -22,8 +21,7 @@ describe('AngularTranslationService', () => {
             providers: [TranslateService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
         });
 
-        translateService = TestBed.inject(TranslateService);
-        service = new AngularTranslationLib(translateService);
+        service = TestBed.inject(AngularTranslationLib);
     });
 
     it('should get translation', () => {

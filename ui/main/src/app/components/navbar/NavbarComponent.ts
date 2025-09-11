@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
 import {NavbarView} from 'app/components/navbar/view/NavbarView';
@@ -39,6 +39,10 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     ]
 })
 export class NavbarComponent {
+    private readonly modalService = inject(NgbModal);
+    private readonly domSanitizationService = inject(DomSanitizer);
+    private readonly changeDetector = inject(ChangeDetectorRef);
+
     openDropdownPopover: NgbPopover;
     @ViewChild('userCard') userCardTemplate: ElementRef;
     @ViewChild('about') aboutTemplate: ElementRef;
@@ -52,11 +56,7 @@ export class NavbarComponent {
     rightMenuElements: NavbarMenuElement[];
     rightMenuCollapsedElements: NavbarMenuElement[];
 
-    constructor(
-        private readonly modalService: NgbModal,
-        private readonly domSanitizationService: DomSanitizer,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         this.navbarPage = new NavbarView().getNavbarPage();
         this.navbarMenuView = new NavbarMenuView();
         this.upperMenuElements = this.navbarMenuView.getNavbarMenu().upperMenuElements;

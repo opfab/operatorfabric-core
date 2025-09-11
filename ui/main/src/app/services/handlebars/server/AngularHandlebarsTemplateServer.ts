@@ -8,7 +8,7 @@
  */
 
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {environment} from '@env/environment';
 import {ServerResponse} from 'app/server/ServerResponse';
 import {Observable} from 'rxjs';
@@ -19,9 +19,11 @@ import {HandlebarsTemplateServer} from './HandlebarsTemplateServer';
     providedIn: 'root'
 })
 export class AngularHandlebarsTemplateServer extends AngularServer implements HandlebarsTemplateServer {
+    private readonly httpClient = inject(HttpClient);
+
     private readonly processesUrl: string;
 
-    constructor(private readonly httpClient: HttpClient) {
+    constructor() {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
     }

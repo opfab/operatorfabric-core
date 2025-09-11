@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, inject} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CountDown} from '../../../utils/countdown/CountDown';
@@ -20,6 +20,8 @@ import {NgIf} from '@angular/common';
     imports: [TranslateModule, NgIf]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
+    private readonly translate = inject(TranslateService);
+
     @Input() public lttd: number;
     @Input() public expiredLabel: string;
     @Input() public showExpiredLabel: boolean = true;
@@ -27,8 +29,6 @@ export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     public countDown: CountDown;
     public translatedExpiredLabel: string;
     secondsBeforeLttdForClockDisplay: number;
-
-    constructor(private readonly translate: TranslateService) {}
 
     ngOnInit() {
         this.secondsBeforeLttdForClockDisplay = ConfigService.getConfigValue(

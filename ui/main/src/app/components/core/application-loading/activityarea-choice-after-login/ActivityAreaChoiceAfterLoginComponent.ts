@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -22,12 +22,10 @@ import {ActivityAreaComponent} from '../../../activityarea/ActivityAreaComponent
     imports: [ActivityAreaComponent]
 })
 export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingComponent {
+    private readonly modalService = inject(NgbModal);
+
     private modalRef: NgbModalRef;
     @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
-
-    constructor(private readonly modalService: NgbModal) {
-        super();
-    }
 
     public execute(): Promise<boolean> {
         if (ConfigService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea();

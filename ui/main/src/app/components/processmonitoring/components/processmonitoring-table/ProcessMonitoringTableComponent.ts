@@ -7,7 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    Output,
+    ViewChild,
+    inject
+} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {
     ColDef,
@@ -39,6 +48,9 @@ import {SetFilterComponent} from './SetFilterComponent';
     imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent, NgForOf]
 })
 export class ProcessmonitoringTableComponent {
+    private readonly translate = inject(TranslateService);
+    private readonly modalService = inject(NgbModal);
+
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
     @Input() result: Card[];
     @Input() processGroupVisible: boolean;
@@ -69,10 +81,7 @@ export class ProcessmonitoringTableComponent {
         fieldsForProcesses?: {process: string; fields: {field: string; visible: boolean}[]}[];
     } = {};
 
-    constructor(
-        private readonly translate: TranslateService,
-        private readonly modalService: NgbModal
-    ) {
+    constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
 

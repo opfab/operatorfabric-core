@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, inject} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofServices/users/model/User';
@@ -27,6 +27,8 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class UsersconfigurationModalComponent implements OnInit {
+    private readonly activeModal = inject(NgbActiveModal);
+
     userdeviceForm = new FormGroup({
         userLogin: new FormControl<string | null>('', [Validators.required]),
         externalDeviceIds: new FormControl<string[] | null>([], [Validators.required])
@@ -54,8 +56,6 @@ export class UsersconfigurationModalComponent implements OnInit {
         search: true,
         sortOptions: true
     };
-
-    constructor(private readonly activeModal: NgbActiveModal) {}
 
     ngOnInit() {
         if (this.row) {
