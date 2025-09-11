@@ -55,7 +55,7 @@ export class SelectCellRendererComponent implements ICellRendererAngularComp {
         if (this.fieldValue && !this.selectOptions.some((option) => option.value === this.fieldValue)) {
             this.selectOptions.push({value: this.fieldValue, label: this.fieldValue});
         }
-        this.fieldLabel = params.getValue().text;
+        this.fieldLabel = params.getValue().stringValue;
 
         // Initialize control with the current value
         this.cardSelectControl.setValue(this.fieldValue);

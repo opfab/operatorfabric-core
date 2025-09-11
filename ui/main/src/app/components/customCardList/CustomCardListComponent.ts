@@ -273,10 +273,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
             defaultColDef: {
                 editable: false,
-                wrapHeaderText: true,
-                valueFormatter: (params: {value: any}) => {
-                    return params.value;
-                }
+                wrapHeaderText: true
             },
             columnTypes: {
                 default: {
@@ -295,11 +292,11 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     wrapText: false,
                     cellRenderer: 'htmlCellRenderer',
                     filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId]?.rowValue ?? '';
+                        return params.data[params.column.colId]?.value ?? '';
                     },
                     comparator: (valueA: any, valueB: any) => {
-                        const rowValueA = valueA.rowValue ?? '';
-                        const rowValueB = valueB.rowValue ?? '';
+                        const rowValueA = valueA.value ?? '';
+                        const rowValueB = valueB.value ?? '';
                         return Utilities.compareObj(rowValueA, rowValueB);
                     }
                 },
@@ -330,24 +327,24 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                             color: 'var(--opfab-color-' + params.value.color + ')'
                         };
                     },
-                    cellRenderer: (params: any) => params.value.text,
+                    cellRenderer: (params: any) => params.value.stringValue,
                     comparator: (valueA: any, valueB: any) => {
-                        if (valueA.text < valueB.text) {
+                        if (valueA.stringValue < valueB.stringValue) {
                             return -1;
                         }
-                        if (valueA.text > valueB.text) {
+                        if (valueA.stringValue > valueB.stringValue) {
                             return 1;
                         }
                         return 0;
                     },
                     filter: true,
-                    filterValueGetter: (params: any) => params.data.typeOfState.text
+                    filterValueGetter: (params: any) => params.data.typeOfState.stringValue
                 },
                 dateAndTime: {
                     sortable: true,
                     resizable: false,
                     wrapText: false,
-                    cellRenderer: (params: any) => params.value.text,
+                    cellRenderer: (params: any) => params.value.stringValue,
                     comparator: (valueA: any, valueB: any) => {
                         if (valueA.value < valueB.value) {
                             return -1;
@@ -359,7 +356,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     },
                     filter: true,
                     filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].text;
+                        return params.data[params.column.colId].stringValue;
                     }
                 },
                 period: {
@@ -387,14 +384,14 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     },
                     filter: true,
                     filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].text;
+                        return params.data[params.column.colId].stringValue;
                     }
                 },
                 responses: {
                     sortable: true,
                     comparator: (valueA: any, valueB: any) => {
-                        const responseA = valueA.map((response) => response.entityName).join(' ');
-                        const responseB = valueB.map((response) => response.entityName).join(' ');
+                        const responseA = valueA.value.map((response) => response.entityName).join(' ');
+                        const responseB = valueB.value.map((response) => response.entityName).join(' ');
                         if (responseA < responseB) {
                             return -1;
                         }
@@ -405,7 +402,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                     },
                     filter: true,
                     filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].map((response) => response.entityName).join(' ');
+                        return params.data[params.column.colId].value.map((response) => response.entityName).join(' ');
                     },
                     resizable: false,
                     wrapText: false,
@@ -413,7 +410,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 },
 
                 // The cell should show a circle with the color defined in the field color,
-                // and the numerical value defined in the field numericalValue is used for sorting and filtering
+                // and the numerical value defined in the field value is used for sorting and filtering
                 // the use of agNumberColumnFilter is necessary to be able to filter the numerical value
                 // using, for example, the range filter
                 coloredCircle: {
@@ -430,16 +427,16 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                         );
                     },
                     comparator: (valueA: any, valueB: any) => {
-                        if (valueA.numericalValue < valueB.numericalValue) {
+                        if (valueA.value < valueB.value) {
                             return -1;
                         }
-                        if (valueA.numericalValue > valueB.numericalValue) {
+                        if (valueA.value > valueB.value) {
                             return 1;
                         }
                         return 0;
                     },
                     filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].numericalValue;
+                        return params.data[params.column.colId].value;
                     }
                 },
                 responseFromMyEntities: {

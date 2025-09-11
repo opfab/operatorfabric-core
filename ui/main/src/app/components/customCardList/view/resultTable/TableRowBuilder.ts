@@ -20,6 +20,7 @@ import {Card} from 'app/model/Card';
 import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
 import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';
+import {ResultTableCell} from './ResultTableCell';
 
 export class TableRowBuilder {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -48,27 +49,27 @@ export class TableRowBuilder {
         const data = {};
         columns.forEach((column) => {
             if (column.isFieldFromCurrentUserChildCard) {
-                data[column.field] = this.getCurrentUserChildCardField(childCards, column);
+                data[column.field] = this.getCurrentUserChildCardCell(childCards, column);
                 return;
             }
             switch (column.fieldType) {
                 case FieldType.BUSINESS_PERIOD:
-                    data[column.field] = this.getBusinessPeriod(card);
+                    data[column.field] = this.getBusinessPeriodCell(card);
                     break;
                 case FieldType.PUBLISHER:
-                    data[column.field] = this.getPublisherLabel(card);
+                    data[column.field] = this.getPublisherCell(card);
                     break;
                 case FieldType.DATE_AND_TIME:
-                    data[column.field] = this.getDateAndTime(card, column.cardField);
+                    data[column.field] = this.getDateAndTimeCell(card, column.cardField);
                     break;
                 case FieldType.TYPE_OF_STATE:
-                    data['typeOfState'] = this.getTypeOfState(card, childCards);
+                    data['typeOfState'] = this.getTypeOfStateCell(card, childCards);
                     break;
                 case FieldType.RESPONSES:
-                    data['responses'] = this.getResponses(card, childCards);
+                    data['responses'] = this.getResponsesCell(card, childCards);
                     break;
                 case FieldType.COLORED_CIRCLE:
-                    data[column.field] = this.getColoredCircleValue(card, column.field);
+                    data[column.field] = this.getColoredCircleCell(card, column.field);
                     break;
                 case FieldType.RESPONSE_FROM_MY_ENTITIES:
                     data['responseFromMyEntities'] = card.hasChildCardFromCurrentUserEntity;
@@ -91,7 +92,7 @@ export class TableRowBuilder {
                     }
                     break;
                 case FieldType.HTML:
-                    data[column.field] = this.getHTMLValue(card, column);
+                    data[column.field] = this.getHTMLCell(card, column);
                     break;
                 default:
                     data[column.field] = this.getNestedField(card, column.cardField);
@@ -105,8 +106,8 @@ export class TableRowBuilder {
         return data;
     }
 
-    private getBusinessPeriod(card: Card): {text: string; htmlValue: string; value: any} {
-        const text =
+    private getBusinessPeriodCell(card: Card): ResultTableCell {
+        const stringValue =
             DateTimeFormatterService.getFormattedDateAndTime(card.startDate) +
             ' - ' +
             (DateTimeFormatterService.getFormattedDateAndTime(card.endDate) ?? '');
@@ -119,22 +120,22 @@ export class TableRowBuilder {
             '</div>';
 
         return {
-            text,
+            stringValue,
             htmlValue,
             value: {startDate: card.startDate.valueOf(), endDate: card.endDate?.valueOf()}
         };
     }
 
-    private getDateAndTime(card: Card, field: string): {text: string; value: string} {
+    private getDateAndTimeCell(card: Card, field: string): ResultTableCell {
         const dateAndTime = this.getNestedField(card, field);
 
         return {
-            text: DateTimeFormatterService.getFormattedDateAndTime(dateAndTime),
+            stringValue: DateTimeFormatterService.getFormattedDateAndTime(dateAndTime),
             value: dateAndTime.valueOf()
         };
     }
 
-    private getCurrentUserChildCardField(childCards: Card[], column: Column): any {
+    private getCurrentUserChildCardCell(childCards: Card[], column: Column): ResultTableCell | string {
         let fieldValue = '';
         if (childCards && childCards.length > 0) {
             const userEntities = UsersService.getCurrentUserWithPerimeters().userData?.entities;
@@ -147,19 +148,20 @@ export class TableRowBuilder {
         }
 
         if (column.fieldType === FieldType.SELECT) {
-            const text = column.possibleValues?.find((value: any) => value.value === fieldValue)?.label ?? fieldValue;
+            const stringValue =
+                column.possibleValues?.find((value: any) => value.value === fieldValue)?.label ?? fieldValue;
 
             return {
                 value: fieldValue,
                 possibleValues: column.possibleValues,
                 allowNewOptionForSelect: column.allowNewOptionForSelect,
-                text: text
+                stringValue
             };
         }
         return fieldValue;
     }
 
-    private getPublisherLabel(card: Card): string {
+    private getPublisherCell(card: Card): ResultTableCell {
         let publisherLabel = card.publisher;
         if (card.publisherType === PublisherType.ENTITY) {
             publisherLabel = EntitiesService.getEntityName(card.publisher);
@@ -172,19 +174,19 @@ export class TableRowBuilder {
         return publisherLabel;
     }
 
-    private getTypeOfState(card: Card, childCards: Card[]): {text: string; value: string | undefined; color: string} {
+    private getTypeOfStateCell(card: Card, childCards: Card[]): ResultTableCell {
         const typeOfState = ProcessesService.getProcess(card.process)?.states?.get(card.state)?.type;
         const color = getTypeOfStateColor(typeOfState, card, childCards);
         if (typeOfState) {
             return {
-                text: this.typeOfStateTranslation.get(typeOfState),
+                stringValue: this.typeOfStateTranslation.get(typeOfState),
                 value: typeOfState,
                 color
             };
-        } else return {text: '', value: undefined, color};
+        } else return {stringValue: '', value: undefined, color};
     }
 
-    private getResponses(card: Card, childCards: Array<Card>): Array<any> {
+    private getResponsesCell(card: Card, childCards: Array<Card>): ResultTableCell {
         const entities = new Array();
         const entitiesForResponse = new Array();
 
@@ -211,7 +213,7 @@ export class TableRowBuilder {
             });
         });
         entities.sort((a, b) => a.entityName?.localeCompare(b.entityName));
-        return entities;
+        return {value: entities};
     }
 
     private getColorForSeverity(severity: Severity): string {
@@ -232,19 +234,20 @@ export class TableRowBuilder {
         return path.split('.').reduce((acc, part) => acc?.[part], obj);
     }
 
-    private getColoredCircleValue(card: Card, field: string): string {
-        return this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
+    private getColoredCircleCell(card: Card, field: string): ResultTableCell {
+        const value = this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
+        return {value: value.numericalValue, color: value.color};
     }
 
-    private getHTMLValue(card: Card, column: Column): {rowValue: string; htmlValue: string} {
+    private getHTMLCell(card: Card, column: Column): ResultTableCell {
         let htmlValue = '';
-        let rowValue = '';
+        let value = '';
         if (column.getHTMLValue) htmlValue = column.getHTMLValue(card);
-        if (column.getValue) rowValue = column.getValue(card);
+        if (column.getValue) value = column.getValue(card);
         else {
-            rowValue = this.getNestedField(card, column.cardField);
+            value = this.getNestedField(card, column.cardField);
         }
-        return {rowValue, htmlValue};
+        return {value, htmlValue};
     }
 
     private isAcknowledgmentPossibleForCard(card: Card): boolean {

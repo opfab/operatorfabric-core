@@ -37,7 +37,7 @@ export class Column {
     isFieldFromCurrentUserChildCard?: boolean;
     fieldType: FieldType;
     flex?: number;
-    getValue?: (card: Card) => string;
+    getValue?: (card: Card) => any;
     getHTMLValue?: (card: Card) => string;
     possibleValues?: {value: string; label: string}[];
     allowNewOptionForSelect?: boolean;
