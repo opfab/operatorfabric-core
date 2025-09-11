@@ -24,11 +24,11 @@ sdk version
 javac -version
 export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx2g"
 ./gradlew --version
-# Check if we are in a fork or not
-if [ "$GITHUB_REPOSITORY" = "$GITHUB_HEAD_REPO_FULL_NAME" ]; then
+# Check if we have access to sonar token (we are not in a fork for example)
+if [[ -n $SONAR_TOKEN ]]; then
     ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker sonar
 else
-    echo "This is a fork, we cannot use secrets for launching sonar analysis so we skip it"
+echo "SONAR_TOKEN is not set, skipping sonar analysis."
     ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker
 fi  
 status_code=$?
