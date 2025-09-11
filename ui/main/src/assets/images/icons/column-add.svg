@@ -9,14 +9,29 @@ file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-<svg fill="none" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" xml:space="preserve">
-  <path
-          d="M42,22h-4v-4c0-0.5-0.2-1.1-0.6-1.4
-    C37,16.2,36.5,16,36,16c-1.1,0-2,0.9-2,2v4h-4c-0.5,0-1,0.2-1.4,0.6C28.2,22.9,28,23.5,28,24c0,1.1,0.9,2,2,2h4v4
-    c0,0.5,0.2,1.1,0.6,1.4C35,31.8,35.5,32,36,32c1.1,0,2-0.9,2-2v-4h4c0.5,0,1-0.2,1.4-0.6c0.4-0.3,0.6-0.9,0.6-1.4
-    C44,22.9,43.1,22,42,22z M36,36c-1.1,0-2,0.9-2,2v2H24V8h10v2c0,1.1,0.9,2,2,2s2-0.9,2-2V7c0.1-1.6-1.2-2.9-2.8-3
-    c-0.1,0-0.1,0-0.2,0H9C7.4,3.9,6.1,5.2,6,6.8C6,6.9,6,6.9,6,7v34c-0.1,1.6,1.2,2.9,2.8,3c0.1,0,0.1,0,0.2,0h26
-    c1.6,0.1,2.9-1.2,3-2.8c0-0.1,0-0.1,0-0.2v-3C38,36.9,37.1,36,36,36z M20,40H10V8h10V40z"
-          stroke="#000000" stroke-width="1.2" fill="none" />
+<svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+
+    <g transform="translate(24,24) rotate(90) translate(-24,-24)">
+        <!-- First rectangle (top before rotation) -->
+        <!-- Top horizontal line split into two segments -->
+        <line x1="4" y1="6" x2="14" y2="6" stroke="black" stroke-width="2" />
+        <line x1="34" y1="6" x2="44" y2="6" stroke="black" stroke-width="2" />
+
+        <!-- Left and right sides -->
+        <line x1="4" y1="6" x2="4" y2="22" stroke="black" stroke-width="2" />
+        <line x1="44" y1="6" x2="44" y2="22" stroke="black" stroke-width="2" />
+
+        <!-- Bottom line -->
+        <line x1="4" y1="22" x2="44" y2="22" stroke="black" stroke-width="2" />
+
+        <!-- Second rectangle below -->
+        <rect x="4" y="22" width="40" height="20" fill="none" stroke="black" stroke-width="2" />
+
+        <!-- Plus sign in the erased space -->
+        <!-- Horizontal line -->
+        <line x1="18" y1="6" x2="30" y2="6" stroke="black" stroke-width="2" />
+        <!-- Vertical line -->
+        <line x1="24" y1="0" x2="24" y2="12" stroke="black" stroke-width="2" />
+    </g>
+
 </svg>
