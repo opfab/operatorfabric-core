@@ -17,7 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 export class AngularTranslationLib extends TranslationLib {
     private readonly translateService = inject(TranslateService);
 
-    setTranslation(lang: string, translation: Object, shouldMerge: boolean) {
+    setTranslation(lang: string, translation: any, shouldMerge: boolean) {
         this.translateService.setTranslation(lang, translation, shouldMerge);
     }
 
