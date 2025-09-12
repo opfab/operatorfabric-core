@@ -559,6 +559,18 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         const bymonthday: number[] = [];
         let bysetpos: number[] = [];
 
+        if (
+            (<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked === true ||
+            (<HTMLInputElement>document.getElementById('radioButtonDailyFreq')).checked === true
+        ) {
+            if (!time) {
+                return {
+                    valid: false,
+                    errorMsg: opfab.utils.getTranslation('builtInTemplate.taskUserCard.youMustProvideATime')
+                };
+            }
+        }
+
         if ((<HTMLInputElement>document.getElementById('radioButtonMonthlyFreq')).checked === true) {
             freq = 'MONTHLY';
             bymonth = this.fetchMonths();
