@@ -17,7 +17,7 @@ import {NgForOf} from '@angular/common';
     standalone: true,
     imports: [FormsModule, NgForOf],
     template: `
-        <div style="margin: 10px">
+        <div style="margin: 10px" id="opfab-set-filter">
             <label class="opfab-checkbox" *ngFor="let cb of checkboxes">
                 <input type="checkbox" [(ngModel)]="cb.checked" (ngModelChange)="onCheckboxChange()" />
                 {{ cb.label }}
