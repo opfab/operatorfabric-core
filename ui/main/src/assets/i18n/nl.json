@@ -824,6 +824,7 @@
             "youMustProvideAtLeastOneNthDay": "U dient minimaal één dagnummer op te geven.",
             "youMustProvideAtLeastOneWeekday": "U dient minimaal één dag van de week op te geven.",
             "youMustProvideAtLeastOneMonth": "U dient minimaal één maand op te geven.",
+            "youMustProvideATime": "U moet een tijd opgeven.",
             "the": "De"
         },
         "message-or-question-listCard": {
