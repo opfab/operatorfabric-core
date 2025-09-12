@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -6,101 +6,16 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-
-
 = Keycloak Configuration
 
-The configuration needed for development purposes is automatically loaded from the dev-realms.json file.
-However, the steps below describe how they can be reproduced from scratch on a blank Keycloak instance in case you
-want to add to it.
+The configuration needed for development purposes is automatically loaded from the config/keycloak repository.
 
 The Keycloak Management interface is available here:  [host]:89/auth/admin
 Default credentials are admin/admin.
 
-== Add Realm
+To facilitate development, in  the configuration file dev-realms.json, session is set to have
+a duration of 10 hours (36000 seconds).
 
-* Click top left down arrow next to Master
-* Add Realm
-* Name it dev (or whatever)
-
-== Setup at least one client (or best one per service)
-
-=== Create client
- * Click Clients in left menu
- * Click Create Button
- * Set client ID to "opfab-client" (or whatever)
- * Select Openid-Connect Protocol
- * Click Next
- * Enable client authentication
- * Enable authorization
- * Select Authentication flows: Standard flow, Direct access grants, Implicit flow
- * Click Next
- * Enter Valid redirect URIs : http://localhost:2002/*
- * Add Valid redirect URIs : http://localhost:4200/*
- * Click Save
- * Remove Web origins settings
- * Click Save
-
-
- * Select Client scopes tab
- * Click on opfab-client-dedicated
-
- * From Mappers tab click Add Mapper
- * Select by configuration
- * Select User Property
- * name it sub
- * set Property to username
- * set Token claim name to sub
- * enable add to access token
- * save
-
- * From Mappers tab click Add Mapper
- * Select by configuration
- * Select User Attribute
- * name it groups
- * set Property to groups
- * set User attribute to groups
- * set Token claim name to groups
- * enable add to access token
- * save
-
- * From Mappers tab click Add Mapper
- * Select by configuration
- * Select User Attribute
- * name it groups
- * set Property to entitiesId
- * set User attribute to entitiesId
- * set Token claim name to entitiesId
- * enable add to access token
- * save
-
-== Create Users
-
- * Click Users in left menu
- * Click Add User button
- * Set username to admin 
- * Create
- * Select Credentials tab
- * set password and confirmation to "test"
- * disable Temporary flag
- * Select Attributes tab
- * add groups or entitiesId attributes if needed
- 
-repeat process for other users:
-operator3_fr, operator1_fr, operator2_fr, etc ..
-
-
-=== Development-specific configuration
-
-To facilitate development, in  the configuration file provided in the git (dev-realms.json) ,session are set to have
-a duration of 10 hours (36000 seconds) and SSL is not required. These parameters should not be used in production.
-
-The following parameters are set : 
-accessTokenLifespan : 36000
-ssoSessionMaxLifespan : 36000
-accessCodeLifespan" : 36000
-accessCodeLifespanUserAction : 36000
-sslRequired : none
 
 
 
