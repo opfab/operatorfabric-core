@@ -82,6 +82,16 @@ describe('Monitoring processus screen tests', function () {
         // We check the column with data.stateName is filled
         clickSeeOnlyTheCardsIAmRecipientOf(); // we uncheck
         clickSearch();
+        agGrid.countTableRows('#opfab-processmonitoring-table-grid', 6);
+
+        // We test the set filter
+        agGrid.clickColumnFilter('#opfab-processmonitoring-table-grid', 4);
+        cy.get('#opfab-set-filter').should('be.visible');
+        cy.get('#opfab-set-filter').contains('label', 'CALCUL1').click(); // check CALCUL1
+        agGrid.countTableRows('#opfab-processmonitoring-table-grid', 1);
+        cy.get('#opfab-set-filter').contains('label', 'CALCUL1').click(); // uncheck CALCUL1
+        agGrid.countTableRows('#opfab-processmonitoring-table-grid', 6);
+
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 2, 'have.text', 'Process state (calcul)');
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 3, 'have.text', '');
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 2, 4, 'have.text', 'CALCUL1');
@@ -171,8 +181,13 @@ describe('Monitoring processus screen tests', function () {
             'have.text',
             'Confirmation the issues have been fixed'
         );
-        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 4, 'have.text',
-          'ENTITY1_FR,ENTITY2_FR,ENTITY4_FR,ENTITY1_IT,ENTITY1_NL');
+        agGrid.cellShould(
+            '#opfab-processmonitoring-table-grid',
+            0,
+            4,
+            'have.text',
+            'ENTITY1_FR,ENTITY2_FR,ENTITY4_FR,ENTITY1_IT,ENTITY1_NL'
+        );
 
         // The user selects all the processes, so we should see 6 columns (default conf.) and 5 cards
         clickOnResetButton();

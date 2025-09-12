@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 import {OpfabCommands} from './opfabCommands';
 
 export class AgGridCommands extends OpfabCommands {
-
     constructor() {
         super();
         super.init('AG GRID');
@@ -18,11 +17,11 @@ export class AgGridCommands extends OpfabCommands {
 
     countTableRows = function (table, rowsNum) {
         cy.get(table).find('.ag-center-cols-container').find('.ag-row').should('have.length', rowsNum);
-    }
+    };
 
     countTableColumns = function (table, columnsNum) {
         cy.get(table).find('.ag-header-container').find('.ag-header-cell').should('have.length', columnsNum);
-    }
+    };
 
     // Check ag-grid cell value
     cellShould = function (table, row, col, operator, value) {
@@ -33,7 +32,7 @@ export class AgGridCommands extends OpfabCommands {
             .find('.ag-cell-value')
             .eq(col)
             .should(operator, value);
-    }
+    };
 
     // Check ag-grid cell value
     cellElementShould = function (table, row, col, element, operator, value) {
@@ -45,7 +44,7 @@ export class AgGridCommands extends OpfabCommands {
             .eq(col)
             .find(element)
             .should(operator, value);
-    }
+    };
 
     // Click on ag-grid cell
     // Specific tag should be specified in case of cell renderers
@@ -61,8 +60,17 @@ export class AgGridCommands extends OpfabCommands {
                 .eq(0)
                 .click();
         } else {
-            cy.get(table).find('.ag-center-cols-container').find('.ag-row').eq(row).find('.ag-cell-value').eq(col).click();
+            cy.get(table)
+                .find('.ag-center-cols-container')
+                .find('.ag-row')
+                .eq(row)
+                .find('.ag-cell-value')
+                .eq(col)
+                .click();
         }
-    }
-}
+    };
 
+    clickColumnFilter = function (table, col) {
+        cy.get(table).find('.ag-header').find('.ag-header-cell').eq(col).find('.ag-icon-filter').click();
+    };
+}
