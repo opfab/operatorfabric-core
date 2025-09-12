@@ -4,6 +4,7 @@
   "baseBranchPatterns": ["develop"],
   "prConcurrentLimit": 12,
   "ignorePaths": [
+    "ui/main/**",
     "**/node_modules/**",
     "**/bower_components/**",
     "**/vendor/**",
@@ -33,16 +34,8 @@
       "automerge": true
     },
     {
-      "groupName": "angular",
-      "matchPackageNames": ["@angular/{/,}**", "@angular-devkit/{/,}**"]
-    },
-    {
       "groupName": "confluent",
       "matchPackageNames": ["io.confluent{/,}**"]
-    },
-    {
-      "groupName": "ag-grid",
-      "matchPackageNames": ["ag-grid-angular{/,}**", "ag-grid-community{/,}**"]
     }
   ],
   "gradle": {
