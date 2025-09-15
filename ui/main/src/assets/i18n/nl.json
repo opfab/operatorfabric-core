@@ -734,8 +734,7 @@
         "filters": {
             "action": "ACTIE",
             "login": "GEBRUIKERSNAAM",
-            "dateFrom": "VAN",
-            "dateTo": "TOT"
+            "dateRange": "DATUMBEREIK"
         }
     },
     "datePicker": {

@@ -53,9 +53,11 @@ th {
     cursor: pointer;
 }
 
-.opfab-useractionlogs-datepicker {
+.opfab-useractionlogs-date-range-picker {
     margin-left: 10px;
-    width: 210px;
+    width: 240px;
+    border-radius: initial;
+    height: 47px;
 }
 
 .opfab-useractionlogs-table {

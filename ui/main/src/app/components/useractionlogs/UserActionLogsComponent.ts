@@ -17,7 +17,7 @@ import {
     ViewChild,
     inject
 } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
 import {UserActionLogsView} from 'app/components/useractionlogs/view/UserActionLogsView';
@@ -31,6 +31,8 @@ import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/ArchivedCardDetailComponent';
 import {OpfabTitleCasePipe} from '../share/pipes/OpfabTitleCasePipe';
 import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/MultiSelect';
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
+import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
 
 @Component({
     selector: 'of-useractionlogs',
@@ -47,7 +49,8 @@ import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/
         NgbPagination,
         SpinnerComponent,
         ArchivedCardDetailComponent,
-        OpfabTitleCasePipe
+        OpfabTitleCasePipe,
+        NgxDaterangepickerMd
     ]
 })
 export class UserActionLogsComponent implements OnInit, OnDestroy {
@@ -82,6 +85,9 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     selectedCard: Card;
     selectedChildCards: Card[];
 
+    readonly locale = DateRangePickerConfig.getLocale();
+    readonly ranges = DateRangePickerConfig.getCustomRanges();
+
     constructor() {
         this.userActionLogsView = new UserActionLogsView();
         this.userActionLogsPage = this.userActionLogsView.getUserActionLogPage();
@@ -100,22 +106,20 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
         this.userActionLogsForm = new FormGroup({
             login: new FormControl([]),
             action: new FormControl([]),
-            dateFrom: new FormControl<string | null>(null),
-            dateTo: new FormControl('')
+            dateRange: new FormControl({})
         });
     }
 
     private setInitialDateFrom() {
         const initDate = this.userActionLogsPage.initialFromDate;
 
-        const initialDateFrom =
-            initDate.getFullYear() +
-            '-' +
-            String(initDate.getMonth() + 1).padStart(2, '0') +
-            '-' +
-            String(initDate.getDate()).padStart(2, '0') +
-            'T00:00';
-        this.userActionLogsForm.controls.dateFrom.setValue(initialDateFrom);
+        const startOfDay = new Date(initDate);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        this.userActionLogsForm.controls.dateRange?.setValue({
+            startDate: startOfDay,
+            endDate: null
+        });
     }
 
     private initLoginMultiselect() {
@@ -168,12 +172,15 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     private setViewParametersFromForm(page) {
         const logins = this.userActionLogsForm.get('login').value;
         const actions = this.userActionLogsForm.get('action').value;
-        const dateFrom = this.extractDateAndTime(this.userActionLogsForm.get('dateFrom'));
-        const dateTo = this.extractDateAndTime(this.userActionLogsForm.get('dateTo'));
+
+        const dates = this.userActionLogsForm.get('dateRange').value as {startDate: string; endDate: string};
+        const startDate = Date.parse(dates.startDate);
+        const endDate = Date.parse(dates.endDate);
+
         this.userActionLogsView.setSelectedLogins(logins);
         this.userActionLogsView.setSelectedActions(actions);
-        this.userActionLogsView.setDateFrom(dateFrom);
-        this.userActionLogsView.setDateTo(dateTo);
+        this.userActionLogsView.setDateFrom(startDate);
+        this.userActionLogsView.setDateTo(endDate);
         if (page) {
             this.userActionLogsView.setPageNumber(page);
             this.currentResultPage = page + 1;
@@ -181,14 +188,6 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
             this.userActionLogsView.setPageNumber(0);
             this.currentResultPage = 1;
         }
-    }
-
-    private extractDateAndTime(form: AbstractControl): number {
-        const val = form.value;
-        if (!val || val === '') {
-            return null;
-        }
-        return Date.parse(val);
     }
 
     changePage(page) {
