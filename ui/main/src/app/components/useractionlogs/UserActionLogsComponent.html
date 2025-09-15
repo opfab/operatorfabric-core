@@ -50,14 +50,20 @@
             </div>
         </div>
 
-        <div style="display: flex; margin-top: 39px" [formGroup]="this.userActionLogsForm">
-            <div class="opfab-input opfab-useractionlogs-datepicker">
-                <label for="opfab-date-from" translate>useractionlogs.filters.dateFrom</label>
-                <input type="datetime-local" id="opfab-date-from" formControlName="dateFrom" />
-            </div>
-            <div class="opfab-input opfab-useractionlogs-datepicker">
-                <label for="opfab-date-to" translate>useractionlogs.filters.dateTo</label>
-                <input type="datetime-local" id="opfab-date-to" formControlName="dateTo" />
+        <div style="display: flex; margin-top: 39px">
+            <div class="opfab-input opfab-useractionlogs-date-range-picker" [formGroup]="this.userActionLogsForm">
+                <label for="opfab-date-range" translate>useractionlogs.filters.dateRange</label>
+                <input
+                    id="opfab-date-range"
+                    type="button"
+                    ngxDaterangepickerMd
+                    [locale]="locale"
+                    [ranges]="ranges"
+                    [alwaysShowCalendars]="true"
+                    [timePicker]="true"
+                    [timePicker24Hour]="true"
+                    [timePickerIncrement]="1"
+                    formControlName="dateRange" />
             </div>
         </div>
 

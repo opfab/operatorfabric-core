@@ -735,8 +735,7 @@
         "filters": {
             "action": "ACTION",
             "login": "UTILISATEUR",
-            "dateFrom": "À PARTIR DE",
-            "dateTo": "JUSQU'À"
+            "dateRange": "PÉRIODE"
         }
     },
     "datePicker": {

@@ -734,8 +734,7 @@
         "filters": {
             "action": "ACTION",
             "login": "USERNAME",
-            "dateFrom": "FROM",
-            "dateTo": "TO"
+            "dateRange": "DATE RANGE"
         }
     },
     "datePicker": {
