@@ -38,7 +38,7 @@
     "@popperjs/core": "2.11.8",
     "ag-grid-angular": "34.0.2",
     "ag-grid-community": "34.0.2",
-    "angular-oauth2-oidc": "17.0.2",
+    "angular-oauth2-oidc": "20.0.2",
     "bootstrap": "5.3.8",
     "chart.js": "4.5.0",
     "chartjs-adapter-date-fns": "3.0.0",
