@@ -1,7 +1,6 @@
-version: '2.1'
 services:
   mongodb:
-    image: mongo:4.4.6-bionic
+    image: mongo:7.0.24-jammy
     ports:
       - "27017:27017"
     environment:
