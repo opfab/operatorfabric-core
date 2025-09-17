@@ -77,6 +77,7 @@
     "geomap": {
       "enableMap": false,
       "darkMode":true,
+      "mapProjection": "EPSG:3857",
       "defaultDataProjection": "EPSG:4326",
       "initialLongitude": 5.3255,
       "initialLatitude": 52.1845,
@@ -87,24 +88,32 @@
       "highlightPolygonStrokeWidth": 5,
       "layers": [
                 {
-                    "type":"osm"
+                    "type":"osm",
+                    "opacity": 1.0,
+                    "zIndex": 0
                 },
                 {
                     "type":"wmts",
                     "capabilitiesUrl":"https://data.geopf.fr/annexes/ressources/wmts/essentiels.xml",
                     "layer":"CADASTRALPARCELS.PARCELLAIRE_EXPRESS",
-                    "matrixSet":"PM_0_19"
+                    "matrixSet":"PM_0_19",
+                    "opacity": 0.7,
+                    "zIndex": 1
                 },
                 {
                     "type": "geojson",
                     "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
                     "style": {
                         "stroke-color": "red"
-                    }
+                    },
+                    "opacity": 0.8,
+                    "zIndex": 2
                 },
                 {
                     "type": "geojson",
-                    "url": "assets/layers/geojson-layer2.json"
+                    "url": "assets/layers/geojson-layer2.json",
+                    "opacity": 0.6,
+                    "zIndex": 3
                 }
 
             ]
