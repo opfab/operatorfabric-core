@@ -108,7 +108,24 @@
     </div>
 
     <form [formGroup]="timeFilterForm" id="opfab-time-filter-form" style="padding-left: 7px">
-        <div style="margin-left: 2px; margin-right: 2px; margin-top: 20px; width: 210px; min-width: 210px">
+        <div class="opfab-input" [formGroup]="this.timeFilterForm">
+            <label for="opfab-date-range" translate>feed.filters.time.dateRange</label>
+            <input
+                    [alwaysShowCalendars]="true"
+                    [opens]="center"
+                    [locale]="locale"
+                    [ranges]="ranges"
+                    [showClearButton]="true"
+                    [timePicker24Hour]="true"
+                    [timePickerIncrement]="1"
+                    [timePicker]="true"
+                    formControlName="dateRange"
+                    id="opfab-feed-filter-date-time-range"
+                    ngxDaterangepickerMd
+                    type="button"
+                    />
+        </div>
+        <!--<div style="margin-left: 2px; margin-right: 2px; margin-top: 20px; width: 210px; min-width: 210px">
             <div class="opfab-input" id="opfab-start">
                 <label for="opfab-feed-filter-dateTimeFrom" translate>feed.filters.time.start.label</label>
                 <input
@@ -130,7 +147,7 @@
                     (change)="onDateTimeChange($event)"
                     [min]="endMinDate" />
             </div>
-        </div>
+        </div>-->
     </form>
 </div>
 <div *ngIf="!hideApplyFiltersToTimeLineChoice">

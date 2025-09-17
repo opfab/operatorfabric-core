@@ -259,8 +259,7 @@
             "time": {
                 "titleIfFilterBasedOnPublishDate": "Receipt date",
                 "titleIfFilterBasedOnBusinessDate": "Business period",
-                "start.label": "START",
-                "end.label": "END",
+                "dateRange": "DATE RANGE",
                 "active.label": "Active"
             },
             "type": {

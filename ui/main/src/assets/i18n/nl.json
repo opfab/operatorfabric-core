@@ -259,8 +259,7 @@
             "time": {
                 "titleIfFilterBasedOnPublishDate": "Ontvangstdatum",
                 "titleIfFilterBasedOnBusinessDate": "Bedrijfsperiode",
-                "start.label": "START",
-                "end.label": "EIND",
+                "dateRange": "DATUMBEREIK",
                 "active.label": "Actief"
             },
             "type": {

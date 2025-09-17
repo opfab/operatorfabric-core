@@ -26,13 +26,23 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgIf} from '@angular/common';
 import {FeedSortComponent} from '../feed-sort/FeedSortComponent';
 import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelectComponent';
+import {DateRangePickerConfig} from '../../../../../../utils/DateRangePickerConfig';
+import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
 
 @Component({
     selector: 'of-feed-filter',
     templateUrl: './FeedFilterComponent.html',
     styleUrls: ['./FeedFilterComponent.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, TranslateModule, NgIf, FeedSortComponent, MultiSelectComponent]
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule,
+        NgIf,
+        FeedSortComponent,
+        MultiSelectComponent,
+        NgxDaterangepickerMd
+    ]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;
@@ -63,8 +73,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         notAckControl: FormControl<boolean | null>;
     }>;
     timeFilterForm: FormGroup<{
-        dateTimeFrom: FormControl<any>;
-        dateTimeTo: FormControl<any>;
+        dateRange: FormControl<any>
+        //dateTimeFrom: FormControl<any>;
+        //dateTimeTo: FormControl<any>;
     }>;
     responseFilterForm: FormGroup<{
         responseControl: FormControl<boolean | null>;
@@ -88,6 +99,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private dateFilterType = FilterType.PUBLISHDATE_FILTER;
     private readonly filteredLightCardStore: FilteredLightCardsStore;
+
+    readonly locale = DateRangePickerConfig.getLocale();
+    readonly ranges = DateRangePickerConfig.getCustomRanges();
 
     constructor() {
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -141,8 +155,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private createDateTimeForm() {
         return new FormGroup({
-            dateTimeFrom: new FormControl<any>(''),
-            dateTimeTo: new FormControl<any>('')
+            dateRange: new FormControl({})
+            //dateTimeFrom: new FormControl<any>(''),
+            //dateTimeTo: new FormControl<any>('')
         });
     }
 
@@ -426,7 +441,8 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 '-' +
                 String(savedStart.getDate()).padStart(2, '0') +
                 'T00:00';
-            this.timeFilterForm.get('dateTimeFrom').setValue(savedStartString);
+            /*this.timeFilterForm.get('dateTimeFrom').setValue(savedStartString);*/
+            this.timeFilterForm.get('dateRange').setValue({startDate: savedStartString});
         }
 
         if (savedEnd != null) {
@@ -437,8 +453,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 '-' +
                 String(savedEnd.getDate()).padStart(2, '0') +
                 'T00:00';
-            this.timeFilterForm.get('dateTimeTo').setValue(savedEndString);
+            //this.timeFilterForm.get('dateTimeTo').setValue(savedEndString);
+            this.timeFilterForm.get('dateRange').setValue({endDate: savedEndString});
         }
+        this.timeFilterForm.get('dateRange').setValue(null);
 
         this.setNewFilterValue();
 
@@ -453,8 +471,10 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
     private setNewFilterValue(): void {
         const status = {start: null, end: null};
-        status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
-        status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));
+        /*status.start = this.extractTime(this.timeFilterForm.get('dateTimeFrom'));
+        status.end = this.extractTime(this.timeFilterForm.get('dateTimeTo'));*/
+        status.start = this.timeFilterForm.get('dateRange')?.value?.startDate;
+        status.end = this.timeFilterForm.get('dateRange')?.value?.endDate;
 
         if (
             status.start != null &&
@@ -472,18 +492,24 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             this.endMinDate = null;
         } else {
             UserPreferencesService.setPreference('opfab.feed.filter.start', status.start);
-            if (this.timeFilterForm.value.dateTimeFrom?.length) {
-                this.endMinDate = this.timeFilterForm.value.dateTimeFrom;
+            if (this.timeFilterForm.value.dateRange?.startDate?.length) {
+                this.endMinDate = this.timeFilterForm.value.dateRange?.startDate;
             }
+            /*if (this.timeFilterForm.value.dateTimeFrom?.length) {
+                this.endMinDate = this.timeFilterForm.value.dateTimeFrom;
+            }*/
         }
         if (status.end == null || isNaN(status.end)) {
             UserPreferencesService.removePreference('opfab.feed.filter.end');
             this.startMaxDate = null;
         } else {
             UserPreferencesService.setPreference('opfab.feed.filter.end', status.end);
-            if (this.timeFilterForm.value.dateTimeTo?.length) {
-                this.startMaxDate = this.timeFilterForm.value.dateTimeTo;
+            if (this.timeFilterForm.value.dateRange?.endDate?.length) {
+                this.startMaxDate = this.timeFilterForm.value.dateRange.endDate;
             }
+            /*if (this.timeFilterForm.value.dateTimeTo?.length) {
+                this.startMaxDate = this.timeFilterForm.value.dateTimeTo;
+            }*/
         }
 
         this.filteredLightCardStore.updateFilter(this.dateFilterType, true, status);
@@ -499,6 +525,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     }
 
     isFilterActive(): boolean {
+        console.log('#############################this.timeFilterForm.get(\'dateRange\').value=', this.timeFilterForm.get('dateRange').value);
         return (
             !this.typeFilterForm.get('alarm').value ||
             !this.typeFilterForm.get('action').value ||
@@ -506,14 +533,32 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
             !this.typeFilterForm.get('information').value ||
             !this.responseFilterForm.get('responseControl').value ||
             !this.ackFilterForm.get('notAckControl').value ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            /*!!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||*/
+            !!this.timeFilterForm.get('dateRange').value ||
             this.processFilterForm.get('process').value.length > 0
         );
     }
 
     showResetLink(): boolean {
-        return (
+        const ret =
+            !this.typeFilterForm.get('alarm').value ||
+            !this.typeFilterForm.get('action').value ||
+            !this.typeFilterForm.get('compliant').value ||
+            !this.typeFilterForm.get('information').value ||
+            !this.responseFilterForm.get('responseControl').value ||
+            this.defaultAcknowledgmentFilter !==
+            this.getAckPreference(
+                this.ackFilterForm.get('ackControl').value,
+                this.ackFilterForm.get('notAckControl').value
+            ) ||
+            /*!!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||*/
+            !!this.timeFilterForm.get('dateRange').value ||
+            this.processFilterForm.get('process').value.length > 0;
+            console.log('--------------------------- ret=', ret);
+        return ret;
+        /*return (
             !this.typeFilterForm.get('alarm').value ||
             !this.typeFilterForm.get('action').value ||
             !this.typeFilterForm.get('compliant').value ||
@@ -524,10 +569,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                     this.ackFilterForm.get('ackControl').value,
                     this.ackFilterForm.get('notAckControl').value
                 ) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
-            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||
+            /!*!!this.extractTime(this.timeFilterForm.get('dateTimeFrom')) ||
+            !!this.extractTime(this.timeFilterForm.get('dateTimeTo')) ||*!/
+            !this.timeFilterForm.get('dateRange').value ||
             this.processFilterForm.get('process').value.length > 0
-        );
+        );*/
     }
 
     reset() {
@@ -542,8 +588,9 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         UserPreferencesService.setPreference('opfab.feed.filter.ack', this.defaultAcknowledgmentFilter);
 
         if (!this.hideTimerTags) {
-            this.timeFilterForm.get('dateTimeFrom').setValue(null);
-            this.timeFilterForm.get('dateTimeTo').setValue(null);
+            this.timeFilterForm.get('dateRange').setValue(null);
+            //this.timeFilterForm.get('dateTimeFrom').setValue(null);
+            //this.timeFilterForm.get('dateTimeTo').setValue(null);
             this.setNewFilterValue();
         }
         if (!this.hideApplyFiltersToTimeLineChoice) {

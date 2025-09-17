@@ -260,8 +260,7 @@
             "time": {
                 "titleIfFilterBasedOnPublishDate": "Date de réception",
                 "titleIfFilterBasedOnBusinessDate": "Période métier",
-                "start.label": "DÉBUT",
-                "end.label": "FIN",
+                "dateRange": "PÉRIODE",
                 "active.label": "Actif"
             },
             "type": {
