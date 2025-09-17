@@ -1,5 +1,6 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
 /* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025, RTE International (https://www.rte-international.com/)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,13 +11,15 @@
 
 import {Map as OpenLayersMap} from 'ol';
 import View from 'ol/View';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, XYZ, Vector as VectorSource} from 'ol/source';
-import {fromLonLat} from 'ol/proj';
+import {Tile as TileLayer, Vector as VectorLayer, Image as ImageLayer} from 'ol/layer';
+import {OSM, XYZ, Vector as VectorSource, ImageArcGISRest} from 'ol/source';
+import {fromLonLat, get as getProjection, transform} from 'ol/proj';
 import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {register} from 'ol/proj/proj4';
+import proj4 from 'proj4';
 import WKT from 'ol/format/WKT';
 import WMTSCapabilities from 'ol/format/WMTSCapabilities';
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
@@ -35,6 +38,12 @@ import {DateTimeFormatterService} from '../../../services/dateTimeFormatter/Date
 
 let self;
 
+// Lambert 93 extent for France including Corsica
+const LAMBERT93_EXTENT = [47680, 6037008, 1302430, 7230727];
+
+// Night mode CSS filter for map tiles
+const NIGHT_MODE_FILTER = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
+
 export abstract class OpfabMap {
     unsubscribe$ = new Subject<void>();
     map: OpenLayersMap;
@@ -45,6 +54,8 @@ export abstract class OpfabMap {
     targetElementId: string;
 
     highlightPolygonStrokeWidth: number = 2;
+    private postRenderHandler?: (e: any) => void;
+    private geoJsonLayers: VectorLayer<VectorSource<any>>[] = [];
 
     constructor(
         private readonly translate: TranslateService,
@@ -63,37 +74,168 @@ export abstract class OpfabMap {
             });
     }
 
+    private setupProjections() {
+        // Define Lambert 93 (EPSG:2154)
+        proj4.defs(
+            'EPSG:2154',
+            '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+        );
+
+        // Save in OpenLayers
+        register(proj4);
+
+        // Define the extent of France in Lambert 93 (including Corsica)
+        const lambert93Projection = getProjection('EPSG:2154');
+        if (lambert93Projection) {
+            lambert93Projection.setExtent(LAMBERT93_EXTENT);
+        }
+    }
+
+    private getProjectionConfig() {
+        const supportedProjections = {
+            'EPSG:3857': {
+                name: 'Web Mercator',
+                extent: [-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244]
+            },
+            'EPSG:2154': {
+                name: 'Lambert 93',
+                extent: LAMBERT93_EXTENT
+            }
+        };
+
+        // Get default data projection once
+        const defaultDataProjection = ConfigService.getConfigValue('feed.geomap.defaultDataProjection', 'EPSG:4326');
+
+        // 1. New optional parameter (priority)
+        const mapProjection = ConfigService.getConfigValue('feed.geomap.mapProjection', null);
+        if (mapProjection) {
+            const config = supportedProjections[mapProjection];
+            if (!config) {
+                logger.warn(`Unsupported projection: ${mapProjection}, using EPSG:3857 as default`);
+                return {
+                    mapProjection: 'EPSG:3857',
+                    dataProjection: defaultDataProjection,
+                    config: supportedProjections['EPSG:3857']
+                };
+            }
+            return {
+                mapProjection,
+                dataProjection: defaultDataProjection,
+                config
+            };
+        }
+
+        // 2. Backward compatibility fallback
+        return {
+            mapProjection: 'EPSG:3857',
+            dataProjection: defaultDataProjection,
+            config: supportedProjections['EPSG:3857']
+        };
+    }
+
+    private transformInitialCoordinates(
+        longitude: number,
+        latitude: number,
+        targetProjection: string
+    ): [number, number] {
+        // Check if coordinates are already in Lambert 93 (EPSG:2154) for France
+        if (targetProjection === 'EPSG:2154') {
+            // Check if coordinates are within Lambert 93 extent (including Corsica)
+            const [minX, minY, maxX, maxY] = LAMBERT93_EXTENT;
+            if (longitude >= minX && longitude <= maxX && latitude >= minY && latitude <= maxY) {
+                // Coordinates are already in Lambert 93, no transformation needed
+                return [longitude, latitude] as [number, number];
+            }
+        }
+
+        // Auto-detect EPSG:3857 inputs (meters) vs WGS84 degrees
+        if (targetProjection === 'EPSG:3857') {
+            // If values are outside plausible lon/lat ranges, assume already in 3857
+            if (Math.abs(longitude) > 180 || Math.abs(latitude) > 90) {
+                return [longitude, latitude] as [number, number];
+            }
+            return fromLonLat([longitude, latitude]) as [number, number];
+        }
+
+        // Otherwise, assume WGS84 and transform to target
+        const sourceProjection = 'EPSG:4326';
+        return transform([longitude, latitude], sourceProjection, targetProjection) as [number, number];
+    }
+
+    private shouldApplyDarkMode(style): boolean {
+        const colorMode = ConfigService.getConfigValue('feed.geomap.colorMode', 'uiTheme');
+
+        if (colorMode === 'dark') {
+            return true;
+        } else if (colorMode === 'light') {
+            return false;
+        } else if (colorMode === 'uiTheme') {
+            // Follow the global UI theme
+            return style === GlobalStyleService.NIGHT;
+        } else {
+            // Default behavior: follow UI theme
+            return style === GlobalStyleService.NIGHT;
+        }
+    }
+
+    private getConfiguredLayers(): any[] {
+        return ConfigService.getConfigValue('feed.geomap.layers', []);
+    }
+
     private updateMapColors(style) {
         if (this.map) {
             let filter = '';
-            if (style === GlobalStyleService.NIGHT) {
-                //change map color to Dark Mode
-                if (ConfigService.getConfigValue('feed.geomap.darkMode', true))
-                    filter = 'invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%)';
+
+            if (this.shouldApplyDarkMode(style)) {
+                filter = NIGHT_MODE_FILTER;
             }
-            this.map.on('postcompose', () => {
-                if (document.querySelector('canvas')) {
-                    document.querySelector('canvas').style.filter = filter;
+
+            const viewport = this.map.getViewport?.();
+            const applyFilter = () => {
+                if (viewport) {
+                    viewport.querySelectorAll('canvas').forEach((c: HTMLCanvasElement) => (c.style.filter = filter));
                 }
-            });
+            };
+            // Remove previous handler if any, then add a single listener
+            if (this.postRenderHandler) {
+                this.map.un('postrender', this.postRenderHandler as any);
+            }
+            this.postRenderHandler = applyFilter;
+            this.map.on('postrender', this.postRenderHandler as any);
+            // Apply immediately for current frame
+            applyFilter();
             this.map.updateSize();
         }
     }
 
     drawMap(enableGraph: boolean) {
+        // Configure all available projections
+        this.setupProjections();
+
+        // Determine projection configuration to use
+        const projectionConfig = this.getProjectionConfig();
+
         const overlay = this.getClosePopupOverlay();
         const attribution = new Attribution({
             collapsible: true
         });
 
+        // Get coordinates from config
         const longitude = ConfigService.getConfigValue('feed.geomap.initialLongitude', 0);
         const latitude = ConfigService.getConfigValue('feed.geomap.initialLatitude', 0);
         const zoom = ConfigService.getConfigValue('feed.geomap.initialZoom', 1);
+        this.highlightPolygonStrokeWidth = ConfigService.getConfigValue('feed.geomap.highlightPolygonStrokeWidth', 2);
 
+        // Transform coordinates to target projection
+        const transformedCenter = this.transformInitialCoordinates(longitude, latitude, projectionConfig.mapProjection);
+
+        // Create map with configured projection
         this.map = new OpenLayersMap({
             view: new View({
-                center: fromLonLat([longitude, latitude]),
-                zoom: zoom
+                projection: projectionConfig.mapProjection,
+                center: transformedCenter,
+                zoom: zoom,
+                extent: projectionConfig.config.extent
             }),
             target: this.targetElementId,
             overlays: [overlay],
@@ -101,9 +243,13 @@ export abstract class OpfabMap {
         });
 
         this.addLayers();
+        this.addGeoJSONLayer(GlobalStyleService.getStyle());
         if (enableGraph) {
             this.map.addControl(new GraphControl(null));
         }
+
+        // Apply initial day/night mode
+        this.updateMapColors(GlobalStyleService.getStyle());
 
         this.map.on('singleclick', function (evt) {
             displayLightCardIfNecessary(evt);
@@ -123,59 +269,110 @@ export abstract class OpfabMap {
         }
     }
 
+    private validateLayerConfiguration(layer: any): boolean {
+        if (!layer.type) {
+            logger.error(`Invalid XYZ layer configuration: missing url`);
+            return false;
+        }
+
+        switch (layer.type) {
+            case 'wmts':
+                if (!layer.capabilitiesUrl || !layer.layer || !layer.matrixSet) {
+                    logger.error(
+                        `Invalid WMTS layer configuration: missing required properties (capabilitiesUrl, layer, matrixSet). details=${JSON.stringify(layer)}`
+                    );
+                    return false;
+                }
+                break;
+            case 'xyz':
+                if (!layer.url) {
+                    logger.error(`Invalid XYZ layer configuration: missing url`);
+                    return false;
+                }
+                break;
+            case 'esri':
+            case 'arcgis':
+                if (!layer.url) {
+                    logger.error(`Invalid ArcGIS layer configuration: missing url`);
+                    return false;
+                }
+                break;
+            case 'geojson':
+                if (!layer.url) {
+                    logger.error(`Invalid GeoJSON layer configuration: missing url`);
+                    return false;
+                }
+                break;
+            case 'osm':
+                // OSM layers don't require additional parameters
+                break;
+            default:
+                logger.warn(`Unknown layer type: ${layer.type}`);
+                return false;
+        }
+
+        return true;
+    }
+
     addLayers() {
-        const layers = ConfigService.getConfigValue('feed.geomap.layers', []);
+        const layers = this.getConfiguredLayers();
         if (layers && layers.length > 0) {
             layers.forEach((layer) => {
-                if (layer.type === 'wmts') {
-                    if (!layer.capabilitiesUrl || !layer.layer || !layer.matrixSet) {
-                        logger.error(`Invalid WMTS layer configuration: missing required properties`, layer);
-                        return;
-                    }
-                    this.addWMTSLayer(
-                        layer.capabilitiesUrl,
-                        layer.layer,
-                        layer.matrixSet,
-                        layer.useCredentialsForCapabilities
-                    );
-                } else if (layer.type === 'xyz') {
-                    if (!layer.url) {
-                        logger.error(`Invalid XYZ layer configuration: missing url`, layer);
-                        return;
-                    }
-                    this.map.addLayer(
-                        new TileLayer({
-                            source: new XYZ({
-                                url: layer.url,
-                                tileSize: layer.tileSize,
-                                crossOrigin: layer.crossOrigin
+                // Validate layer configuration before processing
+                if (!this.validateLayerConfiguration(layer)) {
+                    return;
+                }
+
+                switch (layer.type) {
+                    case 'wmts':
+                        this.addWMTSLayer(layer.capabilitiesUrl, layer.layer, layer.matrixSet, layer);
+                        break;
+                    case 'xyz':
+                        this.map.addLayer(
+                            new TileLayer({
+                                source: new XYZ({
+                                    url: layer.url,
+                                    tileSize: layer.tileSize,
+                                    crossOrigin: 'anonymous'
+                                }),
+                                opacity: layer.opacity !== undefined ? layer.opacity : 1,
+                                zIndex: layer.zIndex !== undefined ? layer.zIndex : 0
                             })
-                        })
-                    );
-                } else if (layer.type === 'osm') {
-                    this.map.addLayer(new TileLayer({source: new OSM()}));
-                } else if (layer.type !== 'geojson') {
-                    logger.warn(`Unknown layer type: ${layer.type}`);
+                        );
+                        break;
+                    case 'osm':
+                        this.map.addLayer(
+                            new TileLayer({
+                                source: new OSM({crossOrigin: 'anonymous'}),
+                                opacity: layer.opacity !== undefined ? layer.opacity : 1,
+                                zIndex: layer.zIndex !== undefined ? layer.zIndex : 0
+                            })
+                        );
+                        break;
+                    case 'esri':
+                    case 'arcgis':
+                        // ArcGIS layer support
+                        this.addArcGISLayer(layer);
+                        break;
+                    case 'geojson':
+                        // GeoJSON layers are processed in batch for better performance
+                        break;
+                    default:
+                        logger.warn(`Unknown layer type: ${layer.type}`);
+                        break;
                 }
             });
         }
     }
 
-    async addWMTSLayer(
-        capabilitiesUrl: string,
-        layer: string,
-        matrixSet: string,
-        useCredentialsForCapabilities: boolean
-    ) {
+    async addWMTSLayer(capabilitiesUrl: string, layer: string, matrixSet: string, layerConfig?: any) {
         const parser = new WMTSCapabilities();
         try {
-            const optionsForCapabilitiesFetching: RequestInit = useCredentialsForCapabilities
-                ? {credentials: 'include'}
-                : {};
-            const response = await fetch(capabilitiesUrl, optionsForCapabilitiesFetching);
+            const response = await fetch(capabilitiesUrl);
 
             if (!response.ok) {
-                logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText} `);
+                logger.error(`Failed to fetch WMTS capabilities: ${response.status} ${response.statusText}`);
+                return;
             }
 
             const text = await response.text();
@@ -190,27 +387,45 @@ export abstract class OpfabMap {
                 layer: layer,
                 matrixSet: matrixSet
             });
-            self.map.addLayer(
-                new TileLayer({
-                    opacity: 1,
-                    source: new WMTS(options)
-                })
-            );
+            // Ensure CORS works consistently
+            (options as any).crossOrigin = 'anonymous';
+
+            // Use opacity and zIndex from configuration
+            const opacity = layerConfig?.opacity !== undefined ? layerConfig.opacity : 1;
+            const zIndex = layerConfig?.zIndex !== undefined ? layerConfig.zIndex : 0;
+
+            // Create WMTS layer
+            const wmtsLayer = new TileLayer({
+                opacity,
+                source: new WMTS(options),
+                zIndex
+            });
+
+            // For Lambert 93, set extent constraint to avoid 404 errors on tiles outside valid area
+            const projectionConfig = this.getProjectionConfig();
+            if (projectionConfig.mapProjection === 'EPSG:2154') {
+                const constrainExtent = ConfigService.getConfigValue('feed.geomap.constrainLambert93Extent', true);
+                if (constrainExtent) {
+                    wmtsLayer.setExtent(projectionConfig.config.extent);
+                }
+            }
+
+            this.map.addLayer(wmtsLayer);
         } catch (error) {
-            logger.error(`Failed to add WMTS layer '${layer}':`, error);
+            logger.error(`Failed to add WMTS layer '${layer}': ${String(error)}`);
         }
     }
 
     updateMap(cards: Card[], maxZoom: number, initialZoomToLocation?: string) {
         if (this.map) {
+            const projectionConfig = this.getProjectionConfig();
+
             const featureArray = [];
-            this.map.removeLayer(this.vectorLayer);
+            if (this.vectorLayer) {
+                this.map.removeLayer(this.vectorLayer);
+            }
 
             const zoomDuration = ConfigService.getConfigValue('feed.geomap.zoomDuration', 500);
-            const defaultDataProjection = ConfigService.getConfigValue(
-                'feed.geomap.defaultDataProjection',
-                'EPSG:4326'
-            );
             const zoomLevelWhenZoomToLocation = ConfigService.getConfigValue(
                 'feed.geomap.zoomLevelWhenZoomToLocation',
                 14
@@ -222,8 +437,8 @@ export abstract class OpfabMap {
                     try {
                         const format = new WKT();
                         const feature = format.readFeature(lightCard.wktGeometry, {
-                            dataProjection: lightCard.wktProjection || defaultDataProjection,
-                            featureProjection: 'EPSG:3857'
+                            dataProjection: lightCard.wktProjection || projectionConfig.dataProjection,
+                            featureProjection: projectionConfig.mapProjection
                         });
                         feature.set('lightCard', lightCard, true);
                         featureArray.push(feature);
@@ -233,6 +448,7 @@ export abstract class OpfabMap {
                         );
                     }
                 });
+
             this.vectorLayer = new VectorLayer({
                 source: new VectorSource({
                     features: featureArray
@@ -241,8 +457,10 @@ export abstract class OpfabMap {
                     const severity: Severity = feature.get('lightCard').severity;
                     const geoType: string = feature.getGeometry().getType();
                     return OpfabMap.getOpenLayersStyle(geoType, severity, false, self.highlightPolygonStrokeWidth);
-                }
+                },
+                zIndex: 2000 // Keep geometries on top of all layers
             });
+
             this.map.addLayer(this.vectorLayer);
 
             if (this.vectorLayer.getSource().getFeatures().length > 0) {
@@ -289,7 +507,9 @@ export abstract class OpfabMap {
         if (this.map) {
             let colorStroke = 'rgba(0, 0, 0, 0.6)';
             let colorFill = 'rgba(0, 0, 0, 0.05)';
-            if (style === GlobalStyleService.NIGHT) {
+
+            if (this.shouldApplyDarkMode(style)) {
+                // Apply night mode colors
                 colorStroke = 'rgba(255, 255, 255, 0.6)';
                 colorFill = 'rgba(255, 255, 255, 0.05)';
             }
@@ -303,11 +523,18 @@ export abstract class OpfabMap {
                 })
             });
 
-            const geojsonLayers = ConfigService.getConfigValue('feed.geomap.layers', []).filter(
-                (layer) => layer.type === 'geojson'
-            );
+            const geojsonLayers = this.getConfiguredLayers().filter((layer) => layer.type === 'geojson');
+
+            // Remove previously added GeoJSON layers
+            this.geoJsonLayers.forEach((l) => this.map.removeLayer(l));
+            this.geoJsonLayers = [];
 
             geojsonLayers.forEach((geojson) => {
+                // Validate GeoJSON layer configuration
+                if (!this.validateLayerConfiguration(geojson)) {
+                    return;
+                }
+
                 const layerSource = new VectorSource({
                     format: new GeoJSON(),
                     url: geojson.url
@@ -315,11 +542,13 @@ export abstract class OpfabMap {
 
                 const vectorLayer = new VectorLayer({
                     source: layerSource,
-                    style: geojson.style ?? defaultStyle
+                    style: geojson.style ? this.convertFlatStyleToOpenLayersStyle(geojson.style) : defaultStyle,
+                    opacity: geojson.opacity !== undefined ? geojson.opacity : 1,
+                    zIndex: geojson.zIndex !== undefined ? geojson.zIndex : 0
                 });
 
-                this.map.removeLayer(vectorLayer);
                 this.map.addLayer(vectorLayer);
+                this.geoJsonLayers.push(vectorLayer);
             });
         }
     }
@@ -518,6 +747,64 @@ export abstract class OpfabMap {
 
     isSmallscreen() {
         return window.innerWidth < 1000;
+    }
+
+    private convertFlatStyleToOpenLayersStyle(flatStyle: any): Style {
+        const styleOptions: any = {};
+
+        if (flatStyle['stroke-color'] || flatStyle['stroke-width']) {
+            styleOptions.stroke = new Stroke({
+                color: flatStyle['stroke-color'] || 'rgba(0, 0, 0, 1)',
+                width: flatStyle['stroke-width'] || 1
+            });
+        }
+
+        if (flatStyle['fill-color']) {
+            styleOptions.fill = new Fill({
+                color: flatStyle['fill-color']
+            });
+        }
+
+        return new Style(styleOptions);
+    }
+
+    private addArcGISLayer(layerConfig: any) {
+        // Build ArcGIS REST parameters
+        const restParams: any = {};
+
+        if (layerConfig.layers) {
+            restParams['LAYERS'] = `show:${layerConfig.layers}`;
+        }
+        if (layerConfig.format) {
+            restParams['FORMAT'] = String(layerConfig.format);
+        } else {
+            restParams['FORMAT'] = 'png';
+        }
+        // Default to transparent unless explicitly disabled
+        restParams['TRANSPARENT'] = layerConfig.transparent === false ? 'false' : 'true';
+
+        // For Lambert 93, add projection info to params to ensure proper coordinate handling
+        const projectionConfig = this.getProjectionConfig();
+        if (projectionConfig.mapProjection === 'EPSG:2154') {
+            // ArcGIS services should handle projection automatically, but we can add it as a parameter if needed
+            restParams['outSR'] = '2154'; // Spatial Reference for Lambert 93
+        }
+
+        const imageArcGISSource = new ImageArcGISRest({
+            url: layerConfig.url,
+            params: restParams,
+            ratio: layerConfig.ratio ?? 1,
+            crossOrigin: 'anonymous'
+        });
+
+        const imageLayer = new ImageLayer({
+            source: imageArcGISSource,
+            opacity: layerConfig.opacity !== undefined ? layerConfig.opacity : 1,
+            visible: layerConfig.visible !== false,
+            zIndex: layerConfig.zIndex !== undefined ? layerConfig.zIndex : 0
+        });
+
+        this.map.addLayer(imageLayer);
     }
 }
 
