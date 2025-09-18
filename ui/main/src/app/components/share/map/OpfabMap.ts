@@ -239,6 +239,15 @@ export abstract class OpfabMap {
         this.map.on('singleclick', function (evt) {
             displayLightCardIfNecessary(evt);
         });
+        /**
+         * Show a lightweight card popup when the user clicks a map feature that has a `lightCard`.
+         *
+         * If any features at the clicked pixel include a `lightCard` property, this sets the provided
+         * `overlay` position to the click coordinate, stores the found `lightCard` objects on
+         * `self.lightCardsToDisplay`, and requests change detection so the popup can render.
+         *
+         * @param evt - The OpenLayers map browser event (e.g., singleclick) containing `pixel` and `coordinate`.
+         */
         function displayLightCardIfNecessary(evt) {
             const featureArray = [];
             if (self.map.hasFeatureAtPixel(evt.pixel)) {
