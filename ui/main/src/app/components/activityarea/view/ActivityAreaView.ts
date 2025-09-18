@@ -87,9 +87,11 @@ export class ActivityAreaView {
             activityAreaLine.entityName = entity.name;
             activityAreaLine.isUserConnected = entitiesConnected?.includes(entity.id);
 
+            let isEntityInAtLeastOneActivityAreaCluster = false;
             if (entity.parents?.length > 0) {
                 entity.parents.forEach((parentId) => {
                     const parentEntity = EntitiesService.getEntity(parentId);
+
                     if (parentEntity?.roles?.includes(RoleEnum.ACTIVITY_AREA_GROUP)) {
                         this.isEntityAlreadyACluster(parentEntity.id)
                             ? this.addLineToCluster(this.activityAreaClusters.get(parentEntity.id), activityAreaLine)
@@ -97,13 +99,12 @@ export class ActivityAreaView {
                                   parentEntity.id,
                                   new ActivityAreaEntityCluster(parentEntity.id, parentEntity.name, [activityAreaLine])
                               );
-                    } else {
-                        this.addLineToCluster(this.activityAreaOrphanEntitiesCluster, activityAreaLine);
+                        isEntityInAtLeastOneActivityAreaCluster = true;
                     }
                 });
-            } else {
-                this.addLineToCluster(this.activityAreaOrphanEntitiesCluster, activityAreaLine);
             }
+            if (!isEntityInAtLeastOneActivityAreaCluster)
+                this.addLineToCluster(this.activityAreaOrphanEntitiesCluster, activityAreaLine);
         }
     }
 

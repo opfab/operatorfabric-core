@@ -112,6 +112,15 @@ describe('ActivityAreaView', () => {
                 [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
                 [],
                 null
+            ),
+            new Entity('ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE', 'ENTITY6_NAME', '', [], [], []),
+            new Entity(
+                'ENTITY_WITH_TWO_PARENTS',
+                'ENTITY_WITH_TWO_PARENTS_NAME',
+                '',
+                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+                [],
+                ['CLUSTERING_ENTITY', 'ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE']
             )
         ];
         await setEntities(entities);
@@ -166,7 +175,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN he is member of entity with no parents or no parents with the correct role THEN activityArea has 2 lines with no title', async () => {
-        mockUserConfig(['ENTITY_WITH_NO_CLUSTERING_PARENT', 'ENTITY_WITH_NO_PARENT'], []);
+        await mockUserConfig(['ENTITY_WITH_NO_CLUSTERING_PARENT', 'ENTITY_WITH_NO_PARENT'], []);
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -179,7 +188,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN he is member of entity2 and entity1 THEN activityArea has lines sorted by entity name ', async () => {
-        mockUserConfig(['ENTITY2', 'ENTITY1'], []);
+        await mockUserConfig(['ENTITY2', 'ENTITY1'], []);
         initActivityAreaView();
 
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -191,7 +200,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN one entity does not have the ACTIVITY_AREA role THEN activityAreaView does not contains the entity', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2', 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE'], []);
+        await mockUserConfig(['ENTITY1', 'ENTITY2', 'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE'], []);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
@@ -201,8 +210,19 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityName).toEqual('ENTITY2_NAME');
     });
 
+    // Test related to issue https://github.com/opfab/operatorfabric-core/issues/8902
+    it('GIVEN a user member of an entity with two parents WHEN the second parent has no ACTIVITY_AREA_GROUP role THEN the entity appears only under the first parent group', async () => {
+        await mockUserConfig(['ENTITY_WITH_TWO_PARENTS'], []);
+        initActivityAreaView();
+        const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
+        expect(activityAreaPage.activityAreaClusters).toHaveSize(1);
+        expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(1);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY_WITH_TWO_PARENTS');
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].entityName).toEqual('ENTITY_WITH_TWO_PARENTS_NAME');
+    });
+
     it('GIVEN a user member of entity1 and entity2 WHEN entity2 is disconnected THEN entity2 is not connected in the activityAreaView', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
         initActivityAreaView();
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
@@ -213,7 +233,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 and entity2 WHEN entity1 has another user currently connected THEN entity1 line contains the other user login in the activityAreaView ', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], []);
 
         const connectedUsers = [{login: 'anotherUser', entitiesConnected: ['ENTITY1']}];
         usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
@@ -229,7 +249,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 and entity2 WHEN user is currently connected to entity1 THEN entity1 line contains the current user login ', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
             {login: 'anotherUser', firstName: 'John', lastName: 'Smith', entitiesConnected: ['ENTITY1']},
@@ -247,7 +267,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 and entity2 WHEN entity1 has 3 users currently connected THEN entity1 line contains the 3 user logins', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
@@ -273,7 +293,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 WHEN entity1 has 3 users currently connected THEN connected user text contains the 3 user logins sorted by alphabetical order', async () => {
-        mockUserConfig(['ENTITY1'], ['ENTITY1']);
+        await mockUserConfig(['ENTITY1'], ['ENTITY1']);
 
         const connectedUsers = [
             {login: 'aa', entitiesConnected: ['ENTITY1']},
@@ -289,7 +309,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 and entity2 WHEN save activity area with entity1 only connected THEN settings are updated with entity2 disconnected ', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
 
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -302,7 +322,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user member of entity1 and entity2 WHEN save activity area with entity1 and entity2 connected THEN settings are updated with no entity disconnected ', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
@@ -317,7 +337,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN save activity area with error from back THEN return false', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         settingsServerMock.setResponseForPatchUserSettings(
@@ -328,7 +348,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN save activity area THEN perimeter is reloaded ', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         activityAreaView.setEntityConnected('ENTITY1', true);
@@ -346,7 +366,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN set entity connected THEN Activity Area needs to be saved ', async () => {
-        mockUserConfig(['ENTITY1'], []);
+        await mockUserConfig(['ENTITY1'], []);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         activityAreaView.setEntityConnected('ENTITY1', true);
@@ -354,7 +374,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN a user WHEN set entity connected an even number of times THEN Activity Area does not need to be saved ', async () => {
-        mockUserConfig(['ENTITY1'], []);
+        await mockUserConfig(['ENTITY1'], []);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         activityAreaView.setEntityConnected('ENTITY1', true);
@@ -365,7 +385,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN activity area WHEN user clicks on cluster checkbox THEN all cluster lines should be selected', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], []);
         initActivityAreaView();
         initFunctionsToSet();
 
@@ -376,7 +396,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN activity area WHEN user unchecks a cluster line checkbox THEN cluster checkbox should not be selected', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
         initActivityAreaView();
         initFunctionsToSet();
 
@@ -387,7 +407,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN activity area WHEN user checks all cluster line checkboxes THEN cluster checkbox should be selected', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], []);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], []);
         initActivityAreaView();
         initFunctionsToSet();
 
@@ -408,7 +428,7 @@ describe('ActivityAreaView', () => {
         });
         opfabEventStreamServerMock.sendLightCard(card);
 
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1']);
         initActivityAreaView();
         await firstValueFrom(activityAreaView.getActivityAreaPage());
         settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
@@ -419,7 +439,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN an activity area view WHEN activity area view is init THEN it is updated after 2 seconds', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
@@ -454,7 +474,7 @@ describe('ActivityAreaView', () => {
     });
 
     it('GIVEN an activity area view initialized WHEN stopping view THEN view is not updated anymore', async () => {
-        mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
+        await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
             {login: 'anotherUser', entitiesConnected: ['ENTITY1']},
