@@ -29,8 +29,6 @@ operatorfabric:
     host: rabbitmq
     port: 5672
     username: guest
-    password: guest   
-
   businessconfig:
     storage:
       path: "/businessconfig-storage"

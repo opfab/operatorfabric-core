@@ -26,7 +26,6 @@ operatorfabric:
     host: rabbitmq
     port: 5672
     username: guest
-    password: guest
   servicesUrls:
     businessconfig: "businessconfig:2100"
     users: "http://users:2103"

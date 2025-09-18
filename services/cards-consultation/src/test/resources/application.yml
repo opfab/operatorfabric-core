@@ -1,5 +1,5 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:password@localhost:27017/?authSource=admin
+      uri: mongodb://root:password@localhost:27017/?authSource=admin #use for test environment only
       database: operator-fabric-test

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2023, RTE (http://www.rte-france.com)
+# Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,4 +12,4 @@
 # This starts by moving to the directory where the script is located so the paths below still work even if the script
 # is called from another folder
 
-docker exec -it mongodb mongorestore --drop -u root -p password 
+docker exec -it mongodb mongorestore --drop -u root -p password #use for test environment only

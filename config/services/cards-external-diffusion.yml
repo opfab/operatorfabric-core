@@ -4,7 +4,7 @@ operatorfabric:
     port: 1025
     auth:
       user: guest
-      pass: guest
+      pass: guest # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   cardsExternalDiffusion:
     defaultConfig:
       mailFrom: opfab@localhost.it
