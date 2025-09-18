@@ -52,6 +52,7 @@ code to use the new structure.
 To be consistent, the timeline domain J has been renamed D (Day).
 So if necessary, you have to update your config file `web-ui.json`, replacing value `J` with `D` in the field
 `feed.timeline.domains`, for example :
+
 ----
  "timeline": {
    "domains": [
@@ -64,5 +65,22 @@ So if necessary, you have to update your config file `web-ui.json`, replacing va
    ]
  }
 ----
+
+
+== RabbitMQ configuration
+
+
+In previous version, a default password was set for RabbitMQ connection if no password was provided in configuration. Using the default password was considered as acceptable as the rabbit server was not suppose to be accessible from outside the docker network and a security advice was present in the docker compose file. 
+
+Starting from this version, no default password is set anymore in the services configuration to mitigate security risk by forcing user to set a password. 
+
+So you must provide a password :
+
+- in your docker compose configuration file via the env variable RABBITMQ_DEFAULT_PASS. 
+- in your yaml common configuration file via the property `operatorfabric.rabbitmq.password`
+
+If you do not provide any password, the application will not start and an error message will be logged.
+
+
 
 

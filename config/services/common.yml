@@ -6,18 +6,17 @@ management:
         include: '*'
 
 operatorfabric:
-  # rabbitmq:
-    # host: rabbitmq
-    # SECURITY WARNING : To set and change in production if rabbit port is open outside of docker network
-    # username: guest
-    # password: guest
+  rabbitmq:
+    host: rabbitmq
+    username: guest
+    password: for_test_only # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   customscreen:
     dataFields: ["keywords", "nested.field","comment","reason"]
   mongodb:
-    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin
+    uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   internalAccount:
     login: opfab
-    password: test
+    password: test # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   security:
     oauth2:
       resourceserver:

@@ -4,7 +4,6 @@ operatorfabric:
     host: "rabbitmq"
     port: 5672
     username: "guest"
-    password: "guest"
   mongodb:
     database: "operator-fabric"
   servicesUrls:

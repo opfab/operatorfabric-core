@@ -4,8 +4,9 @@ operatorfabric:
     dataFields: ["keywords", "nested.field","comment","reason"]
   rabbitmq:
     host: localhost
+    password: for_test_only # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   mongodb:
-    uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin
+    uri: mongodb://root:password@localhost:27017/operator-fabric?authSource=admin # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   servicesUrls:
     users: "http://localhost:2103"
     businessconfig: "http://localhost:2100"

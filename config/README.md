@@ -1,5 +1,7 @@
 This directory contains all the configuration files needed to start Opfab.
 
+This configuration is intended for testing and demonstration purposes only. It is not suitable for production environments, but can serve as a starting point to be adapted for production requirements.
+
 # Directory Structure
 
 ## services

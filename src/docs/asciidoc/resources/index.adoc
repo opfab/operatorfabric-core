@@ -55,3 +55,5 @@ include::migration_guide_to_4.6.adoc[leveloffset=+1]
 include::migration_guide_to_4.7.adoc[leveloffset=+1]
 
 include::migration_guide_to_4.9.adoc[leveloffset=+1]
+
+include::migration_guide_to_4.10.adoc[leveloffset=+1]

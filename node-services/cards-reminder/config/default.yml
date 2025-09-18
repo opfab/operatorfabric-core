@@ -11,17 +11,17 @@ operatorfabric:
     host: "localhost"
     port: 5672
     username: "guest"
-    password: "guest"
+    password: "for_test_only" #use for test environment only
   mongodb:
     database: "operator-fabric"
-    uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin"
+    uri: "mongodb://root:password@localhost:27017/operator-fabric?authSource=admin" #use for test environment only
   servicesUrls:
     authToken: "http://127.0.0.1:2002/auth/token"
     users: "http://127.0.0.1:2103"
     cardsPublication: "http://127.0.0.1:2102"
   internalAccount:
     login: opfab
-    password: test
+    password: test # use for test environment only
   logConfig:
     logFolder: "logs/"
     logFile: "%DATE%.log"
