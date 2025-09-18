@@ -1,6 +1,5 @@
 server:
   port: 2100
-  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: businessconfig

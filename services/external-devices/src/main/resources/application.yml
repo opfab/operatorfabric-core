@@ -1,6 +1,5 @@
 server:
   port : 2105
-  forward-headers-strategy: framework # Needed for IP control feature
 spring:
   application:
     name: external-devices
