@@ -17,6 +17,7 @@ import {
     SendMailServiceStub
 } from './testHelpers';
 
+const MILLISECONDS_IN_AN_HOUR = 60 * 60 * 1000;
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
@@ -163,12 +164,6 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                emailForCardSending: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
-            {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
@@ -229,12 +224,6 @@ describe('Cards external diffusion', function () {
         initConfig();
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
-            {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                emailForCardSending: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
             {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
@@ -300,12 +289,6 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1']},
-                sendCardsByEmail: true,
-                emailForCardSending: 'operator_1@opfab.com',
-                computedPerimeters: perimeters
-            },
-            {
                 userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
@@ -353,6 +336,69 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].body).toMatch(`INFORMATION - Title1`);
         expect(mailService.sent[0].body).toMatch(`ALARM - Title1`);
         expect(mailService.sent[0].body).toMatch(`Email Body Postfix`);
+    });
+
+    it('Should send daily email with cards sorted by publishDate', async function () {
+        const time = Date.now();
+        const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
+        setup();
+        recapCardsDiffusionControl.setShowCardUrls(false);
+        initConfig();
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
+                sendCardsByEmail: true,
+                sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1000',
+                id: 'defaultProcess.process1',
+                severity: 'INFORMATION',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            },
+            {
+                uid: '1001',
+                id: 'defaultProcess.process2',
+                severity: 'ALARM',
+                publisher: 'publisher1',
+                publishDate: publishDateBeforeConfigDate + MILLISECONDS_IN_AN_HOUR,
+                startDate: publishDateBeforeConfigDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1']
+            }
+        ];
+
+        await recapCardsDiffusionControl.checkCardsStartingFrom('daily');
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
+        expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
+
+        expect(mailService.sent[0].body).toMatch(
+            new RegExp(
+                `^Daily Email Body Prefix<br><br>\\s*` +
+                    `\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2} - ALARM - Title1<br><br>\\s*` +
+                    `\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2} - INFORMATION - Title1<br><br>\\s*` +
+                    `<br>Email Body Postfix$`
+            )
+        );
     });
 
     it('Should not send daily recap email when setting sendDailyEmail is set to false', async function () {

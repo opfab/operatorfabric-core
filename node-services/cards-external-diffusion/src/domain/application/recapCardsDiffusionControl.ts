@@ -145,12 +145,11 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
 
     recapFormat(cards: Card[], emailBodyPrefix: string, timezoneForEmails: string): string {
         let body = emailBodyPrefix + '<br><br>\n';
-        for (const card of cards) {
-            body += this.getFormattedDateAndTimeFromEpochDate(card.startDate, timezoneForEmails) + ' - ';
 
-            if (card.endDate != null) {
-                body += this.getFormattedDateAndTimeFromEpochDate(card.endDate, timezoneForEmails) + ' - ';
-            }
+        cards?.sort((a, b) => b.publishDate - a.publishDate);
+
+        for (const card of cards) {
+            body += this.getFormattedDateAndTimeFromEpochDate(card.publishDate, timezoneForEmails) + ' - ';
 
             const urlOfCard =
                 '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
