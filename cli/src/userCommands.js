@@ -11,6 +11,7 @@ const config = require('./configCommands.js');
 const prompts = require('prompts');
 const utils = require('./utils.js');
 const fs = require('fs').promises;
+const JSON5 = require('json5');
 
 const userCommands = {
     async processUserCommand(args) {
@@ -152,7 +153,7 @@ const userCommands = {
         filePath = await utils.missingTextPrompt('File path', filePath);
         let userList;
         try {
-            userList = JSON.parse(await fs.readFile(filePath, 'utf8'));
+            userList = JSON5.parse(await fs.readFile(filePath, 'utf8'));
         } catch (error) {
             console.error(`Failed to parse the JSON file: ${error.message}`);
             return;

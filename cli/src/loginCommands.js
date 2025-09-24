@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@
 
 const config = require('./configCommands.js');
 const prompts = require('prompts');
+const JSON5 = require('json5');
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -175,7 +176,7 @@ const loginCommands = {
     getExpirationDate(token) {
         const payload = token.split('.')[1];
         const decodedPayload = Buffer.from(payload, 'base64').toString('utf8');
-        const {exp} = JSON.parse(decodedPayload);
+        const {exp} = JSON5.parse(decodedPayload);
         return exp * 1000; // to have it in ms since epoch
     },
 

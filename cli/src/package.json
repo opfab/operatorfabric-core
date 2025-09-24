@@ -15,6 +15,7 @@
     "dependencies": {
         "prompts": "2.4.2",
         "tar": "7.4.4",
-        "omelette": "0.4.17"
+        "omelette": "0.4.17",
+        "json5": "^2.2.3"
     }
 }
