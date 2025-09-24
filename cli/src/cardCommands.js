@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 const config = require('./configCommands.js');
 const prompts = require('prompts');
 const fs = require('fs').promises;
+const JSON5 = require('json5');
 
 const cardCommands = {
 
@@ -193,9 +194,9 @@ const cardCommands = {
 
     prepareCard(card, cardCustomization) {
         const now = new Date().getTime();
-        let jsonCard = JSON.parse(card);
+        let jsonCard = JSON5.parse(card);
         if (cardCustomization) {
-            const jsonUpdate = JSON.parse(cardCustomization);
+            const jsonUpdate = JSON5.parse(cardCustomization);
             this.patchCard(jsonCard, jsonUpdate);
         }
 

@@ -10,6 +10,7 @@
 const prompts = require('prompts');
 const utils = require("./utils");
 const fs = require('fs').promises;
+const JSON5 = require('json5');
 
 const groupCommands = {
     async processGroupCommand(args) {
@@ -62,7 +63,7 @@ const groupCommands = {
         }
         try {
             await fs.access(groupsFile, fs.constants.F_OK);
-            const groupsList = JSON.parse(await fs.readFile(groupsFile, 'utf8'));
+            const groupsList = JSON5.parse(await fs.readFile(groupsFile, 'utf8'));
             for (const group of groupsList) {
                 await utils.sendRequest(
                     'users/groups',

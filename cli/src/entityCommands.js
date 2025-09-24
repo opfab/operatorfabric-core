@@ -10,6 +10,7 @@
 const prompts = require('prompts');
 const utils = require("./utils");
 const fs = require('fs').promises;
+const JSON5 = require('json5');
 
 const entityCommands = {
     async processEntityCommand(args) {
@@ -61,7 +62,7 @@ const entityCommands = {
                 return;
             }
         }
-        const entitiesList = JSON.parse(await fs.readFile(entitiesFile, 'utf8'));
+        const entitiesList = JSON5.parse(await fs.readFile(entitiesFile, 'utf8'));
         for (const entity of entitiesList) {
             await utils.sendRequest(
                 'users/entities',
