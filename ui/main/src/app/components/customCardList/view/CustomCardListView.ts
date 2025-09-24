@@ -18,6 +18,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {LoggerService} from '@ofServices/logs/LoggerService';
 import {ButtonActions} from './buttonActions/ButtonActions';
 import {FilterValues} from './FilterValues';
+import {getColumnsDefinitionForAgGrid} from './resultTable/ColumnDefinitions';
 
 /**
  * This class is responsible for implementing the business logic related to the UI component.
@@ -71,7 +72,7 @@ export class CustomCardListView {
     }
 
     public getColumnsDefinitionForAgGrid(): any[] {
-        return this.resultTable.getColumnsDefinitionForAgGrid();
+        return getColumnsDefinitionForAgGrid(this.customScreenDefinition);
     }
 
     public getResults(): Observable<any> {

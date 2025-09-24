@@ -19,7 +19,6 @@ import {AgGridAngular} from 'ag-grid-angular';
 import {
     AllCommunityModule,
     CellClickedEvent,
-    ITooltipParams,
     ModuleRegistry,
     provideGlobalGridOptions,
     RowSelectionOptions
@@ -45,7 +44,6 @@ import {CustomTooltipComponent} from './CustomToolTipComponent';
 import {SelectCellRendererComponent} from './cellRenderers/SelectCellRendererComponent';
 import {AcknowledgmentCellRendererComponent} from './cellRenderers/AcknowledgmentCellRendererComponent';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {Utilities} from '../../utils/Utilities';
 
 @Component({
     selector: 'of-custom-card-list-screen',
@@ -172,13 +170,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe$ = new Subject<void>();
     private inputMode$ = new Subject<void>();
 
-    private readonly severitySortValue = new Map([
-        ['ALARM', 1],
-        ['ACTION', 2],
-        ['COMPLIANT', 3],
-        ['INFORMATION', 4]
-    ]);
-
     loadingInProgress = false;
 
     constructor() {
@@ -254,13 +245,6 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     }
 
     private setAgGridConfiguration() {
-        const severityCellClassRules = {
-            'opfab-sev-alarm': (field) => field.value === 'ALARM',
-            'opfab-sev-action': (field) => field.value === 'ACTION',
-            'opfab-sev-compliant': (field) => field.value === 'COMPLIANT',
-            'opfab-sev-information': (field) => field.value === 'INFORMATION'
-        };
-
         this.gridOptions = {
             ...AgGrid.getDefaultGridOptions(),
             components: {
@@ -275,205 +259,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
             defaultColDef: {
                 editable: false,
-                wrapHeaderText: true
-            },
-            columnTypes: {
-                default: {
-                    sortable: true,
-                    filter: true,
-                    resizable: false,
-                    wrapText: false,
-                    comparator: function (valueA: any, valueB: any) {
-                        return Utilities.compareObj(valueA, valueB);
-                    }
-                },
-                html: {
-                    sortable: true,
-                    filter: true,
-                    resizable: false,
-                    wrapText: false,
-                    cellRenderer: 'htmlCellRenderer',
-                    filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId]?.value ?? '';
-                    },
-                    comparator: (valueA: any, valueB: any) => {
-                        const rowValueA = valueA.value ?? '';
-                        const rowValueB = valueB.value ?? '';
-                        return Utilities.compareObj(rowValueA, rowValueB);
-                    }
-                },
-                severity: {
-                    sortable: true,
-                    resizable: false,
-                    maxWidth: 18,
-                    cellClassRules: severityCellClassRules,
-                    headerClass: 'opfab-ag-header-with-no-padding',
-                    comparator: (valueA: any, valueB: any) => {
-                        valueA = this.severitySortValue.get(valueA);
-                        valueB = this.severitySortValue.get(valueB);
-                        if (valueA > valueB) {
-                            return 1;
-                        }
-                        if (valueA < valueB) {
-                            return -1;
-                        }
-                        return 0;
-                    }
-                },
-                typeOfState: {
-                    sortable: true,
-                    resizable: false,
-                    wrapText: false,
-                    cellStyle: (params) => {
-                        return {
-                            color: 'var(--opfab-color-' + params.value.color + ')'
-                        };
-                    },
-                    cellRenderer: (params: any) => params.value.stringValue,
-                    comparator: (valueA: any, valueB: any) => {
-                        if (valueA.stringValue < valueB.stringValue) {
-                            return -1;
-                        }
-                        if (valueA.stringValue > valueB.stringValue) {
-                            return 1;
-                        }
-                        return 0;
-                    },
-                    filter: true,
-                    filterValueGetter: (params: any) => params.data.typeOfState.stringValue
-                },
-                dateAndTime: {
-                    sortable: true,
-                    resizable: false,
-                    wrapText: false,
-                    cellRenderer: (params: any) => params.value.stringValue,
-                    comparator: (valueA: any, valueB: any) => {
-                        if (valueA.value < valueB.value) {
-                            return -1;
-                        }
-                        if (valueA.value > valueB.value) {
-                            return 1;
-                        }
-                        return 0;
-                    },
-                    filter: true,
-                    filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].stringValue;
-                    }
-                },
-                period: {
-                    sortable: true,
-                    resizable: false,
-                    wrapText: true,
-                    cellRenderer: 'htmlCellRenderer',
-                    comparator: (valueA: any, valueB: any) => {
-                        // First compare startDate
-                        if (valueA.value.startDate < valueB.value.startDate) {
-                            return -1;
-                        }
-                        if (valueA.value.startDate > valueB.value.startDate) {
-                            return 1;
-                        }
-                        // If startDate are equal, compare endDate
-                        if (valueA.value.endDate < valueB.value.endDate) {
-                            return -1;
-                        }
-                        if (valueA.value.endDate > valueB.value.endDate) {
-                            return 1;
-                        }
-
-                        return 0;
-                    },
-                    filter: true,
-                    filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].stringValue;
-                    }
-                },
-                responses: {
-                    sortable: true,
-                    comparator: (valueA: any, valueB: any) => {
-                        const responseA = valueA.value.map((response) => response.entityName).join(' ');
-                        const responseB = valueB.value.map((response) => response.entityName).join(' ');
-                        if (responseA < responseB) {
-                            return -1;
-                        }
-                        if (responseA > responseB) {
-                            return 1;
-                        }
-                        return 0;
-                    },
-                    filter: true,
-                    filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].value.map((response) => response.entityName).join(' ');
-                    },
-                    resizable: false,
-                    wrapText: false,
-                    cellRenderer: 'responsesCellRenderer'
-                },
-
-                // The cell should show a circle with the color defined in the field color,
-                // and the numerical value defined in the field value is used for sorting and filtering
-                // the use of agNumberColumnFilter is necessary to be able to filter the numerical value
-                // using, for example, the range filter
-                coloredCircle: {
-                    sortable: true,
-                    filter: 'agNumberColumnFilter',
-                    resizable: false,
-                    wrapText: false,
-                    cellStyle: {display: 'flex', 'justify-content': 'center'},
-                    cellRenderer: (params: any) => {
-                        return (
-                            '<div style="margin-top:10px;width: 20px; height: 20px;border-radius: 50%;background-color:' +
-                            params.value?.color +
-                            '"></div>'
-                        );
-                    },
-                    comparator: (valueA: any, valueB: any) => {
-                        if (valueA.value < valueB.value) {
-                            return -1;
-                        }
-                        if (valueA.value > valueB.value) {
-                            return 1;
-                        }
-                        return 0;
-                    },
-                    filterValueGetter: (params: any) => {
-                        return params.data[params.column.colId].value;
-                    }
-                },
-                responseFromMyEntities: {
-                    sortable: false,
-                    filter: false,
-                    resizable: false,
-                    width: 15,
-                    wrapText: false,
-                    cellRenderer: 'hasResponseCellRenderer'
-                },
-                acknowledgment: {
-                    sortable: false,
-                    filter: false,
-                    resizable: false,
-                    width: 15,
-                    wrapText: false,
-                    cellRenderer: 'acknowledgmentCellRenderer'
-                },
-                input: {
-                    cellRenderer: 'inputCellRenderer',
-                    sortable: false,
-                    filter: false,
-                    resizable: false
-                },
-                select: {
-                    cellRenderer: 'selectCellRenderer',
-                    sortable: false,
-                    filter: false,
-                    resizable: false
-                },
-                number: {
-                    sortable: true,
-                    filter: true,
-                    resizable: false
-                }
+                wrapHeaderText: true,
+                resizable: false
             },
             columnDefs: this.getColumnDefs(),
             paginationPageSize: this.pageSize,
@@ -497,25 +284,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private getColumnDefs() {
         return this.customCardListView.getColumnsDefinitionForAgGrid().map((columnDef) => {
-            if (columnDef.context.showTooltips) {
-                columnDef.tooltipComponent = CustomTooltipComponent;
-                if (columnDef.type === 'select') {
-                    // If the column is a select type, the value for the tooltip is the label of the selected options
-                    // or the value
-                    //    -  if no label is defined
-                    //    -  or if the selected value is not in the possible values
-                    columnDef.tooltipValueGetter = (params: ITooltipParams) => {
-                        const tooltipText =
-                            params.value?.possibleValues?.find((value: any) => value.value === params.value?.value) // find selected value label
-                                ?.label ?? params.value?.value;
-                        return tooltipText;
-                    };
-                } else {
-                    columnDef.tooltipValueGetter = (params: ITooltipParams) => {
-                        return params.value;
-                    };
-                }
-            }
+            // this is done here to keep customCardListView independent of Angular components
+            if (columnDef.tooltipValueGetter) columnDef.tooltipComponent = CustomTooltipComponent;
             return columnDef;
         });
     }
@@ -701,7 +471,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     private getInputColumnIds(): string[] {
         const allColumns = this.gridApi.getColumnDefs();
-        const inputColumns = allColumns.filter((col) => col.type === 'input' || col.type === 'select');
+        const inputColumns = allColumns.filter((col) => col.type === 'input');
         return inputColumns.map((col) => col.field);
     }
 

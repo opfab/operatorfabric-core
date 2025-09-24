@@ -7,12 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {CustomScreenDefinition} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {Card} from 'app/model/Card';
 import {TableRowBuilder} from './TableRowBuilder';
 import {FilterValues} from '../FilterValues';
 import {CardFilter} from './CardFilter';
 import {ResultTableExport} from './ResultTableExport';
+import {getColumnsDefinitionForAgGrid} from './ColumnDefinitions';
 
 export class ResultTable {
     private readonly customScreenDefinition: CustomScreenDefinition;
@@ -25,87 +26,6 @@ export class ResultTable {
         this.customScreenDefinition = customScreenDefinition;
         this.tableRowsBuilder = new TableRowBuilder(customScreenDefinition);
         this.cardFilter = new CardFilter();
-    }
-
-    public getColumnsDefinitionForAgGrid(): any[] {
-        const agGridColumns = [];
-        if (this.customScreenDefinition) {
-            this.customScreenDefinition.results.columns.forEach((column) => {
-                const col = {
-                    field: column.field,
-                    headerName: column.headerName,
-                    type: 'default',
-                    context: {}
-                };
-                if (column.minWidth) col['minWidth'] = column.minWidth;
-                if (column.flex) col['flex'] = column.flex;
-                if (column.showTooltips) col.context['showTooltips'] = true;
-                if (column.maxInputLength) col.context['maxInputLength'] = column.maxInputLength;
-                if (column.multiLinesInCell) {
-                    col['autoHeight'] = true;
-                    col['wrapText'] = true;
-                }
-
-                switch (column.fieldType) {
-                    case FieldType.BUSINESS_PERIOD:
-                        col.type = 'period';
-                        // Period is displayed on two lines in the cell
-                        col['autoHeight'] = true;
-                        col['wrapText'] = true;
-                        break;
-                    case FieldType.SEVERITY:
-                        col.headerName = '';
-                        col.type = 'severity';
-                        break;
-                    case FieldType.DATE_AND_TIME:
-                        col.type = 'dateAndTime';
-                        break;
-                    case FieldType.TYPE_OF_STATE:
-                        col.field = 'typeOfState';
-                        col.type = 'typeOfState';
-                        break;
-                    case FieldType.RESPONSES:
-                        col.field = 'responses';
-                        col.type = 'responses';
-                        break;
-                    case FieldType.RESPONSE_FROM_MY_ENTITIES:
-                        col.field = 'responseFromMyEntities';
-                        col.headerName = '';
-                        col.type = 'responseFromMyEntities';
-                        break;
-                    case FieldType.ACKNOWLEDGMENT:
-                        col.field = 'hasBeenAcknowledged';
-                        col.headerName = '';
-                        col.type = 'acknowledgment';
-                        break;
-                    case FieldType.STATE_NAME:
-                        col.type = 'stateName';
-                        break;
-                    case FieldType.PROCESS_NAME:
-                        col.type = 'processName';
-                        break;
-                    case FieldType.COLORED_CIRCLE:
-                        col.type = 'coloredCircle';
-                        break;
-                    case FieldType.INPUT:
-                        col.type = 'input';
-                        break;
-                    case FieldType.SELECT:
-                        col.type = 'select';
-                        break;
-                    case FieldType.HTML:
-                        col.type = 'html';
-                        break;
-                    case FieldType.NUMBER:
-                        col.type = 'number';
-                        break;
-                    default:
-                        break;
-                }
-                agGridColumns.push(col);
-            });
-        }
-        return agGridColumns;
     }
 
     public setFilters(filtersValue: FilterValues) {
@@ -138,7 +58,7 @@ export class ResultTable {
     public getDataForExport(): Array<any> {
         return new ResultTableExport(
             this.customScreenDefinition,
-            this.getColumnsDefinitionForAgGrid()
+            getColumnsDefinitionForAgGrid(this.customScreenDefinition)
         ).getDataForExport(this.results);
     }
 }
