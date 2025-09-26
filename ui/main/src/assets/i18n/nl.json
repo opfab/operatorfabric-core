@@ -186,6 +186,9 @@
                 "31": "ste",
                 "default": "ste"
             }
+        },
+        "tips": {
+            "hasAResponseFromYourEntity": "Uw entiteit heeft al gereageerd."
         }
     },
     "global": {
@@ -296,7 +299,6 @@
         "tips": {
             "acknowledged": "Bevestigd",
             "lttd": "Resterende tijd om te beslissen",
-            "hasAResponseFromYourEntity": "Uw entiteit heeft al gereageerd.",
             "loadingInProgress": "Kaart wordt geladen",
             "seeGroupedCards": "Open deze kaart om gegroepeerde kaarten te zien",
             "expirationDate": "Vervaldatum",
