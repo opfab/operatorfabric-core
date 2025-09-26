@@ -83,6 +83,9 @@ export class TableRowBuilder {
                 case FieldType.PROCESS_NAME:
                     data['processName'] = ProcessesService.getProcess(card.process)?.name;
                     break;
+                case FieldType.NUMBER_ARRAY:
+                    data[column.field] = this.getNumberArrayCell(card, column);
+                    break;
                 case FieldType.NUMBER:
                 case FieldType.STRING:
                     if (column.getValue) {
@@ -237,6 +240,19 @@ export class TableRowBuilder {
     private getColoredCircleCell(card: Card, field: string): ResultTableCell {
         const value = this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
         return {value: value.numericalValue, color: value.color};
+    }
+
+    private getNumberArrayCell(card: Card, column: Column): ResultTableCell {
+        let htmlValue = '';
+        let value = '';
+        if (column.getValue) value = column.getValue(card);
+        else {
+            value = this.getNestedField(card, column.cardField);
+        }
+        if (Array.isArray(value)) {
+            htmlValue = value.join('<br/>');
+        }
+        return {value, htmlValue};
     }
 
     private getHTMLCell(card: Card, column: Column): ResultTableCell {

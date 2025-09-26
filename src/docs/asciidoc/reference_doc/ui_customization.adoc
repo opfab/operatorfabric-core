@@ -444,6 +444,8 @@ For each field you want to display in the result table, define a column object. 
 - `DATE_AND_TIME`: Displays the date and time formatted according to the user's locale.
 - `HTML`: Renders the HTML contained in the `getValue` method.
 - `INPUT`: Displays an input field. The value of the input field will be used for response cards if the custom screen has response buttons (see below).
+- `NUMBER` : Displays a number.
+- `NUMBER_ARRAY` : Displays an array of numbers based on a json array.
 - `PROCESS_NAME`: Displays the name of the card's process.
 - `PUBLISHER`: Displays the publisher entity if the card is published by an entity, otherwise displays the user who published the card.
 - `RESPONSES`: Displays the list of entities that must respond, with the color indicating the severity of the response if the entity has responded. It uses the `entitiesRequiredToRespond` field of the card. If this field is empty, it will use the `entitiesAllowedToRespond` field of the card.

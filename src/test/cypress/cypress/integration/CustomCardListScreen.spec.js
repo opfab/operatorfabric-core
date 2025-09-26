@@ -122,7 +122,7 @@ describe('Custom Card List Screen', function () {
 
             cy.get('#opfab-custom-screen-table').find('#opfab-custom-screen-table-grid').should('exist');
             agGrid.countTableRows('#opfab-custom-screen-table-grid', 6);
-            cy.get('.ag-header-cell').should('be.visible').should('have.length', 9);
+            cy.get('.ag-header-cell').should('be.visible').should('have.length', 10);
             cy.get('#opfab-response-button-button1').should('exist').and('be.disabled');
             cy.get('#opfab-response-button-button2').should('exist').and('be.disabled');
             cy.get('#opfab-acknowledge-button').should('exist').and('be.disabled');

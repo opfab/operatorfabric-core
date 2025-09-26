@@ -430,6 +430,27 @@ describe('CustomScreenView - ResultTable', () => {
             ]);
         });
 
+        it('with the number array as HTML if field type is NUMBER_ARRAY', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'myfield',
+                        fieldType: FieldType.NUMBER_ARRAY,
+                        getValue: () => {
+                            return [4, 1];
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    severity: Severity.ALARM
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([{cardId: 'card1', myfield: {value: [4, 1], htmlValue: '4<br/>1'}}]);
+        });
         it('with state name and process name', async () => {
             const state = new State();
             state.name = 'State Name';

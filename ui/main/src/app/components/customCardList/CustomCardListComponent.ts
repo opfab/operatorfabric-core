@@ -256,7 +256,20 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 selectCellRenderer: SelectCellRendererComponent,
                 tooltipComponent: CustomTooltipComponent
             },
-
+            columnTypes: {
+                default: {},
+                acknowledgment: {},
+                coloredCircle: {},
+                dateAndTime: {},
+                html: {},
+                input: {},
+                numberArray: {},
+                period: {},
+                responseFromMyEntities: {},
+                responses: {},
+                severity: {},
+                typeOfState: {}
+            },
             defaultColDef: {
                 editable: false,
                 wrapHeaderText: true,

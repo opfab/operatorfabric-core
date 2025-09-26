@@ -71,6 +71,8 @@ export enum FieldType {
     DATE_AND_TIME = 'DATE_AND_TIME',
     HTML = 'HTML',
     INPUT = 'INPUT',
+    NUMBER = 'NUMBER',
+    NUMBER_ARRAY = 'NUMBER_ARRAY',
     PROCESS_NAME = 'PROCESS_NAME',
     PUBLISHER = 'PUBLISHER',
     RESPONSE_FROM_MY_ENTITIES = 'RESPONSE_FROM_MY_ENTITIES',
@@ -79,8 +81,7 @@ export enum FieldType {
     SEVERITY = 'SEVERITY',
     STATE_NAME = 'STATE_NAME',
     STRING = 'STRING',
-    TYPE_OF_STATE = 'TYPE_OF_STATE',
-    NUMBER = 'NUMBER'
+    TYPE_OF_STATE = 'TYPE_OF_STATE'
 }
 
 export enum HeaderFilter {
