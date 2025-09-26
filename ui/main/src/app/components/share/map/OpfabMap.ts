@@ -271,7 +271,7 @@ export abstract class OpfabMap {
 
     private validateLayerConfiguration(layer: any): boolean {
         if (!layer.type) {
-            logger.error(`Invalid XYZ layer configuration: missing url`);
+            logger.error(`Invalid layer type. details=${JSON.stringify(layer)}`);
             return false;
         }
 
@@ -387,8 +387,6 @@ export abstract class OpfabMap {
                 layer: layer,
                 matrixSet: matrixSet
             });
-            // Ensure CORS works consistently
-            (options as any).crossOrigin = 'anonymous';
 
             // Use opacity and zIndex from configuration
             const opacity = layerConfig?.opacity !== undefined ? layerConfig.opacity : 1;
