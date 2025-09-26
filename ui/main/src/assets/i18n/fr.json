@@ -187,6 +187,9 @@
                 "31": "ème",
                 "default": "ème"
             }
+        },
+        "tips": {
+            "hasAResponseFromYourEntity": "Votre entité a déjà répondu."
         }
     },
     "global": {
@@ -297,7 +300,6 @@
         "tips": {
             "acknowledged": "Acquittée",
             "lttd": "Temps restant pour décider",
-            "hasAResponseFromYourEntity": "Votre entité a déjà répondu.",
             "loadingInProgress": "Chargement de cartes en cours",
             "seeGroupedCards": "Ouvrez cette carte pour voir les cartes groupées",
             "expirationDate": "Date d'expiration",
