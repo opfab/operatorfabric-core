@@ -234,6 +234,33 @@ describe('CustomScreenView - ResultTable - Export', () => {
         expect(dataForExport).toEqual([{'html Field': 'contingencies'}]);
     });
 
+    it('Should export string separated with comma for NUMBER_ARRAY field type', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'numberArrayField',
+                    fieldType: FieldType.NUMBER_ARRAY,
+                    getValue: () => {
+                        return [1, 5, 9];
+                    }
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                startDate: new Date(),
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([{numberArrayField: '1,5,9'}]);
+    });
+
     it('Should contain list of entity names that have responded and not responded', () => {
         const resultTable = getResultTable({
             columns: [

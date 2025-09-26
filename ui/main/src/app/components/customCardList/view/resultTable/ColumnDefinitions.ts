@@ -64,6 +64,9 @@ export function getColumnsDefinitionForAgGrid(customScreenDefinition: CustomScre
                 case FieldType.NUMBER:
                     col.type = 'number';
                     break;
+                case FieldType.NUMBER_ARRAY:
+                    setColumnForNumberArray(col);
+                    break;
                 case FieldType.RESPONSE_FROM_MY_ENTITIES:
                     setColumnResponseFromMyEntities(col);
                     break;
@@ -199,6 +202,40 @@ function setColumnForInput(col: AgGridColDef) {
     col.sortable = false;
     col.filter = false;
     col.cellRenderer = 'inputCellRenderer';
+}
+
+function setColumnForNumberArray(col: AgGridColDef) {
+    col.type = 'numberArray';
+    col.filter = true;
+    col.autoHeight = true;
+    col.wrapText = true;
+    col.cellRenderer = 'htmlCellRenderer';
+    col.filterValueGetter = (params: any) => {
+        const v = params.data[params.column.colId]?.value;
+        return Array.isArray(v) ? v.join(' ') : '';
+    };
+    col.comparator = (valueA: any, valueB: any): number => {
+        // order the arrays, compare the first numbers and the following if equal
+        const arrayA = valueA.value ?? [];
+        const arrayB = valueB.value ?? [];
+        const len = Math.min(arrayA.length, arrayB.length);
+        for (let i = 0; i < len; i++) {
+            if (arrayA[i] < arrayB[i]) {
+                return -1;
+            }
+            if (arrayA[i] > arrayB[i]) {
+                return 1;
+            }
+        }
+        // If all compared numbers are equal, the shorter array is considered smaller
+        if (arrayA.length < arrayB.length) {
+            return -1;
+        }
+        if (arrayA.length > arrayB.length) {
+            return 1;
+        }
+        return 0;
+    };
 }
 
 function setColumnResponseFromMyEntities(col: AgGridColDef) {

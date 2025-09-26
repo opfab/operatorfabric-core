@@ -64,6 +64,11 @@ export class ResultTableExport {
                             cellValue = cellValue?.value;
                             row[column.headerName] = cellValue;
                             break;
+                        case 'numberArray':
+                            if (Array.isArray(cellValue.value)) {
+                                row[column.headerName] = cellValue.value.join(',');
+                            }
+                            break;
                         default:
                             if (cellValue?.stringValue) {
                                 cellValue = cellValue.stringValue;

@@ -302,12 +302,27 @@
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
-                    minWidth: 600,
-                    flex: 1
+                    flex: 2
+                },
+                {
+                    field: 'testNumberArray',
+                    headerName: "Test Number Array",
+                    fieldType: 'NUMBER_ARRAY',
+                    getValue: () => { // Get random number Array for testing the feature
+                        const length = Math.floor(Math.random() * 3) + 1;
+                        const arr = [];
+                        for (let i = 0; i < length; i++) {
+                            arr.push(Math.floor(Math.random() * 100));
+                        }
+                        return arr;
+
+                    }
+
                 },
                 {
                     headerName: 'ANSWERS',
                     fieldType: 'RESPONSES',
+                    minWidth: 200,
                     flex: 2
                 },
                 {
