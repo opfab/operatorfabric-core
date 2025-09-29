@@ -168,7 +168,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         let body = await this.processCardTemplate(card);
 
         if (emailToPlainText) {
-            body = htmlToText(body, {wordwrap: false});
+            body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
         }
 
         try {
