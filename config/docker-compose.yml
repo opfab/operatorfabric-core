@@ -165,6 +165,7 @@ services:
     volumes:
       - "./services/cards-external-diffusion.yml:/usr/app/config/docker.yml"
       - "./services/common.yml:/usr/app/config/common.yml"
+      - "./services/customHandlebarsHelpersExample.js:/usr/app/config/customHandlebarsHelpersExample.js"
   cards-reminder:
     container_name: cards-reminder
     image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"

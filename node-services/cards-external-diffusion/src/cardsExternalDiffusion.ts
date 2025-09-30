@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,6 +21,7 @@ import ConfigService from './domain/client-side/configService';
 import CardsExternalDiffusionDatabaseService from './domain/server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
 import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
+import {loadHelpers} from './domain/server-side/CustomHandlebarsHelpers';
 
 const app = express();
 app.disable('x-powered-by');
@@ -45,7 +46,6 @@ app.use(
 app.use(express.static('public'));
 const adminPort = config.get('operatorfabric.cardsExternalDiffusion.adminPort');
 const defaultLogLevel = config.get('operatorfabric.logConfig.logLevel');
-
 const logger = getLogger();
 
 const activeOnStartUp = config.get('operatorfabric.cardsExternalDiffusion.activeOnStartup');
@@ -55,6 +55,18 @@ const configService = new ConfigService(
     'config/serviceConfig.json',
     logger
 );
+
+// load custom handlebars helpers
+// Need to ignore Sonar rule btypescript:S4325 because it is necessary to use "any" here to avoid TypeScript errors
+const customHandlebarsHelpersFile = (config.get('operatorfabric.cardsExternalDiffusion') as any) //NOSONAR
+    ?.customHandlebarsHelpersFile;
+if (customHandlebarsHelpersFile && (customHandlebarsHelpersFile as string).length > 0) {
+    try {
+        loadHelpers(customHandlebarsHelpersFile as string, logger);
+    } catch (err) {
+        logger.error('Error loading custom handlebars helpers from ' + customHandlebarsHelpersFile, err);
+    }
+}
 
 const mailService = new SendMailService(config.get('operatorfabric.mail'));
 

@@ -35,6 +35,7 @@ operatorfabric:
   cardsExternalDiffusion:
     adminPort: 2106
     activeOnStartup: true
+    customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js
     defaultConfig:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
