@@ -67,6 +67,9 @@ export function getColumnsDefinitionForAgGrid(customScreenDefinition: CustomScre
                 case FieldType.NUMBER_ARRAY:
                     setColumnForNumberArray(col);
                     break;
+                case FieldType.PERIOD_ARRAY:
+                    setColumnForPeriodArray(col);
+                    break;
                 case FieldType.RESPONSE_FROM_MY_ENTITIES:
                     setColumnResponseFromMyEntities(col);
                     break;
@@ -215,7 +218,7 @@ function setColumnForNumberArray(col: AgGridColDef) {
         return Array.isArray(v) ? v.join(' ') : '';
     };
     col.comparator = (valueA: any, valueB: any): number => {
-        // order the arrays, compare the first numbers and the following if equal
+        // compare the first numbers and the following if equal
         const arrayA = valueA.value ?? [];
         const arrayB = valueB.value ?? [];
         const len = Math.min(arrayA.length, arrayB.length);
@@ -228,6 +231,47 @@ function setColumnForNumberArray(col: AgGridColDef) {
             }
         }
         // If all compared numbers are equal, the shorter array is considered smaller
+        if (arrayA.length < arrayB.length) {
+            return -1;
+        }
+        if (arrayA.length > arrayB.length) {
+            return 1;
+        }
+        return 0;
+    };
+}
+
+function setColumnForPeriodArray(col: AgGridColDef) {
+    col.type = 'periodArray';
+    col.filter = false;
+    col.autoHeight = true;
+    col.wrapText = true;
+    col.cellRenderer = 'htmlCellRenderer';
+    col.comparator = (valueA: any, valueB: any): number => {
+        // compare the first startDate and the following if equal
+        const arrayA = valueA.value ?? [];
+        const arrayB = valueB.value ?? [];
+        const len = Math.min(arrayA.length, arrayB.length);
+        for (let i = 0; i < len; i++) {
+            // First compare startDate
+            if (arrayA[i].startDate < arrayB[i].startDate) {
+                return -1;
+            }
+            if (arrayA[i].startDate > arrayB[i].startDate) {
+                return 1;
+            }
+        }
+        // is equal, compare endDate
+        for (let i = 0; i < len; i++) {
+            if (arrayA[i].endDate < arrayB[i].endDate) {
+                return -1;
+            }
+            if (arrayA[i].endDate > arrayB[i].endDate) {
+                return 1;
+            }
+        }
+
+        // If all compared periods are equal, the shorter array is considered smaller
         if (arrayA.length < arrayB.length) {
             return -1;
         }

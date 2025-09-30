@@ -451,6 +451,43 @@ describe('CustomScreenView - ResultTable', () => {
             const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
             expect(dataArray).toEqual([{cardId: 'card1', myfield: {value: [4, 1], htmlValue: '4<br/>1'}}]);
         });
+        it('with the period array as HTML if field type is PERIOD_ARRAY', () => {
+            const resultTable = getResultTable({
+                columns: [
+                    {
+                        field: 'myfield',
+                        fieldType: FieldType.PERIOD_ARRAY,
+                        getValue: () => {
+                            return [
+                                {startDate: new Date('2021-01-01T02:00'), endDate: new Date('2021-01-01T03:00')},
+                                {startDate: new Date('2025-03-01T02:00'), endDate: new Date('2025-06-01T08:00')}
+                            ];
+                        }
+                    }
+                ]
+            });
+            const cards = [
+                getOneLightCard({
+                    id: 'card1',
+                    severity: Severity.ALARM
+                })
+            ];
+            const dataArray = resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+            expect(dataArray).toEqual([
+                {
+                    cardId: 'card1',
+                    myfield: {
+                        value: [
+                            {startDate: new Date('2021-01-01T02:00'), endDate: new Date('2021-01-01T03:00')},
+                            {startDate: new Date('2025-03-01T02:00'), endDate: new Date('2025-06-01T08:00')}
+                        ],
+                        stringValue: '01/01/2021 2:00 AM - 01/01/2021 3:00 AM,03/01/2025 2:00 AM - 06/01/2025 8:00 AM',
+                        htmlValue:
+                            '<div class="opfab-no-extra-line-spacing">01/01/2021 2:00 AM<br/>01/01/2021 3:00 AM</div><div class="opfab-no-extra-line-spacing">03/01/2025 2:00 AM<br/>06/01/2025 8:00 AM</div>'
+                    }
+                }
+            ]);
+        });
         it('with state name and process name', async () => {
             const state = new State();
             state.name = 'State Name';

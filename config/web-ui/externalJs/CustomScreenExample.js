@@ -286,10 +286,14 @@
                     multiLinesInCell: true
                 },
                 {
-                    field: 'startDate',
-                    headerName: 'START DATE AS EPOCH',
+                    field: 'testNumber',
+                    headerName: 'Test Number',
                     cardField: 'startDate',
-                    fieldType: 'NUMBER'
+                    fieldType: 'NUMBER',
+                    getValue: (card) => { //get random number for testing the feature
+                        return Math.floor(Math.random() * 100);
+                    },
+                    flex: 1
                 },
                 {
                     fieldType: 'RESPONSE_FROM_MY_ENTITIES'
@@ -302,7 +306,25 @@
                     headerName: 'TITLE',
                     cardField: 'titleTranslated',
                     fieldType: 'STRING',
-                    flex: 2
+                    flex: 1
+                },
+                {
+                    field: 'testPeriodArray',
+                    headerName: "Test Period Array",
+                    fieldType: 'PERIOD_ARRAY',
+                    getValue: () => { // Get date period Array for testing the feature
+                        const length = Math.floor(Math.random() * 3) + 1;
+                        const arr = [];
+                        for (let i = 0; i < length; i++) {
+                            const startDate = Date.now() + Math.floor(Math.random() * 1000000000);
+                            const endDate = startDate + Math.floor(Math.random() * 1000000000);
+                            arr.push({ startDate, endDate });
+                        }
+                        return arr;
+
+                    },
+                    flex: 3
+
                 },
                 {
                     field: 'testNumberArray',
@@ -316,7 +338,8 @@
                         }
                         return arr;
 
-                    }
+                    },
+                    flex: 1
 
                 },
                 {
