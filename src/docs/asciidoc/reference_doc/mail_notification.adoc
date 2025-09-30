@@ -33,6 +33,8 @@ In email handlebars templates it is possible to refer card fields by prefixing w
   {{#card.data.networkContingencies}}
 ....
 
+=== Rich text content
+
 A specific handlebars helper `deltaToHtml` allows to display rich text content from a card containing the 'richMessage' field with the following syntax:
 
 ....
@@ -63,3 +65,44 @@ The custom parameters can then be referred in handlebars template prefixed with 
 {{#config.myParam1}}
 ....
 
+=== Custom Handlebars helpers
+
+As with the UI via the Frontend API, you can define custom Handlebars helpers for use in email templates. To do this, create a JavaScript file and assign an array of functions to the `helpers` variable. For example:
+
+
+```javascript
+
+function example_severityColor(severity) {
+    let color;
+    switch (severity) {
+        case 'ALARM':
+            color = 'red';
+            break;
+        case 'ACTION':
+            color = 'orange';
+            break;
+        case 'COMPLIANT':
+            color = 'green';
+            break;
+        case 'INFORMATION':
+            color = 'blue';
+            break;
+        default:
+            color = 'white';
+            break;
+    }
+    return color;
+}
+
+helpers = [example_severityColor];
+
+```
+Each helper will be registered with the same name as the helper function. To avoid conflicts with existing helpers, it is recommended to prefix your helper names (for example: `myapp_xxx`).
+
+Reference this file in the YAML configuration of the `cards-external-diffusion` service using the `customHandlebarsHelpersFile` parameter:
+
+```
+cardsExternalDiffusion:
+    adminPort: 2106
+    customHandlebarsHelpersFile: /path/to/the/file/containing/helpers.js
+```

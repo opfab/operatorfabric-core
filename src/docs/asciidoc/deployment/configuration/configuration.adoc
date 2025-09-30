@@ -393,6 +393,7 @@ The card external diffusion service can be configured with the following propert
 |operatorfabric.mail.auth.pass||yes|Mail server authentication password
 |operatorfabric.cardsExternalDiffusion.adminPort|2106|no|Listen port
 |operatorfabric.cardsExternalDiffusion.activeOnStartup|true|no|Flag to start the notification service on startup
+|operatorfabric.cardsExternalDiffusion.customHandlebarsHelpersFile||no|Path to a javascript file containing custom Handlebars helpers to be used in email templates
 |operatorfabric.cardsExternalDiffusion.defaultConfig.mailFrom||yes|Mail from address
 |operatorfabric.cardsExternalDiffusion.defaultConfig.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject title
 |operatorfabric.cardsExternalDiffusion.defaultConfig.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject title

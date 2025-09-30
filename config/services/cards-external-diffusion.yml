@@ -6,6 +6,7 @@ operatorfabric:
       user: guest
       pass: guest # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   cardsExternalDiffusion:
+    customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js
     defaultConfig:
       mailFrom: opfab@localhost.it
       subjectPrefix: 'Opfab card received '
