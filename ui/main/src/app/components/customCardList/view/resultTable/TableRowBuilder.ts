@@ -86,6 +86,9 @@ export class TableRowBuilder {
                 case FieldType.NUMBER_ARRAY:
                     data[column.field] = this.getNumberArrayCell(card, column);
                     break;
+                case FieldType.PERIOD_ARRAY:
+                    data[column.field] = this.getPeriodArrayCell(card, column);
+                    break;
                 case FieldType.NUMBER:
                 case FieldType.STRING:
                     if (column.getValue) {
@@ -264,6 +267,26 @@ export class TableRowBuilder {
             value = this.getNestedField(card, column.cardField);
         }
         return {value, htmlValue};
+    }
+    private getPeriodArrayCell(card: Card, column: Column): ResultTableCell {
+        let htmlValue = '';
+        let stringValue = '';
+        let value = '';
+        if (column.getValue) value = column.getValue(card);
+        else {
+            value = this.getNestedField(card, column.cardField);
+        }
+        if (Array.isArray(value)) {
+            for (const period of value) {
+                const start = DateTimeFormatterService.getFormattedDateAndTime(period.startDate);
+                const end = DateTimeFormatterService.getFormattedDateAndTime(period.endDate);
+                stringValue += start + ' - ' + (end ?? '') + ',';
+                htmlValue += '<div class="opfab-no-extra-line-spacing">' + start + '<br/>' + (end ?? '') + '</div>';
+            }
+        }
+        if (stringValue.endsWith(',')) stringValue = stringValue.slice(0, -1);
+
+        return {value, stringValue, htmlValue};
     }
 
     private isAcknowledgmentPossibleForCard(card: Card): boolean {

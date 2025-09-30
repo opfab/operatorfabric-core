@@ -261,6 +261,34 @@ describe('CustomScreenView - ResultTable - Export', () => {
         expect(dataForExport).toEqual([{numberArrayField: '1,5,9'}]);
     });
 
+    it('Should export period separated with comma for PERIOD_ARRAY field type', () => {
+        const resultTable = getResultTable({
+            columns: [
+                {
+                    field: 'testField',
+                    headerName: 'period',
+                    fieldType: FieldType.PERIOD_ARRAY,
+                    getValue: (card: Card) => [
+                        {startDate: new Date('2021-01-01T02:00'), endDate: new Date('2021-01-02T02:00')},
+                        {startDate: new Date('2021-02-01T02:00'), endDate: new Date('2021-02-02T02:00')}
+                    ]
+                }
+            ]
+        });
+        const cards = [
+            getOneLightCard({
+                process: 'processId1',
+                state: 'state1',
+                id: 'id1'
+            })
+        ];
+
+        resultTable.getDataArrayFromCards(cards, emptyChildCardsList);
+        const dataForExport = resultTable.getDataForExport();
+        expect(dataForExport).toEqual([
+            {period: '01/01/2021 2:00 AM - 01/02/2021 2:00 AM,02/01/2021 2:00 AM - 02/02/2021 2:00 AM'}
+        ]);
+    });
     it('Should contain list of entity names that have responded and not responded', () => {
         const resultTable = getResultTable({
             columns: [
