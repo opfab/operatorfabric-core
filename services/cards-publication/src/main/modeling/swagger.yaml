@@ -948,6 +948,7 @@ paths:
       responses:
         '200':
           description: OK
+  /cards-consultation/cards:
     post:
       tags:
         - cards
