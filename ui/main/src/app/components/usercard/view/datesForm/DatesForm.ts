@@ -76,11 +76,11 @@ export class DatesForm {
     private getDefaultValueForDate(field: string): number {
         switch (field) {
             case 'startDate':
-                return new Date().valueOf() + DatesForm.ONE_MINUTE;
+                return Date.now() + DatesForm.ONE_MINUTE;
             case 'lttd':
-                return new Date().valueOf() + DatesForm.ONE_DAY - DatesForm.ONE_MINUTE;
+                return Date.now() + DatesForm.ONE_DAY - DatesForm.ONE_MINUTE;
             default:
-                return new Date().valueOf() + DatesForm.ONE_DAY;
+                return Date.now() + DatesForm.ONE_DAY;
         }
     }
 

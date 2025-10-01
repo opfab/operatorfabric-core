@@ -48,7 +48,7 @@ const NB_MILLIS_IN_ONE_SECOND = 1000;
 
 export function getOneLightCard(lightCardTemplate?: any): Card {
     lightCardTemplate = lightCardTemplate ?? {};
-    const today = new Date().getTime();
+    const today = Date.now();
     const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
     return new Card(
         Guid.create().toString(),
@@ -99,7 +99,7 @@ export function getOneLightCard(lightCardTemplate?: any): Card {
 
 export function getOneCard(cardTemplate?: any): Card {
     cardTemplate = cardTemplate ?? {};
-    const today = new Date().getTime();
+    const today = Date.now();
     const startTime = today + 2 * NB_SECONDS_IN_ONE_MINUTE * NB_MILLIS_IN_ONE_SECOND;
     return new Card(
         cardTemplate.uid ?? Guid.create().toString(),
@@ -244,7 +244,7 @@ export function sendLightCard(card: Card) {
     OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
     OpfabStore.reset();
     RealTimeDomainService.init();
-    RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
+    RealTimeDomainService.setStartAndEndPeriod(0, Date.now() + 1000);
     opfabEventStreamServerMock.sendLightCard(card);
 }
 export function sendLightCards(cards: Card[]) {
@@ -252,7 +252,7 @@ export function sendLightCards(cards: Card[]) {
     OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
     OpfabStore.reset();
     RealTimeDomainService.init();
-    RealTimeDomainService.setStartAndEndPeriod(0, new Date().valueOf() + 1000);
+    RealTimeDomainService.setStartAndEndPeriod(0, Date.now() + 1000);
     cards.forEach((card) => opfabEventStreamServerMock.sendLightCard(card));
 }
 

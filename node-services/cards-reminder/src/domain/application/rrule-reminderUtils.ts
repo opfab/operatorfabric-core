@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
     let nextTime = -1;
 
     if (startingDate == null) {
-        startingDate = new Date().valueOf();
+        startingDate = Date.now();
     }
     if (card.timeSpans != null && card.timeSpans.length > 0) nextTime = -1;
     else if (startingDate > card.startDate) {

@@ -32,6 +32,6 @@ export class AcknowledgePermission {
     }
 
     private static isLttdExpired(card: Card): boolean {
-        return card.lttd != null && card.lttd - new Date().getTime() <= 0;
+        return card.lttd != null && card.lttd - Date.now() <= 0;
     }
 }

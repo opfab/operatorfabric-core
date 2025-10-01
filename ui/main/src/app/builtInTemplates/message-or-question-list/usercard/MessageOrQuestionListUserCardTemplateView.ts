@@ -74,7 +74,7 @@ export class MessageOrQuestionListUserCardTemplateView {
                 key: 'message_or_question_list.summary',
                 parameters: {summary: summary.length ? ' : ' + summary : ''}
             },
-            startDate: new Date().valueOf(),
+            startDate: Date.now(),
             data: {
                 id: id,
                 title: title,

@@ -78,7 +78,7 @@ export class UserPermissionsService {
     }
 
     private static isLttdExpired(card: Card): boolean {
-        return card.lttd != null && card.lttd - new Date().getTime() <= 0;
+        return card.lttd != null && card.lttd - Date.now() <= 0;
     }
 
     public static getUserEntitiesAllowedToRespond(

@@ -732,9 +732,9 @@ describe('UserCard view ', () => {
                         process: 'process1',
                         state: 'state1_1',
                         startDate: 0,
-                        endDate: new Date().valueOf() + 10000,
-                        lttd: new Date().valueOf() + 5000,
-                        expirationDate: new Date().valueOf() + 8000,
+                        endDate: Date.now() + 10000,
+                        lttd: Date.now() + 5000,
+                        expirationDate: Date.now() + 8000,
                         actions: [CardAction.KEEP_CHILD_CARDS]
                     }),
                     childCards: [
@@ -771,9 +771,9 @@ describe('UserCard view ', () => {
                         process: 'process1',
                         state: 'state1_1',
                         startDate: 0,
-                        endDate: new Date().valueOf() + 10000,
-                        lttd: new Date().valueOf() + 5000,
-                        expirationDate: new Date().valueOf() + 8000,
+                        endDate: Date.now() + 10000,
+                        lttd: Date.now() + 5000,
+                        expirationDate: Date.now() + 8000,
                         actions: [CardAction.KEEP_CHILD_CARDS]
                     }),
                     childCards: [
@@ -816,9 +816,9 @@ describe('UserCard view ', () => {
                         process: 'process1',
                         state: 'state1_1',
                         startDate: 0,
-                        endDate: new Date().valueOf() + 10000,
-                        lttd: new Date().valueOf() + 5000,
-                        expirationDate: new Date().valueOf() + 8000,
+                        endDate: Date.now() + 10000,
+                        lttd: Date.now() + 5000,
+                        expirationDate: Date.now() + 8000,
                         actions: [CardAction.KEEP_CHILD_CARDS]
                     }),
                     childCards: [

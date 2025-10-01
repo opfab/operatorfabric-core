@@ -68,7 +68,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
 
         this.eventSource.onmessage = (message) => {
             if (message.data === 'HEARTBEAT') {
-                this.lastheartbeatDate = new Date().valueOf();
+                this.lastheartbeatDate = Date.now();
                 logger.info(`EventStreamServer - HEARTBEAT received - Connection alive `, LogOption.LOCAL);
             } else if (message.data === 'INIT') {
                 if (this.firstSubscriptionInitDone) {
@@ -81,7 +81,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
                     this.firstSubscriptionInitDone = true;
                     this.streamInitDoneEvent.next();
                     this.streamInitDoneEvent.complete();
-                    this.lastheartbeatDate = new Date().valueOf();
+                    this.lastheartbeatDate = Date.now();
                 }
             } else this.businessEvents.next(message);
         };
@@ -101,9 +101,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     private checkHeartBeatReceive() {
         this.heartbeatReceptionIntervalId = setInterval(() => {
             logger.info(
-                'EventStreamServer - Last heart beat received ' +
-                    (new Date().valueOf() - this.lastheartbeatDate) +
-                    'ms ago',
+                'EventStreamServer - Last heart beat received ' + (Date.now() - this.lastheartbeatDate) + 'ms ago',
                 LogOption.LOCAL_AND_REMOTE
             );
         }, 60000);

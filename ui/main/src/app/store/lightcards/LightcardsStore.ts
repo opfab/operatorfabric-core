@@ -99,7 +99,7 @@ export class LightCardsStore {
             sample(interval(1000)),
             filter(
                 (results: Map<any, any>) =>
-                    new Date().valueOf() - this.timeOfLastDebounce > 1000 && // we only need to get cards if no debounce arise in 1 second
+                    Date.now() - this.timeOfLastDebounce > 1000 && // we only need to get cards if no debounce arise in 1 second
                     results.size - this.numberOfCardProcessedByPreviousDebounce > 20
             ), // and if there is enough new cards
 
@@ -117,7 +117,7 @@ export class LightCardsStore {
         return this.lightCardsEvents.pipe(
             takeUntil(this.unsubscribe$),
             debounceTime(LightCardsStore.DEBOUNCE_TIME_IN_MS),
-            tap(() => (this.timeOfLastDebounce = new Date().valueOf()))
+            tap(() => (this.timeOfLastDebounce = Date.now()))
         );
     }
 

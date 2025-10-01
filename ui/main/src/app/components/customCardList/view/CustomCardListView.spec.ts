@@ -243,7 +243,7 @@ describe('CustomCardListView', () => {
                 state: 'state1',
                 entitiesAllowedToRespond: ['entity1'],
                 id: 'id1',
-                startDate: new Date().valueOf()
+                startDate: Date.now()
             });
             const childCard = getOneLightCard({
                 process: 'process1',
@@ -252,7 +252,7 @@ describe('CustomCardListView', () => {
                 id: 'id2',
                 publisher: 'entity1',
                 severity: Severity.COMPLIANT,
-                startDate: new Date().valueOf()
+                startDate: Date.now()
             });
             sendLightCards([card, childCard]);
 

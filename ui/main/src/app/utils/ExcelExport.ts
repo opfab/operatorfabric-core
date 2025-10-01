@@ -34,6 +34,6 @@ export class ExcelExport {
         const data: Blob = new Blob([buffer], {
             type: EXCEL_TYPE
         });
-        saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+        saveAs(data, fileName + '_export_' + Date.now() + EXCEL_EXTENSION);
     }
 }

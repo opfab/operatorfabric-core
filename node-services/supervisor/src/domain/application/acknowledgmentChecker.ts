@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -111,7 +111,7 @@ export default class AcknowledgementChecker {
 
     private async sendUnacknowlegedCard(unackedCard: Card, missingAcks: string): Promise<any> {
         const card: Card = {...this.unackedCardTemplate};
-        card.startDate = new Date().valueOf();
+        card.startDate = Date.now();
         card.processInstanceId = unackedCard.id;
         if (unackedCard.publisherType === 'ENTITY') {
             card.entityRecipients = [unackedCard.publisher];

@@ -36,7 +36,7 @@ export class QuestionCardTemplateView {
                 }
             }
             responseHistory.push({
-                responseDate: new Date().getTime(),
+                responseDate: Date.now(),
                 response: response
             });
 

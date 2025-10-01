@@ -354,7 +354,7 @@ describe('AcknowledgePermission testing ', () => {
             'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is Write), ' +
             'lttd is not reached, isAcknowledgmentAllowed() must return false',
         () => {
-            const lttdInTheFuture = new Date().valueOf() + 100000;
+            const lttdInTheFuture = Date.now() + 100000;
             const cardWithLttd = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',
@@ -395,7 +395,7 @@ describe('AcknowledgePermission testing ', () => {
             'user can respond (user is a member of entity allowed to respond and user rights for the state of the response is Write), ' +
             'lttd is reached, isAcknowledgmentAllowed() must return true',
         () => {
-            const lttdInThePast = new Date().valueOf() - 100000;
+            const lttdInThePast = Date.now() - 100000;
             const cardWithLttd = getOneCard({
                 process: 'testProcess',
                 processVersion: '1',

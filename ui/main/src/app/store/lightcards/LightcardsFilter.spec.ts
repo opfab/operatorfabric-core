@@ -27,9 +27,9 @@ describe('NewFilterService ', () => {
             getSeveralLightCards(1, {
                 process: 'process1',
                 state: 'first',
-                startDate: new Date().valueOf(),
+                startDate: Date.now(),
                 endDate: null,
-                publishDate: new Date().valueOf(),
+                publishDate: Date.now(),
                 severity: Severity.ALARM,
                 hasBeenAcknowledged: false,
                 hasChildCardFromCurrentUserEntity: false,
@@ -40,9 +40,9 @@ describe('NewFilterService ', () => {
             getSeveralLightCards(1, {
                 process: 'process1',
                 state: 'second',
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR,
+                startDate: Date.now(),
+                endDate: Date.now() + ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR,
                 severity: Severity.ACTION,
                 hasBeenAcknowledged: false,
                 hasChildCardFromCurrentUserEntity: true,
@@ -53,9 +53,9 @@ describe('NewFilterService ', () => {
             getSeveralLightCards(1, {
                 process: 'process2',
                 state: 'state2',
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + 2 * ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR * 2,
+                startDate: Date.now(),
+                endDate: Date.now() + 2 * ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR * 2,
                 severity: Severity.COMPLIANT,
                 hasBeenAcknowledged: true,
                 hasChildCardFromCurrentUserEntity: false
@@ -65,9 +65,9 @@ describe('NewFilterService ', () => {
             getSeveralLightCards(1, {
                 process: 'process3',
                 state: 'state3',
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + 3 * ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR * 3,
+                startDate: Date.now(),
+                endDate: Date.now() + 3 * ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR * 3,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: true,
                 hasChildCardFromCurrentUserEntity: false
@@ -80,9 +80,9 @@ describe('NewFilterService ', () => {
         let cards = getFourCards();
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf() + 36 * ONE_HOUR,
-                endDate: new Date().valueOf() + 48 * ONE_HOUR,
-                publishDate: new Date().valueOf() + ONE_HOUR * 25,
+                startDate: Date.now() + 36 * ONE_HOUR,
+                endDate: Date.now() + 48 * ONE_HOUR,
+                publishDate: Date.now() + ONE_HOUR * 25,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: true,
                 hasChildCardFromCurrentUserEntity: false
@@ -90,9 +90,9 @@ describe('NewFilterService ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf() + 31 * ONE_HOUR,
-                endDate: new Date().valueOf() + 48 * ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR * 31,
+                startDate: Date.now() + 31 * ONE_HOUR,
+                endDate: Date.now() + 48 * ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR * 31,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: true,
                 hasChildCardFromCurrentUserEntity: false
@@ -100,9 +100,9 @@ describe('NewFilterService ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf() + 31 * ONE_HOUR,
-                endDate: new Date().valueOf() + 48 * ONE_HOUR,
-                publishDate: new Date().valueOf() + ONE_HOUR * 51,
+                startDate: Date.now() + 31 * ONE_HOUR,
+                endDate: Date.now() + 48 * ONE_HOUR,
+                publishDate: Date.now() + ONE_HOUR * 51,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: true,
                 hasChildCardFromCurrentUserEntity: false
@@ -187,8 +187,8 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                start: new Date().valueOf() + 0.5 * ONE_HOUR,
-                end: new Date().valueOf() + 10 * ONE_HOUR
+                start: Date.now() + 0.5 * ONE_HOUR,
+                end: Date.now() + 10 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(3);
@@ -201,8 +201,8 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                start: new Date().valueOf() + 1.5 * ONE_HOUR,
-                end: new Date().valueOf() + 30 * ONE_HOUR
+                start: Date.now() + 1.5 * ONE_HOUR,
+                end: Date.now() + 30 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(3);
@@ -215,8 +215,8 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                start: new Date().valueOf() + 2.5 * ONE_HOUR,
-                end: new Date().valueOf() + 20 * ONE_HOUR
+                start: Date.now() + 2.5 * ONE_HOUR,
+                end: Date.now() + 20 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(1);
@@ -227,8 +227,8 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                start: new Date().valueOf() + 20 * ONE_HOUR,
-                end: new Date().valueOf() + 30 * ONE_HOUR
+                start: Date.now() + 20 * ONE_HOUR,
+                end: Date.now() + 30 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(1);
@@ -239,7 +239,7 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                end: new Date().valueOf() - 30 * ONE_HOUR
+                end: Date.now() - 30 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(1);
@@ -250,7 +250,7 @@ describe('NewFilterService ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
-                start: new Date().valueOf() + 50 * ONE_HOUR
+                start: Date.now() + 50 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(1);
@@ -262,7 +262,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date before all date => should return the four cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() - 4 * ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: Date.now() - 4 * ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(4);
             expect(filteredCards).toContain(cards[0]);
@@ -274,7 +274,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date before two date => should return two cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() - 1.5 * ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: Date.now() - 1.5 * ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(2);
             expect(filteredCards).toContain(cards[0]);
@@ -284,7 +284,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date after all date => should return no cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: new Date().valueOf() + ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {start: Date.now() + ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(0);
         });
@@ -292,7 +292,7 @@ describe('NewFilterService ', () => {
         it('Filter with end date after  all date => should return the four cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() + 4 * ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: Date.now() + 4 * ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(4);
             expect(filteredCards).toContain(cards[0]);
@@ -304,7 +304,7 @@ describe('NewFilterService ', () => {
         it('Filter with end date before two date => should return two cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() - 1.5 * ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: Date.now() - 1.5 * ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(2);
             expect(filteredCards).toContain(cards[2]);
@@ -314,7 +314,7 @@ describe('NewFilterService ', () => {
         it('Filter with end date before all date => should return no cards   ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: new Date().valueOf() - 5 * ONE_HOUR});
+            service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {end: Date.now() - 5 * ONE_HOUR});
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(0);
         });
@@ -323,8 +323,8 @@ describe('NewFilterService ', () => {
             const cards = getFourCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
             service.updateFilter(FilterType.PUBLISHDATE_FILTER, true, {
-                start: new Date().valueOf() - 2.5 * ONE_HOUR,
-                end: new Date().valueOf() - 0.5 * ONE_HOUR
+                start: Date.now() - 2.5 * ONE_HOUR,
+                end: Date.now() - 0.5 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
             expect(filteredCards.length).toBe(2);

@@ -15,9 +15,9 @@ import {GroupedLightCardsService} from './GroupedLightCardsService';
 describe('GroupedLightCardsService ', () => {
     function getCardWithTag(tags: string[]) {
         return getSeveralLightCards(1, {
-            startDate: new Date().valueOf(),
+            startDate: Date.now(),
             endDate: null,
-            publishDate: new Date().valueOf(),
+            publishDate: Date.now(),
             severity: Severity.ALARM,
             hasBeenAcknowledged: false,
             hasChildCardFromCurrentUserEntity: false,
