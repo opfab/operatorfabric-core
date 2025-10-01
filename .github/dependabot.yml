@@ -1,6 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
+    cooldown:
+      semver-major-days: 5
+      semver-minor-days: 2
+      semver-patch-days: 0
     directory: "/ui/main/"
     groups:
       angular:
