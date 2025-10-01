@@ -193,7 +193,7 @@ export class CardBuilder {
             this.startDate = this.specificCardInformation.card.startDate;
         }
         if (!this.startDate) {
-            this.startDate = new Date().valueOf();
+            this.startDate = Date.now();
             this.startDateEqualsToCurrentDate = true;
         }
         if (!this.inputFieldVisibility.get(InputFieldName.EndDate)) {
@@ -213,7 +213,7 @@ export class CardBuilder {
             return false;
         }
 
-        const currentDate = new Date().valueOf();
+        const currentDate = Date.now();
         if (lttd && (lttd < startDate || lttd <= currentDate)) {
             this.displayErrorMessage('userCard.error.lttdBeforeStartDate', undefined);
             return false;

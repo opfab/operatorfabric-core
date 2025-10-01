@@ -25,7 +25,7 @@ describe('Sound decisions', () => {
 
     describe('Check sound and system notification', () => {
         it('Sound and system notification for new card ', (done) => {
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             const card = getOneLightCard({publishDate: publishDate});
             NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
             expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTrue();
@@ -37,7 +37,7 @@ describe('Sound decisions', () => {
             'No sound and system notification for card with action is NOT_NOTIFIED and user entities does not contains ' +
                 'card publisher entity',
             (done) => {
-                const publishDate = new Date().getTime();
+                const publishDate = Date.now();
                 const card1 = getOneLightCard({
                     publishDate: publishDate,
                     publisher: 'ENTITY1_FR',
@@ -51,7 +51,7 @@ describe('Sound decisions', () => {
         );
 
         it('No sound and system notification for cards recently sent by the user', (done) => {
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             const card1 = getOneLightCard({publishDate: publishDate});
             const card2 = getOneLightCard({publishDate: publishDate});
             NotificationDecision.setLastUserAction(publishDate - NotificationDecision.ERROR_MARGIN);
@@ -65,7 +65,7 @@ describe('Sound decisions', () => {
         });
 
         it('No sound and no system notification if card has been read', (done) => {
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             const card = getOneLightCard({
                 hasBeenRead: true,
                 publishDate: publishDate
@@ -79,7 +79,7 @@ describe('Sound decisions', () => {
         });
 
         it('No sound and no system notification if card is too old', (done) => {
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             const card = getOneLightCard({
                 hasBeenRead: false,
                 publishDate: publishDate
@@ -91,9 +91,9 @@ describe('Sound decisions', () => {
         });
 
         it('System notification and NO sound for card sent before last user action', (done) => {
-            const publishDate = new Date().getTime() - NotificationDecision.ERROR_MARGIN;
+            const publishDate = Date.now() - NotificationDecision.ERROR_MARGIN;
             const card = getOneLightCard({publishDate: publishDate});
-            NotificationDecision.setLastUserAction(new Date().getTime());
+            NotificationDecision.setLastUserAction(Date.now());
             expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
             expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTrue();
             done();
@@ -103,19 +103,19 @@ describe('Sound decisions', () => {
             /* This use case arises when a different user updates a card originally created by the current user.
              * We detect this scenario by verifying that the card's publish date is later than the date when the current user sent the card.
              */
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             let card = getOneLightCard({publishDate: publishDate});
             NotificationDecision.addSentCard(card.id);
             expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
             expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
 
             jasmine.clock().tick(1000);
-            card = {...card, publishDate: new Date().getTime()};
+            card = {...card, publishDate: Date.now()};
             expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeFalse();
             expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeFalse();
 
             jasmine.clock().tick(NotificationDecision.ERROR_MARGIN);
-            card = {...card, publishDate: new Date().getTime()};
+            card = {...card, publishDate: Date.now()};
             expect(NotificationDecision.isSoundToBePlayedForCard(card)).toBeTrue();
             expect(NotificationDecision.isSystemNotificationToBeShownForCard(card)).toBeTrue();
             done();
@@ -183,7 +183,7 @@ describe('Sound decisions', () => {
         });
 
         it('Clean sent cards after configured retention period', (done) => {
-            const publishDate = new Date().getTime();
+            const publishDate = Date.now();
             const card1 = getOneLightCard({publishDate: publishDate});
             NotificationDecision.addSentCard(card1.id);
             expect(NotificationDecision.hasSentCard(card1.id)).toBeTrue();
@@ -194,7 +194,7 @@ describe('Sound decisions', () => {
     });
 
     it('Sound and system notification for child card with PROPAGATE_READ_ACK_TO_PARENT_CARD', (done) => {
-        const publishDate = new Date().getTime();
+        const publishDate = Date.now();
         const card = getOneLightCard({
             publishDate: publishDate,
             parentCardId: '123456',
@@ -205,7 +205,7 @@ describe('Sound decisions', () => {
     });
 
     it('No Sound and no system notification for child card without PROPAGATE_READ_ACK_TO_PARENT_CARD', (done) => {
-        const publishDate = new Date().getTime();
+        const publishDate = Date.now();
         const card = getOneLightCard({
             publishDate: publishDate,
             parentCardId: '123456',
@@ -216,7 +216,7 @@ describe('Sound decisions', () => {
     });
 
     it('No sound and no system notification if child card with PROPAGATE_READ_ACK_TO_PARENT_CARD is in lastSentCards', (done) => {
-        const publishDate = new Date().getTime();
+        const publishDate = Date.now();
         const card = getOneLightCard({
             publishDate: publishDate,
             parentCardId: '123456',
@@ -231,7 +231,7 @@ describe('Sound decisions', () => {
         /* This use case arises when a different user from the same entity modifies a response child card originally sent by the current user.
          * We detect this scenario by verifying that the card's publish date is later than the date when the current user sent the child card.
          */
-        const publishDate = new Date().getTime();
+        const publishDate = Date.now();
         let card = getOneLightCard({
             publishDate: publishDate,
             parentCardId: '123456',
@@ -241,11 +241,11 @@ describe('Sound decisions', () => {
         expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
 
         jasmine.clock().tick(1000);
-        card = {...card, publishDate: new Date().getTime()};
+        card = {...card, publishDate: Date.now()};
         expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeFalse();
 
         jasmine.clock().tick(NotificationDecision.ERROR_MARGIN);
-        card = {...card, publishDate: new Date().getTime()};
+        card = {...card, publishDate: Date.now()};
         expect(NotificationDecision.isNotificationNeededForChildCard(card)).toBeTrue();
         done();
     });

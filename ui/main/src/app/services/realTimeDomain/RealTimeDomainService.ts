@@ -240,7 +240,7 @@ export class RealTimeDomainService {
     }
 
     public static shiftIfNecessaryDomainUsingOverlap(): void {
-        const currentDate = new Date().valueOf();
+        const currentDate = Date.now();
         // shift domain one minute before change of cycle
         let domainDuration = {};
         if (currentDate > RealTimeDomainService.currentDomain.endDate - 60 * 1000) {

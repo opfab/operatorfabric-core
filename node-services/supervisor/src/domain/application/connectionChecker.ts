@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -137,7 +137,7 @@ export default class ConnectionChecker {
         if (entityResp.isValid()) entityName = entityResp.getData().name;
         else this.logger.info('GetEntity Response not valid');
         const card = {...this.disconnectedCardTemplate};
-        card.startDate = new Date().valueOf();
+        card.startDate = Date.now();
         card.processInstanceId = disconnected;
         card.entityRecipients = recipients;
         card.data = {disconnected: entityName, minutes};

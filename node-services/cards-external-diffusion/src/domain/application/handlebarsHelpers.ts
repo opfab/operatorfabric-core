@@ -346,7 +346,7 @@ export class HandlebarsHelper {
 
     private static registerNow(): void {
         Handlebars.registerHelper('now', function () {
-            return new Date().valueOf();
+            return Date.now();
         });
     }
 

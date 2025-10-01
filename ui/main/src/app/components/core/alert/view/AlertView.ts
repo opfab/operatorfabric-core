@@ -40,11 +40,11 @@ export class AlertView {
         else this.alertPage.message = message.message;
         logger.debug(`AlertMessage : ${this.alertPage.message}`, LogOption.LOCAL_AND_REMOTE);
         this.alertPage.backgroundColor = this.getBackgroundColor(message.level);
-        this.lastMessageDate = new Date().valueOf();
+        this.lastMessageDate = Date.now();
         if (message.level !== MessageLevel.ALARM || this.alarmMessageAutoClose)
             setTimeout(() => {
                 // to avoid closing a message which replace a previous one
-                if (new Date().valueOf() - this.lastMessageDate >= 5000) this.alertPage.display = false;
+                if (Date.now() - this.lastMessageDate >= 5000) this.alertPage.display = false;
             }, 5000);
     }
 

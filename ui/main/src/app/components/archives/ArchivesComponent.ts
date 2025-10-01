@@ -204,7 +204,7 @@ export class ArchivesComponent implements OnDestroy, OnInit {
                         this.results = page.content;
 
                         if (this.isCollapsibleUpdatesActivated && this.hasResult) {
-                            const requestID = new Date().valueOf();
+                            const requestID = Date.now();
                             this.lastRequestID = requestID;
                             this.loadUpdatesByCardId(requestID, isAdminModeChecked);
                         } else {

@@ -32,7 +32,7 @@ export class UrlLockService {
     }
 
     public disconnectOtherUsers(): void {
-        this.store.setItem(this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL, JSON.stringify(new Date().getTime()));
+        this.store.setItem(this.DISCONNECTED_BY_NEW_USER_USING_SAME_URL, JSON.stringify(Date.now()));
     }
 
     public setDisconnectSignalListener(listener: Function): void {

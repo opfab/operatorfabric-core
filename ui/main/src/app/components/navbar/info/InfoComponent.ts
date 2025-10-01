@@ -47,7 +47,7 @@ export class InfoComponent implements OnInit {
     }
 
     updateTime(): void {
-        this.timeToDisplay = DateTimeFormatterService.getFormattedTime(new Date().valueOf());
+        this.timeToDisplay = DateTimeFormatterService.getFormattedTime(Date.now());
         setTimeout(() => {
             this.updateTime();
             this.changeDetector.markForCheck();

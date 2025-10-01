@@ -130,8 +130,8 @@ export class LightCardsFilter {
             },
             false,
             {
-                start: new Date().valueOf() - LightCardsFilter.TWO_HOURS_IN_MILLIS,
-                end: new Date().valueOf() + LightCardsFilter.TWO_DAYS_IN_MILLIS
+                start: Date.now() - LightCardsFilter.TWO_HOURS_IN_MILLIS,
+                end: Date.now() + LightCardsFilter.TWO_DAYS_IN_MILLIS
             }
         );
     }

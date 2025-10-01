@@ -41,7 +41,7 @@ export class NotificationDecision {
         NotificationDecision.systemNotificationEnabled.set(Severity.COMPLIANT, false);
         NotificationDecision.systemNotificationEnabled.set(Severity.INFORMATION, false);
         NotificationDecision.lastSentCards = new Map();
-        NotificationDecision.lastUserAction = new Date().valueOf();
+        NotificationDecision.lastUserAction = Date.now();
 
         // Avoid having multiple intervals running in parallel
         // in unit tests.In production, this is not a problem as the
@@ -60,7 +60,7 @@ export class NotificationDecision {
     }
 
     public static addSentCard(cardId: string) {
-        NotificationDecision.lastSentCards.set(cardId, new Date().valueOf());
+        NotificationDecision.lastSentCards.set(cardId, Date.now());
     }
 
     public static hasSentCard(cardId: string) {
@@ -145,7 +145,7 @@ export class NotificationDecision {
     }
 
     private static checkCardIsRecent(card: Card): boolean {
-        return new Date().getTime() - card.publishDate <= NotificationDecision.RECENT_THRESHOLD;
+        return Date.now() - card.publishDate <= NotificationDecision.RECENT_THRESHOLD;
     }
 
     private static checkSentCardIsRecentlyPublished(card: Card): boolean {
@@ -153,7 +153,7 @@ export class NotificationDecision {
     }
 
     private static cleanSentCards() {
-        const now = new Date().valueOf();
+        const now = Date.now();
         const toRemove = [];
         NotificationDecision.lastSentCards.forEach((timestamp, cardId) => {
             if (timestamp <= now - NotificationDecision.RECENT_THRESHOLD) toRemove.push(cardId);

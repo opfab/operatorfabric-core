@@ -145,7 +145,7 @@ export class SoundNotificationService {
 
     public static clearOutstandingNotifications() {
         this.clearSignal.next(null);
-        NotificationDecision.setLastUserAction(new Date().valueOf());
+        NotificationDecision.setLastUserAction(Date.now());
     }
 
     public static handleLoadedCard(card: Card) {

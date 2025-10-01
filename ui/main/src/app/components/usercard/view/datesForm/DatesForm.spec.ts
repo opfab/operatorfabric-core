@@ -88,11 +88,9 @@ describe('UserCard DatesForm', () => {
         it('startDate = current date + one minute if startDate visible', async () => {
             await setProcessConfigWithUserCardConfig({startDateVisible: true});
             datesForm.initDatesBeforeTemplateScriptsExecution('process1', 'state1_1');
-            expect(datesForm.getDateValue(InputFieldName.StartDate)).toEqual(new Date().valueOf() + 60000);
+            expect(datesForm.getDateValue(InputFieldName.StartDate)).toEqual(Date.now() + 60000);
             datesForm.initDatesAfterTemplateScriptsExecution();
-            expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.StartDate]).toEqual(
-                new Date().valueOf() + 60000
-            );
+            expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.StartDate]).toEqual(Date.now() + 60000);
         });
         it('startDate = undefined if startDate not visible', async () => {
             await setProcessConfigWithUserCardConfig({startDateVisible: false});
@@ -102,10 +100,10 @@ describe('UserCard DatesForm', () => {
         it('endDate = current date + 24 hours if endDate Visible ', async () => {
             await setProcessConfigWithUserCardConfig({endDateVisible: true});
             datesForm.initDatesBeforeTemplateScriptsExecution('process1', 'state1_1');
-            expect(datesForm.getDateValue(InputFieldName.EndDate)).toEqual(new Date().valueOf() + 60000 * 60 * 24);
+            expect(datesForm.getDateValue(InputFieldName.EndDate)).toEqual(Date.now() + 60000 * 60 * 24);
             datesForm.initDatesAfterTemplateScriptsExecution();
             expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.EndDate]).toEqual(
-                new Date().valueOf() + 60000 * 60 * 24
+                Date.now() + 60000 * 60 * 24
             );
         });
         it('endDate = undefined if endDate not visible ', async () => {
@@ -116,7 +114,7 @@ describe('UserCard DatesForm', () => {
         it('lttd =  current date + 24 hours - 60 seconds if lttd visible (end date - 60s)', async () => {
             await setProcessConfigWithUserCardConfig({lttdVisible: true});
             datesForm.initDatesBeforeTemplateScriptsExecution('process1', 'state1_1');
-            const wantedDate = new Date().valueOf() + 60000 * 60 * 24 - 60000;
+            const wantedDate = Date.now() + 60000 * 60 * 24 - 60000;
 
             expect(datesForm.getDateValue(InputFieldName.Lttd)).toEqual(wantedDate);
             datesForm.initDatesAfterTemplateScriptsExecution();
@@ -131,12 +129,10 @@ describe('UserCard DatesForm', () => {
             await setProcessConfigWithUserCardConfig({expirationDateVisible: true});
             datesForm.initDatesBeforeTemplateScriptsExecution('process1', 'state1_1');
 
-            expect(datesForm.getDateValue(InputFieldName.ExpirationDate)).toEqual(
-                new Date().valueOf() + 60000 * 60 * 24
-            );
+            expect(datesForm.getDateValue(InputFieldName.ExpirationDate)).toEqual(Date.now() + 60000 * 60 * 24);
             datesForm.initDatesAfterTemplateScriptsExecution();
             expect(userCardUIControlMock.setDate_FctCalls[InputFieldName.ExpirationDate]).toEqual(
-                new Date().valueOf() + 60000 * 60 * 24
+                Date.now() + 60000 * 60 * 24
             );
         });
         it('expirationDate = undefined if expirationDate not visible ', async () => {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,15 +17,14 @@ export class RemindDatabaseServiceStub extends RemindDatabaseService {
 
     public async getItemsToRemindNow(): Promise<any[]> {
         if (RemindDatabaseServiceStub.simulateError) throw new Error('error test');
-        const toRemind = this.reminders.filter((reminder) => reminder.timeForReminding <= new Date().valueOf());
+        const toRemind = this.reminders.filter((reminder) => reminder.timeForReminding <= Date.now());
         return await Promise.resolve(toRemind);
     }
 
     public async getAllCardsWithReminder(): Promise<any[]> {
         const toRemind = Array.from(RemindDatabaseServiceStub.cards.values()).filter(
             (card) =>
-                card.secondsBeforeTimeSpanForReminder != null &&
-                (card.endDate == null || card.endDate >= new Date().valueOf())
+                card.secondsBeforeTimeSpanForReminder != null && (card.endDate == null || card.endDate >= Date.now())
         );
         return await Promise.resolve(toRemind);
     }

@@ -24,9 +24,9 @@ describe('Lightcards sorter ', () => {
         let cards: Card[] = new Array();
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf(),
+                startDate: Date.now(),
                 endDate: null,
-                publishDate: new Date().valueOf(),
+                publishDate: Date.now(),
                 severity: Severity.ACTION,
                 hasBeenAcknowledged: false,
                 hasBeenRead: true,
@@ -35,9 +35,9 @@ describe('Lightcards sorter ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR,
+                startDate: Date.now(),
+                endDate: Date.now() + ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: false,
                 hasBeenRead: true,
@@ -46,9 +46,9 @@ describe('Lightcards sorter ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + 2 * ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR * 3,
+                startDate: Date.now(),
+                endDate: Date.now() + 2 * ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR * 3,
                 severity: Severity.ALARM,
                 hasBeenAcknowledged: true,
                 hasBeenRead: false,
@@ -57,9 +57,9 @@ describe('Lightcards sorter ', () => {
         );
         cards = cards.concat(
             getSeveralLightCards(1, {
-                startDate: new Date().valueOf(),
-                endDate: new Date().valueOf() + 3 * ONE_HOUR,
-                publishDate: new Date().valueOf() - ONE_HOUR * 2,
+                startDate: Date.now(),
+                endDate: Date.now() + 3 * ONE_HOUR,
+                publishDate: Date.now() - ONE_HOUR * 2,
                 severity: Severity.INFORMATION,
                 hasBeenAcknowledged: true,
                 hasBeenRead: false,

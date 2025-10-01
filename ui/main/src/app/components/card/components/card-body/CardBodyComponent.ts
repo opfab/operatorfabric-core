@@ -394,7 +394,7 @@ export class CardBodyComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     private isLttdExpired(): boolean {
-        return this.card.lttd != null && this.card.lttd - new Date().getTime() <= 0;
+        return this.card.lttd != null && this.card.lttd - Date.now() <= 0;
     }
 
     public isThereEnoughSpaceToShowCard() {

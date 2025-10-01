@@ -26,7 +26,7 @@ export class CardSender {
         if (setCurrentDateForStartDate) {
             cardForPublish = {
                 ...cardForPublish,
-                startDate: new Date().valueOf()
+                startDate: Date.now()
             };
         }
         try {
@@ -92,7 +92,7 @@ export class CardSender {
         if (setCurrentDateForStartDate) {
             cardForPublish = {
                 ...cardForPublish,
-                startDate: new Date().valueOf()
+                startDate: Date.now()
             };
         }
         return await firstValueFrom(CardsService.postCard(cardForPublish));

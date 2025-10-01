@@ -11,7 +11,7 @@ import {NearestDomainId} from './NearestDomainId';
 
 describe('NearestDomainId', () => {
     let nearestDomainId: NearestDomainId;
-    const startDate: number = new Date().getTime();
+    const startDate: number = Date.now();
     const twelveHoursInMillis = 1000 * 60 * 60 * 12;
     const threeMonthsInMillis = 1000 * 60 * 60 * 24 * 30 * 3;
     const oneAndHalfDaysInMillis = 1000 * 60 * 60 * 24 * 1.5;

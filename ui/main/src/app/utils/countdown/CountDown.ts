@@ -23,7 +23,7 @@ export class CountDown {
 
     private computeCountDown() {
         if (this.stop) return;
-        const remindingTime = this.endTime - new Date().valueOf();
+        const remindingTime = this.endTime - Date.now();
         if (remindingTime < 0) {
             this.counting = false;
             this.ended = true;
