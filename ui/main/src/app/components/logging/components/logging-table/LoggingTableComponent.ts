@@ -91,7 +91,11 @@ export class LoggingTableComponent implements OnDestroy {
             },
             defaultColDef: {
                 editable: false,
-                wrapHeaderText: true
+                wrapHeaderText: true,
+                filterParams: {
+                    // the backend filtering supports only one condition
+                    maxNumConditions: 1
+                }
             },
             columnTypes: {
                 timeColumn: {
