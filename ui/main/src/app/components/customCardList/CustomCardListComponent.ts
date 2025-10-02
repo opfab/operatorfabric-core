@@ -369,8 +369,13 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         filterValues.processes = [...this.headerForm.get('processes').value];
         filterValues.typesOfStateFilter = [...this.headerForm.get('typeOfState').value];
         filterValues.readAndAckFilter = [...this.headerForm.get('readAndAck').value];
-        filterValues.includeCardsWithResponseFromMyEntities = this.headerForm.get('responseFromMyEntities').value;
-        filterValues.includeCardsWithResponsesFromAllEntities = this.headerForm.get('responseFromAllEntities').value;
+        if (this.responseFromMyEntitiesFilterVisible) {
+            filterValues.includeCardsWithResponseFromMyEntities = this.headerForm.get('responseFromMyEntities').value;
+        } else filterValues.includeCardsWithResponseFromMyEntities = true;
+        if (this.responseFromAllEntitiesFilterVisible) {
+            filterValues.includeCardsWithResponsesFromAllEntities =
+                this.headerForm.get('responseFromAllEntities').value;
+        } else filterValues.includeCardsWithResponsesFromAllEntities = true;
         this.customCardListView.setFilters(filterValues);
         this.customCardListView.search();
     }
