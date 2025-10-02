@@ -18,7 +18,7 @@
         "jwt-decode": "4.0.0",
         "amqp-connection-manager": "4.1.15",
         "amqplib": "0.10.9",
-        "winston": "3.17.0",
+        "winston": "3.18.3",
         "winston-daily-rotate-file": "5.0.0"
     },
     "devDependencies": {
