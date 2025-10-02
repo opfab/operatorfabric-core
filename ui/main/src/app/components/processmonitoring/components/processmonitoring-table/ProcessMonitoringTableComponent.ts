@@ -96,15 +96,16 @@ export class ProcessmonitoringTableComponent {
             },
             defaultColDef: {
                 editable: false,
-                wrapHeaderText: true
+                wrapHeaderText: true,
+                filterParams: {
+                    // the backend filtering supports only one condition
+                    maxNumConditions: 1
+                }
             },
             columnTypes: {
                 summaryColumn: {
                     sortable: false,
                     filter: true,
-                    filterParams: {
-                        suppressAndOrCondition: true
-                    },
                     wrapText: false,
                     autoHeight: true,
                     flex: 1,
