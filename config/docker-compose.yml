@@ -11,7 +11,7 @@ services:
       - "./mongodump:/dump"
   rabbitmq:
     container_name: rabbit
-    image: "lfeoperatorfabric/of-rabbitmq:SNAPSHOT"
+    image: "lfeoperatorfabric/of-rabbitmq:4.10.0-RC.RELEASE"
     hostname: rabbit
     environment: 
       RABBITMQ_DEFAULT_PASS: for_test_only    # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!! 
@@ -75,7 +75,7 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-users-service:4.10.0-RC.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -90,7 +90,7 @@ services:
     - "./services/common.yml:/config/common.yml"
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-businessconfig-service:4.10.0-RC.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -105,7 +105,7 @@ services:
      - "./services/businessconfig.yml:/config/application.yml"
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication-service:4.10.0-RC.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -120,7 +120,7 @@ services:
       - "./services/cards-publication.yml:/config/application.yml"
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation-service:4.10.0-RC.RELEASE"
     depends_on:
       - mongodb
       - rabbitmq
@@ -136,7 +136,7 @@ services:
       - "./services/cards-consultation.yml:/config/application.yml"
   web-ui:
     container_name: web-ui
-    image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+    image: "lfeoperatorfabric/of-web-ui:4.10.0-RC.RELEASE"
     ports:
     - "2002:80"
       # To avoid resolving hostname in docker network for nginx
@@ -155,7 +155,7 @@ services:
       - "../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
-    image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-external-diffusion-service:4.10.0-RC.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "2106:2106"
@@ -168,7 +168,7 @@ services:
       - "./services/customHandlebarsHelpersExample.js:/usr/app/config/customHandlebarsHelpersExample.js"
   cards-reminder:
     container_name: cards-reminder
-    image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-reminder:4.10.0-RC.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "2107:2107"
@@ -180,7 +180,7 @@ services:
       - "./services/common.yml:/usr/app/config/common.yml"
   supervisor:
     container_name: supervisor
-    image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
+    image: "lfeoperatorfabric/of-supervisor:4.10.0-RC.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "2108:2108"
@@ -194,7 +194,7 @@ services:
 #     - "./services/custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
-    image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-devices-service:4.10.0-RC.RELEASE"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -211,7 +211,7 @@ services:
 # External application example
   ext-app:
     container_name: external-app
-    image: "lfeoperatorfabric/of-external-app:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-app:4.10.0-RC.RELEASE"
     ports:
       - "8090:8090"
     volumes:
@@ -220,7 +220,7 @@ services:
 # Dummy external devices using Modbus Protocol
   dummy-modbus-device_1:
     container_name: dummy-modbus-device_1
-    image: "lfeoperatorfabric/of-dummy-modbus-device:SNAPSHOT"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.10.0-RC.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4031:4030"
@@ -228,7 +228,7 @@ services:
       - "./certificates:/certificates_to_add"
   dummy-modbus-device_2:
     container_name: dummy-modbus-device_2
-    image: "lfeoperatorfabric/of-dummy-modbus-device:SNAPSHOT"
+    image: "lfeoperatorfabric/of-dummy-modbus-device:4.10.0-RC.RELEASE"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "4032:4030"
