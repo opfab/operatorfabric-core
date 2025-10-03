@@ -126,7 +126,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     onFilterChanged(ev) {
-        this.filterChange.next({filterModel: this.gridApi.getFilterModel(), colId: ev.columns[0]?.colId});
+        this.filterChange.next({filterModel: this.gridApi.getFilterModel(), colId: ev?.columns[0]?.colId});
     }
 
     onGridReady(params) {
@@ -308,5 +308,12 @@ export class ProcessmonitoringTableComponent {
             'opfab.processMonitoring.columnsVisibility',
             JSON.stringify(this.columnsVisibilityPreference)
         );
+    }
+
+    public resetAllAgGridFilters() {
+        if (this.gridApi) {
+            this.gridApi.setFilterModel(null);
+            this.onFilterChanged(null);
+        }
     }
 }

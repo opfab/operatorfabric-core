@@ -146,6 +146,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
     modalRef: NgbModalRef;
     @ViewChild('exportInProgress') exportTemplate: ElementRef;
+    @ViewChild('processMonitoringTable') processMonitoringTable: ProcessmonitoringTableComponent;
 
     listOfProcessesForFilter = [];
     listOfProcessesForRequest = [];
@@ -630,6 +631,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     toggleShowMap() {
+        this.processMonitoringTable?.resetAllAgGridFilters();
+
         this.isMapViewActivated = !this.isMapViewActivated;
         this.sendFilterQuery(0, !this.isMapViewActivated);
     }
