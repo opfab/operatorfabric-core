@@ -34,7 +34,7 @@
             "selectStateText": "Sélectionner un État",
             "selectTagText": "Sélectionner une Étiquette",
             "selectEntityText": "Sélectionner une Entité",
-            "selectReadAndAckText": "Sélectionner si lu ou acquitté",
+            "selectReadAndAckText": "Sélectionner si lue ou acquittée",
             "selectTypeOfStateText": "Sélectionner un État de processus",
             "toDateBeforeFromDate": "La date 'Jusqu'à' doit être postérieure à la date 'À partir de'.",
             "businessDateRange": "PÉRIODE MÉTIER",
