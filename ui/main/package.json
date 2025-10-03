@@ -1,6 +1,6 @@
 {
   "name": "operatorfabric-ui-main",
-  "opfabVersion": "SNAPSHOT",
+  "opfabVersion": "4.10.0-RC.RELEASE",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -52,7 +52,7 @@
     "lodash-es": "4.17.21",
     "ng-event-source": "1.0.14",
     "ngx-daterangepicker-material": "6.0.4",
-    "ol": "10.6.1", 
+    "ol": "10.6.1",
     "proj4": "2.19.10",
     "quill": "2.0.3",
     "rrule": "2.8.1",
