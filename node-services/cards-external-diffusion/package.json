@@ -30,7 +30,7 @@
         "jwks-rsa": "3.2.0",
         "jwt-decode": "4.0.0",
         "mongodb": "6.20.0",
-        "nodemailer": "7.0.6",
+        "nodemailer": "7.0.7",
         "quill": "2.0.3",
         "winston": "3.18.3",
         "winston-daily-rotate-file": "5.0.0"
