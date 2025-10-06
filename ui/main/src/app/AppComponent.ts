@@ -13,7 +13,6 @@ import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
 import {OpfabEventStreamService} from './services/events/OpfabEventStreamService';
 import {ApplicationLoadingComponent} from './components/core/application-loading/ApplicationLoadingComponent';
-import {NgIf} from '@angular/common';
 import {AlertComponent} from './components/core/alert/AlertComponent';
 import {NavbarComponent} from './components/navbar/NavbarComponent';
 import {RouterOutlet} from '@angular/router';
@@ -28,7 +27,6 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     styleUrls: ['./AppComponent.scss'],
     imports: [
         ApplicationLoadingComponent,
-        NgIf,
         AlertComponent,
         NavbarComponent,
         RouterOutlet,

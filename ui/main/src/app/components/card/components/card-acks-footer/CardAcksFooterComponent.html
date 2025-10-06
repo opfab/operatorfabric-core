@@ -19,13 +19,14 @@
         triggers="click"
         [autoClose]="'outside'"
         popoverClass="opfab-popover-wide">
+        @for (entity of listEntitiesToAck; track entity.id) {
         <span
-            *ngFor="let entity of listEntitiesToAck"
             style="display: inline-block"
             [ngStyle]="{color: entity.color}"
             [id]="'opfab-card-acknowledged-entity-' + entity.id"
             >&nbsp; {{ entity.name }} &nbsp;</span
         >
+        }
     </div>
 </div>
 
@@ -37,7 +38,8 @@
         </tr>
         <tr>
             <td id="opfab-acknowledged-list" style="vertical-align: top; padding: 10px">
-                <div *ngFor="let entity of acknowledgedList">
+                @for (entity of acknowledgedList; track entity.id) {
+                <div>
                     <span
                         style="white-space: nowrap"
                         [ngStyle]="{color: entity.color}"
@@ -45,9 +47,11 @@
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
                 </div>
+                }
             </td>
             <td id="opfab-not-acknowledged-list" style="vertical-align: top; padding: 10px">
-                <div *ngFor="let entity of notAcknowledgedList">
+                @for (entity of notAcknowledgedList; track entity.id) {
+                <div>
                     <span
                         style="white-space: nowrap"
                         [ngStyle]="{color: entity.color}"
@@ -55,6 +59,7 @@
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
                 </div>
+                }
             </td>
         </tr>
     </table>

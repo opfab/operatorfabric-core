@@ -7,7 +7,9 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div id="opfab-div-card-template" class="opfab-card-template-rendering">
-    <of-spinner *ngIf="isLoadingSpinnerToDisplay"></of-spinner>
+    @if (isLoadingSpinnerToDisplay) {
+    <of-spinner></of-spinner>
+    }
     <div
         [hidden]="isLoadingSpinnerToDisplay"
         id="opfab-div-card-template-processed"

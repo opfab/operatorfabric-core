@@ -13,13 +13,12 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../../../../store/OpfabStore';
-import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-feed-search',
     templateUrl: './FeedSearchComponent.html',
     styleUrls: ['./FeedSearchComponent.scss'],
-    imports: [NgIf, FormsModule, ReactiveFormsModule]
+    imports: [FormsModule, ReactiveFormsModule]
 })
 export class FeedSearchComponent implements OnInit {
     private readonly translateService = inject(TranslateService);

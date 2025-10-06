@@ -27,10 +27,11 @@
         </div>
     </div>
 </form>
+@if (loginMessage) {
 <div
     id="opfab-login-msg"
     class="opfab-input-invalid"
-    *ngIf="loginMessage"
     style="margin: auto; margin-top: 50px; width: 600px; text-align: center">
     {{ loginMessage.i18n.key | translate: loginMessage.i18n.parameters }}
 </div>
+}

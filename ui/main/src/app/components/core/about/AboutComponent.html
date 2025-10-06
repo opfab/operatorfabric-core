@@ -7,10 +7,12 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="about-application-list" style="margin-top: 10px">
-    <div *ngFor="let elem of aboutElements">
+    @for (elem of aboutElements; track elem.name) {
+    <div>
         <span class="about-application-name">{{ elem.name }}</span>
         <span> - </span>
         <span>{{ elem.version }}</span>
     </div>
+    }
     <br />
 </div>

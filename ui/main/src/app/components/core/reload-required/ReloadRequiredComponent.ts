@@ -10,14 +10,13 @@
 import {Component, OnInit} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-reload-required',
     styleUrls: ['./ReloadRequiredComponent.scss'],
     templateUrl: './ReloadRequiredComponent.html',
-    imports: [NgIf, TranslateModule]
+    imports: [TranslateModule]
 })
 export class ReloadRequiredComponent implements OnInit {
     displayReloadRequired: boolean;

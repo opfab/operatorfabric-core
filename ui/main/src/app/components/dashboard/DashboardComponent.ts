@@ -15,7 +15,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {ConfigService} from 'app/services/config/ConfigService';
 import {TimelineButtonsComponent} from '../share/timeline-buttons/TimelineButtonsComponent';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgFor, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {CardComponent} from '../card/CardComponent';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
@@ -25,7 +25,7 @@ declare const opfab: any;
     selector: 'of-dashboard',
     templateUrl: './DashboardComponent.html',
     styleUrls: ['./DashboardComponent.scss'],
-    imports: [TimelineButtonsComponent, TranslateModule, NgIf, NgFor, NgClass, NgbPopover, CardComponent]
+    imports: [TimelineButtonsComponent, TranslateModule, NgClass, NgbPopover, CardComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
     private readonly modalService = inject(NgbModal);

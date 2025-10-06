@@ -12,7 +12,6 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {Subject, debounceTime, takeUntil} from 'rxjs';
 import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/FeedFilterAndSortIconsComponent';
 import {FeedSearchComponent} from './feed-search/FeedSearchComponent';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 
@@ -20,7 +19,7 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
     selector: 'of-filters',
     templateUrl: './FiltersComponent.html',
     styleUrls: ['./FiltersComponent.scss'],
-    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, NgIf, TranslateModule]
+    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, TranslateModule]
 })
 export class FiltersComponent implements OnInit, OnDestroy {
     @Input() filterActive: boolean;

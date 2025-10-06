@@ -38,7 +38,6 @@ import {TemplateCssService} from '@ofServices/templateCss/TemplateCssService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {CurrentUserStore} from '../../../store/CurrentUserStore';
 import {UsersService} from '@ofServices/users/UsersService';
-import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/SpinnerComponent';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
 
@@ -48,7 +47,7 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     styleUrls: ['./TemplateRenderingComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, SpinnerComponent]
+    imports: [SpinnerComponent]
 })
 export class TemplateRenderingComponent implements OnChanges, OnInit, OnDestroy, AfterViewChecked {
     private readonly element = inject(ElementRef);

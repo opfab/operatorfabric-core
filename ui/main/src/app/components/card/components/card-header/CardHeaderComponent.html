@@ -7,23 +7,25 @@
 
 <div class="flex-container">
     <div id="opfab-card-response-header-left" style="width: 30%; padding-left: 15px; margin-top: 2px">
-        <span id="opfab-card-response-header-status" *ngIf="!!cardState.type">
+        @if (!!cardState.type) {
+        <span id="opfab-card-response-header-status">
             <span translate>response.status</span> :
             <!--The translate directive should stay there rather than in the element see OC-1603-->
-            <span id="opfab-card-type-of-state" style="color:var(--opfab-color-{{ typeOfStateColor }})"
+            <span id="opfab-card-type-of-state" [style]="'color:var(--opfab-color-' + typeOfStateColor + ')'"
                 >{{ 'shared.typeOfState.' + cardState.type | translate }}</span
             >
         </span>
-        <span *ngIf="!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')">
-            |
-        </span>
-        <span *ngIf="!!card.lttd">
+        } @if (!!card.lttd && !!cardState.type && (!lttdExpiredIsTrue || cardState.type !== 'FINISHED')) {
+        <span> | </span>
+        } @if (!!card.lttd) {
+        <span>
             <of-countdown
                 [lttd]="card.lttd"
                 [showExpiredIcon]="showExpiredIcon"
                 [showExpiredLabel]="showExpiredLabel"
                 [expiredLabel]="expiredLabel"></of-countdown>
         </span>
+        }
     </div>
 
     <div
@@ -36,13 +38,14 @@
         triggers="click"
         [autoClose]="'outside'"
         popoverClass="opfab-popover-arrow-shift-right">
-        <span translate>response.answers</span> :
+        <span translate>response.answers</span> : @for (entity of entitiesForCardHeader; track entity.id; let isLast =
+        $last) {
         <span
-            *ngFor="let entity of entitiesForCardHeader; let isLast = last"
             [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')', 'text-align': 'center'}"
             [id]="'opfab-card-header-entity-' + entity.id">
             &nbsp; {{ entity.name }} &nbsp;
         </span>
+        }
     </div>
 </div>
 
@@ -54,7 +57,8 @@
         </tr>
         <tr>
             <td id="opfab-answered-list" style="vertical-align: top; padding: 10px">
-                <div *ngFor="let entity of answeredList">
+                @for (entity of answeredList; track entity.id) {
+                <div>
                     <span
                         style="white-space: nowrap"
                         [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')'}"
@@ -62,9 +66,11 @@
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
                 </div>
+                }
             </td>
             <td id="opfab-not-answered-list" style="vertical-align: top; padding: 10px">
-                <div *ngFor="let entity of notAnsweredList">
+                @for (entity of notAnsweredList; track entity.id) {
+                <div>
                     <span
                         style="white-space: nowrap"
                         [ngStyle]="{color: 'var(--opfab-color-' + entity.color + ')'}"
@@ -72,6 +78,7 @@
                         >&nbsp; {{ entity.name }} &nbsp;</span
                     >
                 </div>
+                }
             </td>
         </tr>
     </table>

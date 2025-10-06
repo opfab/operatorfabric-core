@@ -14,20 +14,21 @@
 
     <div class="text-center navbar-info-block" style="margin-left: 5px">
         <div class="user-name" style="font-size: 15px; text-align: right; padding-right: 8px">{{ userName }}</div>
-        <div
-            *ngIf="userEntitiesToDisplay"
-            class="user-entities"
-            style="padding-top: 10px; margin-left: 5px; text-align: center; padding-right: 8px">
+        @if (userEntitiesToDisplay) {
+        <div class="user-entities" style="padding-top: 10px; margin-left: 5px; text-align: center; padding-right: 8px">
             {{ userEntitiesToDisplay }}
         </div>
-        <div *ngIf="!userEntitiesToDisplay" class="user-entities" style="padding-top: 5px; padding-right: 8px">
-            &nbsp;
-        </div>
+        } @else {
+        <div class="user-entities" style="padding-top: 5px; padding-right: 8px">&nbsp;</div>
+        }
     </div>
+    @if (userEntitiesToDisplayTrimmed) {
     <div
-        *ngIf="userEntitiesToDisplayTrimmed"
         class="opfab-tooltip-content bottom"
         style="max-width: 280px; text-align: left; white-space: normal; width: max-content">
-        <div *ngFor="let entity of userEntities" style="margin: 5px 10px 5px 10px">{{ entity }}</div>
+        @for (entity of userEntities; track entity) {
+        <div style="margin: 5px 10px 5px 10px">{{ entity }}</div>
+        }
     </div>
+    }
 </div>

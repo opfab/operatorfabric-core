@@ -20,16 +20,13 @@
         class="ag-theme-opfab"
         [enableCellTextSelection]="true">
     </ag-grid-angular>
-
-    <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+    @if (gridApi) {
+    <div class="opfab-pagination" style="padding-bottom: 5px">
         <div style="width: 200px; margin-top: 15px">
             <select (change)="onPageSizeChanged($event.target)" id="opfab-page-size-select">
-                <option
-                    *ngFor="let option of paginationPageSizeOptions"
-                    [value]="option"
-                    [attr.selected]="option === pageSize ? true : null">
-                    {{ option }}
-                </option>
+                @for (option of paginationPageSizeOptions;track option) {
+                <option [value]="option" [attr.selected]="option === pageSize ? true : null">{{ option }}</option>
+                }
             </select>
             <label for="opfab-page-size-select" translate>&nbsp;shared.pageSize</label>
         </div>
@@ -38,8 +35,8 @@
             <span translate> shared.resultsNumber </span> : {{ totalElements }}
         </div>
         <div style="width: 40%; margin-top: 5px">
+            @if (totalPages > 1) {
             <ngb-pagination
-                *ngIf="totalPages > 1"
                 [collectionSize]="totalElements"
                 [page]="page"
                 [pageSize]="pageSize"
@@ -47,6 +44,7 @@
                 [maxSize]="3"
                 [rotate]="true">
             </ngb-pagination>
+            }
         </div>
         <div style="width: 50%; text-align: right; padding-right: 8px">
             <div
@@ -59,4 +57,5 @@
             </div>
         </div>
     </div>
+    }
 </div>

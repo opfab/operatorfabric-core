@@ -15,14 +15,13 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 import * as _ from 'lodash-es';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {NgIf, NgFor} from '@angular/common';
 
 @Component({
     selector: 'of-info',
     templateUrl: './InfoComponent.html',
     styleUrls: ['./InfoComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgFor]
+    imports: []
 })
 export class InfoComponent implements OnInit {
     private readonly changeDetector = inject(ChangeDetectorRef);

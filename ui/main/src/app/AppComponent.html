@@ -9,17 +9,18 @@
 <div class="app-content opfab-bgcolor">
     <of-application-loading (applicationLoadedDone)="onApplicationLoaded()"> </of-application-loading>
 
-    <of-alert *ngIf="applicationLoaded"> </of-alert>
-
-    <of-navbar *ngIf="applicationLoaded"></of-navbar>
-
-    <router-outlet *ngIf="applicationLoaded"></router-outlet>
-
-    <of-connection-lost *ngIf="applicationLoaded"> </of-connection-lost>
+    @if (applicationLoaded) {
+    <of-alert> </of-alert>
+    <of-navbar></of-navbar>
+    <router-outlet></router-outlet>
+    <of-connection-lost> </of-connection-lost>
+    }
 
     <of-session-end> </of-session-end>
 
-    <of-reload-required *ngIf="applicationLoaded"></of-reload-required>
+    @if (applicationLoaded) {
+    <of-reload-required></of-reload-required>
+    }
 </div>
 
 <!-- This element is used by Cypress tests to make sure actual tests are not launched until the application has

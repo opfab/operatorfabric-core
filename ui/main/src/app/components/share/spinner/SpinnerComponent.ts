@@ -19,7 +19,6 @@ import {
     inject
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -27,7 +26,7 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './SpinnerComponent.html',
     styleUrls: ['./SpinnerComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule]
+    imports: [TranslateModule]
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
     private readonly modalService = inject(NgbModal);
