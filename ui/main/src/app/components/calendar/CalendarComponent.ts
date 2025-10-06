@@ -24,14 +24,13 @@ import rrulePlugin from '@fullcalendar/rrule';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {OpfabStore} from '../../store/OpfabStore';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
-import {NgIf} from '@angular/common';
 import {CardComponent} from '../card/CardComponent';
 
 @Component({
     selector: 'of-calendar',
     templateUrl: './CalendarComponent.html',
     styleUrls: ['./CalendarComponent.scss'],
-    imports: [NgIf, FullCalendarModule, CardComponent]
+    imports: [FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy {
     private readonly modalService = inject(NgbModal);

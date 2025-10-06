@@ -19,7 +19,6 @@ import {SelectedCard} from '@ofServices/selectedCard/model/SelectedCard';
 import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
-import {NgIf} from '@angular/common';
 import {CardBodyComponent} from './components/card-body/CardBodyComponent';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {TranslateModule} from '@ngx-translate/core';
@@ -30,7 +29,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-card',
     templateUrl: './CardComponent.html',
     styleUrls: ['./CardComponent.scss'],
-    imports: [NgIf, CardBodyComponent, SpinnerComponent, TranslateModule]
+    imports: [CardBodyComponent, SpinnerComponent, TranslateModule]
 })
 export class CardComponent implements OnInit, OnDestroy {
     protected modalService = inject(NgbModal);

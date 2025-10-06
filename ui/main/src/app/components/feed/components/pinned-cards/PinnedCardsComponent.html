@@ -7,7 +7,8 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 <div class="opfab-pinned-cards">
     <div id="of-pinned-cards">
-        <div class="opfab-pinned-card" *ngFor="let pinned of visiblePinnedCards" style="white-space: nowrap">
+        @for (pinned of visiblePinnedCards; track pinned.id) {
+        <div class="opfab-pinned-card" style="white-space: nowrap">
             <div style="display: flex">
                 <span
                     class="opfab-bg-sev-{{ pinned.severity.toString() | lowercase }}"
@@ -18,10 +19,11 @@
                 <em class="fas fa-thumbtack" style="padding-left: 4px; margin-top: 4px"></em>
             </div>
         </div>
+        }
     </div>
+    @if (areThereTooManyCardsForWindow()) {
     <span
         id="of-pinned-cards-popover"
-        *ngIf="areThereTooManyCardsForWindow()"
         container="body"
         #p1="ngbPopover"
         [ngbPopover]="hiddenCardsTemplate"
@@ -30,18 +32,20 @@
         popoverClass="opfab-popover"
         >...</span
     >
+    }
 </div>
 <ng-template #hiddenCardsTemplate>
-    <div class="opfab-pinned-card opfab-hidden-pinned-card" *ngFor="let pinned of hiddenPinnedCards">
+    @for (pinned of hiddenPinnedCards; track pinned.id) {
+    <div class="opfab-pinned-card opfab-hidden-pinned-card">
         <span class="opfab-bg-sev-{{ pinned.severity.toString() | lowercase }}" (click)="select(pinned.id)"
             >{{ pinned.titleTranslated }}</span
         >
         <em class="fas fa-thumbtack" style="padding-left: 4px"></em>
     </div>
-    <div
-        *ngIf="areThereTooManyHiddenCards()"
-        style="text-align: right; font-weight: bold; margin-top: 0px; margin-right: 10px">
+    } @if (areThereTooManyHiddenCards()) {
+    <div style="text-align: right; font-weight: bold; margin-top: 0px; margin-right: 10px">
         ... {{ pinnedCards.length - maxVisiblePinnedCards - maxHiddenPinnedCards }}
         <span translate> feed.moreCards </span>
     </div>
+    }
 </ng-template>

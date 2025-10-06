@@ -15,7 +15,6 @@ import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {RealtimeUsersView} from 'app/components/realtimeusers/view/RealtimeUsersView';
 import {RealtimePage} from 'app/components/realtimeusers/view/RealtimePage';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgFor} from '@angular/common';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 
@@ -23,7 +22,7 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     selector: 'of-realtimeusers',
     templateUrl: './RealtimeUsersComponent.html',
     styleUrls: ['./RealtimeUsersComponent.scss'],
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, SpinnerComponent, MultiSelectComponent, NgFor]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, SpinnerComponent, MultiSelectComponent]
 })
 export class RealtimeUsersComponent implements OnInit, OnDestroy {
     private readonly configServer = inject(ConfigServer);

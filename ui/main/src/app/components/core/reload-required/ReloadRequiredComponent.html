@@ -6,7 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id="opfab-reload-msg" class="opfab-info-message opfab-alert-error" *ngIf="displayReloadRequired">
+@if (displayReloadRequired) {
+<div id="opfab-reload-msg" class="opfab-info-message opfab-alert-error">
     <span translate
         >reloadRequired.message
         <a (click)="reload()"><span class="opfab-reload-link" translate>reloadRequired.linkText</span></a></span
@@ -15,3 +16,4 @@
         <span aria-hidden="true">&times;</span>
     </div>
 </div>
+}

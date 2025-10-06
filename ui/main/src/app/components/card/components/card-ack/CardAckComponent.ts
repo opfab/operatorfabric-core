@@ -24,7 +24,6 @@ import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
-import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
 import {TranslateModule} from '@ngx-translate/core';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
@@ -41,7 +40,7 @@ const enum AckI18nKeys {
 @Component({
     selector: 'of-card-ack',
     templateUrl: './CardAckComponent.html',
-    imports: [NgIf, SpinnerComponent, TranslateModule]
+    imports: [SpinnerComponent, TranslateModule]
 })
 export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;

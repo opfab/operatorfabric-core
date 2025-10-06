@@ -9,7 +9,6 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -17,7 +16,7 @@ import {TranslateModule} from '@ngx-translate/core';
     styleUrls: ['./ConnectionLostComponent.scss'],
     templateUrl: './ConnectionLostComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule]
+    imports: [TranslateModule]
 })
 export class ConnectionLostComponent implements OnInit {
     private readonly opfabEventStreamServer = inject(OpfabEventStreamServer);

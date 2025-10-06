@@ -5,12 +5,14 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 
-<button id="opfab-card-details-btn-ack" class="opfab-btn" *ngIf="showAckButton" (click)="acknowledgeCard()">
+@if (showAckButton) {
+<button id="opfab-card-details-btn-ack" class="opfab-btn" (click)="acknowledgeCard()">
     {{ btnAckText | translate }}
 </button>
-
-<button id="opfab-card-details-btn-unack" class="opfab-btn" *ngIf="showUnAckButton" (click)="cancelAcknowledgement()">
+} @if (showUnAckButton) {
+<button id="opfab-card-details-btn-unack" class="opfab-btn" (click)="cancelAcknowledgement()">
     {{ btnUnAckText | translate }}
 </button>
-
-<of-spinner *ngIf="ackOrUnackInProgress" [seeInModal]="true" loadingText="shared.requestInProgress"> </of-spinner>
+} @if (ackOrUnackInProgress) {
+<of-spinner [seeInModal]="true" loadingText="shared.requestInProgress" />
+}

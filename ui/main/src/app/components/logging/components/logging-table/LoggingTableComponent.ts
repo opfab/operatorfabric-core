@@ -19,14 +19,13 @@ import {StateDescriptionCellRendererComponent} from '../cell-renderers/StateDesc
 import {SenderCellRendererComponent} from '../cell-renderers/SenderCellRendererComponent';
 import {Subject} from 'rxjs';
 import {AgGridAngular} from 'ag-grid-angular';
-import {NgFor, NgIf} from '@angular/common';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {AgGrid} from 'app/utils/AgGrid';
 
 @Component({
     selector: 'of-logging-table',
     templateUrl: './LoggingTableComponent.html',
-    imports: [AgGridAngular, NgIf, NgFor, TranslateModule, NgbPagination]
+    imports: [AgGridAngular, TranslateModule, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
     private readonly translate = inject(TranslateService);

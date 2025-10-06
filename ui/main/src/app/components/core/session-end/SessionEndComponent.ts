@@ -11,7 +11,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} f
 import {I18n} from 'app/model/I18n';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -19,7 +18,7 @@ import {TranslateModule} from '@ngx-translate/core';
     styleUrls: ['./SessionEndComponent.scss'],
     templateUrl: './SessionEndComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule]
+    imports: [TranslateModule]
 })
 export class SessionEndComponent implements OnInit {
     private readonly changeDetector = inject(ChangeDetectorRef);

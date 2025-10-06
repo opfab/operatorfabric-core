@@ -14,7 +14,6 @@ import {NavbarView} from 'app/components/navbar/view/NavbarView';
 import {NavbarMenuElement, NavbarPage} from 'app/components/navbar/view/NavbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NavbarMenuView} from 'app/components/navbar/view/NavbarMenuView';
-import {NgFor, NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {InfoComponent} from './info/InfoComponent';
 import {UserCardComponent} from '../usercard/UserCardComponent';
@@ -27,16 +26,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     templateUrl: './NavbarComponent.html',
     styleUrls: ['./NavbarComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        NgFor,
-        NgIf,
-        NgbPopover,
-        TranslateModule,
-        InfoComponent,
-        UserCardComponent,
-        AboutComponent,
-        SpinnerComponent
-    ]
+    imports: [NgbPopover, TranslateModule, InfoComponent, UserCardComponent, AboutComponent, SpinnerComponent]
 })
 export class NavbarComponent {
     private readonly modalService = inject(NgbModal);

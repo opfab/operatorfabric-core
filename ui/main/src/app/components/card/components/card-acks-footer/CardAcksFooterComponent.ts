@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgFor, NgStyle} from '@angular/common';
+import {NgStyle} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
@@ -24,7 +24,7 @@ import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
     selector: 'of-card-acks-footer',
     templateUrl: './CardAcksFooterComponent.html',
     styleUrls: ['./CardAcksFooterComponent.scss'],
-    imports: [TranslateModule, NgFor, NgStyle, NgbPopover]
+    imports: [TranslateModule, NgStyle, NgbPopover]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     @Input() card: Card;

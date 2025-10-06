@@ -17,7 +17,7 @@ import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {OpfabStore} from '../../store/OpfabStore';
 import {TimeLineComponent} from './components/time-line/TimeLineComponent';
-import {NgIf, AsyncPipe} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {PinnedCardsComponent} from './components/pinned-cards/PinnedCardsComponent';
 import {CardListComponent} from './components/card-list/CardListComponent';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
@@ -26,7 +26,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-cards',
     templateUrl: './FeedComponent.html',
     styleUrls: ['./FeedComponent.scss'],
-    imports: [TimeLineComponent, NgIf, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
+    imports: [TimeLineComponent, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
 export class FeedComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);

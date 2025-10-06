@@ -11,13 +11,12 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, inject} from '@angular/c
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CountDown} from '../../../utils/countdown/CountDown';
-import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-countdown',
     templateUrl: './CountDownComponent.html',
     styleUrls: ['./CountDownComponent.scss'],
-    imports: [TranslateModule, NgIf]
+    imports: [TranslateModule]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     private readonly translate = inject(TranslateService);

@@ -12,7 +12,7 @@ import {Card} from 'app/model/Card';
 import {State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
-import {NgIf, NgFor, NgStyle} from '@angular/common';
+import {NgStyle} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {CountDownComponent} from '../../../share/countdown/CountDownComponent';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ class EntityForCardHeader {
     selector: 'of-card-header',
     templateUrl: './CardHeaderComponent.html',
     styleUrls: ['./CardHeaderComponent.scss'],
-    imports: [NgIf, TranslateModule, CountDownComponent, NgbPopover, NgFor, NgStyle]
+    imports: [TranslateModule, CountDownComponent, NgbPopover, NgStyle]
 })
 export class CardHeaderComponent implements OnChanges {
     @Input() card: Card;

@@ -15,7 +15,8 @@
     </div>
 
     <div style="width: 100%"></div>
-    <div *ngIf="loadingInProgress" class="opfab-loading-spinner opfab-tooltip">
+    @if (loadingInProgress) {
+    <div class="opfab-loading-spinner opfab-tooltip">
         <div>
             <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
             <span class="opfab-tooltip-content left" style="z-index: 1; text-align: left">
@@ -23,4 +24,5 @@
             >
         </div>
     </div>
+    }
 </div>

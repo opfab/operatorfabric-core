@@ -19,7 +19,6 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 
 @Component({
@@ -27,7 +26,7 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     templateUrl: './SettingsComponent.html',
     styleUrls: ['./SettingsComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, NgIf, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     private readonly translateService = inject(TranslateService);

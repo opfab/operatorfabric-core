@@ -13,6 +13,8 @@
         </of-light-card>
     </div>
 </div>
-<div *ngIf="lightCards?.length > maxVisibleCards" style="float: right; margin-right: 20px">
+@if (lightCards?.length > maxVisibleCards) {
+<div style="float: right; margin-right: 20px">
     ... {{ lightCards?.length - maxVisibleCards }} <span translate> feed.moreCards </span>
 </div>
+}

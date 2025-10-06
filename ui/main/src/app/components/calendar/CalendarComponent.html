@@ -6,9 +6,11 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div id="opfab-calendar" class="opfab-app-calendar" *ngIf="calendarVisible">
+@if (calendarVisible) {
+<div id="opfab-calendar" class="opfab-app-calendar">
     <full-calendar #calendar [options]="calendarOptions"></full-calendar>
 </div>
+}
 
 <ng-template #cardDetail let-modal>
     <div class="modal-body modal-body-squared">

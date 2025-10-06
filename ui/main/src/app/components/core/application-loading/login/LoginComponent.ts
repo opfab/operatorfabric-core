@@ -12,7 +12,7 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular
 import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AuthService} from 'app/authentication/AuthService';
-import {NgClass, NgIf} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -20,7 +20,7 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './LoginComponent.html',
     styles: ['.btn-primary {margin-right: 8px;}'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule, NgIf]
+    imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule]
 })
 export class LoginComponent implements OnInit {
     private readonly authService = inject(AuthService);

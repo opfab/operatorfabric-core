@@ -18,7 +18,6 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {State} from '@ofServices/processes/model/Processes';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {NgIf} from '@angular/common';
 import {SpinnerComponent} from '../spinner/SpinnerComponent';
 import {TemplateRenderingComponent} from '../template-rendering/TemplateRenderingComponent';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
@@ -27,7 +26,7 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
     selector: 'of-simplified-card-view',
     templateUrl: './SimplifiedCardViewComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, SpinnerComponent, TemplateRenderingComponent]
+    imports: [SpinnerComponent, TemplateRenderingComponent]
 })
 export class SimplifiedCardViewComponent implements OnInit, OnDestroy {
     @Input() card: Card;
