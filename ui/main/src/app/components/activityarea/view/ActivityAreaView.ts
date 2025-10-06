@@ -134,10 +134,10 @@ export class ActivityAreaView {
                             this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
                                 cluster.lines.forEach((line) => {
                                     if (line.entityId === entityId) {
-                                        if (connectedUser.firstName && connectedUser.lastName) {
-                                            line.connectedUsers.push(
-                                                connectedUser.firstName + ' ' + connectedUser.lastName
-                                            );
+                                        if (connectedUser.firstName || connectedUser.lastName) {
+                                            const firstName = connectedUser.firstName || '';
+                                            const lastName = connectedUser.lastName || '';
+                                            line.connectedUsers.push((firstName + ' ' + lastName).trim());
                                         } else {
                                             line.connectedUsers.push(connectedUser.login);
                                         }

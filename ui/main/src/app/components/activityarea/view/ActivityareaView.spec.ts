@@ -248,12 +248,14 @@ describe('ActivityAreaView', () => {
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
 
-    it('GIVEN a user member of entity1 and entity2 WHEN user is currently connected to entity1 THEN entity1 line contains the current user login ', async () => {
+    it('GIVEN 4 users with or without firstName/lastName WHEN users are connected THEN ENTITY1 line contains login or firstName/lastName', async () => {
         await mockUserConfig(['ENTITY1', 'ENTITY2'], ['ENTITY1', 'ENTITY2']);
 
         const connectedUsers = [
             {login: 'anotherUser', firstName: 'John', lastName: 'Smith', entitiesConnected: ['ENTITY1']},
-            {login: 'currentUser', firstName: 'James', entitiesConnected: ['ENTITY1']}
+            {login: 'currentUser', firstName: 'James', entitiesConnected: ['ENTITY1']},
+            {login: 'userWithoutFirstName', lastName: 'Doe', entitiesConnected: ['ENTITY1']},
+            {login: 'userWithoutFirstNameAndLastName', entitiesConnected: ['ENTITY1']}
         ];
         usersServerMock.setResponseForConnectedUsers(new ServerResponse(connectedUsers, ServerResponseStatus.OK, null));
 
@@ -261,7 +263,12 @@ describe('ActivityAreaView', () => {
         const activityAreaPage = await firstValueFrom(activityAreaView.getActivityAreaPage());
         expect(activityAreaPage.activityAreaClusters[0].lines).toHaveSize(2);
         expect(activityAreaPage.activityAreaClusters[0].lines[0].entityId).toEqual('ENTITY1');
-        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual(['John Smith', 'currentUser']);
+        expect(activityAreaPage.activityAreaClusters[0].lines[0].connectedUsers).toEqual([
+            'John Smith',
+            'James',
+            'Doe',
+            'userWithoutFirstNameAndLastName'
+        ]);
         expect(activityAreaPage.activityAreaClusters[0].lines[1].entityId).toEqual('ENTITY2');
         expect(activityAreaPage.activityAreaClusters[0].lines[1].connectedUsers).toEqual([]);
     });
