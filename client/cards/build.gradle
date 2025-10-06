@@ -18,13 +18,6 @@ jar {
     }
 }
 
-swaggerSources {
-
-    model {
-        inputFile = file("../../services/cards-publication/src/main/modeling/swagger.yaml")
-    }
-}
-
 avro {
     createSetters = true
     fieldVisibility = "PRIVATE"

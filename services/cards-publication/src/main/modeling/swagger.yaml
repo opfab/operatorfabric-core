@@ -1,15 +1,15 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
   version: SNAPSHOT
   title: Card Management API
-  termsOfService: ''
+  termsOfService: ""
   contact:
     email: opfab_AT_lists.lfenergy.org
-    url: 'https://opfab.github.io/'
+    url: "https://opfab.github.io/"
   license:
     name: Mozilla Public License V2.0
-    url: 'http://mozilla.org/MPL/2.0/'
+    url: "http://mozilla.org/MPL/2.0/"
 host: localhost:2002
 tags:
   - name: cards
@@ -85,17 +85,17 @@ definitions:
         FR: Mon Titre
   CardOperation:
     type: object
-    description: 'Operation to do:  Add, Update or Delete a card' 
+    description: "Operation to do:  Add, Update or Delete a card"
     properties:
       type:
-        $ref: '#/definitions/CardOperationTypeEnum'
+        $ref: "#/definitions/CardOperationTypeEnum"
       cardId:
         type: string
         description: >-
           ID of card to be deleted. Only used for CardOperations of DELETE
           type.
       card:
-        $ref: '#/definitions/LightCard'
+        $ref: "#/definitions/LightCard"
         description: >-
           Card object to be added or updated. Only used for CardOperations of
           ADD or UPDATE type.
@@ -148,7 +148,7 @@ definitions:
     properties:
       freq:
         description: Frequency of the recurrence
-        $ref: '#/definitions/FreqEnum'
+        $ref: "#/definitions/FreqEnum"
       interval:
         description: Represents at which intervals the recurrence rule repeats. The default value is "1", meaning every second for a SECONDLY rule, every minute for a MINUTELY rule etc.
         type: integer
@@ -157,12 +157,12 @@ definitions:
         type: integer
       wkst:
         description: Defines the day on which the workweek starts. Valid values are MO, TU, WE, TH, FR, SA, and SU.
-        $ref: '#/definitions/DayEnum'
+        $ref: "#/definitions/DayEnum"
       byweekday:
         description: Defines a list of days of the week for the recurrence
         type: array
         items:
-          $ref: '#/definitions/DayEnum'
+          $ref: "#/definitions/DayEnum"
       bymonth:
         description: Defines a list of months of the year for the recurrence (from 1 to 12, 1 representing January)
         type: array
@@ -200,10 +200,10 @@ definitions:
     description: An object to define a business time span
     properties:
       start:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Span start
       end:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Span end (must be after start)
     required:
       - start
@@ -263,25 +263,25 @@ definitions:
         type: string
         description: associated process state name
       publishDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: The date the card was published (meaning created by the card service)
         readOnly: true
       lttd:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: >-
           Last time to decide, after this date no action can be triggered on the
           card
       startDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card validity start time
       endDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card validity end time (must be after startDate)
       expirationDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card deletion time (must be after startDate)
       severity:
-        $ref: '#/definitions/SeverityEnum'
+        $ref: "#/definitions/SeverityEnum"
         description: Card severity
       tags:
         type: array
@@ -290,18 +290,18 @@ definitions:
         description: Tags associated with the card
       rRule:
         description: Json object representing the recurrence of the card (as defined in the RFC 5545)
-        $ref: '#/definitions/RRule'
+        $ref: "#/definitions/RRule"
       timeSpans:
         type: array
         description: List of business time span associated to card
         items:
-          $ref: '#/definitions/TimeSpan'
+          $ref: "#/definitions/TimeSpan"
       title:
         description: Card i18n title
-        $ref: '#/definitions/I18n'
+        $ref: "#/definitions/I18n"
       summary:
         description: Card i18n summary
-        $ref: '#/definitions/I18n'
+        $ref: "#/definitions/I18n"
       titleTranslated:
         description: Card title translated
         type: string
@@ -329,12 +329,12 @@ definitions:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
       entitiesRequiredToRespond:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
         description: >-
           List of entities that have to respond. It will be taken into account in addition to entitiesAllowedToRespond
           to determine if a user can send a response. If present and not empty, this list will be used for display in the
@@ -344,20 +344,20 @@ definitions:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
       entityRecipientsForInformation:
         description: >-
           List of entity recipients for information : Among entityRecipients which one are only for information.
         type: array
         items:
           type: string
-        example: [ "Manager" ]
+        example: ["Manager"]
       entitiesAllowedToEdit:
         description: List of entities that can edit the card
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
       data:
         type: object
         description: Business data
@@ -373,12 +373,12 @@ definitions:
         type: boolean
         description: Is true if the card was read by current user
       publisherType:
-        $ref: '#/definitions/PublisherTypeEnum'
+        $ref: "#/definitions/PublisherTypeEnum"
       representative:
         type: string
         description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
       representativeType:
-        $ref: '#/definitions/PublisherTypeEnum'
+        $ref: "#/definitions/PublisherTypeEnum"
       wktGeometry:
         type: string
         description: Contains WKT geometry string ex. 'POINT (6.476709 52.569132)'
@@ -391,7 +391,7 @@ definitions:
       actions:
         type: array
         items:
-          $ref: '#/definitions/CardActionEnum'
+          $ref: "#/definitions/CardActionEnum"
     required:
       - publisher
       - process
@@ -438,10 +438,10 @@ definitions:
     description: LightCard Subscription object
     properties:
       rangeStart:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: subscription range start time
       rangeEnd:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: subscription range end time
   Connection:
     type: object
@@ -460,7 +460,7 @@ definitions:
         type: array
         items:
           type: string
-        description: List of entities the user is attached to 
+        description: List of entities the user is attached to
       groups:
         type: array
         items:
@@ -495,24 +495,24 @@ definitions:
         type: string
         description: associated process state name
       lttd:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: >-
           Last time to decide, after this date no action can be triggered on the
           card
       startDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card validity start time
       endDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card validity end time
       expirationDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Card deletion time
       publishDate:
-        $ref: '#/definitions/EpochDate'
+        $ref: "#/definitions/EpochDate"
         description: Publication time of the Card
       severity:
-        $ref: '#/definitions/SeverityEnum'
+        $ref: "#/definitions/SeverityEnum"
         description: Card severity
       tags:
         type: array
@@ -524,12 +524,12 @@ definitions:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
       entitiesRequiredToRespond:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
         description: >-
           List of entities that have to respond. It will be taken into account in addition to entitiesAllowedToRespond
           to determine if a user can send a response. If present and not empty, this list will be used for display in the
@@ -539,13 +539,13 @@ definitions:
         type: array
         items:
           type: string
-        example: ["Dispatcher","Planner"]
+        example: ["Dispatcher", "Planner"]
       title:
         description: Card i18n title
-        $ref: '#/definitions/I18n'
+        $ref: "#/definitions/I18n"
       summary:
         description: Card i18n summary
-        $ref: '#/definitions/I18n'
+        $ref: "#/definitions/I18n"
       titleTranslated:
         description: Card title translated
         type: string
@@ -554,12 +554,12 @@ definitions:
         type: string
       rRule:
         description: Json object representing the recurrence of the card (as defined in the RFC 5545)
-        $ref: '#/definitions/RRule'
+        $ref: "#/definitions/RRule"
       timeSpans:
         type: array
         description: List of business time span associated to card
         items:
-          $ref: '#/definitions/TimeSpan'
+          $ref: "#/definitions/TimeSpan"
       hasBeenAcknowledged:
         type: boolean
         description: Is true if the card was acknowledged by current user
@@ -593,10 +593,10 @@ definitions:
         type: array
         description: List of users who read the read
         items:
-          type: string   
+          type: string
       hasBeenRead:
         type: boolean
-        description: Is true if the card was read by current user  
+        description: Is true if the card was read by current user
       parentCardId:
         type: string
         description: The id of its parent card if it's a child card
@@ -604,12 +604,12 @@ definitions:
         type: string
         description: The uid of the initial parent card if it's a child card (optional). When a card is updated, its id is still the same but not its uid, that's why we store this field initialParentCardUid.
       publisherType:
-        $ref: '#/definitions/PublisherTypeEnum'
+        $ref: "#/definitions/PublisherTypeEnum"
       representative:
         type: string
         description: Used in case of sending card as a representative of an entity or a publisher (unique ID of the entity or publisher)
       representativeType:
-        $ref: '#/definitions/PublisherTypeEnum'
+        $ref: "#/definitions/PublisherTypeEnum"
       wktGeometry:
         type: string
         description: Contains WKT geometry string ex. 'POINT (6.476709 52.569132)'
@@ -658,7 +658,7 @@ definitions:
       content:
         type: array
         items:
-          $ref: '#/definitions/LightCard'
+          $ref: "#/definitions/LightCard"
         description: >-
           LightCard objects making up the required result page
       first:
@@ -717,7 +717,7 @@ definitions:
         type: number
         description: >-
           Page number
-      size: 
+      size:
         type: number
         description: >-
           Page size (max number of items in page)
@@ -730,7 +730,7 @@ definitions:
       filters:
         type: array
         items:
-          $ref: '#/definitions/FilterModel'
+          $ref: "#/definitions/FilterModel"
       selectedFields:
         type: array
         items:
@@ -741,13 +741,13 @@ definitions:
       columnName:
         type: string
       matchType:
-        $ref: '#/definitions/FilterMatchTypeEnum'
-      filter: 
+        $ref: "#/definitions/FilterMatchTypeEnum"
+      filter:
         type: array
-        items: 
+        items:
           type: string
-      operation: 
-        $ref: '#/definitions/FilterOperationTypeEnum'
+      operation:
+        $ref: "#/definitions/FilterOperationTypeEnum"
   PublisherTypeEnum:
     type: string
     description: |-
@@ -764,7 +764,7 @@ definitions:
     properties:
       i18nValue:
         description: i18n value to translate
-        $ref: '#/definitions/I18n'
+        $ref: "#/definitions/I18n"
       process:
         description: Id of the process
         type: string
@@ -811,17 +811,17 @@ paths:
             A unique id to identify client to allow for reconnection (an
             autogenerated UUID is the best solution)
       responses:
-        '200':
+        "200":
           description: ok
           schema:
             type: array
             items:
-              $ref: '#/definitions/CardOperation'
-        '401':
+              $ref: "#/definitions/CardOperation"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - User doesn't have any group
-  '/cards-consultation/cardSubscription/{uiId}':
+  "/cards-consultation/cardSubscription/{uiId}":
     put:
       tags:
         - cards
@@ -843,25 +843,25 @@ paths:
           name: subscription
           description: updated subscription
           schema:
-            $ref: '#/definitions/Subscription'
+            $ref: "#/definitions/Subscription"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/Subscription'
-        '400':
+            $ref: "#/definitions/Subscription"
+        "400":
           description: Bad request (body doesn't match login path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '404':
+        "404":
           description: Subscription not found
   /cards-publication/cards/rateLimiter:
     post:
       summary: reset the rate limiter
       responses:
-        '200':
+        "200":
           description: rate limiter reset
-        '400':
+        "400":
           description: bad request
   /cards-consultation/logs:
     post:
@@ -869,9 +869,9 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: remote logs sent
-        '400':
+        "400":
           description: bad request
   /cards-publication/cards:
     post:
@@ -879,7 +879,7 @@ paths:
         - card
         - creation
       summary: publish card
-      description: Publish one card to OperatorFabric 
+      description: Publish one card to OperatorFabric
       operationId: publishCard
       consumes:
         - application/json
@@ -889,13 +889,13 @@ paths:
         - name: card
           in: body
           schema:
-              $ref: '#/definitions/Card'
+            $ref: "#/definitions/Card"
       responses:
-        '201':
+        "201":
           description: created
           schema:
-            $ref: '#/definitions/CardCreationReport'
-        '400':
+            $ref: "#/definitions/CardCreationReport"
+        "400":
           description: bad request
     patch:
       tags:
@@ -917,17 +917,17 @@ paths:
           name: card
           description: card containing fields to be updated
           schema:
-            $ref: '#/definitions/Card'
+            $ref: "#/definitions/Card"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/CardCreationReport'
-        '400':
+            $ref: "#/definitions/CardCreationReport"
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '404':
+        "404":
           description: Card not found
     delete:
       tags:
@@ -942,11 +942,11 @@ paths:
         - application/json
       parameters:
         - in: query
-        - name: endDateBefore
-        - type: number
-        - required: true
+          name: endDateBefore
+          type: number
+          required: true
       responses:
-        '200':
+        "200":
           description: OK
   /cards-consultation/cards:
     post:
@@ -967,19 +967,19 @@ paths:
         - name: filter
           in: body
           schema:
-            $ref: '#/definitions/CardsFilter'
+            $ref: "#/definitions/CardsFilter"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/LightCardPage'
-        '400':
+            $ref: "#/definitions/LightCardPage"
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - User doesn't have any group
-  '/cards-consultation/archives/{id}':
+  "/cards-consultation/archives/{id}":
     parameters:
       - in: path
         name: id
@@ -993,13 +993,13 @@ paths:
       summary: fetch archived card
       description: fetch archived card with the given id
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/Card'
-        '401':
+            $ref: "#/definitions/Card"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - User doesn't have any group
   /cards-consultation/archives:
     post:
@@ -1020,17 +1020,17 @@ paths:
         - name: filter
           in: body
           schema:
-            $ref: '#/definitions/CardsFilter'
+            $ref: "#/definitions/CardsFilter"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/LightCardPage'
-        '400':
+            $ref: "#/definitions/LightCardPage"
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - User doesn't have any group
   /cards-consultation/connectedRecipientsPreview:
     post:
@@ -1043,17 +1043,17 @@ paths:
         - name: card
           in: body
           schema:
-              $ref: '#/definitions/Card'
+            $ref: "#/definitions/Card"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
               type: string
-        '400':
+        "400":
           description: Bad request
-  '/cards-publication/cards/{id}':
+  "/cards-publication/cards/{id}":
     parameters:
       - in: path
         name: id
@@ -1068,9 +1068,9 @@ paths:
       summary: delete card
       description: delete a card
       responses:
-        '200':
+        "200":
           description: OK
-  '/cards-consultation/cards/{id}':
+  "/cards-consultation/cards/{id}":
     parameters:
       - in: path
         name: id
@@ -1085,22 +1085,22 @@ paths:
       summary: fetch current card
       description: fetch current card for process id
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: object
             properties:
               card:
-                $ref: '#/definitions/Card'
+                $ref: "#/definitions/Card"
               childCards:
                 type: array
                 items:
-                  $ref: '#/definitions/Card'
-        '401':
+                  $ref: "#/definitions/Card"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - User doesn't have any group
-  '/cards-publication/cards/userAcknowledgement/{uid}':
+  "/cards-publication/cards/userAcknowledgement/{uid}":
     parameters:
       - in: path
         name: uid
@@ -1123,13 +1123,13 @@ paths:
       summary: update current card adding a user acknowledgement
       description: update current card users acknowledgements, adding a new item, by card id and authenticated user
       responses:
-        '201':
+        "201":
           description: Created
-        '200':
+        "200":
           description: No action done, the item already exists
-        '404':
+        "404":
           description: Try to remove item from non-existing card
-  '/cards-publication/cards/cancelUserAcknowledgement/{uid}':
+  "/cards-publication/cards/cancelUserAcknowledgement/{uid}":
     parameters:
       - in: path
         name: uid
@@ -1152,13 +1152,13 @@ paths:
       summary: update current card removing a user acknowledgement
       description: update current card users acknowledgements, removing an item, by card id and authenticated user
       responses:
-        '200':
+        "200":
           description: Item removed
-        '204':
+        "204":
           description: Try to remove non-existing item
-        '404':
+        "404":
           description: Try to remove item from non-existing card
-  '/cards-publication/cards/userCardRead/{uid}':
+  "/cards-publication/cards/userCardRead/{uid}":
     parameters:
       - in: path
         name: uid
@@ -1174,11 +1174,11 @@ paths:
       summary: update current card adding a user read
       description: update current card users reads, adding a new item, by card id and authenticated user
       responses:
-        '201':
+        "201":
           description: Created
-        '200':
+        "200":
           description: No action done, the item already exists
-        '404':
+        "404":
           description: Try to remove item from non-existing card
     delete:
       operationId: deleteUserRead
@@ -1189,13 +1189,13 @@ paths:
       summary: update current card removing a user read
       description: update current card users reads, removing an item, by card id and authenticated user
       responses:
-        '201':
+        "201":
           description: Created
-        '200':
+        "200":
           description: No action done, the item already exists
-        '404':
+        "404":
           description: Try to remove item from non-existing card
-  '/cards-publication/cards/translateCardField':
+  "/cards-publication/cards/translateCardField":
     post:
       summary: Get translated field
       description: Get translated field for a given i18n value
@@ -1206,19 +1206,19 @@ paths:
         - name: fieldToTranslate
           in: body
           schema:
-            $ref: '#/definitions/FieldToTranslate'
+            $ref: "#/definitions/FieldToTranslate"
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: string
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-  '/cards-publication/cards/resetReadAndAcks/{uid}':
+  "/cards-publication/cards/resetReadAndAcks/{uid}":
     parameters:
       - in: path
         name: uid
@@ -1234,9 +1234,9 @@ paths:
       summary: update current card removing acknowledgements and reads
       description: update current card removing acknowledgements and reads, send the card with updated publishDate
       responses:
-        '200':
+        "200":
           description: card updated and sent with updated publishDate
-        '404':
+        "404":
           description: Try to update non-existing card
-        '403':
+        "403":
           description: Forbidden - User not allowed

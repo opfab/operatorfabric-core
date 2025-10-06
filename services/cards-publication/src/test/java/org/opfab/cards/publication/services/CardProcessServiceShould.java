@@ -560,7 +560,7 @@ class CardProcessServiceShould {
         ComputedPerimeter cp = new ComputedPerimeter();
         cp.setProcess("PROCESS_CARD_USER");
         cp.setState("state1");
-        cp.setRights(RightEnum.ReceiveAndWrite);
+        cp.setRights(RightEnum.RECEIVE_AND_WRITE);
         List<ComputedPerimeter> list = new ArrayList<>();
         list.add(cp);
         caseDifferentUser.setComputedPerimeters(list);
@@ -606,7 +606,7 @@ class CardProcessServiceShould {
         ComputedPerimeter cp = new ComputedPerimeter();
         cp.setProcess("PROCESS_CARD_USER");
         cp.setState("state1");
-        cp.setRights(RightEnum.ReceiveAndWrite);
+        cp.setRights(RightEnum.RECEIVE_AND_WRITE);
         List<ComputedPerimeter> list = new ArrayList<>();
         list.add(cp);
         caseDifferentUser.setComputedPerimeters(list);
@@ -851,7 +851,7 @@ class CardProcessServiceShould {
         ComputedPerimeter c1 = new ComputedPerimeter();
         c1.setProcess("PROCESS_CARD_USER");
         c1.setState("state1");
-        c1.setRights(RightEnum.Receive);
+        c1.setRights(RightEnum.RECEIVE);
 
         Card card = TestHelpers.generateOneCard("dummyUser");
         List<ComputedPerimeter> list = new ArrayList<>();
@@ -877,7 +877,7 @@ class CardProcessServiceShould {
         ComputedPerimeter cp = new ComputedPerimeter();
         cp.setProcess("PROCESS_CARD_USER");
         cp.setState("state1");
-        cp.setRights(RightEnum.ReceiveAndWrite);
+        cp.setRights(RightEnum.RECEIVE_AND_WRITE);
 
         Card card = TestHelpers.generateOneCard("dummyUser");
         List<ComputedPerimeter> list = new ArrayList<>();

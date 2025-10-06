@@ -141,9 +141,9 @@ class ConnectionRoutesShould {
             service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
 
             String[] expectedUsers = {
-                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}" };
+                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}" };
 
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
 

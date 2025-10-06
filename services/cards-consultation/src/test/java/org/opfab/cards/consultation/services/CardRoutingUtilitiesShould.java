@@ -20,14 +20,12 @@ import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.User;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 class CardRoutingUtilitiesShould {
- 
+
     private CurrentUserWithPerimeters currentUserWithPerimeters;
     private String processStateInPerimeter = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"publisher_test\", \"publisherType\":\"EXTERNAL\"";
     private String processStateNotInPerimeter = "\"card\":{\"process\":\"Process1\", \"state\":\"State2\", \"publisher\":\"publisher_test\", \"publisherType\":\"EXTERNAL\"";
@@ -37,7 +35,7 @@ class CardRoutingUtilitiesShould {
     private String processStateInPerimeterAndPublisherIsTheUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"testuser\", \"publisherType\":\"USER\"";
     private String processStateInPerimeterAndPublisherIsAnotherUser = "\"card\":{\"process\":\"Process1\", \"state\":\"State1\", \"publisher\":\"anotheruser\", \"publisherType\":\"USER\"";
 
-    public CardRoutingUtilitiesShould(){
+    public CardRoutingUtilitiesShould() {
         User user = new User();
         user.setLogin("testuser");
         user.setFirstName("Test");
@@ -56,142 +54,253 @@ class CardRoutingUtilitiesShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("Process1");
         perimeter.setState("State1");
-        perimeter.setRights(RightEnum.Receive);
+        perimeter.setRights(RightEnum.RECEIVE);
 
         currentUserWithPerimeters = new CurrentUserWithPerimeters();
         currentUserWithPerimeters.setUserData(user);
         currentUserWithPerimeters.setComputedPerimeters(Arrays.asList(perimeter));
     }
 
-
-    private  JSONObject createJSONObjectFromString(String jsonString)
-    {
-        try
-        {
-           return  (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(jsonString);
+    private JSONObject createJSONObjectFromString(String jsonString) {
+        try {
+            return (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).parse(jsonString);
+        } catch (ParseException e) {
+            System.err.println("Error parsing :" + e.toString());
+            return null;
         }
-        catch(ParseException e){ System.err.println("Error parsing :" + e.toString()); return null;}
     }
 
     @Test
     void checkIfUserMustReceiveTheCardUsingGroupsOnly() {
 
-        JSONObject messageBodyWithGroupOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"]}}");  //true
-        JSONObject messageBodyWithGroupOfTheUserButStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"]}}");  //true
-        JSONObject messageBodyWithNoGroupOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"]}}");  //false
-        JSONObject messageBodyWithGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[]}}");  //true
-        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}");  //false
-        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser =
-                createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}");  //true
+        JSONObject messageBodyWithGroupOfTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"]}}"); // true
+        JSONObject messageBodyWithGroupOfTheUserButStateNotInPerimeter = createJSONObjectFromString(
+                "{" + processStateNotInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"]}}"); // true
+        JSONObject messageBodyWithNoGroupOfTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"]}}"); // false
+        JSONObject messageBodyWithGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString(
+                "{" + processStateInPerimeter
+                        + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[]}}"); // true
+        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList = createJSONObjectFromString(
+                "{" + processStateInPerimeter
+                        + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}"); // false
+        JSONObject messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[]}}"); // true
 
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUser, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUser,
+                currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithGroupOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupOfTheUser,
+                currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoGroupOfTheUserAndEmptyEntitiesList, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoGroupOfTheUserAndEmptyEntitiesListButPublisherIsTheEntityOfUser,
+                currentUserWithPerimeters)).isTrue();
     }
 
     @Test
     void checkIfUserMustReceiveTheCardUsingEntitiesOnly() {
 
+        JSONObject messageBodyWithEntityOfTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ", \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // true
+        JSONObject messageBodyWithEntityOfTheUserButStateNotInPerimeter = createJSONObjectFromString(
+                "{" + processStateNotInPerimeter + ", \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // false
+        JSONObject messageBodyWithNoEntityOfTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ", \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // false
+        JSONObject messageBodyWithEntityOfTheUserAndEmptyGroupsList = createJSONObjectFromString(
+                "{" + processStateInPerimeter
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // true
+        JSONObject messageBodyWithNoEntityOfTheUserAndEmptyGroupsList = createJSONObjectFromString(
+                "{" + processStateInPerimeter
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // false
+        JSONObject messageBodyWithNoEntityOfTheUserAndEmptyGroupsListButPublisherIsTheEntityOfUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // true
 
-        JSONObject messageBodyWithEntityOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); //true
-        JSONObject messageBodyWithEntityOfTheUserButStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ", \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); //false
-        JSONObject messageBodyWithNoEntityOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); //false
-        JSONObject messageBodyWithEntityOfTheUserAndEmptyGroupsList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); //true
-        JSONObject messageBodyWithNoEntityOfTheUserAndEmptyGroupsList = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); //false
-        JSONObject messageBodyWithNoEntityOfTheUserAndEmptyGroupsListButPublisherIsTheEntityOfUser =
-                createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ", \"groupRecipients\":[], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); //true
-
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoEntityOfTheUser, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUserAndEmptyGroupsList, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoEntityOfTheUserAndEmptyGroupsList, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoEntityOfTheUserAndEmptyGroupsListButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
-     }
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUser,
+                currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithEntityOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoEntityOfTheUser,
+                currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithEntityOfTheUserAndEmptyGroupsList, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoEntityOfTheUserAndEmptyGroupsList, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoEntityOfTheUserAndEmptyGroupsListButPublisherIsTheEntityOfUser,
+                currentUserWithPerimeters)).isTrue();
+    }
 
     @Test
     void checkIfUserMustReceiveTheCardUsingGroupsAndEntities() {
 
-        JSONObject messageBodyWithEntityAndGroupOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}");  //true
-        JSONObject messageBodyWithEntityAndGroupOfTheUser2 = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup2\", \"testgroup4\"], \"entityRecipients\":[\"testentity2\", \"testentity4\"]}}");  //true
-        JSONObject messageBodyWithEntityAndGroupOfTheUserButStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}");  //false
-        JSONObject messageBodyWithGroupOfTheUserButNotEntity = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}");  //false (in group but not in entity)
-        JSONObject messageBodyWithEntityOfTheUserButNotGroup = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}");  //false (in entity but not in group)
-        JSONObject messageBodyWithNoGroupAndNoEntityOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}");  //false (not in group and not in entity)
-        JSONObject messageBodyWithNoGroupAndNoEntityOfTheUserButPublisherIsTheEntityOfUser =
-                createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}");  //true
+        JSONObject messageBodyWithEntityAndGroupOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter
+                + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // true
+        JSONObject messageBodyWithEntityAndGroupOfTheUser2 = createJSONObjectFromString("{" + processStateInPerimeter
+                + ", \"groupRecipients\":[\"testgroup2\", \"testgroup4\"], \"entityRecipients\":[\"testentity2\", \"testentity4\"]}}"); // true
+        JSONObject messageBodyWithEntityAndGroupOfTheUserButStateNotInPerimeter = createJSONObjectFromString("{"
+                + processStateNotInPerimeter
+                + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // false
+        JSONObject messageBodyWithGroupOfTheUserButNotEntity = createJSONObjectFromString("{" + processStateInPerimeter
+                + ", \"groupRecipients\":[\"testgroup1\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // false
+                                                                                                                                        // (in
+                                                                                                                                        // group
+                                                                                                                                        // but
+                                                                                                                                        // not
+                                                                                                                                        // in
+                                                                                                                                        // entity)
+        JSONObject messageBodyWithEntityOfTheUserButNotGroup = createJSONObjectFromString("{" + processStateInPerimeter
+                + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity1\", \"testentity4\"]}}"); // false
+                                                                                                                                        // (in
+                                                                                                                                        // entity
+                                                                                                                                        // but
+                                                                                                                                        // not
+                                                                                                                                        // in
+                                                                                                                                        // group)
+        JSONObject messageBodyWithNoGroupAndNoEntityOfTheUser = createJSONObjectFromString("{" + processStateInPerimeter
+                + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // false
+                                                                                                                                        // (not
+                                                                                                                                        // in
+                                                                                                                                        // group
+                                                                                                                                        // and
+                                                                                                                                        // not
+                                                                                                                                        // in
+                                                                                                                                        // entity)
+        JSONObject messageBodyWithNoGroupAndNoEntityOfTheUserButPublisherIsTheEntityOfUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ", \"groupRecipients\":[\"testgroup3\", \"testgroup4\"], \"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // true
 
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityAndGroupOfTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityAndGroupOfTheUser2, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityAndGroupOfTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserButNotEntity, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUserButNotGroup, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupAndNoEntityOfTheUser,currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoGroupAndNoEntityOfTheUserButPublisherIsTheEntityOfUser,currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEntityAndGroupOfTheUser,
+                currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities
+                .checkIfUserMustReceiveTheCard(messageBodyWithEntityAndGroupOfTheUser2, currentUserWithPerimeters))
+                .isTrue();
+        Assertions
+                .assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                        messageBodyWithEntityAndGroupOfTheUserButStateNotInPerimeter, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities
+                .checkIfUserMustReceiveTheCard(messageBodyWithGroupOfTheUserButNotEntity, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities
+                .checkIfUserMustReceiveTheCard(messageBodyWithEntityOfTheUserButNotGroup, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities
+                .checkIfUserMustReceiveTheCard(messageBodyWithNoGroupAndNoEntityOfTheUser, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoGroupAndNoEntityOfTheUserButPublisherIsTheEntityOfUser, currentUserWithPerimeters))
+                .isTrue();
     }
 
     @Test
     void checkIfUserMustReceiveTheCardUsingNoGroupsAndNoEntities() {
 
-        JSONObject messageBodyWithEmptyRecipientAndGroup = createJSONObjectFromString("{" + processStateInPerimeter + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //false
-        JSONObject messageBodyWithNoRecipients = createJSONObjectFromString("{" + processStateInPerimeter + "}}");    //false
-        JSONObject messageBodyWithEmptyRecipientAndGroupButPublisherIsTheEntityOfUser =
-                createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //true
+        JSONObject messageBodyWithEmptyRecipientAndGroup = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ", \"groupRecipients\":[], \"entityRecipients\":[]}}"); // false
+        JSONObject messageBodyWithNoRecipients = createJSONObjectFromString("{" + processStateInPerimeter + "}}"); // false
+        JSONObject messageBodyWithEmptyRecipientAndGroupButPublisherIsTheEntityOfUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[]}}"); // true
 
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroup, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipients, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroupButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroup,
+                currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipients,
+                currentUserWithPerimeters)).isFalse();
+        Assertions
+                .assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                        messageBodyWithEmptyRecipientAndGroupButPublisherIsTheEntityOfUser, currentUserWithPerimeters))
+                .isTrue();
     }
 
     @Test
     void checkIfUserMustReceiveTheCardUsingUserOnly() {
 
-        JSONObject messageBodyWithTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); //true
-        JSONObject messageBodyWithTheUserAndEntity = createJSONObjectFromString("{" + processStateInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"],\"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); //true
-        JSONObject messageBodyWithTheUserAndGroup = createJSONObjectFromString("{" + processStateInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"], \"groupRecipients\":[\"testgroup3\", \"testgroup4\"]}}"); //true
-        JSONObject messageBodyWithTheUserButStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); //false
-        JSONObject messageBodyWithoutTheUser = createJSONObjectFromString("{" + processStateInPerimeter + ",\"userRecipients\":[\"noexistantuser1\", \"noexistantuser2\"]}}"); //false
-        JSONObject messageBodyWithTheUserAndPublisherIsTheEntityOfUserButStateNotInPerimeter =
-                createJSONObjectFromString("{" + processStateNotInPerimeterAndPublisherIsTheEntityOfTheUser + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); //false
-        JSONObject messageBodyWithoutTheUserButPublisherIsTheEntityOfUser =
-                createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser + ",\"userRecipients\":[\"noexistantuser1\", \"noexistantuser2\"]}}"); //true
+        JSONObject messageBodyWithTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); // true
+        JSONObject messageBodyWithTheUserAndEntity = createJSONObjectFromString("{" + processStateInPerimeter
+                + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"],\"entityRecipients\":[\"testentity3\", \"testentity4\"]}}"); // true
+        JSONObject messageBodyWithTheUserAndGroup = createJSONObjectFromString("{" + processStateInPerimeter
+                + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"], \"groupRecipients\":[\"testgroup3\", \"testgroup4\"]}}"); // true
+        JSONObject messageBodyWithTheUserButStateNotInPerimeter = createJSONObjectFromString(
+                "{" + processStateNotInPerimeter + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); // false
+        JSONObject messageBodyWithoutTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeter + ",\"userRecipients\":[\"noexistantuser1\", \"noexistantuser2\"]}}"); // false
+        JSONObject messageBodyWithTheUserAndPublisherIsTheEntityOfUserButStateNotInPerimeter = createJSONObjectFromString(
+                "{" + processStateNotInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ",\"userRecipients\":[\"testuser\", \"noexistantuser2\"]}}"); // false
+        JSONObject messageBodyWithoutTheUserButPublisherIsTheEntityOfUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheEntityOfTheUser
+                        + ",\"userRecipients\":[\"noexistantuser1\", \"noexistantuser2\"]}}"); // true
 
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserAndEntity, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserAndGroup, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithoutTheUser, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserAndPublisherIsTheEntityOfUserButStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithoutTheUserButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(
+                CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUser, currentUserWithPerimeters))
+                .isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserAndEntity,
+                currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithTheUserAndGroup,
+                currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities
+                .checkIfUserMustReceiveTheCard(messageBodyWithTheUserButStateNotInPerimeter, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithoutTheUser,
+                currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithTheUserAndPublisherIsTheEntityOfUserButStateNotInPerimeter, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithoutTheUserButPublisherIsTheEntityOfUser, currentUserWithPerimeters)).isTrue();
     }
 
     @Test
     void checkIfUserNeedToReceiveADeleteCardOperation() {
-        JSONObject messageBodyWithUdpateAndProcessStateInPerimeter = createJSONObjectFromString("{" + processStateInPerimeter + "}, \"type\":\"UPDATE\"}");
-        JSONObject messageBodyWithUpdateButProcessStateNotInPerimeter = createJSONObjectFromString("{" + processStateNotInPerimeter + "}, \"type\":\"UPDATE\"}");
-        JSONObject messageBodyWithAddAndProcessStateInPerimeter = createJSONObjectFromString("{" + processStateInPerimeter + "}, \"type\":\"ADD\"}");
-         
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUdpateAndProcessStateInPerimeter, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithUpdateButProcessStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(messageBodyWithAddAndProcessStateInPerimeter, currentUserWithPerimeters)).isFalse();
+        JSONObject messageBodyWithUdpateAndProcessStateInPerimeter = createJSONObjectFromString(
+                "{" + processStateInPerimeter + "}, \"type\":\"UPDATE\"}");
+        JSONObject messageBodyWithUpdateButProcessStateNotInPerimeter = createJSONObjectFromString(
+                "{" + processStateNotInPerimeter + "}, \"type\":\"UPDATE\"}");
+        JSONObject messageBodyWithAddAndProcessStateInPerimeter = createJSONObjectFromString(
+                "{" + processStateInPerimeter + "}, \"type\":\"ADD\"}");
+
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(
+                messageBodyWithUdpateAndProcessStateInPerimeter, currentUserWithPerimeters)).isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(
+                messageBodyWithUpdateButProcessStateNotInPerimeter, currentUserWithPerimeters)).isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(
+                messageBodyWithAddAndProcessStateInPerimeter, currentUserWithPerimeters)).isFalse();
     }
 
     @Test
     void checkInCaseOfCardSentByAUser() {
-        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheUser
-                + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //true
-        JSONObject messageBodyWithNoRecipientsAndPublisherIsTheUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsTheUser + "}}");    //true
+        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheUser
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[]}}"); // true
+        JSONObject messageBodyWithNoRecipientsAndPublisherIsTheUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsTheUser + "}}"); // true
 
-        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsAnotherUser
-                + ", \"groupRecipients\":[], \"entityRecipients\":[]}}");    //false
-        JSONObject messageBodyWithNoRecipientsAndPublisherIsAnotherUser = createJSONObjectFromString("{" + processStateInPerimeterAndPublisherIsAnotherUser + "}}");    //false
+        JSONObject messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsAnotherUser
+                        + ", \"groupRecipients\":[], \"entityRecipients\":[]}}"); // false
+        JSONObject messageBodyWithNoRecipientsAndPublisherIsAnotherUser = createJSONObjectFromString(
+                "{" + processStateInPerimeterAndPublisherIsAnotherUser + "}}"); // false
 
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipientsAndPublisherIsTheUser, currentUserWithPerimeters)).isTrue();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser, currentUserWithPerimeters)).isFalse();
-        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(messageBodyWithNoRecipientsAndPublisherIsAnotherUser, currentUserWithPerimeters)).isFalse();
+        Assertions
+                .assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                        messageBodyWithEmptyRecipientAndGroupAndPublisherIsTheUser, currentUserWithPerimeters))
+                .isTrue();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoRecipientsAndPublisherIsTheUser, currentUserWithPerimeters)).isTrue();
+        Assertions
+                .assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                        messageBodyWithEmptyRecipientAndGroupAndPublisherIsAnotherUser, currentUserWithPerimeters))
+                .isFalse();
+        Assertions.assertThat(CardRoutingUtilities.checkIfUserMustReceiveTheCard(
+                messageBodyWithNoRecipientsAndPublisherIsAnotherUser, currentUserWithPerimeters)).isFalse();
     }
 }

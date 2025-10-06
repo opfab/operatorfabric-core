@@ -72,7 +72,7 @@ class CardOperationsControllerShould {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
-        perimeter.setRights(RightEnum.ReceiveAndWrite);
+        perimeter.setRights(RightEnum.RECEIVE_AND_WRITE);
 
         User user = new User();
         user.setLogin("dummyUser");

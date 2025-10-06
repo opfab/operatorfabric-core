@@ -135,7 +135,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter -> {
-                if ((perimeter.getRights() == RightEnum.Receive) || (perimeter.getRights() == RightEnum.ReceiveAndWrite))
+                if ((perimeter.getRights() == RightEnum.RECEIVE) || (perimeter.getRights() == RightEnum.RECEIVE_AND_WRITE))
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
             });
 

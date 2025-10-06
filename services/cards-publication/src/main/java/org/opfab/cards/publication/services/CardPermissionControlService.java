@@ -92,6 +92,6 @@ public class CardPermissionControlService {
         Optional<ComputedPerimeter> cardPerimeter = perimeters.stream()
                 .filter(x -> x.getState().equalsIgnoreCase(card.state) && x.getProcess().equalsIgnoreCase(card.process))
                 .findFirst();
-        return cardPerimeter.isPresent() && RightEnum.ReceiveAndWrite.equals(cardPerimeter.get().getRights());
+        return cardPerimeter.isPresent() && RightEnum.RECEIVE_AND_WRITE.equals(cardPerimeter.get().getRights());
     }
 }

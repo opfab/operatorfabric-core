@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.businessconfig.model;
 
-public enum LinkTypeEnum {
-    TAB,  
-    IFRAME,    
-    BOTH
-}
+ package org.opfab.users.model;
+
+ public enum RoleEnum {
+    ACTIVITY_AREA,
+    ACTIVITY_AREA_GROUP,
+    CARD_RECEIVER,
+    CARD_SENDER;
+ }

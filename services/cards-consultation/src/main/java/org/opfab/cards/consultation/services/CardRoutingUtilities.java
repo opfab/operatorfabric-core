@@ -62,7 +62,7 @@ public class CardRoutingUtilities {
     private static boolean isReceiveRightsForProcessAndState(String processId, String stateId,
             Map<String, RightEnum> userRightsPerProcessAndState) {
         final RightEnum rights = userRightsPerProcessAndState.get(processId + '.' + stateId);
-        return rights == RightEnum.Receive || rights == RightEnum.ReceiveAndWrite;
+        return rights == RightEnum.RECEIVE || rights == RightEnum.RECEIVE_AND_WRITE;
     }
 
     /**

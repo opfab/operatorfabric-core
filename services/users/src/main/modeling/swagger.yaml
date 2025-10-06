@@ -1,15 +1,15 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: IMPORTANT - The Try it Out button will generate curl requests for examples, but executing them through the UI will not work as authentication has not been set up. This page is for documentation only.
   version: SNAPSHOT
   title: User Management
-  termsOfService: ''
+  termsOfService: ""
   contact:
     email: opfab_AT_lists.lfenergy.org
-    url: 'https://opfab.github.io/'
+    url: "https://opfab.github.io/"
   license:
     name: Mozilla Public License V2.0
-    url: 'http://mozilla.org/MPL/2.0/'
+    url: "http://mozilla.org/MPL/2.0/"
 host: localhost:2002
 tags:
   - name: users
@@ -100,13 +100,13 @@ definitions:
       permissions:
         type: array
         items:
-          $ref: '#/definitions/PermissionEnum'
+          $ref: "#/definitions/PermissionEnum"
           uniqueItems: true
     required:
       - id
     example:
       id: WANDA
-      name : Wanda
+      name: Wanda
       description: They were not as successful in Fierce Creatures.
   Entity:
     type: object
@@ -127,12 +127,12 @@ definitions:
         items:
           type: string
           uniqueItems: true
-      roles: 
+      roles:
         type: array
         items:
-          $ref: '#/definitions/RoleEnum'
+          $ref: "#/definitions/RoleEnum"
     required:
-       - id
+      - id
     example:
       id: ENTITY1
       name: Control Room 1
@@ -165,7 +165,7 @@ definitions:
       state:
         type: string
       right:
-        $ref: '#/definitions/RightEnum'
+        $ref: "#/definitions/RightEnum"
       filteringNotificationAllowed:
         type: boolean
         description: When set to false, the user can not unselect the state in the notification configuration screen.
@@ -186,7 +186,7 @@ definitions:
       stateRights:
         type: array
         items:
-          $ref: '#/definitions/StateRight'
+          $ref: "#/definitions/StateRight"
           uniqueItems: true
     required:
       - id
@@ -249,7 +249,7 @@ definitions:
       hallwayMode:
         type: boolean
         description: |-
-          If this is set to true, hallway mode for feed screen will be enabled 
+          If this is set to true, hallway mode for feed screen will be enabled
       remoteLoggingEnabled:
         type: boolean
         description: |-
@@ -299,7 +299,7 @@ definitions:
       sendWeeklyEmail:
         type: boolean
         description: |-
-            If this is set to true, an email will be sent weekly with all the cards received during the week
+          If this is set to true, an email will be sent weekly with all the cards received during the week
       email:
         type: string
         description: Email address to use as recipient for email notifications
@@ -317,11 +317,11 @@ definitions:
     properties:
       userData:
         type: object
-        $ref: '#/definitions/User'
+        $ref: "#/definitions/User"
       computedPerimeters:
         type: array
         items:
-          $ref: '#/definitions/ComputedPerimeter'
+          $ref: "#/definitions/ComputedPerimeter"
           uniqueItems: true
       processesStatesNotNotified:
         type: object
@@ -354,7 +354,7 @@ definitions:
       sendWeeklyEmail:
         type: boolean
         description: |-
-            If this is set to true, an email will be sent weekly with all the cards received during the week
+          If this is set to true, an email will be sent weekly with all the cards received during the week
       emailForCardSending:
         type: string
         description: Email address to use as recipient for email notifications
@@ -364,7 +364,7 @@ definitions:
       permissions:
         type: array
         items:
-          $ref: '#/definitions/PermissionEnum'
+          $ref: "#/definitions/PermissionEnum"
           uniqueItems: true
   ComputedPerimeter:
     type: object
@@ -374,7 +374,7 @@ definitions:
       state:
         type: string
       rights:
-        $ref: '#/definitions/RightEnum'
+        $ref: "#/definitions/RightEnum"
       filteringNotificationAllowed:
         type: boolean
         description: When the value is false, the user can not unselect the state in the notification configuration screen.
@@ -411,7 +411,7 @@ definitions:
       content:
         type: array
         items:
-          $ref: '#/definitions/UserActionLog'
+          $ref: "#/definitions/UserActionLog"
         description: >-
           ActionLog objects making up the required result page
       first:
@@ -462,17 +462,17 @@ paths:
       tags:
         - users
       summary: Fetch a list of all existing users
-      description: 'Fetch a list of all existing users, with pagination and filter options'
+      description: "Fetch a list of all existing users, with pagination and filter options"
       operationId: fetchUsers
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/User'
+              $ref: "#/definitions/User"
           examples:
             application/json:
               - login: jcleese
@@ -491,10 +491,11 @@ paths:
                   - MONTY
                 entities:
                   - ENITY1
-        '401':
+        "401":
           description: Authentication required
-        '403':
-          description: Authenticated users who are not admins can only access their own
+        "403":
+          description:
+            Authenticated users who are not admins can only access their own
             data
     post:
       tags:
@@ -511,24 +512,25 @@ paths:
           name: user
           description: User to be created
           schema:
-            $ref: '#/definitions/User'
+            $ref: "#/definitions/User"
       responses:
-        '200':
+        "200":
           description: OK (user already existed so it was updated)
           schema:
-            $ref: '#/definitions/User'
-        '201':
+            $ref: "#/definitions/User"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/User'
-        '400':
+            $ref: "#/definitions/User"
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
-          description: Authenticated users who are not admins can only create their own
+        "403":
+          description:
+            Authenticated users who are not admins can only create their own
             data
-  '/users/users/{login}':
+  "/users/users/{login}":
     get:
       tags:
         - users
@@ -544,53 +546,53 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/User'
-        '401':
+            $ref: "#/definitions/User"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: >-
             Authenticated users who are not admins can only access their own
             data
-        '404':
+        "404":
           description: Required user not found
     put:
       tags:
-      - users
+        - users
       summary: Update existing user
       description: Update existing user
       operationId: updateUser
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: login
-        description: user login (should match login in request body)
-        type: string
-        required: true
-      - in: body
-        name: user
-        description: User to be updated (login should match path parameter)
-        schema:
-          $ref: '#/definitions/User'
+        - in: path
+          name: login
+          description: user login (should match login in request body)
+          type: string
+          required: true
+        - in: body
+          name: user
+          description: User to be updated (login should match path parameter)
+          schema:
+            $ref: "#/definitions/User"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/User'
-        '201':
+            $ref: "#/definitions/User"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/User'
-        '400':
+            $ref: "#/definitions/User"
+        "400":
           description: Bad request (body doesn't match login path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Authenticated users who are not admins can only update their own data
     delete:
       tags:
@@ -607,43 +609,43 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required user not found
-  '/users/users/{login}/settings':
+  "/users/users/{login}/settings":
     get:
       tags:
-      - users
+        - users
       summary: Fetch an existing user's settings
       description: Fetch existing user's settings from their login
       operationId: fetchUserSetting
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: login
-        description: user login
-        type: string
-        required: true
+        - in: path
+          name: login
+          description: user login
+          type: string
+          required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/UserSettings'
-        '401':
+            $ref: "#/definitions/UserSettings"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: >-
             Authenticated users who are not admins can only access their own
             data
-        '404':
+        "404":
           description: Required user not found
     put:
       tags:
@@ -665,92 +667,92 @@ paths:
           name: userSettings
           description: User settings to be updated (login should match path parameter)
           schema:
-            $ref: '#/definitions/UserSettings'
+            $ref: "#/definitions/UserSettings"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/UserSettings'
-        '201':
+            $ref: "#/definitions/UserSettings"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/UserSettings'
-        '400':
+            $ref: "#/definitions/UserSettings"
+        "400":
           description: Bad request (body doesn't match login path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Authenticated users who are not admins can only update their own data
-        '404':
+        "404":
           description: User not found
     patch:
       tags:
-      - users
+        - users
       summary: Patch existing user settings
       description: Patch existing user settings
       operationId: patchUserSettings
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: login
-        description: user login
-        type: string
-        required: true
-      - in: body
-        name: userSettings
-        description: User settings to be updated
-        schema:
-          $ref: '#/definitions/UserSettings'
+        - in: path
+          name: login
+          description: user login
+          type: string
+          required: true
+        - in: body
+          name: userSettings
+          description: User settings to be updated
+          schema:
+            $ref: "#/definitions/UserSettings"
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/UserSettings'
-        '401':
+            $ref: "#/definitions/UserSettings"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Authenticated users who are not admins can only update their own data
-        '404':
+        "404":
           description: User not found
-  '/users/users/synchronizeWithToken':
+  "/users/users/synchronizeWithToken":
     post:
       tags:
-      - users
+        - users
       summary: synchronize user data
       description: synchronize user data with JWT token
       operationId: synchronizeWithToken
       produces:
-      - application/json
+        - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/User'
-        '201':
+            $ref: "#/definitions/User"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/User'
-        '401':
+            $ref: "#/definitions/User"
+        "401":
           description: Authentication required
   /users/groups:
     get:
       tags:
         - groups
       summary: Fetch a list of all existing groups
-      description: 'Fetch a list of all existing groups, with pagination and filter options'
+      description: "Fetch a list of all existing groups, with pagination and filter options"
       operationId: fetchGroups
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Group'
+              $ref: "#/definitions/Group"
           examples:
             application/json:
               - id: WANDA
@@ -758,10 +760,10 @@ paths:
                 description: They were not as successful in Fierce Creatures
               - id: MARXB
                 name: Marx Brothers
-                description: 'Chico, Groucho and Harpo, forget about Zeppo and Gummo'
-        '401':
+                description: "Chico, Groucho and Harpo, forget about Zeppo and Gummo"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
     post:
       tags:
@@ -778,23 +780,23 @@ paths:
           name: group
           description: Group to be created
           schema:
-            $ref: '#/definitions/Group'
+            $ref: "#/definitions/Group"
       responses:
-        '200':
+        "200":
           description: Updated
           schema:
-            $ref: '#/definitions/Group'
-        '201':
+            $ref: "#/definitions/Group"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Group'
-        '400':
+            $ref: "#/definitions/Group"
+        "400":
           description: Bad request (duplicate key)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-  '/users/groups/{id}':
+  "/users/groups/{id}":
     put:
       tags:
         - groups
@@ -815,21 +817,21 @@ paths:
           name: group
           description: Updated group data (should match "id group" path parameter)
           schema:
-            $ref: '#/definitions/Group'
+            $ref: "#/definitions/Group"
       responses:
-        '200':
+        "200":
           description: Updated
           schema:
-            $ref: '#/definitions/Group'
-        '201':
+            $ref: "#/definitions/Group"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Group'
-        '400':
+            $ref: "#/definitions/Group"
+        "400":
           description: Bad request (body doesn't match "id group" path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
     get:
       tags:
@@ -846,15 +848,15 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/Group'
-        '401':
+            $ref: "#/definitions/Group"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
     delete:
       tags:
@@ -871,17 +873,17 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
-  '/users/groups/{id}/users':
+  "/users/groups/{id}/users":
     put:
       tags:
         - groups
@@ -911,15 +913,15 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
     patch:
       tags:
@@ -946,15 +948,15 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
     delete:
       tags:
@@ -972,64 +974,64 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
-  '/users/groups/{id}/users/{login}':
+  "/users/groups/{id}/users/{login}":
     delete:
       tags:
-      - groups
-      - users
+        - groups
+        - users
       summary: Remove user from group
       description: ONLY remove user from group (no addition)
       operationId: deleteGroupUser
       produces:
-      - application/json
+        - application/json
       parameters:
-      - in: path
-        name: id
-        description: Group id
-        type: string
-        required: true
-      - in: path
-        name: login
-        description: User login
-        type: string
-        required: true
+        - in: path
+          name: id
+          description: Group id
+          type: string
+          required: true
+        - in: path
+          name: login
+          description: User login
+          type: string
+          required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
   /users/entities:
     get:
       tags:
         - entities
       summary: Fetch a list of all existing entities.
-      description: 'Fetch a list of all existing entities, with pagination and filter options.'
+      description: "Fetch a list of all existing entities, with pagination and filter options."
       operationId: fetchEntities
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Entity'
+              $ref: "#/definitions/Entity"
           examples:
             application/json:
               - id: ENTITY1
@@ -1038,13 +1040,13 @@ paths:
               - id: ENTITY2
                 name: Control Room 2
                 description: Control Room 2
-        '401':
+        "401":
           description: Authentication required
     post:
       tags:
         - entities
       summary: Create a new entity of users
-      description: 'Create a new entity of users.'
+      description: "Create a new entity of users."
       operationId: createEntity
       consumes:
         - application/json
@@ -1055,28 +1057,28 @@ paths:
           name: entity
           description: Entity to be created
           schema:
-            $ref: '#/definitions/Entity'
+            $ref: "#/definitions/Entity"
       responses:
-        '200':
+        "200":
           description: Updated
           schema:
-            $ref: '#/definitions/Entity'
-        '201':
+            $ref: "#/definitions/Entity"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Entity'
-        '400':
+            $ref: "#/definitions/Entity"
+        "400":
           description: Bad request (duplicate key)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-  '/users/entities/{id}':
+  "/users/entities/{id}":
     put:
       tags:
         - entities
       summary: Update existing entity
-      description: 'Update existing entity.'
+      description: "Update existing entity."
       operationId: updateEntity
       consumes:
         - application/json
@@ -1092,27 +1094,27 @@ paths:
           name: entity
           description: Updated entity data (should match id path parameter)
           schema:
-            $ref: '#/definitions/Entity'
+            $ref: "#/definitions/Entity"
       responses:
-        '200':
+        "200":
           description: Updated
           schema:
-            $ref: '#/definitions/Entity'
-        '201':
+            $ref: "#/definitions/Entity"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Entity'
-        '400':
+            $ref: "#/definitions/Entity"
+        "400":
           description: Bad request (body doesn't match id path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
     get:
       tags:
         - entities
       summary: Fetch an existing entity of users
-      description: 'Fetch an existing entity of users.'
+      description: "Fetch an existing entity of users."
       operationId: fetchEntity
       produces:
         - application/json
@@ -1123,15 +1125,15 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/Entity'
-        '401':
+            $ref: "#/definitions/Entity"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
     delete:
       tags:
@@ -1148,17 +1150,17 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
-  '/users/entities/{id}/users':
+  "/users/entities/{id}/users":
     put:
       tags:
         - entities
@@ -1188,22 +1190,22 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
     patch:
       tags:
         - entities
         - users
       summary: Add users to entity
-      description: 'ONLY add users to entity (no deletion).'
+      description: "ONLY add users to entity (no deletion)."
       operationId: addEntityUsers
       produces:
         - application/json
@@ -1223,22 +1225,22 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
     delete:
       tags:
         - entities
         - users
       summary: Remove all users from entity
-      description: 'remove all users from entity.'
+      description: "remove all users from entity."
       operationId: deleteEntityUsers
       produces:
         - application/json
@@ -1249,23 +1251,23 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
-  '/users/entities/{id}/users/{login}':
+  "/users/entities/{id}/users/{login}":
     delete:
       tags:
         - entities
         - users
       summary: Remove user from entity
-      description: 'ONLY remove user from entity (no addition).'
+      description: "ONLY remove user from entity (no addition)."
       operationId: deleteEntityUser
       produces:
         - application/json
@@ -1281,32 +1283,32 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required entity not found
   /users/perimeters:
     get:
       tags:
         - perimeters
       summary: Fetch a list of all existing perimeters
-      description: 'Fetch a list of all existing perimeters.'
+      description: "Fetch a list of all existing perimeters."
       operationId: fetchPerimeters
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Perimeter'
+              $ref: "#/definitions/Perimeter"
           examples:
             application/json:
               - id: Process1
@@ -1323,15 +1325,15 @@ paths:
                     right: ReceiveAndWrite
                   - state: State2
                     rights: Write
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
     post:
       tags:
         - perimeters
       summary: Create a new perimeter
-      description: 'Create a new perimeter.'
+      description: "Create a new perimeter."
       operationId: createPerimeter
       consumes:
         - application/json
@@ -1342,24 +1344,24 @@ paths:
           name: perimeter
           description: Perimeter to be created
           schema:
-            $ref: '#/definitions/Perimeter'
+            $ref: "#/definitions/Perimeter"
       responses:
-        '201':
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Perimeter'
-        '400':
+            $ref: "#/definitions/Perimeter"
+        "400":
           description: Bad request (duplicate key)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-  '/users/perimeters/{id}':
+  "/users/perimeters/{id}":
     put:
       tags:
         - perimeters
       summary: Update existing perimeter
-      description: 'Update existing perimeter.'
+      description: "Update existing perimeter."
       operationId: updatePerimeter
       consumes:
         - application/json
@@ -1375,27 +1377,27 @@ paths:
           name: perimeter
           description: Updated perimeter data (should match id path parameter)
           schema:
-            $ref: '#/definitions/Perimeter'
+            $ref: "#/definitions/Perimeter"
       responses:
-        '200':
+        "200":
           description: Updated
           schema:
-            $ref: '#/definitions/Perimeter'
-        '201':
+            $ref: "#/definitions/Perimeter"
+        "201":
           description: Created
           schema:
-            $ref: '#/definitions/Perimeter'
-        '400':
+            $ref: "#/definitions/Perimeter"
+        "400":
           description: Bad request (body doesn't match id path parameter)
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
     get:
       tags:
         - perimeters
       summary: Fetch an existing perimeter
-      description: 'Fetch an existing perimeter.'
+      description: "Fetch an existing perimeter."
       operationId: fetchPerimeter
       produces:
         - application/json
@@ -1406,15 +1408,15 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/Perimeter'
-        '401':
+            $ref: "#/definitions/Perimeter"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
     delete:
       tags:
@@ -1431,17 +1433,17 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
-  '/users/perimeters/{id}/groups':
+  "/users/perimeters/{id}/groups":
     put:
       tags:
         - perimeters
@@ -1469,22 +1471,22 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
     patch:
       tags:
         - perimeters
         - groups
       summary: Add groups to perimeter
-      description: 'ONLY add groups to perimeter (no deletion).'
+      description: "ONLY add groups to perimeter (no deletion)."
       operationId: addPerimeterGroups
       produces:
         - application/json
@@ -1504,22 +1506,22 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
     delete:
       tags:
         - perimeters
         - groups
       summary: Remove all groups from perimeter
-      description: 'remove all groups from perimeter.'
+      description: "remove all groups from perimeter."
       operationId: deletePerimeterGroups
       produces:
         - application/json
@@ -1530,23 +1532,23 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
-  '/users/perimeters/{idPerimeter}/groups/{idGroup}':
+  "/users/perimeters/{idPerimeter}/groups/{idGroup}":
     delete:
       tags:
         - perimeters
         - groups
       summary: Remove group from perimeter
-      description: 'ONLY remove group from perimeter (no addition).'
+      description: "ONLY remove group from perimeter (no addition)."
       operationId: deletePerimeterGroup
       produces:
         - application/json
@@ -1562,17 +1564,17 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: Deleted
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required perimeter not found
-  '/users/groups/{id}/perimeters':
+  "/users/groups/{id}/perimeters":
     get:
       tags:
         - groups
@@ -1589,12 +1591,12 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Perimeter'
+              $ref: "#/definitions/Perimeter"
           examples:
             application/json:
               - id: Process1
@@ -1611,11 +1613,11 @@ paths:
                     right: ReceiveAndWrite
                   - state: State2
                     rights: Write
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
     put:
       tags:
@@ -1644,22 +1646,22 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
     patch:
       tags:
         - groups
         - perimeters
       summary: Add perimeters to group
-      description: 'ONLY add perimeters to group (no deletion).'
+      description: "ONLY add perimeters to group (no deletion)."
       operationId: addGroupPerimeters
       produces:
         - application/json
@@ -1679,17 +1681,17 @@ paths:
             items:
               type: string
       responses:
-        '200':
+        "200":
           description: Updated
-        '400':
+        "400":
           description: Bad request
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: Forbidden - ADMIN role necessary
-        '404':
+        "404":
           description: Required group not found
-  '/users/users/{login}/perimeters':
+  "/users/users/{login}/perimeters":
     get:
       tags:
         - users
@@ -1706,12 +1708,12 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/Perimeter'
+              $ref: "#/definitions/Perimeter"
           examples:
             application/json:
               - id: Process1
@@ -1728,29 +1730,29 @@ paths:
                     right: ReceiveAndWrite
                   - state: State2
                     rights: Write
-        '401':
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: >-
             Authenticated users who are not admins can only access their own
             data
-        '404':
+        "404":
           description: Required user not found
   /users/CurrentUserWithPerimeters:
     get:
       tags:
         - users
       summary: Get information about the user connected and his perimeters
-      description: 'Get information about the user connected and his perimeters.'
+      description: "Get information about the user connected and his perimeters."
       operationId: fetchCurrentUserWithPerimeters
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: object
-            $ref: '#/definitions/CurrentUserWithPerimeters'
+            $ref: "#/definitions/CurrentUserWithPerimeters"
           examples:
             application/json:
               userData:
@@ -1770,14 +1772,14 @@ paths:
                 - process: Process1
                   state: State2
                   rights: ReceiveAndWrite
-        '401':
+        "401":
           description: Authentication required
   /users/UserWithPerimeters/{login}:
     get:
       tags:
         - users
       summary: Get information about a user and his perimeters
-      description: 'Get information about a user and his perimeters.'
+      description: "Get information about a user and his perimeters."
       operationId: fetchUserWithPerimeters
       parameters:
         - in: path
@@ -1788,11 +1790,11 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: object
-            $ref: '#/definitions/CurrentUserWithPerimeters'
+            $ref: "#/definitions/CurrentUserWithPerimeters"
           examples:
             application/json:
               userData:
@@ -1812,14 +1814,14 @@ paths:
                 - process: Process1
                   state: State2
                   rights: ReceiveAndWrite
-        '401':
+        "401":
           description: Authentication required
   /users/userActionLogs:
     get:
       tags:
         - user actions logs
       summary: Get user action logs
-      description: 'Get the list the user actions.'
+      description: "Get the list the user actions."
       operationId: getUserActionLogs
       parameters:
         - in: query
@@ -1828,14 +1830,14 @@ paths:
           items:
             type: string
           required: false
-          description: 'usernames of the users who performed the actions'
+          description: "usernames of the users who performed the actions"
         - in: query
           name: action
           type: array
           items:
             type: string
           required: false
-          description: 'types of actions performed'
+          description: "types of actions performed"
         - in: query
           name: dateFrom
           type: number
@@ -1875,27 +1877,27 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: object
-            $ref: '#/definitions/UserActionLogPage'
+            $ref: "#/definitions/UserActionLogPage"
   /users/lastUserAction:
     get:
       tags:
         - last user action
       summary: Get last user action
-      description: 'Get the list the user actions.'
+      description: "Get the list the user actions."
       operationId: getLastUserAction
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/LastUserAction'
+              $ref: "#/definitions/LastUserAction"
   /users/lastUserAction/{login}:
     get:
       tags:
@@ -1912,118 +1914,118 @@ paths:
           type: string
           required: true
       responses:
-        '200':
+        "200":
           description: OK
           schema:
-            $ref: '#/definitions/LastUserAction'
-        '401':
+            $ref: "#/definitions/LastUserAction"
+        "401":
           description: Authentication required
-        '403':
+        "403":
           description: >-
             Authenticated users who are not admins can only access the data
   /users/notificationconfiguration/processstatenotified/{process}/{state}:
-      post:
-        tags:
-          - notification configuration
-        summary: Set notification for a process/state for all users
-        description: 'Configure process/state notification for all users'
-        operationId: notificationConfiguration
-        parameters:
-          - in: path
-            name: process
-            description: process id
-            type: string
-            required: true
-          - in: path
-            name: state
-            description: state id
-            type: string
-            required: true
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: OK
-          '401':
-            description: Authentication required
-          '403':
-            description: Forbidden - ADMIN role necessary
-      delete:
-        tags:
-          - notification configuration
-        summary: Unset process/state notification for all users
-        description: 'Remove process/state notification for all users'
-        operationId: notificationConfiguration
-        parameters:
-          - in: path
-            name: process
-            description: process id
-            type: string
-            required: true
-          - in: path
-            name: state
-            description: state id
-            type: string
-            required: true
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: OK
-          '401':
-            description: Authentication required
-          '403':
-            description: Forbidden - ADMIN role necessary
+    post:
+      tags:
+        - notification configuration
+      summary: Set notification for a process/state for all users
+      description: "Configure process/state notification for all users"
+      operationId: postNotificationConfiguration
+      parameters:
+        - in: path
+          name: process
+          description: process id
+          type: string
+          required: true
+        - in: path
+          name: state
+          description: state id
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Authentication required
+        "403":
+          description: Forbidden - ADMIN role necessary
+    delete:
+      tags:
+        - notification configuration
+      summary: Unset process/state notification for all users
+      description: "Remove process/state notification for all users"
+      operationId: deleteNotificationConfiguration
+      parameters:
+        - in: path
+          name: process
+          description: process id
+          type: string
+          required: true
+        - in: path
+          name: state
+          description: state id
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Authentication required
+        "403":
+          description: Forbidden - ADMIN role necessary
   /users/notificationconfiguration/processstatenotifiedbymail/{process}/{state}:
-      post:
-        tags:
-          - email notification configuration
-        summary: Set email notification for a process/state for all users
-        description: 'Configure process/state email notification for all users'
-        operationId: emailNotificationConfiguration
-        parameters:
-          - in: path
-            name: process
-            description: process id
-            type: string
-            required: true
-          - in: path
-            name: state
-            description: state id
-            type: string
-            required: true
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: OK
-          '401':
-            description: Authentication required
-          '403':
-            description: Forbidden - ADMIN role necessary
-      delete:
-        tags:
-          - email notification configuration
-        summary: Unset email notification for a process/state for all users
-        description: 'Remove process/state email notification for all users'
-        operationId: emailNotificationConfiguration
-        parameters:
-          - in: path
-            name: process
-            description: process id
-            type: string
-            required: true
-          - in: path
-            name: state
-            description: state id
-            type: string
-            required: true
-        produces:
-          - application/json
-        responses:
-          '200':
-            description: OK
-          '401':
-            description: Authentication required
-          '403':
-            description: Forbidden - ADMIN role necessary
+    post:
+      tags:
+        - email notification configuration
+      summary: Set email notification for a process/state for all users
+      description: "Configure process/state email notification for all users"
+      operationId: postEmailNotificationConfiguration
+      parameters:
+        - in: path
+          name: process
+          description: process id
+          type: string
+          required: true
+        - in: path
+          name: state
+          description: state id
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Authentication required
+        "403":
+          description: Forbidden - ADMIN role necessary
+    delete:
+      tags:
+        - email notification configuration
+      summary: Unset email notification for a process/state for all users
+      description: "Remove process/state email notification for all users"
+      operationId: deleteEmailNotificationConfiguration
+      parameters:
+        - in: path
+          name: process
+          description: process id
+          type: string
+          required: true
+        - in: path
+          name: state
+          description: state id
+          type: string
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Authentication required
+        "403":
+          description: Forbidden - ADMIN role necessary
