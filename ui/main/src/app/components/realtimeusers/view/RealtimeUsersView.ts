@@ -94,11 +94,10 @@ export class RealtimeUsersView {
 
             connectedUsers.forEach((connectedUser) => {
                 if (connectedUser.entitiesConnected) {
-                    if (connectedUser.firstName && connectedUser.lastName) {
-                        this.userNameToDisplay.set(
-                            connectedUser.login,
-                            connectedUser.firstName + ' ' + connectedUser.lastName
-                        );
+                    if (connectedUser.firstName || connectedUser.lastName) {
+                        const firstName = connectedUser.firstName || '';
+                        const lastName = connectedUser.lastName || '';
+                        this.userNameToDisplay.set(connectedUser.login, (firstName + ' ' + lastName).trim());
                     } else {
                         this.userNameToDisplay.set(connectedUser.login, connectedUser.login);
                     }

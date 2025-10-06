@@ -37,8 +37,11 @@ export class InfoComponent implements OnInit {
         this.updateTime();
         const firstName = UsersService.getCurrentUserWithPerimeters().userData.firstName;
         const lastName = UsersService.getCurrentUserWithPerimeters().userData.lastName;
-        if (firstName && lastName) this.userName = `${_.upperFirst(firstName)} ${_.upperFirst(lastName)}`;
-        else this.userName = UsersService.getCurrentUserWithPerimeters().userData.login;
+        if (firstName || lastName) {
+            this.userName = `${_.upperFirst(firstName || '')} ${_.upperFirst(lastName || '')}`.trim();
+        } else {
+            this.userName = UsersService.getCurrentUserWithPerimeters().userData.login;
+        }
 
         if (ConfigService.getConfigValue('showUserEntitiesOnTopRightOfTheScreen', false)) {
             this.setUserEntitiesToDisplay();
