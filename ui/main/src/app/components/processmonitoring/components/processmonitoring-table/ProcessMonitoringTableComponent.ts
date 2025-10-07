@@ -116,7 +116,7 @@ export class ProcessmonitoringTableComponent {
                     filter: false,
                     wrapText: false,
                     autoHeight: false,
-                    maxWidth: 18,
+                    maxWidth: 36,
                     resizable: false
                 }
             },
@@ -132,20 +132,33 @@ export class ProcessmonitoringTableComponent {
     onGridReady(params) {
         this.gridApi = params.api;
 
-        const severityCellClassRules = {
-            'opfab-sev-alarm': (field) => field.value === 1,
-            'opfab-sev-action': (field) => field.value === 2,
-            'opfab-sev-compliant': (field) => field.value === 3,
-            'opfab-sev-information': (field) => field.value === 4
-        };
-
         this.columnDefs = [
             {
                 type: 'severityColumn',
                 headerName: '',
                 field: 'severityNumber',
                 headerClass: 'opfab-ag-header-with-no-padding',
-                cellClassRules: severityCellClassRules
+                cellStyle: {
+                    border: 'none'
+                },
+                cellRenderer: (params) => {
+                    const severityClassMap = {
+                        1: 'opfab-sev-alarm',
+                        2: 'opfab-sev-action',
+                        3: 'opfab-sev-compliant',
+                        4: 'opfab-sev-information'
+                    };
+                    const appliedClass = severityClassMap[params.value] || '';
+
+                    return `
+                        <div style="
+                            width: 18px; 
+                            height: 100%;
+                            float: right;"
+                            class="${appliedClass}">
+                        </div>
+                    `;
+                }
             }
         ];
 
@@ -178,6 +191,7 @@ export class ProcessmonitoringTableComponent {
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
+                        cellClass: 'opfab-ag-cell-with-no-padding',
                         flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false,
                         colId: column.field,
