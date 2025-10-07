@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@
 package org.opfab.springtools.configuration.oauth;
 
 import java.io.IOException;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 
 
 public interface UserServiceCache {

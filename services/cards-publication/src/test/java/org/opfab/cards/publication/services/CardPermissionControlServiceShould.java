@@ -11,10 +11,10 @@ package org.opfab.cards.publication.services;
 
 import org.junit.jupiter.api.Test;
 import org.opfab.cards.publication.model.*;
-import org.opfab.users.model.ComputedPerimeter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightEnum;
-import org.opfab.users.model.User;
+import org.opfab.common.users.ComputedPerimeter;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.RightEnum;
+import org.opfab.common.users.User;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;

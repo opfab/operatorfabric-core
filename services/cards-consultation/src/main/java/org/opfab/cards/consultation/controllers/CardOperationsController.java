@@ -20,7 +20,7 @@ import org.opfab.cards.consultation.services.CardSubscription;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;

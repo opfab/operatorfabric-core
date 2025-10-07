@@ -10,10 +10,10 @@ package org.opfab.cards.publication.services;
 
 import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
-import org.opfab.users.model.ComputedPerimeter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.PermissionEnum;
-import org.opfab.users.model.RightEnum;
+import org.opfab.common.users.ComputedPerimeter;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.PermissionEnum;
+import org.opfab.common.users.RightEnum;
 
 import java.util.Arrays;
 import java.util.List;

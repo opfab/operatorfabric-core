@@ -14,7 +14,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.ProcessRepository;
-import org.opfab.businessconfig.model.Process;
+import org.opfab.common.businessconfig.Process;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.springframework.http.HttpStatus;

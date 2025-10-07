@@ -16,7 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
-import org.opfab.businessconfig.model.Process;
+import org.opfab.common.businessconfig.Process;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.utilities.eventbus.EventListener;
 

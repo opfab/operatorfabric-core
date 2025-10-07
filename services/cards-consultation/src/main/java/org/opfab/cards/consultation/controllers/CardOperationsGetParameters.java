@@ -9,7 +9,7 @@
 
 package org.opfab.cards.consultation.controllers;
 
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import java.time.Instant;
 
 @SuppressWarnings("java:S1104") // it is just a data object , we choose to have all fields public for simplicity

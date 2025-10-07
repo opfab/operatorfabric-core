@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;

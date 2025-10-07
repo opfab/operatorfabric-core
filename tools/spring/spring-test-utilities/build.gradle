@@ -3,6 +3,5 @@ dependencies{
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterWeb
     implementation project(':tools:spring:spring-oauth2-utilities')
-    implementation project(":client:users-client-data")
-    implementation project(":client:businessconfig-client-data")
+    implementation project(':services:common-service')
 }

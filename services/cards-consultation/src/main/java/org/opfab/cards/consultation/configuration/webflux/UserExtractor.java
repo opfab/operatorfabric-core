@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2021, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,17 +11,12 @@
 package org.opfab.cards.consultation.configuration.webflux;
 
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
 
 public interface UserExtractor {
-    /**
-     * Extracts User from Authentication request parameters
-     * @param request the http request
-     * @return a {@link User}
-     */
+
     default Mono<CurrentUserWithPerimeters> extractUserFromJwtToken(ServerRequest request){
         return request.principal()
                 .map( principal ->  {

@@ -20,7 +20,7 @@ import org.opfab.cards.publication.model.ArchivedCard;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -11,8 +11,8 @@ package org.opfab.cards.consultation.services;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightEnum;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.RightEnum;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
 
 import java.util.*;

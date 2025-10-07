@@ -1,4 +1,4 @@
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,16 +12,14 @@ package org.opfab.springtools.configuration.oauth;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.User;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-
 public class OpfabLoginAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
-
 
     private String[] usernames;
 
@@ -33,19 +31,18 @@ public class OpfabLoginAuthorizationManager implements AuthorizationManager<Requ
     public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
         return new AuthorizationDecision(checkUserLogin(supplier.get()));
     }
-    
+
     private boolean checkUserLogin(Authentication authentication) {
         User userData = null;
         String user = null;
-        //authentication.getPrincipal() is UserData type if there is authentication
-        //but is String type if there is no authentication (jira : OC-655)
-        if (authentication.getPrincipal()  instanceof String principal) {
+        // authentication.getPrincipal() is UserData type if there is authentication
+        // but is String type if there is no authentication (jira : OC-655)
+        if (authentication.getPrincipal() instanceof String principal) {
             user = principal;
-        }
-        else if (authentication.getPrincipal()  instanceof CurrentUserWithPerimeters currentUserWithPerimeters){
+        } else if (authentication.getPrincipal() instanceof CurrentUserWithPerimeters currentUserWithPerimeters) {
             userData = currentUserWithPerimeters.getUserData();
             user = userData.getLogin();
-            
+
         } else {
             userData = (User) authentication.getPrincipal();
             user = userData.getLogin();

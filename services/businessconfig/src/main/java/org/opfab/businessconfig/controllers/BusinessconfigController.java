@@ -19,7 +19,7 @@ import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
 import org.opfab.businessconfig.configuration.oauth2.UserExtractor;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.utilities.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -64,8 +64,8 @@ public class BusinessconfigController implements UserExtractor {
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public BusinessconfigController(ProcessesService processService,
-                                    UserActionLogRepository userActionLogRepository,
-                                    LastUserActionRepository lastUserActionRepository) {
+            UserActionLogRepository userActionLogRepository,
+            LastUserActionRepository lastUserActionRepository) {
         this.processService = processService;
         this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
     }
@@ -168,7 +168,8 @@ public class BusinessconfigController implements UserExtractor {
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/processes/" + result.id());
             response.setStatus(201);
 
-            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Create bundle " + result.id());
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(),
+                    "Create bundle " + result.id());
 
             return result;
         } catch (FileNotFoundException e) {
@@ -246,7 +247,8 @@ public class BusinessconfigController implements UserExtractor {
             // leaving response body empty
             response.setStatus(204);
 
-            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Delete bundle " + processId);
+            logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(),
+                    "Delete bundle " + processId);
 
             return null;
         } catch (FileNotFoundException e) {

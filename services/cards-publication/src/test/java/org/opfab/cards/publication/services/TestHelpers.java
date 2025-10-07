@@ -19,10 +19,10 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.model.TimeSpan;
-import org.opfab.users.model.ComputedPerimeter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightEnum;
-import org.opfab.users.model.User;
+import org.opfab.common.users.ComputedPerimeter;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.RightEnum;
+import org.opfab.common.users.User;
 
 public class TestHelpers {
 
