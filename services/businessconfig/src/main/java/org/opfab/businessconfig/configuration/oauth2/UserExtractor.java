@@ -7,26 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.businessconfig.configuration.oauth2;
+
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
 
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 public interface UserExtractor {
-    /**
-     * Extracts User from Authentication request parameters
-     * @param request the HttpServlet request
-     * @return a {@link User}
-     */
-    default CurrentUserWithPerimeters extractUserFromJwtToken(HttpServletRequest request){
+    default CurrentUserWithPerimeters extractUserFromJwtToken(HttpServletRequest request) {
         Principal principal = request.getUserPrincipal();
 
-        if (principal != null){
+        if (principal != null) {
             OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
             return (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         }

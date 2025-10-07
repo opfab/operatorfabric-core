@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2023-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
 * See AUTHORS.txt
 * This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ package org.opfab.cards.publication.repositories;
 
 import org.opfab.cards.publication.model.ArchivedCard;
 import org.opfab.cards.publication.model.Card;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 
 import java.time.Instant;
 import java.util.List;
@@ -30,7 +30,7 @@ public interface CardRepository {
 
     public void deleteCard(Card cardToDelete);
 
-    public void setArchivedCardAsDeleted(String process, String processInstanceId,Instant deletionDate);
+    public void setArchivedCardAsDeleted(String process, String processInstanceId, Instant deletionDate);
 
     public Card findCardById(String id, boolean dataFieldIncluded);
 
@@ -46,7 +46,7 @@ public interface CardRepository {
 
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid);
 
-    public List<Card>  deleteCardsByEndDateBefore(Instant endDateBefore);
+    public List<Card> deleteCardsByEndDateBefore(Instant endDateBefore);
 
     public List<Card> findCardsByExpirationDate(Instant expirationDate);
 

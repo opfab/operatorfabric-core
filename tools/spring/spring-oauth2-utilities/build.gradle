@@ -5,7 +5,6 @@ dependencies{
     implementation spring.securityOauthResource, spring.securityOauthJose
     implementation spring.webflux
     implementation misc.jacksonDatabind
-    implementation project(":client:users-client-data")
-    implementation project(":client:businessconfig-client-data")
+    implementation project(":services:common-service")
     implementation project(":tools:generic:utilities")
 }

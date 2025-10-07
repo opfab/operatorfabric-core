@@ -12,7 +12,7 @@ package org.opfab.cards.consultation.services;
 import java.time.Instant;
 
 import org.opfab.springtools.configuration.oauth.UserServiceCache;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 

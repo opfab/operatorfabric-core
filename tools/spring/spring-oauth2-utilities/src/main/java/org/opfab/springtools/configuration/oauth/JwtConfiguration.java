@@ -10,8 +10,8 @@
 package org.opfab.springtools.configuration.oauth;
 
 import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.User;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

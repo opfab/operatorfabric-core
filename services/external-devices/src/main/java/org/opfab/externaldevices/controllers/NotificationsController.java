@@ -17,7 +17,7 @@ import org.opfab.externaldevices.model.Notification;
 import org.opfab.externaldevices.services.DevicesService;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -9,7 +9,7 @@
 
 package org.opfab.springtools.configuration.oauth;
 
-import org.opfab.users.model.PermissionEnum;
+import org.opfab.common.users.PermissionEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 

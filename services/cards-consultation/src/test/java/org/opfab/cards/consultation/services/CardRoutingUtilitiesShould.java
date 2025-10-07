@@ -15,10 +15,10 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 
 import org.junit.jupiter.api.Test;
-import org.opfab.users.model.ComputedPerimeter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.RightEnum;
-import org.opfab.users.model.User;
+import org.opfab.common.users.ComputedPerimeter;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.RightEnum;
+import org.opfab.common.users.User;
 
 
 import java.util.ArrayList;

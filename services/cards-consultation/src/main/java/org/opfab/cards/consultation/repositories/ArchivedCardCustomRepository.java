@@ -13,7 +13,7 @@ package org.opfab.cards.consultation.repositories;
 import org.opfab.cards.consultation.model.ArchivedCard;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardsFilter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.data.domain.Page;
 
 import reactor.core.publisher.Flux;

@@ -3,7 +3,9 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.springframework.boot'
+    
+if (project.name != 'common-service') {
+    apply plugin: 'org.springframework.boot'}
 
     dependencies {
         implementation boot.actuator
@@ -36,7 +38,7 @@ subprojects {
             includeTestsMatching "*Should"
         }
     }
-    // This is a temporary fix to avoid false build error, see (#1543)
+
     tasks.named("processResources") {
         duplicatesStrategy = 'include'
     }
@@ -51,6 +53,7 @@ subprojects {
         }
     }
 
+if (project.name != 'common-service') {
     task buildDocker(type: Exec) {
         workingDir project.projectDir
         commandLine 'docker', 'build', 
@@ -72,8 +75,7 @@ subprojects {
   
     tasks.buildDocker.dependsOn copyScriptsForDockerImage
     tasks.buildDocker.dependsOn build
-    tasks.jacocoTestReport.dependsOn test
+}
+tasks.jacocoTestReport.dependsOn test
 
 }
-
-

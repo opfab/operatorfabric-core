@@ -15,7 +15,7 @@ import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
 import org.opfab.springtools.error.model.ApiError;
 import org.opfab.springtools.error.model.ApiErrorException;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 

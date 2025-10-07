@@ -7,15 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.FilterModel;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
 import org.opfab.springtools.configuration.mongo.PaginationUtils;
-import org.opfab.users.model.CurrentUserWithPerimeters;
-import org.opfab.users.model.PermissionEnum;
-import org.opfab.users.model.RightEnum;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.PermissionEnum;
+import org.opfab.common.users.RightEnum;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -40,7 +39,6 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 import reactor.util.function.Tuple2;
 
-
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import org.slf4j.Logger;
@@ -51,12 +49,12 @@ public interface UserUtilitiesCommonToCardRepository<T> {
     public static final Logger log = LoggerFactory.getLogger(UserUtilitiesCommonToCardRepository.class);
 
     public static final String ENTITY_RECIPIENTS = "entityRecipients";
-	public static final String GROUP_RECIPIENTS = "groupRecipients";
+    public static final String GROUP_RECIPIENTS = "groupRecipients";
     public static final String PROCESS_STATE_KEY = "processStateKey";
     public static final String USER_RECIPIENTS = "userRecipients";
-	public static final String PUBLISH_DATE_FIELD = "publishDate";
-	public static final String START_DATE_FIELD = "startDate";
-	public static final String END_DATE_FIELD = "endDate";
+    public static final String PUBLISH_DATE_FIELD = "publishDate";
+    public static final String START_DATE_FIELD = "startDate";
+    public static final String END_DATE_FIELD = "endDate";
 
     public static final String PROCESS_FIELD = "process";
     public static final String PROCESS_INSTANCE_ID_FIELD = "processInstanceId";
@@ -82,10 +80,11 @@ public interface UserUtilitiesCommonToCardRepository<T> {
     public static final String PUBLISHER_TYPE = "publisherType";
 
     public static final List<String> SPECIAL_PARAMETERS = Collections.unmodifiableList(Arrays.asList(
-        PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM,
-        PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY, ADMIN_MODE));
+            PUBLISH_DATE_FROM_PARAM, PUBLISH_DATE_TO_PARAM, ACTIVE_FROM_PARAM, ACTIVE_TO_PARAM,
+            PAGE_PARAM, PAGE_SIZE_PARAM, CHILD_CARDS_PARAM, LATEST_UPDATE_ONLY, ADMIN_MODE));
 
-    default Mono<T> findByIdWithUser(ReactiveMongoTemplate template, String id, CurrentUserWithPerimeters currentUserWithPerimeters, Class<T> clazz) {
+    default Mono<T> findByIdWithUser(ReactiveMongoTemplate template, String id,
+            CurrentUserWithPerimeters currentUserWithPerimeters, Class<T> clazz) {
         Query query = new Query();
         List<Criteria> criteria = computeCriteriaToFindCardByIdWithUser(id, currentUserWithPerimeters);
         if (!criteria.isEmpty())
@@ -99,13 +98,15 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         return template.find(query, clazz);
     }
 
-    default Flux<T> findByInitialParentCardUid(ReactiveMongoTemplate template, String initialParentCardUid, Class<T> clazz) {
+    default Flux<T> findByInitialParentCardUid(ReactiveMongoTemplate template, String initialParentCardUid,
+            Class<T> clazz) {
         Query query = new Query();
         query.addCriteria(Criteria.where("initialParentCardUid").is(initialParentCardUid));
         return template.find(query, clazz);
     }
 
-    default List<Criteria> computeCriteriaToFindCardByIdWithUser(String id, CurrentUserWithPerimeters currentUserWithPerimeters) {
+    default List<Criteria> computeCriteriaToFindCardByIdWithUser(String id,
+            CurrentUserWithPerimeters currentUserWithPerimeters) {
         List<Criteria> criteria = new ArrayList<>();
         criteria.add(Criteria.where("_id").is(id));
 
@@ -113,7 +114,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                 PermissionEnum.ADMIN, PermissionEnum.VIEW_ALL_CARDS);
 
         boolean isAdminModeForUserPerimeters = (!hasCurrentUserAdminPermission &&
-                hasCurrentUserAnyPermission(currentUserWithPerimeters, PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS));
+                hasCurrentUserAnyPermission(currentUserWithPerimeters,
+                        PermissionEnum.VIEW_ALL_CARDS_FOR_USER_PERIMETERS));
 
         if (!hasCurrentUserAdminPermission)
             criteria.add(computeCriteriaForUser(currentUserWithPerimeters, isAdminModeForUserPerimeters));
@@ -121,13 +123,14 @@ public interface UserUtilitiesCommonToCardRepository<T> {
     }
 
     default boolean hasCurrentUserAnyPermission(CurrentUserWithPerimeters user, PermissionEnum... permissions) {
-        if (permissions == null || user.getPermissions() == null) return false;
+        if (permissions == null || user.getPermissions() == null)
+            return false;
         List<PermissionEnum> permissionsList = Arrays.asList(permissions);
         return user.getPermissions().stream().filter(role -> permissionsList.indexOf(role) >= 0).count() > 0;
     }
 
     default Criteria computeCriteriaForUser(CurrentUserWithPerimeters currentUserWithPerimeters,
-                                            boolean isAdminModeForUserPerimeters) {
+            boolean isAdminModeForUserPerimeters) {
         String login = currentUserWithPerimeters.getUserData().getLogin();
         List<String> groups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> entities = currentUserWithPerimeters.getUserData().getEntities();
@@ -135,7 +138,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         if (currentUserWithPerimeters.getComputedPerimeters() != null)
             currentUserWithPerimeters.getComputedPerimeters().forEach(perimeter -> {
-                if ((perimeter.getRights() == RightEnum.Receive) || (perimeter.getRights() == RightEnum.ReceiveAndWrite))
+                if ((perimeter.getRights() == RightEnum.Receive)
+                        || (perimeter.getRights() == RightEnum.ReceiveAndWrite))
                     processStateList.add(perimeter.getProcess() + "." + perimeter.getState());
             });
 
@@ -145,42 +149,53 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         return computeCriteriaForUser(login, groups, entities, processStateList);
     }
 
-    /** Rules for receiving cards :
-
-    1) If the card is sent to user1, the card is received and visible for user1 if he has the receive right for the
-       corresponding process/state (Receive or ReceiveAndWrite)
-    2) If the card is sent to GROUP1 (or ENTITY1), the card is received and visible for user if all the following is true :
-         - he's a member of GROUP1 (or ENTITY1)
-         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
-    3) If the card is sent to ENTITY1 and GROUP1, the card is received and visible for user if all the following is true :
-         - he's a member of ENTITY1 (either directly or through one of its children entities)
-         - he's a member of GROUP1
-         - he has the receive right for the corresponding process/state (Receive or ReceiveAndWrite)
-    **/
-    default Criteria computeCriteriaForUser(String login, List<String> groups, List<String> entities, List<String> processStateList) {
+    /**
+     * Rules for receiving cards :
+     * 
+     * 1) If the card is sent to user1, the card is received and visible for user1
+     * if he has the receive right for the
+     * corresponding process/state (Receive or ReceiveAndWrite)
+     * 2) If the card is sent to GROUP1 (or ENTITY1), the card is received and
+     * visible for user if all the following is true :
+     * - he's a member of GROUP1 (or ENTITY1)
+     * - he has the receive right for the corresponding process/state (Receive or
+     * ReceiveAndWrite)
+     * 3) If the card is sent to ENTITY1 and GROUP1, the card is received and
+     * visible for user if all the following is true :
+     * - he's a member of ENTITY1 (either directly or through one of its children
+     * entities)
+     * - he's a member of GROUP1
+     * - he has the receive right for the corresponding process/state (Receive or
+     * ReceiveAndWrite)
+     **/
+    default Criteria computeCriteriaForUser(String login, List<String> groups, List<String> entities,
+            List<String> processStateList) {
         List<String> groupsList = (groups != null ? groups : new ArrayList<>());
         List<String> entitiesList = (entities != null ? entities : new ArrayList<>());
 
-        return  new Criteria().andOperator(where(PROCESS_STATE_KEY).in(processStateList),
+        return new Criteria().andOperator(where(PROCESS_STATE_KEY).in(processStateList),
                 new Criteria().orOperator(where(USER_RECIPIENTS).in(login),
-                        where(GROUP_RECIPIENTS).in(groupsList).andOperator
-                                (new Criteria().orOperator
-                                        (where(ENTITY_RECIPIENTS).exists(false), where(ENTITY_RECIPIENTS).size(0))),
-                        where(ENTITY_RECIPIENTS).in(entitiesList).andOperator
-                                (new Criteria().orOperator
-                                        (where(GROUP_RECIPIENTS).exists(false), where(GROUP_RECIPIENTS).size(0))),
+                        where(GROUP_RECIPIENTS).in(groupsList)
+                                .andOperator(new Criteria().orOperator(where(ENTITY_RECIPIENTS).exists(false),
+                                        where(ENTITY_RECIPIENTS).size(0))),
+                        where(ENTITY_RECIPIENTS).in(entitiesList)
+                                .andOperator(new Criteria().orOperator(where(GROUP_RECIPIENTS).exists(false),
+                                        where(GROUP_RECIPIENTS).size(0))),
                         where(GROUP_RECIPIENTS).in(groupsList).and(ENTITY_RECIPIENTS).in(entitiesList),
-                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString()).andOperator(where(PUBLISHER).in(entitiesList)),
-                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.USER.toString()).andOperator(where(PUBLISHER).is(login))));
+                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.ENTITY.toString())
+                                .andOperator(where(PUBLISHER).in(entitiesList)),
+                        where(PUBLISHER_TYPE).is(PublisherTypeEnum.USER.toString())
+                                .andOperator(where(PUBLISHER).is(login))));
     }
 
     default Criteria computeCriteriaForUserButWithoutCriteriaOnRecipients(List<String> processStateList) {
         return Criteria.where(PROCESS_STATE_KEY).in(processStateList);
     }
 
-
     Mono<T> findByIdWithUser(String id, CurrentUserWithPerimeters user);
+
     Flux<T> findByParentCardId(String parentCardId);
+
     Flux<T> findByInitialParentCardUid(String initialParentCardUid);
 
     boolean checkIfInAdminMode(CurrentUserWithPerimeters currentUserWithPerimeters, CardsFilter filter);
@@ -194,9 +209,10 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         boolean isAdminMode = checkIfInAdminMode(currentUserWithPerimeters, filter);
         boolean isAdminModeForUserPerimeters = (!isAdminMode &&
                 checkIfInAdminModeAndPermissionViewAllArchivedCardsForUserPerimeters(
-                currentUserWithPerimeters, filter));
+                        currentUserWithPerimeters, filter));
 
-        List<Criteria> criteria = getCriteria(filter, currentUserWithPerimeters, isAdminMode, isAdminModeForUserPerimeters);
+        List<Criteria> criteria = getCriteria(filter, currentUserWithPerimeters, isAdminMode,
+                isAdminModeForUserPerimeters);
 
         boolean latestUpdateOnly = filter.latestUpdateOnly();
 
@@ -235,7 +251,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                 checkIfInAdminModeAndPermissionViewAllArchivedCardsForUserPerimeters(
                         currentUserWithPerimeters, filter));
 
-        List<Criteria> criteria = this.getCriteria(filter, currentUserWithPerimeters, isAdminMode, isAdminModeForUserPerimeters);
+        List<Criteria> criteria = this.getCriteria(filter, currentUserWithPerimeters, isAdminMode,
+                isAdminModeForUserPerimeters);
 
         boolean latestUpdateOnly = filter.latestUpdateOnly();
 
@@ -297,46 +314,59 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         return criteria;
     }
 
-    private Criteria getMatchingCriteria(FilterModel columnFilter) throws NumberFormatException, NoSuchFieldException, SecurityException {
+    private Criteria getMatchingCriteria(FilterModel columnFilter)
+            throws NumberFormatException, NoSuchFieldException, SecurityException {
         Criteria criteria = null;
-        switch(columnFilter.matchType()) {
-            case EQUALS: 
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getEqualsIgnoreCasePattern(columnFilter.filter().get(0)));
+        switch (columnFilter.matchType()) {
+            case EQUALS:
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getEqualsIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
             case NOTEQUAL:
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getNotEqualsIgnoreCasePattern(columnFilter.filter().get(0)));
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getNotEqualsIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
-            case BLANK: 
-                criteria =  Criteria.where(columnFilter.columnName()).isNull();
+            case BLANK:
+                criteria = Criteria.where(columnFilter.columnName()).isNull();
                 break;
             case NOTBLANK:
-                criteria =  Criteria.where(columnFilter.columnName()).exists(true);
+                criteria = Criteria.where(columnFilter.columnName()).exists(true);
                 break;
             case STARTSWITH:
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getStartsWithIgnoreCasePattern(columnFilter.filter().get(0)));
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getStartsWithIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
             case ENDSWITH:
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getEndsWithIgnoreCasePattern(columnFilter.filter().get(0)));
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getEndsWithIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
             case CONTAINS:
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getContainsIgnoreCasePattern(columnFilter.filter().get(0)));
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getContainsIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
             case NOTCONTAINS:
-                criteria =  Criteria.where(columnFilter.columnName()).regex(getNotContainsIgnoreCasePattern(columnFilter.filter().get(0)));
+                criteria = Criteria.where(columnFilter.columnName())
+                        .regex(getNotContainsIgnoreCasePattern(columnFilter.filter().get(0)));
                 break;
             case IN:
-                criteria =  Criteria.where(columnFilter.columnName()).in(columnFilter.filter());
+                criteria = Criteria.where(columnFilter.columnName()).in(columnFilter.filter());
                 break;
             case LESSTHAN:
-                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName()).getType().getCanonicalName().equals("java.time.Instant")) {
-                    criteria = Criteria.where(columnFilter.columnName()).lt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
-                } else  criteria =  Criteria.where(columnFilter.columnName()).lt(columnFilter.filter().get(0));
+                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName())
+                        .getType().getCanonicalName().equals("java.time.Instant")) {
+                    criteria = Criteria.where(columnFilter.columnName())
+                            .lt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
+                } else
+                    criteria = Criteria.where(columnFilter.columnName()).lt(columnFilter.filter().get(0));
                 break;
             case GREATERTHAN:
-                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName()).getType().getCanonicalName().equals("java.time.Instant")) {
-                    criteria = Criteria.where(columnFilter.columnName()).gt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
-                } else  criteria =  Criteria.where(columnFilter.columnName()).gt(columnFilter.filter().get(0));
-            break;
+                if (org.opfab.cards.consultation.model.ArchivedCard.class.getDeclaredField(columnFilter.columnName())
+                        .getType().getCanonicalName().equals("java.time.Instant")) {
+                    criteria = Criteria.where(columnFilter.columnName())
+                            .gt(Instant.ofEpochMilli(Long.parseLong(columnFilter.filter().get(0))));
+                } else
+                    criteria = Criteria.where(columnFilter.columnName()).gt(columnFilter.filter().get(0));
+                break;
         }
         return criteria;
     }
@@ -358,7 +388,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
     }
 
     private Pattern getContainsIgnoreCasePattern(String value) {
-        return Pattern.compile( Pattern.quote(value), Pattern.CASE_INSENSITIVE);
+        return Pattern.compile(Pattern.quote(value), Pattern.CASE_INSENSITIVE);
     }
 
     private Pattern getNotContainsIgnoreCasePattern(String value) {
@@ -367,7 +397,8 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
     private Criteria childCardsIncludedOrNotCriteria(CardsFilter filter) {
 
-        if (Boolean.TRUE.equals(filter.includeChildCards())) return new Criteria();
+        if (Boolean.TRUE.equals(filter.includeChildCards()))
+            return new Criteria();
 
         return Criteria.where(PARENT_CARD_ID_FIELD).exists(false);
     }
@@ -376,8 +407,10 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         List<Criteria> criteria = new ArrayList<>();
 
-        Optional<FilterModel> publishDateFilterFrom = filter.filters().stream().filter(f -> f.columnName().equals(PUBLISH_DATE_FROM_PARAM)).findFirst();
-        Optional<FilterModel> publishDateFilterTo = filter.filters().stream().filter(f -> f.columnName().equals(PUBLISH_DATE_TO_PARAM)).findFirst();
+        Optional<FilterModel> publishDateFilterFrom = filter.filters().stream()
+                .filter(f -> f.columnName().equals(PUBLISH_DATE_FROM_PARAM)).findFirst();
+        Optional<FilterModel> publishDateFilterTo = filter.filters().stream()
+                .filter(f -> f.columnName().equals(PUBLISH_DATE_TO_PARAM)).findFirst();
 
         if (publishDateFilterFrom.isPresent() && publishDateFilterTo.isPresent()) {
             criteria.add(Criteria.where(PUBLISH_DATE_FIELD)
@@ -393,34 +426,32 @@ public interface UserUtilitiesCommonToCardRepository<T> {
         return criteria;
     }
 
-
     private List<Criteria> activeDateRangeCriteria(CardsFilter filter) {
 
         List<Criteria> criteria = new ArrayList<>();
 
-
-        Optional<FilterModel> activeDateFilterFrom = filter.filters().stream().filter(f -> f.columnName().equals(ACTIVE_FROM_PARAM)).findFirst();
-        Optional<FilterModel> activeDateFilterTo = filter.filters().stream().filter(f -> f.columnName().equals(ACTIVE_TO_PARAM)).findFirst();
+        Optional<FilterModel> activeDateFilterFrom = filter.filters().stream()
+                .filter(f -> f.columnName().equals(ACTIVE_FROM_PARAM)).findFirst();
+        Optional<FilterModel> activeDateFilterTo = filter.filters().stream()
+                .filter(f -> f.columnName().equals(ACTIVE_TO_PARAM)).findFirst();
 
         if (activeDateFilterFrom.isPresent() && activeDateFilterTo.isPresent()) {
             Instant activeFrom = Instant.ofEpochMilli(Long.parseLong(activeDateFilterFrom.get().filter().get(0)));
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(activeDateFilterTo.get().filter().get(0)));
             criteria.add(new Criteria().orOperator(
-                    //Case 1: Card start date is included in query filter range
+                    // Case 1: Card start date is included in query filter range
                     where(START_DATE_FIELD).gte(activeFrom).lte(activeTo),
-                    //Case 2: Card start date is before start of query filter range and end date after start of query filter
+                    // Case 2: Card start date is before start of query filter range and end date
+                    // after start of query filter
                     new Criteria().andOperator(
-                        where(START_DATE_FIELD).lte(activeFrom),
-                        where(END_DATE_FIELD).gte(activeFrom))
-                    )
-			);
+                            where(START_DATE_FIELD).lte(activeFrom),
+                            where(END_DATE_FIELD).gte(activeFrom))));
 
         } else if (activeDateFilterFrom.isPresent()) {
             Instant activeFrom = Instant.ofEpochMilli(Long.parseLong(activeDateFilterFrom.get().filter().get(0)));
             criteria.add(new Criteria().orOperator(
-                where(END_DATE_FIELD).gte(activeFrom),
-                where(START_DATE_FIELD).gte(activeFrom)
-            ));
+                    where(END_DATE_FIELD).gte(activeFrom),
+                    where(START_DATE_FIELD).gte(activeFrom)));
         } else if (activeDateFilterTo.isPresent()) {
             Instant activeTo = Instant.ofEpochMilli(Long.parseLong(activeDateFilterTo.get().filter().get(0)));
             criteria.add(Criteria.where(START_DATE_FIELD).lte(activeTo));

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import org.opfab.cards.consultation.model.ArchivedCardWithChildCards;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

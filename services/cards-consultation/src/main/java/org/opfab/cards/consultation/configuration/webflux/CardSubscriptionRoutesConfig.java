@@ -14,7 +14,7 @@ import org.opfab.cards.consultation.controllers.CardOperationsGetParameters;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;

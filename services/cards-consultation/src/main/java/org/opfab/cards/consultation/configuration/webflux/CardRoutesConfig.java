@@ -15,7 +15,7 @@ import org.opfab.cards.consultation.model.CardWithChildCards;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
-import org.opfab.users.model.CurrentUserWithPerimeters;
+import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
