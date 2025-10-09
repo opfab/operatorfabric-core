@@ -74,7 +74,7 @@
     "@fortawesome/fontawesome-free": "7.1.0",
     "@types/geojson": "^7946.0.10",
     "@types/jasmine": "5.1.9",
-    "@typescript-eslint/eslint-plugin": "8.45.0",
+    "@typescript-eslint/eslint-plugin": "8.46.0",
     "@typescript-eslint/parser": "8.45.0",
     "eslint": "9.37.0",
     "eslint-plugin-jest": "29.0.1",
