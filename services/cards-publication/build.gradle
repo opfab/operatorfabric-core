@@ -1,3 +1,7 @@
+plugins {
+    id "com.github.davidmc24.gradle.plugin.avro"
+}
+
 dependencies {
     implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
     implementation misc.jsonSmart
@@ -25,9 +29,6 @@ dependencies {
     implementation boot.starterMongo
     testImplementation spring.securityTest
 
-    // necessary for generated class for kafka-avro-serializer (org.opfab.avro.*)
-    implementation project(':client:cards-client-data')
-
     implementation project(':services:common-service')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
@@ -46,3 +47,8 @@ bootJar {
     }
 }
 
+avro {
+    createSetters = true
+    fieldVisibility = "PRIVATE"
+    stringType = "String"
+}
