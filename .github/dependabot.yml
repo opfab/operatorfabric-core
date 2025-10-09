@@ -15,5 +15,11 @@ updates:
       ag-grid:
         patterns:
           - "ag-grid*"
+      eslint:
+        patterns:
+          - "*eslint*"
+      stylelint:
+        patterns:
+          - "*stylelint*"
     schedule:
       interval: "daily"
