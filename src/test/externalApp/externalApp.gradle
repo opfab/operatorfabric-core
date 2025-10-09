@@ -16,8 +16,8 @@ configurations {
 bootJar {
 	manifest {
 		attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
-				"Specification-Title"    : "OperatorFabric Businessconfig Parties Manager",
-				"Implementation-Title"   : "OperatorFabric Businessconfig Parties Manager",
+				"Specification-Title"    : "OperatorFabric Test application",
+				"Implementation-Title"   : "OperatorFabric Test application",
 				"Implementation-Version" : operatorfabric.version,
 				"Specification-Version"  : operatorfabric.version
 		)
@@ -35,7 +35,6 @@ task buildDocker(type: Exec) {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation "org.opfab:cards-client-data:${project.version}"
 	implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
 
@@ -43,8 +42,6 @@ dependencies {
 	implementation project(':tools:spring:spring-utilities')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-
-	implementation project(':client:cards-client-data')
 	}
 
 }

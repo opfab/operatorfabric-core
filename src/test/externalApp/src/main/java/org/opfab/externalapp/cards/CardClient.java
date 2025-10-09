@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,7 @@
 
 package org.opfab.externalapp.cards;
 
-import org.opfab.cards.model.Card;
-import org.opfab.cards.model.CardCreationReport;
+import org.opfab.externalapp.model.*;
 import org.opfab.externalapp.common.HttpClientInterceptor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -38,27 +37,28 @@ public class CardClient {
         restTemplate.setInterceptors(List.of(new HttpClientInterceptor()));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization","Bearer " + authToken);
+        headers.add("Authorization", "Bearer " + authToken);
         HttpEntity<Card> request = new HttpEntity<>(card, headers);
-        ResponseEntity<CardCreationReport> response = restTemplate.postForEntity(url, request, CardCreationReport.class);
+        ResponseEntity<CardCreationReport> response = restTemplate.postForEntity(url, request,
+                CardCreationReport.class);
         return response.getBody();
     }
 
     public Card getCard(String url, String authToken, String cardId) {
         RestTemplate restTemplate = builder.build();
-        
+
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization","Bearer " + authToken);
+        headers.add("Authorization", "Bearer " + authToken);
         HttpEntity<String> request = new HttpEntity<>(headers);
         Map<String, String> params = new HashMap<>();
-       
+
         ResponseEntity<CardData> response = restTemplate.exchange(url + "/" + cardId, HttpMethod.GET,
                 request, CardData.class, params);
         CardData cardData = response.getBody();
-        if (cardData!=null)  return cardData.card;
-        else return null;
+        if (cardData != null)
+            return cardData.card;
+        else
+            return null;
     }
-
-
 
 }

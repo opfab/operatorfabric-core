@@ -10,10 +10,7 @@
 package org.opfab.externalapp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.opfab.cards.model.Card;
-import org.opfab.cards.model.CardCreationReport;
-import org.opfab.cards.model.I18n;
-import org.opfab.cards.model.SeverityEnum;
+import org.opfab.externalapp.model.*;
 import org.opfab.externalapp.cards.CardClient;
 import org.opfab.externalapp.security.AuthClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,31 +80,29 @@ public class ExternalAppServiceImpl implements ExternalAppService {
             Long endDate) {
 
         Card card = new Card();
-        card.setPublisher("operator1_fr");
-        card.setProcessVersion("1");
-        card.setProcess(processToSend);
-        card.setProcessInstanceId(processInstanceIdReceived);
-        card.setState(state);
-        card.setSeverity(SeverityEnum.INFORMATION);
+        card.publisher = "operator1_fr";
+        card.processVersion = "1";
+        card.process = processToSend;
+        card.processInstanceId = processInstanceIdReceived;
+        card.state = state;
+        card.severity = SeverityEnum.INFORMATION;
         if (startDate != null) {
-            card.setStartDate(Instant.ofEpochMilli(startDate));
+            card.startDate = Instant.ofEpochMilli(startDate);
         } else {
-            card.setStartDate(Instant.now());
+            card.startDate = Instant.now();
         }
         if (endDate != null) {
-            card.setEndDate(Instant.ofEpochMilli(endDate));
+            card.endDate = Instant.ofEpochMilli(endDate);
         }
-        card.setUserRecipients(userRecipients);
-        card.setGroupRecipients(groupRecipients);
-        card.setEntityRecipients(entitiesRecipients);
+        card.userRecipients = userRecipients;
+        card.groupRecipients = groupRecipients;
+        card.entityRecipients = entitiesRecipients;
 
-        I18n summary = new I18n();
-        summary.setKey("message.summary");
-        card.setSummary(summary);
+        I18n summary = new I18n("message.summary", null);
+        card.summary = summary;
 
-        I18n title = new I18n();
-        title.setKey("message.title");
-        card.setTitle(title);
+        I18n title = new I18n("message.title", null);
+        card.title = title;
 
         LinkedHashMap<String, String> data = new LinkedHashMap<>();
         data.put("message", "Card with id=" + idReceived + " received by externalApp. " +
@@ -115,7 +110,7 @@ public class ExternalAppServiceImpl implements ExternalAppService {
                 recipientsToString(userRecipients) + " " +
                 recipientsToString(groupRecipients) + " " +
                 recipientsToString(entitiesRecipients) + " ");
-        card.setData(data);
+        card.data = data;
 
         String token = null;
         try {

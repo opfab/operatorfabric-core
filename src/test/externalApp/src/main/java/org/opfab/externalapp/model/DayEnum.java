@@ -6,11 +6,15 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-package org.opfab.externalapp.cards;
 
-import org.opfab.externalapp.model.Card;
+package org.opfab.externalapp.model;
 
-public class CardData {
-    Card card;
-    Card[] childCards;
+public enum DayEnum {
+    MO,
+    TU,
+    WE,
+    TH,
+    FR,
+    SA,
+    SU
 }
