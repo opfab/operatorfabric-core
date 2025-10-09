@@ -1,0 +1,6 @@
+@namespace("org.opfab.avro")
+protocol SeverityTypeProtocol {
+	enum SeverityType {
+		ALARM, ACTION, COMPLIANT, INFORMATION
+	}
+}
