@@ -317,7 +317,17 @@ public class CardSubscriptionService implements EventListener {
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
                 break;
             case "user":
-                cache.values().forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
+                // message contains the user login that is impacted by the change
+                // if message is empty all users are impacted
+                if (message == null || message.isEmpty()) {
+                    cache.values()
+                            .forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
+                } else {
+                    cache.values().forEach(subscription -> {
+                        if (message.equals(subscription.getUserLogin()))
+                            subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE");
+                    });
+                }
                 break;
             case "card":
                 cache.values().forEach(subscription -> processNewCard(message, subscription));
