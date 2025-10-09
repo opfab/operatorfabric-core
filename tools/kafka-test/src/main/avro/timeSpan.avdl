@@ -1,0 +1,7 @@
+@namespace("org.opfab.avro")
+protocol TimeSpanProtocl {
+	record TimeSpan {
+		timestamp_ms start;
+		union {null, timestamp_ms} end = null;
+	}
+}
