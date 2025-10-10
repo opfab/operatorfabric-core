@@ -62,8 +62,9 @@ describe('Resilience tests', function () {
 
         cy.exec('docker stop cards-consultation', {failOnNonZeroExit: false}).then((result) => {
             // only if docker stop works, so it will not be executed in dev mode
-            if (result.code === 0) {
+            if (result.exitCode === 0) {
                 script.send6TestCards(); // Send 6 cards when cards-consultation service is down
+                cy.wait(5000);
                 checkLoadingSpinnerIsVisible();
                 restartCardsConsultationService();
                 feed.checkNumberOfDisplayedCardsIs(6);
