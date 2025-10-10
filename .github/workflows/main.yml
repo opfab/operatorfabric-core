@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -6,47 +5,47 @@ on:
   pull_request:
   schedule:
     # launch a build every day on develop
-    - cron:  '0 22 * * *'
+    - cron: "0 22 * * *"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       build:
-        description: 'Build'
-        required: false 
-        default: 'true'
+        description: "Build"
+        required: false
+        default: "true"
       karate:
-        description: 'Karate tests'
+        description: "Karate tests"
         required: false
-        default: 'true'
+        default: "true"
       cypress:
-        description: 'Cypress Tests'
+        description: "Cypress Tests"
         required: false
-        default: 'true'
+        default: "true"
       cypressTestFiles:
-        description: 'Cypress Test files'
+        description: "Cypress Test files"
         required: false
-        default: '*'
+        default: "*"
       gatling:
-        description: 'Load tests'
+        description: "Load tests"
         required: false
-        default: 'false'
+        default: "false"
       doc:
-        description: 'Build and publish documentation '     
+        description: "Build and publish documentation "
         required: false
-        default: 'false'
+        default: "false"
       docLatest:
-        description: 'Build and publish documentation - Latest'     
+        description: "Build and publish documentation - Latest"
         required: false
-        default: 'false'
+        default: "false"
       dockerPush:
-        description: 'Docker push'     
+        description: "Docker push"
         required: false
-        default: 'false'      
+        default: "false"
       dockerPushLatest:
-        description: 'Docker push - Latest'     
+        description: "Docker push - Latest"
         required: false
-        default: 'false'  
+        default: "false"
 permissions: read-all
 jobs:
   build:
@@ -54,14 +53,14 @@ jobs:
     if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      
+
       - name: Job  status
-        env: 
+        env:
           EVENT_NAME: ${{ github.event_name }}
           REF_NAME: ${{ github.ref_name }}
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
-        run: | 
+        run: |
           echo "----------------------------"
           echo "Trigger by  : $EVENT_NAME"
           echo "On branch : $REF_NAME "
@@ -76,15 +75,15 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('gradle.properties','**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-     
-      # Install all required tools 
-      - name: Install 
+
+      # Install all required tools
+      - name: Install
         run: ./CICD/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
-        # build.sh set variable for sdk, nvm and gradle 
-        # if variable is set in install step it is not accessible in this step 
+        # build.sh set variable for sdk, nvm and gradle
+        # if variable is set in install step it is not accessible in this step
         run: ./CICD/github/build.sh
         env:
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
@@ -93,19 +92,19 @@ jobs:
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: ./CICD/github/launch_karate_tests.sh
-    
-      - name: Cypress tests 
+
+      - name: Cypress tests
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
-      - name: Upload cypress screenshots and logs 
+      - name: Upload cypress screenshots and logs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
-            name: cypress-screenshots
-            path: |
-              src/test/cypress/cypress/screenshots
-              opfab.log
+          name: cypress-screenshots
+          path: |
+            src/test/cypress/cypress/screenshots
+            opfab.log
       - name: Load tests
         if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
         run: ./CICD/github/launch_load_tests.sh
@@ -117,14 +116,14 @@ jobs:
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    
+
       - name: Job  status
-        env: 
+        env:
           EVENT_NAME: ${{ github.event_name }}
           REF_NAME: ${{ github.ref_name }}
           HEAD_REF: ${{ github.head_ref }}
           BASE_REF: ${{ github.base_ref }}
-        run: | 
+        run: |
           echo "----------------------------"
           echo "Trigger by  : $EVENT_NAME"
           echo "On branch : $REF_NAME "
@@ -139,15 +138,15 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('gradle.properties','**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-     
-      # Install all required tools 
-      - name: Install 
+
+      # Install all required tools
+      - name: Install
         run: ./CICD/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
-        # set variable in this step (sdk, nvm et gradle) 
-        # if variable is set in install step it is not accessible in this step 
+        # set variable in this step (sdk, nvm et gradle)
+        # if variable is set in install step it is not accessible in this step
         run: ./CICD/github/build.sh
         env:
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
@@ -157,48 +156,48 @@ jobs:
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
         run: ./CICD/github/launch_karate_tests.sh
 
-      - name: Cypress tests 
+      - name: Cypress tests
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_cypress_tests.sh 
+        run: ./CICD/github/launch_cypress_tests.sh
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
-            name: cypress-screenshots
-            path: src/test/cypress/cypress/screenshots
+          name: cypress-screenshots
+          path: src/test/cypress/cypress/screenshots
 
       - name: Load tests
         if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
         run: ./CICD/github/launch_load_tests.sh
 
-      - name : Publish Documentation
-        if : ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
+      - name: Publish Documentation
+        if: ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
         run: |
           source $HOME/.sdkman/bin/sdkman-init.sh;
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
-          ./gradlew --build-cache generateSwaggerUI asciidoctor;
+          ./gradlew --build-cache generateOpenApiDocs generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
-      - name : Publish Documentation (latest)
-        if : ${{ github.event.inputs.docLatest  == 'true' }}
+      - name: Publish Documentation (latest)
+        if: ${{ github.event.inputs.docLatest  == 'true' }}
         run: |
           source $HOME/.sdkman/bin/sdkman-init.sh;
           export NVM_DIR="$HOME/.nvm"
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
-          ./gradlew --build-cache generateSwaggerUI asciidoctor;
+          ./gradlew --build-cache generateOpenApiDocs generateSwaggerUI asciidoctor;
           ./CICD/github/upload_doc.sh --updateLatest true
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
-      - name : Push images to dockerhub 
+      - name: Push images to dockerhub
         if: ${{ github.event.inputs.dockerPush  == 'true' || github.event_name == 'schedule' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
@@ -207,7 +206,7 @@ jobs:
           docker push ${image}
           done
 
-      - name : Push images latest to dockerhub 
+      - name: Push images latest to dockerhub
         if: ${{ github.event.inputs.dockerPushLatest  == 'true' }}
         run: |
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username opfabtravis --password-stdin
@@ -217,4 +216,3 @@ jobs:
           docker tag ${image}  ${repository}:latest
           docker push ${repository}:latest
           done
-
