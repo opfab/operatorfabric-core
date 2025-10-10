@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -43,15 +43,13 @@ The task output can be found under `$OF_HOME/build/docs/asciidoc`
 
 == Generating API documentation
 
-The documentation for the API is generated from the `swagger.yaml` definitions using SwaggerUI. To generate the
-API documentation, use the `generateSwaggerUI` gradle task, either from the project root or from one of the client directory:
+The documentation for the API is generated from the open api definition file `src/docs/api/openapi.yml` definitions. To generate the
+API documentation, use the `generateOpenApiDocs` gradle task:
 
 [source,bash]
 ----
 cd $OF_HOME
-./gradlew generateSwaggerUI
+./gradlew generateOpenApiDocs
 ----
 
-The task output can be found for each client library under `client/[service-path]/build/docs/api`
-(for example `client/businessconfig/build/docs/api`). Open the `index.html` file in a browser to have a look at
-the generated SwaggerUI.
+The generate html file can be found under `src/docs/api/build`

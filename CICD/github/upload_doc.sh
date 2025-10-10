@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2018-2020, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,12 +67,20 @@ if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
   # If updateLatest is true, update current documentation
   if [[ $updateLatest = true ]]; then
     rm -r $HOME/documentation/documentation/current/*
+    
+    # New Api documentation 
+    echo "copying new API documentation"
+    mkdir -p $HOME/documentation/documentation/current/api/
+    cp -r $OF_HOME/src/docs/api/build/index.html $HOME/documentation/documentation/current/api/
+    
+    # Let for now the old one for backward compatibility
     # Copy API documentation for each component
     for prj in "${OF_CLIENT_REL_COMPONENTS[@]}"; do
       echo "copying $prj documentation"
       mkdir -p $HOME/documentation/documentation/current/api/$prj/
       cp -r client/$prj/build/docs/api/* $HOME/documentation/documentation/current/api/$prj/
     done
+
     # Copy asciidoctor documentation (including images)
     mkdir -p $HOME/documentation/documentation/current/
     cp -r $OF_HOME/build/docs/asciidoc/* $HOME/documentation/documentation/current/
@@ -81,12 +89,22 @@ if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
 fi
 
 # For archives
+
+# New Api Documentation
+echo "copying new API documentation in archives"
+mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/api/
+cp -r $OF_HOME/src/docs/api/build/index.html $HOME/documentation/documentation/archives/$OF_VERSION/api/
+
+# Let for now the old one for backward compatibility
 # Copy API documentation for each component
 for prj in "${OF_CLIENT_REL_COMPONENTS[@]}"; do
   echo "copying $prj documentation"
   mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/api/$prj/
   cp -r client/$prj/build/docs/api/* $HOME/documentation/documentation/archives/$OF_VERSION/api/$prj/
 done
+
+
+
 
 # Copy asciidoctor documentation (only single_file_doc)
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/

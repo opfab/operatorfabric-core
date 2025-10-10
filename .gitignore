@@ -159,5 +159,10 @@ node-services/*/logs
 
 bin/dependencies/report*.txt
 
+#OpenApi doc generation
+src/docs/api/build
+src/docs/api/node_modules
+
+
 # Eclipse LSP files 
 **/.factorypath

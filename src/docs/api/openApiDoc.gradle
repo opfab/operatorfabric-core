@@ -1,0 +1,10 @@
+task generateOpenApiDocs(type: Exec) {
+    description = 'Generates OpenAPI documentation using redoc-cli'
+    group = 'documentation'
+    inputs.file 'openapi.yml'
+    outputs.file 'build/index.html'
+    commandLine 'npx', '@redocly/cli', 'build-docs', 'openapi.yml', '-o', 'build/index.html'
+    doFirst {
+        file('build').mkdirs()
+    }
+}
