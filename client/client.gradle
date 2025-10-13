@@ -1,158 +1,27 @@
-import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
-    id 'java'
-    id 'jacoco'
     id 'org.hidetake.swagger.generator'
-    id "com.vanniktech.maven.publish" version "0.33.0"
 }
 
 subprojects {
 
-    apply plugin: 'java-library'
-    apply plugin: 'jacoco'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
     apply plugin: 'org.hidetake.swagger.generator'
-    apply plugin: "com.vanniktech.maven.publish"
 
     /////// COMPILATION
 
     dependencies {
-        swaggerCodegen generator.swagger, project(':tools:swagger-generator')
         swaggerUI generator.swaggerUI
-        testRuntimeOnly testing_deps.junit5Engine
-        testImplementation testing_deps.junit5Api
-        testImplementation boot.starterTest, testing_deps.assertJ
-        implementation misc.jacksonAnnotations
     }
 
-    sourceSets {
-        main {
-            java {
-                srcDir 'src/main/java'
-                srcDir 'build/swagger/src/main/java'
-            }
-            resources{
-                srcDir 'src/main/resources'
-                srcDir 'build/src/generated/resources'
-            }
-        }
-    }
 
     swaggerSources {
         model {
-            if (!project.projectDir.name.equals('external-devices')) {
-                inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
-            } else {
-                inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
-            }
-            code {
-                additionalProperties = [ignoreImportMappings:"false"]
-                language = 'org.opfab.generators.OpfabClientGenerator'
-                configFile = file('src/main/modeling/config.json')
-                outputDir = file("./build/swagger")
-                templateDir = file('../src/main/resources/swagger-templates')
-                components = ['models']
-            }
+            inputFile = file("../../services/$project.projectDir.name/src/main/modeling/swagger.yaml")
             ui {
                 outputDir = file("./build/docs/api")
             }
         }
     }
 
-    /////// CONFIGURATION
-    test {
-        useJUnitPlatform()
-        filter {
-            includeTestsMatching "*Should"
-        }
-    }
 
-    jacocoTestReport {
-        group = "Reporting"
-        reports {
-            xml.required = true
-            csv.required = false
-            html.outputLocation = file("${buildDir}/reports/coverage")
-        }
-    }
-
-    /////// CUSTOM TASKS
-
-    /*Task that copies all the dependencies under build/support_libs so Sonar
-    can make sense of the Lombok annotations for example */
-    task copyDependencies(type: Copy) {
-        description = 'copy dependencies to build/support_libs'
-        from configurations.compileClasspath
-        into 'build/support_libs'
-    }
-
-    tasks.jacocoTestReport.dependsOn test
-    tasks.compileJava.dependsOn generateSwaggerCode
-    tasks.compileTestJava.dependsOn generateSwaggerCode
-    tasks.generateSwaggerCodeModel.dependsOn ':tools:swagger-generator:assemble'
-
-
-
-    /** Configuration of publication of client jars to Maven Central */
-
-    task sourcesJar(type: Jar){
-        archiveClassifier='sources'
-        from sourceSets.main.allJava
-        duplicatesStrategy = 'include' // This is a temporary fix to avoid false build error, see (#1543)
-    }
-
-    tasks.sourcesJar.dependsOn generateSwaggerCodeModel
-
-    task javadocJar(type: Jar){
-        archiveClassifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    mavenPublishing {
-
-        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-
-        signAllPublications()
-
-        pom {
-            name = project.provider { project.longName }
-            description = project.provider { project.description }
-            version="${operatorfabric.version}"
-            url="${operatorfabric.url}"
-            licenses{
-                license{
-                    name = 'Mozilla Public License Version 2.0'
-                    url = 'https://www.mozilla.org/en-US/MPL/'
-                }
-            }
-            developers {
-                developer {
-                    id = 'freddidierRTE'
-                    name = 'Frédéric Didier'
-                    email = 'frederic-f.didier@rte-france.com'
-                }
-                developer {
-                    id = 'vlo-rte'
-                    name = 'Valérie Longa'
-                    email = 'valerie.longa@rte-france.com'
-                }
-                developer {
-                    id = 'ClementBouvierN'
-                    name = 'Clément Bouvier'
-                    email = 'clement.bouvierneveu@rte-france.com'
-                }
-            }
-            scm {
-                url = 'https://github.com/opfab/operatorfabric-core'
-                connection = 'scm:git:git://github.com:opfab/operatorfabric-core.git'
-                developerConnection = 'scm:git:ssh://github.com:opfab/operatorfabric-core.git'
-            }
-        }
-    }
-
-    signing {
-        useGpgCmd() //These is needed to work with GPG2 See https://github.com/gradle/gradle/issues/888#issuecomment-708439524
-    }
 }

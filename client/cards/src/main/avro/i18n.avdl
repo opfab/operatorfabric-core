@@ -1,7 +1,0 @@
-@namespace("org.opfab.avro")
-protocol I18NProtocol {
-	record I18n {
-		string key;
-		union {null, map<string>} parameters = null;
-	}
-}
