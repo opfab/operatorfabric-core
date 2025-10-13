@@ -404,6 +404,7 @@
         "acknowledge": "BEVESTIGEN SELECTIE",
         "notAnswered": "NIET BEANTWOORD",
         "answer": "BEANTWOORD",
+        "acknowledged": "BEVESTIGD",
         "select" :{
             "otherOptionLabel" : "Andere...",
             "otherOptionPlaceholder" : "Ingestelde waarde"

@@ -404,6 +404,7 @@
         "acknowledge": "ACKNOWLEDGE SELECTED",
         "notAnswered": "NOT ANSWERED",
         "answer": "ANSWER",
+        "acknowledged": "ACKNOWLEDGED",
         "select" :{
             "otherOptionLabel" : "Other...",
             "otherOptionPlaceholder" : "Set value"
