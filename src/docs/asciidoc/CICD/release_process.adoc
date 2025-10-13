@@ -122,43 +122,6 @@ Wait for the build to complete and check that all jobs have been successful.
 . Check that the documentation has been generated and pushed to the GitHub pages website : check the version and revision date at the top of the documents in the current documentation
 (for example link:https://opfab.github.io/documentation/current/architecture/[the architecture documentation])
 
-[[publishing_client_lib_release]]
-=== Publishing the jars for the client library to Maven Central
-
-Once everything else looks ok, you can publish the jars for the client library to MavenCentral. This is done as a last
-step once we are pretty sure we won't need to go back and change things on the release because jars are not meant to be
-removed from Maven Central once they are published (even briefly), and it's not something that could be managed by the
-project.
-
-To do so:
-
-. Set the appropriate properties (credentials and GPG key information) as described in the
-ifdef::single-page-doc[<<client_lib_pub_conf, documentation for the publishing task>>]
-ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#client_lib_pub_conf, documentation for the publishing task>>]
-
-. Run the following command from the project root on the release branch:
-+
-----
-./gradlew publish
-----
-+
-. You should be prompted to enter the passphrase for the GPG key.
-
-. Once the task has completed, log in to the https://central.sonatype.com/[Maven Central Repository] using the same credentials
-as for the Sonatype JIRA.
-+
-image::Maven_Central_Repository.png[Welcome page for the Maven Central repository manager]
-
-. Top right of the screen, click on the https://central.sonatype.com/publishing/deployments[deployment menu]. You should see the staged jars ready for publishing.
-
-. Click on publish, this operation takes around 15 minutes 
-
-image::Published_Release_Central.png[Published jars]
-
-. The jars for the release should then be available on the https://repo1.maven.org/maven2/org/opfab/[project space in the Maven repository] within 10 minutes.
-
-. It can take up to two hours for them to appear on the https://search.maven.org/search?q=opfab[Maven Central Repository Search] and up to one day for https://mvnrepository.com/artifact/org.opfab[MvnRepository]
-
 === Publishing the release on GitHub
 
 . On the https://github.com/opfab/operatorfabric-core/releases[`releases` screen] for the core repository, draft a new
@@ -398,11 +361,6 @@ previous steps has completed successfully, and you can see X.X.X.RELEASE images 
 
 People who want to experiment with OperatorFabric are pointed to this docker compose so it's important to make sure
 that it's working correctly.
-
-=== Publishing the jars for the client library to Maven Central
-
-Like for release candidate , you need to <<publishing_client_lib_release, release the client library jars>>.
-
 
 [[publishing_release_on_github]]
 === Publishing the release on GitHub

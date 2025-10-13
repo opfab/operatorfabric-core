@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2021 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -46,4 +46,6 @@ To be allowed to push images to DockerHub, Github needs to be authenticated. Thi
 
 === Sonatype
 
-We use Sonatype accounts to be able to push libraries to maven central. The list of people authorized to publish is defined via issues : https://issues.sonatype.org/browse/OSSRH-67392
+We used Sonatype accounts to be able to push libraries to maven central. The list of people authorized to publish is defined via issues : https://issues.sonatype.org/browse/OSSRH-67392
+
+This is now deprecated as we do not publish libraries anymore but the old one are still available.

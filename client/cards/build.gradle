@@ -1,22 +1,3 @@
-plugins {
-    id "com.github.davidmc24.gradle.plugin.avro"
-}
-
-dependencies {
-    implementation cloud.avro
-}
-
-jar {
-    manifest {
-        attributes("Created-By": "Gradle ${gradle.gradleVersion}",
-                "Specification-Title": "${longName}",
-                "Implementation-Title": "${longName}",
-                "Implementation-Version": operatorfabric.version,
-                "Specification-Version": operatorfabric.version
-        )
-
-    }
-}
 
 swaggerSources {
 
@@ -25,8 +6,3 @@ swaggerSources {
     }
 }
 
-avro {
-    createSetters = true
-    fieldVisibility = "PRIVATE"
-    stringType = "String"
-}

@@ -1,0 +1,15 @@
+// Copyright (c) 2025 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.10.X to release 4.11.0
+
+== Java Client Library
+
+We do not provide a Java client library for release 4.11.0. We choose to stop maintaining it because it was not widely used and it was a significant maintenance burden. Please use the REST API directly to interact with the platform.
+
+The old Java client library is still available in the Maven central repository but it will not be updated anymore.
+
