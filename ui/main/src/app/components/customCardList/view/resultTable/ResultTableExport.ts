@@ -36,6 +36,7 @@ export class ResultTableExport {
 
     private readonly NOT_ANSWERED = TranslationService.getTranslation('customCardList.notAnswered');
     private readonly ANSWER = TranslationService.getTranslation('customCardList.answer');
+    private readonly ACKNOWLEDGED = TranslationService.getTranslation('customCardList.acknowledged');
 
     private readonly colorToSeverity = {
         red: 'ALARM',
@@ -68,6 +69,9 @@ export class ResultTableExport {
                             if (Array.isArray(cellValue.value)) {
                                 row[column.headerName] = cellValue.value.join(',');
                             }
+                            break;
+                        case 'acknowledgment':
+                            row[this.ACKNOWLEDGED] = cellValue;
                             break;
                         default:
                             if (cellValue?.stringValue) {

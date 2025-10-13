@@ -405,6 +405,7 @@
         "acknowledge": "ACQUITTER LA SÉLECTION",
         "notAnswered": "NON REPONDU",
         "answer": "REPONSE",
+        "acknowledged": "ACQUITTÉE",
         "select" :{
             "otherOptionLabel" : "Autre...",
             "otherOptionPlaceholder" : "Valeur"
