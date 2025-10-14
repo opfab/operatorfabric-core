@@ -11,7 +11,6 @@ dependencies {
     annotationProcessor boot.annotationConfiguration
 
     implementation boot.starterWeb, boot.starterUndertow
-    implementation project(':tools:generic:utilities')
     implementation project(':services:common-service')
     testImplementation project(':tools:spring:spring-test-utilities')
     testImplementation spring.securityTest

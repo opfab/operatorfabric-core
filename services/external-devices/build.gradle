@@ -1,5 +1,4 @@
 dependencies {
-    implementation project(':tools:generic:utilities')
     implementation project(':services:common-service')
     implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose

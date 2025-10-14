@@ -1,5 +1,4 @@
-
-/* Copyright (c) 2023, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,9 +6,11 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+
+
 package org.opfab.utilities.eventbus;
 
-public interface EventBus {
-    public void sendEvent(String eventKey,String eventMessage);
-    public void addListener(String eventKey,EventListener eventListener);
+public interface EventListener {
+
+    public abstract void onEvent(String eventKey,String message);
 }
