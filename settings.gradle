@@ -11,7 +11,6 @@ dependencyResolutionManagement {
 
 rootProject.name = 'operator-fabric'
 
-include 'tools:kafka-test'
 include 'tools:spring:spring-test-utilities'
 include 'tools:generic:test-utilities'
 include 'services:common'
@@ -28,6 +27,7 @@ include 'rabbitmq'
 include 'ui:main'
 include 'externalApp'
 include 'karateTests'
+include 'kafkaJavaClient'
 include 'cypressTests'
 include 'gatlingTests'
 include 'dummyModbusDevice'
@@ -48,6 +48,7 @@ project(':rabbitmq').name = 'rabbitmq'
 project(':ui:main').name = 'web-ui'
 project(':externalApp').projectDir = file('src/test/externalApp')
 project(':karateTests').projectDir = file('src/test/api/karate')
+project(':kafkaJavaClient').projectDir = file('src/test/api/karate/kafka/java-client')
 project(':cypressTests').projectDir = file('src/test/cypress')
 project(':gatlingTests').projectDir = file('src/test/gatling')
 project(':dummyModbusDevice').projectDir = file('src/test/dummyModbusDevice')
