@@ -26,10 +26,10 @@ export GRADLE_OPTS="-XX:MaxMetaspaceSize=512m -Xmx2g"
 ./gradlew --version
 # Check if we have access to sonar token (we are not in a fork for example)
 if [[ -n $SONAR_TOKEN ]]; then
-    ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker sonar
+    ./gradlew --build-cache test jacocoTestReport  buildDocker sonar
 else
 echo "SONAR_TOKEN is not set, skipping sonar analysis."
-    ./gradlew --build-cache copyDependencies test jacocoTestReport  buildDocker
+    ./gradlew --build-cache test jacocoTestReport  buildDocker
 fi  
 status_code=$?
 docker compose -f src/main/docker/test-environment/docker-compose.yml down

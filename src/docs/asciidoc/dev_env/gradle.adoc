@@ -14,11 +14,6 @@ to gradle and plugins official documentation.
 
 == Services
 
-=== Common tasks for all sub-projects
-
-* Test tasks
-* Other:
-** copyDependencies: copy dependencies to build/support_libs (for Sonar)
 
 === Businessconfig Service
 

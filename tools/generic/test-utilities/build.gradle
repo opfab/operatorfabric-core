@@ -1,4 +1,0 @@
-dependencies{
-    implementation testing_deps.assertJ
-    implementation project(':services:common-service')
-}

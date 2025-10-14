@@ -1,6 +1,6 @@
 subprojects {
 
-if (project.name != 'common-service') {
+if (project.name != 'common-service' && project.name != 'test-utilities') {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'io.spring.dependency-management'
@@ -10,7 +10,7 @@ if (project.name != 'common-service') {
         implementation boot.actuator
         implementation misc.micrometer
         testImplementation boot.starterTest, testing_deps.assertJ
-        testImplementation project(':tools:generic:test-utilities')
+        testImplementation project(':services:test-utilities')
 
     }
 
