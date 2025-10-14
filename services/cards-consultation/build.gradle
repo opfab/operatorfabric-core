@@ -11,10 +11,8 @@ dependencies {
 
     implementation boot.starterWebflux
     implementation project(':services:common-service')
-    implementation project(':tools:spring:spring-oauth2-utilities')
     testImplementation testing_deps.reactor
     testImplementation project(':tools:spring:spring-test-utilities')
-    testImplementation project(':tools:spring:spring-oauth2-utilities')
 }
 
 bootJar {

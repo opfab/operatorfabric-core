@@ -12,7 +12,6 @@ dependencies {
 
     implementation boot.starterWeb, boot.starterUndertow
     implementation project(':tools:generic:utilities')
-    implementation project(':tools:spring:spring-oauth2-utilities')
     implementation project(':tools:spring:spring-utilities')
     implementation project(':services:common-service')
     testImplementation project(':tools:spring:spring-test-utilities')
