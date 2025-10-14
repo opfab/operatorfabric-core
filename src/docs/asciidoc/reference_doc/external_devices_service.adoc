@@ -176,7 +176,6 @@ NOTE: The signalMapping object is built as a Map with String keys (rather than t
 constrained type) because there is a strong possibility that in the future we might want to map something other than
 severities.
 
-Please see the https://opfab.github.io/documentation/current/api/external-devices/[API documentation] for details.
 
 NOTE: There is a `Device` object distinct from `DeviceConfiguration` because the latter represents static information
 about how to reach a device, while the former contains information about the actual connection.

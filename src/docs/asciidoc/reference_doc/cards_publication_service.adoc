@@ -27,7 +27,7 @@ include::card_examples.adoc[leveloffset=+1]
 
 The Cards Publication Service exposes a REST API endpoint through which a card can be patched.
 You can find more information in
-ifdef::single-page-doc[link:../api/cards/[the cards api documentation]]
-ifndef::single-page-doc[link:/documentation/current/api/cards/[the cards api documentation]]
+ifdef::single-page-doc[link:../api/index.html#tag/cards-publication[the cards publication api documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/index.html#tag/cards-publication[the cards publication api documentation]]
 . For example, fields like severity, title, summary or data etc... can be patched. However, the fields `process` and
 `processInstanceId` can not be patched as they are used to identify the card.

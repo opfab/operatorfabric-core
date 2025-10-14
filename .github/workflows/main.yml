@@ -179,7 +179,7 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
-          ./gradlew --build-cache generateOpenApiDocs generateSwaggerUI asciidoctor;
+          ./gradlew --build-cache generateOpenApiDocs asciidoctor;
           ./CICD/github/upload_doc.sh
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
@@ -192,7 +192,7 @@ jobs:
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
-          ./gradlew --build-cache generateOpenApiDocs generateSwaggerUI asciidoctor;
+          ./gradlew --build-cache generateOpenApiDocs asciidoctor;
           ./CICD/github/upload_doc.sh --updateLatest true
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}

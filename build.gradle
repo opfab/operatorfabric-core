@@ -1,13 +1,10 @@
 plugins {
     id "com.github.node-gradle.node" version "7.1.0"
     id "org.asciidoctor.jvm.convert" version "4.0.5"
-    id "maven-publish"
-    id "signing"
     id "org.springframework.boot" version "$springBoot" apply false
     id "io.spring.dependency-management" version "1.1.7" apply false
     id 'org.sonarqube' version '6.3.1.5724'
     id "com.github.davidmc24.gradle.plugin.avro" version "1.9.1" apply false
-    id "org.hidetake.swagger.generator" version "2.19.2" apply false
 }
 
 ext {
@@ -77,12 +74,6 @@ ext {
             rabbitMQ       : "com.rabbitmq:amqp-client:$rabbitMQ"
     ]
 
-
-    generator = [
-            swagger                 : "io.swagger:swagger-codegen-cli:$swagger",
-            swaggerUI               : "org.webjars:swagger-ui:$swaggerUI",
-    ]
-
     proxy = [
             https : ""
     ]
@@ -122,13 +113,11 @@ sonar {
         //     - tools/spring/spring-mongo-utilities/** : spring mongo interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
         //     - tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/** : rabbitMQ interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
         //     - tools/generic/test-utilities/** : test utilities are not tested
-        //     - tools/swagger-spring-generators/** : swagger documentation generation is not tested
         //     - tools/kafka-test/** : kafka test  utilities are not tested
         // - node services:
         //     - node-services/**/tests/* : tests are not relevant
         //     - node-services/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
         //     - node-services/**/jest.config.js : jest config files are not tested
-        // - client/** : client librairy is not unit tested (contains only data models)
 
         def coverageExclusions = [
           'cli/**',
@@ -150,12 +139,10 @@ sonar {
           'tools/spring/spring-mongo-utilities/**',
           'tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**',
           'tools/generic/test-utilities/**',
-          'tools/swagger-spring-generators/**',
           'tools/kafka-test/**',
           'node-services/**/tests/*',
           'node-services/**/server-side/**',
-          'node-services/**/jest.config.js',
-          'client/**'
+          'node-services/**/jest.config.js'
         ]
         property 'sonar.coverage.exclusions', coverageExclusions.join(',')
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'

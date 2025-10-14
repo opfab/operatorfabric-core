@@ -185,8 +185,8 @@ target file along with the ID (`\[[my_section_id, text to display]]`) doesn't wo
 In the same way, for relative links to external files (mostly the API documentation):
 +
 ----
-\ifdef::single-page-doc[link:../api/cards/index.html#/archives[here]]
-\ifndef::single-page-doc[link:/documentation/current/api/cards/index.html#/archives[here]]
+\ifdef::single-page-doc[link:../api/index.html#/archives[here]]
+\ifndef::single-page-doc[link:/documentation/current/api/index.html#/archives[here]]
 ----
 +
 IMPORTANT: For this to work, the
