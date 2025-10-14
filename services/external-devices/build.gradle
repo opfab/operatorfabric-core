@@ -9,7 +9,6 @@ dependencies {
 
     compileOnly boot.annotationConfiguration   
    
-    testImplementation project(':tools:spring:spring-test-utilities')
 }
 
 

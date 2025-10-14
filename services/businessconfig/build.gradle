@@ -12,7 +12,7 @@ dependencies {
 
     implementation boot.starterWeb, boot.starterUndertow
     implementation project(':services:common-service')
-    testImplementation project(':tools:spring:spring-test-utilities')
+
     testImplementation spring.securityTest
     testImplementation project(':services:common-service')
 }

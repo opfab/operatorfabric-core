@@ -29,7 +29,6 @@ dependencies {
     testImplementation spring.securityTest
 
     implementation project(':services:common-service')
-    testImplementation project(':tools:spring:spring-test-utilities')
 }
 
 bootJar {

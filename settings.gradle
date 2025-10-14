@@ -11,9 +11,8 @@ dependencyResolutionManagement {
 
 rootProject.name = 'operator-fabric'
 
-include 'tools:spring:spring-test-utilities'
-include 'tools:generic:test-utilities'
 include 'services:common'
+include 'services:test-utilities'
 include 'services:businessconfig'
 include 'services:cards-publication'
 include 'services:cards-consultation'
