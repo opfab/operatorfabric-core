@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     testImplementation testing_deps.karate
-    testImplementation project(':tools:kafka-test')
+    testImplementation project(':kafkaJavaClient')
 }
 
 test {
