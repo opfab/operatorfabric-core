@@ -1,6 +1,8 @@
 
     dependencies {
         implementation misc.jacksonAnnotations
+        implementation boot.starterMongo
+        implementation misc.jsonSmart
     }
 
 
