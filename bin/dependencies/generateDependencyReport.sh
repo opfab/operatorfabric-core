@@ -24,7 +24,6 @@ echo "Build java report"
             tools:generic:utilities:dependencies \
             tools:generic:test-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
-            tools:spring:spring-utilities:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"
     cd src/test/externalApp

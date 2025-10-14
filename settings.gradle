@@ -12,7 +12,6 @@ dependencyResolutionManagement {
 rootProject.name = 'operator-fabric'
 
 include 'tools:generic:utilities'
-include 'tools:spring:spring-utilities'
 include 'tools:kafka-test'
 include 'tools:spring:spring-test-utilities'
 include 'tools:generic:test-utilities'
