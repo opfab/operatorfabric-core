@@ -13,7 +13,6 @@ dependencies {
     implementation project(':services:common-service')
     implementation project(':tools:spring:spring-mongo-utilities')
     implementation project(':tools:spring:spring-oauth2-utilities')
-    implementation project(':tools:user-action-tracing')
     testImplementation testing_deps.reactor
     testImplementation project(':tools:spring:spring-test-utilities')
     testImplementation project(':tools:spring:spring-oauth2-utilities')

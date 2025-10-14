@@ -1,4 +1,0 @@
-dependencies{
-    implementation boot.starterMongo
-    implementation misc.jsonSmart
-}
