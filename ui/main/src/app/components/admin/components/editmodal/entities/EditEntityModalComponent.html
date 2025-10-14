@@ -9,8 +9,12 @@
 
 <div class="modal-content entity-modal">
     <div class="modal-header">
-        <span class="modal-title" *ngIf="row">{{ row.id }}</span>
-        <span class="modal-title" *ngIf="!row" translate>admin.input.{{ type }}.add</span>
+        @if (row) {
+        <span class="modal-title">{{ row.id }}</span>
+        } @else {
+        <span class="modal-title" translate>admin.input.{{ type }}.add</span>
+        }
+
         <div
             id="opfab-admin-edit-btn-close"
             class="opfab-close-modal-icon"
@@ -19,33 +23,48 @@
             <span aria-hidden="true">&times;</span>
         </div>
     </div>
+
     <div class="modal-body">
         <form [formGroup]="entityForm" class="opfab-form-lighter">
             <div class="container">
                 <div>
-                    <div *ngIf="!row" class="opfab-input opfab-edit-row">
+                    @if (!row) {
+                    <div class="opfab-input opfab-edit-row">
                         <label for="opfab-id" translate>admin.input.id.label</label>
                         <input formControlName="id" name="id" id="opfab-id" type="text" />
                     </div>
-                    <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-                        <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-                        <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
-                        <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
-                        <div *ngIf="id.errors.uniqueEntityIdViolation" translate>admin.input.id.alreadyExisting</div>
+                    } @if (id.invalid) {
+                    <div class="opfab-admin-input-invalid">
+                        @if (id.errors.required) {
+                        <div translate>admin.input.id.required</div>
+                        } @if (id.errors.minlength) {
+                        <div translate>admin.input.id.minLength</div>
+                        } @if (id.errors.pattern) {
+                        <div translate>admin.input.id.pattern</div>
+                        } @if (id.errors.uniqueEntityIdViolation) {
+                        <div translate>admin.input.id.alreadyExisting</div>
+                        }
                     </div>
+                    }
 
                     <div class="opfab-input opfab-edit-row">
                         <label for="opfab-name" translate>admin.input.name.label</label>
                         <input formControlName="name" name="name" id="opfab-name" type="text" />
                     </div>
-                    <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
-                        <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
+
+                    @if (name.invalid) {
+                    <div class="opfab-admin-input-invalid">
+                        @if (name.errors.required) {
+                        <div translate>admin.input.name.required</div>
+                        }
                     </div>
+                    }
 
                     <div class="opfab-input opfab-edit-row">
                         <label for="opfab-description" translate>admin.input.description</label>
                         <input formControlName="description" name="description" id="opfab-description" type="text" />
                     </div>
+
                     <div class="opfab-edit-row">
                         <of-multi-select
                             id="opfab-roles"
@@ -56,6 +75,7 @@
                             [selectedOptions]="selectedRoles">
                         </of-multi-select>
                     </div>
+
                     <div class="opfab-edit-row">
                         <of-multi-select
                             id="opfab-parents"
@@ -66,13 +86,16 @@
                             [selectedOptions]="selectedEntities">
                         </of-multi-select>
                     </div>
+
                     <div class="opfab-border-box opfab-edit-row">
                         <label translate>admin.input.entity.labels</label>
                         <div class="label-list">
-                            <div *ngFor="let label of labels.value; let i = index" class="label-chip">
+                            @for (label of labels.value; track label; let i = $index) {
+                            <div class="label-chip">
                                 {{ label }}
-                                <span tabindex="0" (click)="removeLabel(i)" (keydown.enter)="removeLabel(i)">x</span>
+                                <span tabindex="0" (click)="removeLabel(i)" (keydown.enter)="removeLabel(i)"> x </span>
                             </div>
+                            }
                             <input
                                 #labelInput
                                 type="text"
@@ -82,6 +105,7 @@
                                 (keydown.backspace)="!labelInput.value ? removeLabel(-1) : true" />
                         </div>
                     </div>
+
                     <div class="opfab-edit-row">
                         <of-multi-select
                             id="opfab-entity-users"
@@ -95,6 +119,7 @@
                 </div>
             </div>
         </form>
+
         <div class="modal-footer" style="border-top: none">
             <button
                 id="opfab-admin-edit-btn-cancel"
@@ -105,24 +130,26 @@
                 translate>
                 admin.input.close
             </button>
+
+            @if (!row) {
             <button
                 id="opfab-admin-edit-btn-add"
                 [disabled]="!entityForm.valid"
-                *ngIf="!row"
                 (click)="update()"
                 class="opfab-btn"
                 translate>
                 admin.input.{{ type }}.add
             </button>
+            } @if (row) {
             <button
                 id="opfab-admin-entity-btn-save"
                 [disabled]="!entityForm.valid"
-                *ngIf="row"
                 (click)="update()"
                 class="opfab-btn"
                 translate>
                 admin.input.save
             </button>
+            }
         </div>
     </div>
 </div>

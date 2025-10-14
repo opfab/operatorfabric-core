@@ -23,7 +23,7 @@ import {Card} from 'app/model/Card';
 import {UserActionLogsView} from 'app/components/useractionlogs/view/UserActionLogsView';
 import {UserActionLogsResult} from 'app/components/useractionlogs/view/UserActionLogsResult';
 import {UserActionLogsPageDescription} from 'app/components/useractionlogs/view/UserActionLogsPageDescription';
-import {NgIf, NgFor} from '@angular/common';
+import {NgTemplateOutlet} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
@@ -40,17 +40,16 @@ import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
     styleUrls: ['./UserActionLogsComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgIf,
         MultiSelectComponent,
         FormsModule,
         ReactiveFormsModule,
         TranslateModule,
-        NgFor,
         NgbPagination,
         SpinnerComponent,
         ArchivedCardDetailComponent,
         OpfabTitleCasePipe,
-        NgxDaterangepickerMd
+        NgxDaterangepickerMd,
+        NgTemplateOutlet
     ]
 })
 export class UserActionLogsComponent implements OnInit, OnDestroy {

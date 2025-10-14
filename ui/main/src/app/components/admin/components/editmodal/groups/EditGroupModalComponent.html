@@ -9,8 +9,12 @@
 
 <div class="modal-content group-modal">
     <div class="modal-header">
-        <span class="modal-title" style="overflow-wrap: break-word; max-width: 700px" *ngIf="row">{{ row.id }}</span>
-        <span class="modal-title" *ngIf="!row" translate>admin.input.{{ type }}.add</span>
+        @if (row) {
+        <span class="modal-title" style="overflow-wrap: break-word; max-width: 700px">{{ row.id }}</span>
+        } @else {
+        <span class="modal-title" translate>admin.input.{{ type }}.add</span>
+        }
+
         <div
             id="opfab-admin-edit-btn-close"
             class="opfab-close-modal-icon"
@@ -19,31 +23,44 @@
             <span aria-hidden="true">&times;</span>
         </div>
     </div>
+
     <div class="modal-body">
         <form [formGroup]="groupForm" class="opfab-form-lighter">
             <div class="container">
                 <div class="col">
-                    <div *ngIf="!row" class="opfab-input opfab-edit-row">
+                    @if (!row) {
+                    <div class="opfab-input opfab-edit-row">
                         <label for="opfab-id" translate>admin.input.id.label</label>
                         <input formControlName="id" name="id" id="opfab-id" type="text" />
                     </div>
-                    <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-                        <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-                        <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
-                        <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
-                        <div *ngIf="id.errors.uniqueGroupIdViolation" translate>admin.input.id.alreadyExisting</div>
+                    } @if (id.invalid) {
+                    <div class="opfab-admin-input-invalid">
+                        @if (id.errors.required) {
+                        <div translate>admin.input.id.required</div>
+                        } @if (id.errors.minlength) {
+                        <div translate>admin.input.id.minLength</div>
+                        } @if (id.errors.pattern) {
+                        <div translate>admin.input.id.pattern</div>
+                        } @if (id.errors.uniqueGroupIdViolation) {
+                        <div translate>admin.input.id.alreadyExisting</div>
+                        }
                     </div>
+                    }
 
                     <div class="opfab-input opfab-edit-row">
                         <label for="opfab-name" translate>admin.input.name.label</label>
                         <input formControlName="name" name="name" id="opfab-name" type="text" />
                     </div>
-                    <div *ngIf="name.invalid" class="opfab-admin-input-invalid">
-                        <div *ngIf="name.errors.required" translate>admin.input.name.required</div>
-                        <div *ngIf="name.errors.uniqueGroupNameViolation" translate>
-                            admin.input.name.alreadyExisting
-                        </div>
+
+                    @if (name.invalid) {
+                    <div class="opfab-admin-input-invalid">
+                        @if (name.errors.required) {
+                        <div translate>admin.input.name.required</div>
+                        } @if (name.errors.uniqueGroupNameViolation) {
+                        <div translate>admin.input.name.alreadyExisting</div>
+                        }
                     </div>
+                    }
 
                     <div class="opfab-input opfab-edit-row">
                         <label for="opfab-description" translate>admin.input.description</label>
@@ -60,6 +77,7 @@
                             [selectedOptions]="selectedPerimeters">
                         </of-multi-select>
                     </div>
+
                     <div class="opfab-edit-row">
                         <of-multi-select
                             id="opfab-permissions"
@@ -70,6 +88,7 @@
                             [selectedOptions]="selectedGroupPermissions">
                         </of-multi-select>
                     </div>
+
                     <div class="opfab-edit-row">
                         <of-multi-select
                             id="opfab-group-users"
@@ -83,6 +102,7 @@
                 </div>
             </div>
         </form>
+
         <div class="modal-footer" style="border-top: none">
             <button
                 id="opfab-admin-edit-btn-cancel"
@@ -93,24 +113,26 @@
                 translate>
                 admin.input.close
             </button>
+
+            @if (!row) {
             <button
                 id="opfab-admin-edit-btn-add"
                 [disabled]="!groupForm.valid"
-                *ngIf="!row"
                 (click)="update()"
                 class="opfab-btn"
                 translate>
                 admin.input.{{ type }}.add
             </button>
+            } @if (row) {
             <button
                 id="opfab-admin-user-btn-save"
                 [disabled]="!groupForm.valid"
-                *ngIf="row"
                 (click)="update()"
                 class="opfab-btn"
                 translate>
                 admin.input.save
             </button>
+            }
         </div>
     </div>
 </div>

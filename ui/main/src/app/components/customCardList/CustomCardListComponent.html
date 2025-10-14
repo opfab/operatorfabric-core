@@ -6,19 +6,18 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="!isCustomScreenDefinitionExist">
-    <h1>Custom Screen {{id}} does not exist</h1>
-</div>
-
-<div *ngIf="isCustomScreenDefinitionExist" [formGroup]="headerForm" style="overflow: hidden">
+@if (!isCustomScreenDefinitionExist) {
+<h1>Custom Screen {{ id }} does not exist</h1>
+} @if (isCustomScreenDefinitionExist) {
+<div [formGroup]="headerForm" style="overflow: hidden">
     <div class="opfab-custom-screen-header">
         <div style="display: flex">
             <div
                 class="opfab-date-range-input opfab-input"
                 style="margin-top: 28px; margin-bottom: 28px; width: 260px; height: 49px">
-                <label class="opfab-date-range-label" for="opfab-publish-date-range" translate
-                    >shared.filters.businessDateRange</label
-                >
+                <label class="opfab-date-range-label" for="opfab-publish-date-range" translate>
+                    shared.filters.businessDateRange
+                </label>
                 <input
                     id="opfab-business-date-range"
                     type="button"
@@ -31,9 +30,9 @@
                     [timePickerIncrement]="1"
                     formControlName="businessDateRanges" />
             </div>
-            <div
-                *ngIf="processFilterVisible"
-                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+
+            @if (processFilterVisible) {
+            <div style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
                 <of-multi-select
                     id="opfab-process"
                     multiSelectId="processes"
@@ -43,9 +42,8 @@
                     [selectedOptions]="processSelected">
                 </of-multi-select>
             </div>
-            <div
-                *ngIf="typeOfStateFilterVisible"
-                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+            } @if (typeOfStateFilterVisible) {
+            <div style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
                 <of-multi-select
                     id="opfab-type-of-state"
                     multiSelectId="typeOfState"
@@ -55,10 +53,8 @@
                     [selectedOptions]="typeOfStateSelected">
                 </of-multi-select>
             </div>
-
-            <div
-                *ngIf="readAndAckFilterVisible"
-                style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
+            } @if (readAndAckFilterVisible) {
+            <div style="min-width: 300px; max-width: 400px; margin-left: 40px; margin-top: 28px; margin-bottom: 54px">
                 <of-multi-select
                     id="opfab-read-and-ack"
                     multiSelectId="readAndAck"
@@ -68,6 +64,7 @@
                     [selectedOptions]="readAndAckSelected">
                 </of-multi-select>
             </div>
+            }
 
             <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 60px; min-width: 320px">
                 <div class="form-group">
@@ -84,30 +81,30 @@
             </div>
         </div>
     </div>
+
     <div class="opfab-custom-card-list-responses-checkbox">
-        <div *ngIf="responseFromMyEntitiesFilterVisible">
-            <label
-                id="opfab-show-cards-with-response"
-                style="font-weight: bold; margin-left: 5px; margin-right: 30px; margin-bottom: 0px; margin-top: 10px"
-                class="opfab-checkbox"
-                translate
-                >feed.filters.showCardsWithResponse.label
-                <input type="checkbox" formControlName="responseFromMyEntities" />
-                <span class="opfab-checkbox-checkmark"></span>
-            </label>
-        </div>
-        <div *ngIf="responseFromAllEntitiesFilterVisible">
-            <label
-                id="opfab-show-cards-with-all-response"
-                style="font-weight: bold; margin-left: 5px; margin-bottom: 0px; margin-top: 10px"
-                class="opfab-checkbox"
-                translate
-                >shared.filters.showCardsWithResponseFromAllEntities
-                <input type="checkbox" formControlName="responseFromAllEntities" />
-                <span class="opfab-checkbox-checkmark"></span>
-            </label>
-        </div>
-        <div *ngIf="loadingInProgress" class="opfab-loading-spinner">
+        @if (responseFromMyEntitiesFilterVisible) {
+        <label
+            id="opfab-show-cards-with-response"
+            style="font-weight: bold; margin-left: 5px; margin-right: 30px; margin-bottom: 0px; margin-top: 10px"
+            class="opfab-checkbox"
+            translate>
+            feed.filters.showCardsWithResponse.label
+            <input type="checkbox" formControlName="responseFromMyEntities" />
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+        } @if (responseFromAllEntitiesFilterVisible) {
+        <label
+            id="opfab-show-cards-with-all-response"
+            style="font-weight: bold; margin-left: 5px; margin-bottom: 0px; margin-top: 10px"
+            class="opfab-checkbox"
+            translate>
+            shared.filters.showCardsWithResponseFromAllEntities
+            <input type="checkbox" formControlName="responseFromAllEntities" />
+            <span class="opfab-checkbox-checkmark"></span>
+        </label>
+        } @if (loadingInProgress) {
+        <div class="opfab-loading-spinner">
             <ng-template #tipLoadingInProgress>
                 <span translate>feed.tips.loadingInProgress</span>
             </ng-template>
@@ -119,6 +116,7 @@
                 <em class="fas fa-spinner fa-spin opfab-slow-spinner"></em>
             </div>
         </div>
+        }
     </div>
 
     <div
@@ -130,8 +128,8 @@
             margin-right: 5%;
         ">
         <div style="height: calc(100vh - 380px)">
+            @if ((responseButtons?.length === 0) || loadingInProgress) {
             <ag-grid-angular
-                *ngIf="(this.responseButtons?.length === 0) || loadingInProgress; else rowSelectionEnabled"
                 id="opfab-custom-screen-table-grid"
                 [rowData]="rowData"
                 [gridOptions]="gridOptions"
@@ -140,29 +138,27 @@
                 (cellClicked)="selectCard($event)"
                 class="ag-theme-opfab">
             </ag-grid-angular>
-            <ng-template #rowSelectionEnabled>
-                <ag-grid-angular
-                    id="opfab-custom-screen-table-grid"
-                    [rowData]="rowData"
-                    [gridOptions]="gridOptions"
-                    style="width: 100%; height: 100%"
-                    [rowSelection]="rowSelection"
-                    (gridReady)="onGridReady($event)"
-                    (cellClicked)="selectCard($event)"
-                    class="ag-theme-opfab">
-                </ag-grid-angular>
-            </ng-template>
+            } @else {
+            <ag-grid-angular
+                id="opfab-custom-screen-table-grid"
+                [rowData]="rowData"
+                [gridOptions]="gridOptions"
+                style="width: 100%; height: 100%"
+                [rowSelection]="rowSelection"
+                (gridReady)="onGridReady($event)"
+                (cellClicked)="selectCard($event)"
+                class="ag-theme-opfab">
+            </ag-grid-angular>
+            }
         </div>
 
-        <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+        @if (gridApi) {
+        <div class="opfab-pagination" style="padding-bottom: 5px">
             <div style="width: 200px; margin-top: 15px; flex-shrink: 0">
                 <select (change)="onPageSizeChanged($event.target)" id="opfab-page-size-select">
-                    <option
-                        *ngFor="let option of paginationPageSizeOptions"
-                        [value]="option"
-                        [attr.selected]="option === pageSize ? true : null">
-                        {{ option }}
-                    </option>
+                    @for (option of paginationPageSizeOptions; track option) {
+                    <option [value]="option" [attr.selected]="option === pageSize ? true : null">{{ option }}</option>
+                    }
                 </select>
                 <label for="opfab-page-size-select" translate>&nbsp;shared.pageSize</label>
             </div>
@@ -170,8 +166,8 @@
                 <span translate> shared.resultsNumber </span> : {{ gridApi.paginationGetRowCount() }}
             </div>
             <div style="width: 40%; margin-top: 5px">
+                @if (gridApi.paginationGetRowCount() > 10) {
                 <ngb-pagination
-                    *ngIf="gridApi.paginationGetRowCount() > 10"
                     [collectionSize]="gridApi.paginationGetRowCount()"
                     [page]="page"
                     [pagination]="true"
@@ -180,30 +176,31 @@
                     [maxSize]="3"
                     [rotate]="true">
                 </ngb-pagination>
+                }
             </div>
-            <ng-container *ngIf="!loadingInProgress">
-                <div *ngFor="let responseButton of responseButtons" class="opfab-custom-screen-response-btn">
-                    <button
-                        id="opfab-response-button-{{ responseButton.id }}"
-                        class="opfab-btn"
-                        [disabled]="responseButtonDisabled"
-                        style="width: max-content"
-                        (click)="clickOnResponseButton(responseButton.id)">
-                        {{ responseButton.label }}
-                    </button>
-                </div>
-                <div *ngIf="isAcknowledgmentButtonVisible" class="opfab-custom-screen-response-btn">
-                    <button
-                        id="opfab-acknowledge-button"
-                        class="opfab-btn"
-                        [disabled]="ackButtonDisabled"
-                        style="width: max-content"
-                        (click)="clickOnAcknowledgmentButton()">
-                        <span translate> customCardList.acknowledge </span>
-                    </button>
-                </div>
-            </ng-container>
-
+            @if (!loadingInProgress) { @for (responseButton of responseButtons; track responseButton) {
+            <div class="opfab-custom-screen-response-btn">
+                <button
+                    id="opfab-response-button-{{ responseButton.id }}"
+                    class="opfab-btn"
+                    [disabled]="responseButtonDisabled"
+                    style="width: max-content"
+                    (click)="clickOnResponseButton(responseButton.id)">
+                    {{ responseButton.label }}
+                </button>
+            </div>
+            } @if (isAcknowledgmentButtonVisible) {
+            <div class="opfab-custom-screen-response-btn">
+                <button
+                    id="opfab-acknowledge-button"
+                    class="opfab-btn"
+                    [disabled]="ackButtonDisabled"
+                    style="width: max-content"
+                    (click)="clickOnAcknowledgmentButton()">
+                    <span translate> customCardList.acknowledge </span>
+                </button>
+            </div>
+            } }
             <div class="opfab-custom-card-list-export-div">
                 <div
                     id="opfab-monitoring-btn-exportToExcel"
@@ -216,8 +213,10 @@
                 </div>
             </div>
         </div>
+        }
     </div>
 </div>
+}
 
 <ng-template #cardDetail let-modal>
     <div class="modal-body modal-body-squared">

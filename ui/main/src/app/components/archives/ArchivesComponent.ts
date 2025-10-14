@@ -37,7 +37,6 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {CardsService} from '@ofServices/cards/CardsService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {ArchivedCardDetailComponent} from './components/archived-card-detail/ArchivedCardDetailComponent';
@@ -54,9 +53,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
         FormsModule,
         ReactiveFormsModule,
         ArchivesLoggingFiltersComponent,
-        NgIf,
         TranslateModule,
-        NgFor,
         NgbPopover,
         NgbPagination,
         SpinnerComponent,

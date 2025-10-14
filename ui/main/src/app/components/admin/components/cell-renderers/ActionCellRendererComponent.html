@@ -10,13 +10,13 @@
     <em class="{{ getIconForAction() }}"></em>
 </a>
 
-<span *ngIf="this.actionType === 'update'">
-    <form action="/" method="post" enctype="multipart/form-data">
-        <input
-            id="fileUpdater_{{ this.params.data.name }}"
-            type="file"
-            class="file-update"
-            style="display: none"
-            (change)="onFileSelectedForUpdate($event)" />
-    </form>
-</span>
+@if (this.actionType === 'update') {
+<form action="/" method="post" enctype="multipart/form-data">
+    <input
+        id="fileUpdater_{{ this.params.data.name }}"
+        type="file"
+        class="file-update"
+        style="display: none"
+        (change)="onFileSelectedForUpdate($event)" />
+</form>
+}
