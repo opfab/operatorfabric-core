@@ -26,7 +26,6 @@ echo "Build java report"
             tools:spring:spring-oauth2-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
             tools:spring:spring-utilities:dependencies \
-            tools:swagger-generator:dependencies \
             tools:user-action-tracing:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"

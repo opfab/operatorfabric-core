@@ -1,8 +1,0 @@
-
-swaggerSources {
-
-    model {
-        inputFile = file("../../services/cards-publication/src/main/modeling/swagger.yaml")
-    }
-}
-

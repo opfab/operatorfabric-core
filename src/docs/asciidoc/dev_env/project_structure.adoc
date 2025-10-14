@@ -32,6 +32,7 @@ service
 the OperatorFabric UI
 * link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src[src]
 ** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs[docs]
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs/api[apiDoc]: API Documentation
 *** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs/asciidoc[asciidoc]: General documentation (Architecture,
 Getting Started Guide, etc.)
 ** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main[main]
@@ -60,15 +61,6 @@ tasks to work:
 [sub-project]/src/test/java:: contains java tests source code
 [sub-project]/src/main/resources:: contains resource files
 [sub-project]/src/test/resources:: contains test resource files
-
-=== Modeling
-
-Core services projects declaring REST APIS that use Swagger for their
-definition must declare two files:
-
-[horizontal]
-[sub-project]/src/main/modeling/swagger.yaml:: Swagger API definition
-[sub-project]/src/main/modeling/config.json:: Swagger generator configuration
 
 === Docker
 

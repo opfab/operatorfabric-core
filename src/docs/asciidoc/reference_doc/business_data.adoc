@@ -8,12 +8,12 @@
 [[business_data]]
 = Business Data
 
-Using the API, it is now possible to store business data and then call it from the templates. This storage system is intended for light documents and should not be treated as a database.
+Using the API, it is possible to store business data and then call it from the templates. This storage system is intended for light documents and should not be treated as a database.
 
 
 == Pushing data
 
-It is expected for the data being pushed to be compliant with the `json` format. The different methods are detailed in the (https://opfab.github.io/documentation/current/api/businessconfig/#/default/getBusinessData[API documentation]). The default limit of file size accepted is 100 MB, it can be updated in the nginx configuation.
+It is expected for the data being pushed to be compliant with the `json` format. The different methods are detailed in the (https://opfab.github.io/documentation/current/api/index.html#tag/business-data[API documentation]). The default limit of file size accepted is 100 MB, it can be updated in the nginx configuation.
 
 
 == Calling a resource
