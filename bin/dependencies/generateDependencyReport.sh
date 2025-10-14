@@ -21,7 +21,6 @@ echo "Build java report"
             services:external-devices:dependencies \
             services:users:dependencies \
             services:common:dependencies \
-            tools:generic:utilities:dependencies \
             tools:generic:test-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
         >  bin/dependencies/${report_name}
