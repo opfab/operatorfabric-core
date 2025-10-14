@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation project(':tools:generic:utilities'), project(':tools:spring:spring-utilities')
+    implementation project(':tools:generic:utilities')
     implementation misc.jsonSmart
     implementation misc.commonsLang
 

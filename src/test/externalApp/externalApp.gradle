@@ -39,7 +39,6 @@ dependencies {
     implementation spring.securityOauthResource, spring.securityOauthJose
 
 	implementation project(':tools:generic:utilities')
-	implementation project(':tools:spring:spring-utilities')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 	}
