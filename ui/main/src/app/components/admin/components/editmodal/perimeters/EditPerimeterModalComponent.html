@@ -9,8 +9,11 @@
 
 <div class="modal-content perimeter-modal">
     <div class="modal-header">
-        <span class="modal-title" *ngIf="row">{{ row.id }}</span>
-        <span class="modal-title" *ngIf="!row" translate>admin.input.perimeter.add</span>
+        @if (row) {
+        <span class="modal-title">{{ row.id }}</span>
+        } @else {
+        <span class="modal-title" translate>admin.input.perimeter.add</span>
+        }
         <div
             id="opfab-admin-edit-perimeter-btn-close"
             class="opfab-close-modal-icon"
@@ -23,16 +26,22 @@
         <form [formGroup]="perimeterForm" class="opfab-form-lighter">
             <div class="container">
                 <div class="col">
-                    <div *ngIf="!row" class="opfab-input opfab-edit-row" style="position: relative">
+                    @if (!row) {
+                    <div class="opfab-input opfab-edit-row" style="position: relative">
                         <label for="opfab-id" translate>admin.input.perimeter.id</label>
                         <input formControlName="id" name="id" id="opfab-id" type="text" />
                     </div>
-
-                    <div *ngIf="id.invalid" class="opfab-admin-input-invalid">
-                        <div *ngIf="id.errors.required" translate>admin.input.id.required</div>
-                        <div *ngIf="id.errors.minlength" translate>admin.input.id.minLength</div>
-                        <div *ngIf="id.errors.pattern" translate>admin.input.id.pattern</div>
+                    } @if (id.invalid) {
+                    <div class="opfab-admin-input-invalid">
+                        @if (id.errors.required) {
+                        <div translate>admin.input.id.required</div>
+                        } @if (id.errors.minlength) {
+                        <div translate>admin.input.id.minLength</div>
+                        } @if (id.errors.pattern) {
+                        <div translate>admin.input.id.pattern</div>
+                        }
                     </div>
+                    }
 
                     <div class="opfab-edit-row" style="position: relative">
                         <of-multi-select
@@ -47,7 +56,8 @@
                 </div>
 
                 <form [formGroup]="perimeterForm">
-                    <div class="opfab-edit-row opfab-row" *ngFor="let i of stateRightControlsIndexes">
+                    @for (i of stateRightControlsIndexes; track i) {
+                    <div class="opfab-edit-row opfab-row">
                         <div class="opfab-col-6">
                             <of-multi-select
                                 id="opfab-admin-perimeter-state-filter"
@@ -73,8 +83,8 @@
                                 [for]="'opfab-admin-perimeter-filtering-notification-allowed' + i"
                                 class="opfab-checkbox"
                                 style="white-space: pre-line; margin: auto"
-                                translate
-                                >admin.input.perimeter.filteringNotificationAllowed
+                                translate>
+                                admin.input.perimeter.filteringNotificationAllowed
                                 <input
                                     [formControlName]="'filteringNotificationAllowed' + i"
                                     [name]="'filteringNotificationAllowed' + i"
@@ -90,6 +100,7 @@
                             <em class="fas fa-plus-circle" (click)="addStateRightControl()"></em>
                         </div>
                     </div>
+                    }
                 </form>
             </div>
         </form>
@@ -104,24 +115,26 @@
                 translate>
                 admin.input.close
             </button>
+
+            @if (!row) {
             <button
                 id="opfab-admin-perimeter-btn-add"
                 [disabled]="!perimeterForm.valid"
-                *ngIf="!row"
                 (click)="create()"
                 class="opfab-btn"
                 translate>
                 admin.input.perimeter.add
             </button>
+            } @if (row) {
             <button
                 id="opfab-admin-perimeter-btn-save"
                 [disabled]="!perimeterForm.valid"
-                *ngIf="row"
                 (click)="update()"
                 class="opfab-btn"
                 translate>
                 admin.input.save
             </button>
+            }
         </div>
     </div>
 </div>

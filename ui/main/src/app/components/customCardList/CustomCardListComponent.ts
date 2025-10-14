@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgFor, NgIf} from '@angular/common';
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -51,8 +50,6 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
     styleUrls: ['./CustomCardListComponent.scss'],
     imports: [
         TranslateModule,
-        NgIf,
-        NgFor,
         AgGridAngular,
         FormsModule,
         NgxDaterangepickerMd,

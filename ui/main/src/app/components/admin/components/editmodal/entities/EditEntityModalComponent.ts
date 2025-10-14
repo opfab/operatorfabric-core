@@ -30,7 +30,6 @@ import {User} from '@ofServices/users/model/User';
 import {UsersService} from '@ofServices/users/UsersService';
 import {Observable, of} from 'rxjs';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {NgFor, NgIf} from '@angular/common';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
@@ -39,7 +38,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     templateUrl: './EditEntityModalComponent.html',
     styleUrls: ['./EditEntityModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditEntityModalComponent implements OnInit {
     private readonly translate = inject(TranslateService);
