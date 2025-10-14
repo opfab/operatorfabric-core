@@ -20,13 +20,12 @@ echo "Build java report"
             services:businessconfig:dependencies \
             services:external-devices:dependencies \
             services:users:dependencies \
+            services:common:dependencies \
             tools:generic:utilities:dependencies \
             tools:generic:test-utilities:dependencies \
-            tools:spring:spring-mongo-utilities:dependencies \
             tools:spring:spring-oauth2-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
             tools:spring:spring-utilities:dependencies \
-            tools:user-action-tracing:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"
     cd src/test/externalApp

@@ -3,6 +3,8 @@
         implementation misc.jacksonAnnotations
         implementation boot.starterMongo
         implementation misc.jsonSmart
+        implementation boot.starterMongoR
+        implementation boot.starterValidation
     }
 
 
