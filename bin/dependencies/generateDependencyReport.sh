@@ -23,7 +23,6 @@ echo "Build java report"
             services:common:dependencies \
             tools:generic:utilities:dependencies \
             tools:generic:test-utilities:dependencies \
-            tools:spring:spring-oauth2-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
             tools:spring:spring-utilities:dependencies \
         >  bin/dependencies/${report_name}

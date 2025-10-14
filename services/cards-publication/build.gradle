@@ -30,7 +30,6 @@ dependencies {
     testImplementation spring.securityTest
 
     implementation project(':services:common-service')
-    implementation project(':tools:spring:spring-oauth2-utilities')
     testImplementation project(':tools:spring:spring-test-utilities')
 }
 

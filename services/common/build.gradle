@@ -1,10 +1,16 @@
 
     dependencies {
         implementation misc.jacksonAnnotations
+        implementation misc.jacksonDatabind
         implementation boot.starterMongo
         implementation misc.jsonSmart
         implementation boot.starterMongoR
         implementation boot.starterValidation
+        implementation boot.starterSecurity
+        implementation boot.starterWeb
+        implementation spring.securityOauthResource, spring.securityOauthJose
+        implementation project(":tools:generic:utilities")
     }
+
 
 

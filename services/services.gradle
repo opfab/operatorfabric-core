@@ -1,11 +1,10 @@
 subprojects {
 
+if (project.name != 'common-service') {
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'io.spring.dependency-management'
-    
-if (project.name != 'common-service') {
-    apply plugin: 'org.springframework.boot'}
+    apply plugin: 'org.springframework.boot'
 
     dependencies {
         implementation boot.actuator
@@ -53,7 +52,6 @@ if (project.name != 'common-service') {
         }
     }
 
-if (project.name != 'common-service') {
     task buildDocker(type: Exec) {
         workingDir project.projectDir
         commandLine 'docker', 'build', 
@@ -75,7 +73,6 @@ if (project.name != 'common-service') {
   
     tasks.buildDocker.dependsOn copyScriptsForDockerImage
     tasks.buildDocker.dependsOn build
+    tasks.jacocoTestReport.dependsOn test
 }
-tasks.jacocoTestReport.dependsOn test
-
 }
