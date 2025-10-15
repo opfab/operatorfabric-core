@@ -7,35 +7,27 @@
 
 = Greenmail servers
 
-Greenmail is an open source test suite of email servers for testing purposes.
-Opfab uses Greenmail to test mail notification service.
-Greenmail allows retrieving the messages sent with the JSON API.
+Greenmail is an open source test suite of email servers designed for testing purposes.
+OperatorFabric uses Greenmail to test its mail notification service, enabling automated retrieval and inspection of sent messages via a JSON API.
 
-== Greenmail docker container
+== Greenmail Docker Container
 
-A Greenmail docker container is configured in Opfab docker-compose.yaml:
+A Greenmail Docker container is configured in the Opfab `docker-compose.yaml` file.
 
-[source,yaml]
-----
-  greenmail:
-    image: greenmail/standalone:2.1.4
-    ports:
-      - 3025:3025
-      - 3110:3110
-      - 3143:3143
-      - 3465:3465
-      - 3993:3993
-      - 3995:3995
-      - 8080:8080
-----
+The container exposes:
+- Port `3025` for the SMTP protocol (sending emails)
+- Port `8080` for the HTTP REST API (managing and retrieving messages)
 
-The container exposes port 3025 for SMTP protocol and port 8080 for HTTP REST API.
-Greenmail REST API allows listing, retrieving and deleting messages.
+Greenmail's REST API supports listing, retrieving, and deleting messages.
 
-For example, to retrieve the list of received messages, send an http GET request to:
+To retrieve the list of received messages for a specific user, send an HTTP GET request to:
 `http://localhost:8080/api/user/{user}/messages/`
 
+== Accessing Greenmail via Web Interface
 
+You can use a web interface to interact with Greenmail's REST API. Run the script `bin/startEmailClient.sh` to start a mail client container, which connects to the Greenmail container and exposes a web interface on port `8000`.
 
+To access a user's mailbox, you must first create the user in Greenmail using the REST API:
+`http://localhost:8080/#post-/api/user`
 
-
+Refer to the Greenmail REST API documentation (http://localhost:8080/#) for details on available endpoints and usage.
