@@ -15,14 +15,14 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Utilities} from '../../../../utils/Utilities';
 import {LoggerService} from 'app/services/logs/LoggerService';
-import {NgFor, LowerCasePipe} from '@angular/common';
+import {LowerCasePipe} from '@angular/common';
 
 @Component({
     selector: 'of-state-rights-cell-renderer',
     templateUrl: './StateRightsCellRendererComponent.html',
     styleUrls: ['./StateRightsCellRendererComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, LowerCasePipe]
+    imports: [LowerCasePipe]
 })
 export class StateRightsCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

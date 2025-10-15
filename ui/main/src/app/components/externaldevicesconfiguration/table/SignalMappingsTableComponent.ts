@@ -12,7 +12,6 @@ import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './ExternalDevicesConfigurationDirective';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SignalMappingsModalComponent} from '../editModal/SignalMappingsModalComponent';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {AgGridAngular} from 'ag-grid-angular';
@@ -22,7 +21,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-signal-mappings',
     templateUrl: './ExternalDevicesConfigurationDirective.html',
     styleUrls: ['../ExternalDevicesConfigurationComponent.scss'],
-    imports: [NgIf, TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
+    imports: [TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class SignalMappingsTableComponent extends ExternalDevicesConfigurationDirective {
     fields = [new Field('id'), new Field('supportedSignals', FieldType.SIGNAL_MAPPINGS)];

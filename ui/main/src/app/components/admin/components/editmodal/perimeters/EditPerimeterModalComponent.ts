@@ -23,10 +23,8 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {PerimetersService} from '@ofServices/perimeters/PerimetersService';
 import {Process} from '@ofServices/processes/model/Processes';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
-
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {NgIf, NgFor} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 
@@ -35,7 +33,7 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     templateUrl: './EditPerimeterModalComponent.html',
     styleUrls: ['./EditPerimeterModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent, NgFor]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditPerimeterModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

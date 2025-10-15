@@ -16,7 +16,6 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {SupervisedEntitiesService} from '@ofServices/admin/SupervisedEntitiesService';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {CrudUtilities} from '@ofServices/admin/CrudUtils';
@@ -25,7 +24,7 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     selector: 'of-edit-supervised-entity-modal',
     templateUrl: './EditSupervisedEntityModalComponent.html',
     styleUrls: ['./EditSupervisedEntityModalComponent.scss'],
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditSupervisedEntityModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);
