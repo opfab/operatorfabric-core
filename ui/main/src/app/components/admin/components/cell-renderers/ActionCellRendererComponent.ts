@@ -10,14 +10,13 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {NgIf} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 @Component({
     selector: 'of-action-cell-renderer',
     templateUrl: './ActionCellRendererComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, FormsModule]
+    imports: [FormsModule]
 })
 export class ActionCellRendererComponent implements ICellRendererAngularComp {
     // For explanations regarding ag-grid CellRenderers see

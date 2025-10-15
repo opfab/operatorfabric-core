@@ -18,7 +18,6 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {CrudUtilities} from '@ofServices/admin/CrudUtils';
@@ -28,7 +27,7 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     templateUrl: './EditUserModalComponent.html',
     styleUrls: ['./EditUserModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditUserModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

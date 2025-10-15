@@ -16,7 +16,6 @@ import {SoundNotificationService} from '@ofServices/notifications/SoundNotificat
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {ModalService} from '../../../../services/modal/ModalService';
 import {I18n} from 'app/model/I18n';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 /** This component checks if the url of opfab is already in use
@@ -30,7 +29,7 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-app-loaded-in-another-tab',
     styleUrls: ['./AppLoadedInAnotherTabComponent.scss'],
     templateUrl: './AppLoadedInAnotherTabComponent.html',
-    imports: [NgIf, TranslateModule]
+    imports: [TranslateModule]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {
     private readonly urlLockService = inject(UrlLockService);

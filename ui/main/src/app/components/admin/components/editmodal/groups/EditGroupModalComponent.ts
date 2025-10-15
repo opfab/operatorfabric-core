@@ -31,7 +31,6 @@ import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {Observable, of} from 'rxjs';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {NgIf} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 
@@ -40,7 +39,7 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     templateUrl: './EditGroupModalComponent.html',
     styleUrls: ['./EditGroupModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditGroupModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);
