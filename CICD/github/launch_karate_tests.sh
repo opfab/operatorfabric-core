@@ -18,9 +18,13 @@ export NVM_DIR="$HOME/.nvm"
 source ./bin/load_environment_light.sh;
 cd bin
 ./startOpfab.sh prod
+#Logs for debug
+docker logs greenmail
 cd ../src/test/api/karate
 ./launchAll.sh
 status_code=$?
+#Logs for debug
+docker logs greenmail
 cd ../../../../bin
 ./stopOpfab.sh
 # propagate the status code for github actions
