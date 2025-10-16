@@ -10,8 +10,8 @@
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'fs';
-import {format, FormatOptions} from 'date-fns';
 import {enUS, fr, nl} from 'date-fns/locale';
+import {formatInTimeZone, FormatOptionsWithTZ} from 'date-fns-tz';
 
 /**
  *  Handlebars helpers are similar to the ones used on the frontend
@@ -51,6 +51,14 @@ export class HandlebarsHelper {
     }
 
     private static _locale: string;
+
+    // Timezone is set per-request before template compilation.
+    // Safe in single-threaded Node.js event loop when requests are processed sequentially.
+    private static _timezone: string = 'Europe/Paris';
+
+    public static set timezone(tz: string) {
+        HandlebarsHelper._timezone = tz;
+    }
 
     private static registerJson(): void {
         Handlebars.registerHelper('json', function (obj) {
@@ -317,16 +325,22 @@ export class HandlebarsHelper {
     /* eslint-enable */
 
     private static registerDateFormat(): void {
-        Handlebars.registerHelper('dateFormat', (value: string | number, options) => {
+        Handlebars.registerHelper('dateFormat', function (value: string | number, options) {
             if (typeof value === 'string') {
                 value = parseInt(value);
             }
             const m = new Date(value);
-            return format(m, options.hash.format as string, this.getDateFnsLocaleOption(HandlebarsHelper._locale));
+            const tz = HandlebarsHelper._timezone || 'UTC';
+            return formatInTimeZone(
+                m,
+                tz,
+                options.hash.format as string,
+                HandlebarsHelper.getDateFnsLocaleOption(HandlebarsHelper._locale)
+            );
         });
     }
 
-    private static getDateFnsLocaleOption(locale: string): FormatOptions {
+    private static getDateFnsLocaleOption(locale: string): FormatOptionsWithTZ {
         switch (locale) {
             case 'fr':
                 return {locale: fr};
