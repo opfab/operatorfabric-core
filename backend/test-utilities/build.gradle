@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+dependencies{
+    implementation testing_deps.assertJ
+    implementation spring.securityTest
+    implementation spring.securityOauthResource
+    implementation spring.securityOauthJose
+    implementation boot.starterWeb
+    implementation project(':backend:java-common')
+}

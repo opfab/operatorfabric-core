@@ -89,10 +89,10 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization" , "opfab"
         property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
-        property 'sonar.sources', 'ui/main,node-services/cards-external-diffusion,node-services/cards-reminder,node-services/supervisor,node-services/common,cli'
+        property 'sonar.sources', 'ui/main,backend/cards-external-diffusion,backend/cards-reminder,backend/supervisor,backend/common,cli'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
-        property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,node-services/**/coverage/lcov.info'
+        property 'sonar.javascript.lcov.reportPaths','ui/main/reports/coverage/lcov.info,backend/**/coverage/lcov.info'
         // Exlude from sonar coverage :
         // - cli/** : cli is not tested
         // - config/** : config files are not tested
@@ -105,19 +105,13 @@ sonar {
         //     - ui/main/src/tests/** : tests helpers are not tested
         //     - ui/main/**/*.specs.ts : tests are not tested
         //     - ui/main/src/karma.conf.js : karma config files are not tested
-        // - java services :
+        // - backend :
         //     - **/controllers/** : controllers are not unit tested as they are no business logic and there will be tested via cypress e2e tests and API karate test-utilities
         //     - **/src/tooling/** : one-time migration tools, not meant to evolve or be tested
         //     - **/src/test/** : test code is not tested
-        //     - **/spring-test-utilities/** : spring test utilities are not tested
-        //     - tools/spring/spring-mongo-utilities/** : spring mongo interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
-        //     - tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/** : rabbitMQ interface is not unit tested, it will be tested via cypress e2e tests and API karate tests
-        //     - tools/generic/test-utilities/** : test utilities are not tested
-        //     - tools/kafka-test/** : kafka test  utilities are not tested
-        // - node services:
-        //     - node-services/**/tests/* : tests are not relevant
-        //     - node-services/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
-        //     - node-services/**/jest.config.js : jest config files are not tested
+        //     - backend/**/tests/* : tests are not relevant
+        //     - backend/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
+        //     - backend/**/jest.config.js : jest config files are not tested
 
         def coverageExclusions = [
           'cli/**',
@@ -133,21 +127,17 @@ sonar {
           'ui/main/**/*.spec.ts',
           'ui/main/src/karma.conf.js',
           '**/controllers/**',
-          '**/src/tooling/**',
           '**/src/test/**',
-          '**/spring-test-utilities/**',
-          'tools/spring/spring-mongo-utilities/**',
-          'tools/generic/utilities/src/main/java/org/opfab/utilities/eventbus/rabbit/**',
-          'tools/generic/test-utilities/**',
-          'tools/kafka-test/**',
-          'node-services/**/tests/*',
-          'node-services/**/server-side/**',
-          'node-services/**/jest.config.js'
+          '**/test-utilities/**',
+          'src/test/**',
+          'backend/**/tests/*',
+          'backend/**/server-side/**',
+          'backend/**/jest.config.js'
         ]
         property 'sonar.coverage.exclusions', coverageExclusions.join(',')
         property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
-        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,node-services/**/tests/*'
+        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,backend/**/tests/*'
         
 
         property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3'
@@ -220,31 +210,8 @@ asciidoctor {
 //end::asciidoctor_gradle_task_config[]
 
 subprojects {
-
     group = operatorfabric.group
     version = operatorfabric.version
-
-
-
-    if (!project.path.contains('ui') && !project.path.contains('node-services') && !project.path.contains('rabbitmq')){
-
-        subprojects {
-            apply plugin: 'java'
-            apply plugin: 'io.spring.dependency-management'
-
-            test {
-                testLogging {
-                    events = ["passed", "skipped", "failed"]
-                    exceptionFormat = "full"
-                }
-            }
-
-            javadoc {
-                options.noTimestamp()
-            }
-
-        }
-    }
 }
 
 tasks.withType(JavaCompile) {

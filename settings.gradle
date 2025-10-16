@@ -5,60 +5,32 @@ dependencyResolutionManagement {
         maven { url = "https://repo1.maven.org/maven2" }
         maven { url = "https://packages.confluent.io/maven/" } // needed for kafka 
         maven { url = "https://plugins.gradle.org/m2/" }
-        maven { url = "https://maven.google.com/" } // needed for tranisitive dependencies jlibmodbus : com.google.android.things:androidthings:1.0
+        maven { url = "https://maven.google.com/" } // needed for transitive dependencies jlibmodbus : com.google.android.things:androidthings:1.0
     }
 }
 
 rootProject.name = 'operator-fabric'
 
-include 'services:common'
-include 'services:test-utilities'
-include 'services:businessconfig'
-include 'services:cards-publication'
-include 'services:cards-consultation'
-include 'services:users'
-include 'services:external-devices'
-include 'node-services:cards-external-diffusion'
-include 'node-services:cards-reminder'
-include 'node-services:common'
-include 'node-services:supervisor'
-include 'rabbitmq'
+include 'backend:java-common'
+include 'backend:test-utilities'
+include 'backend:businessconfig'
+include 'backend:cards-publication'
+include 'backend:cards-consultation'
+include 'backend:users'
+include 'backend:external-devices'
+include 'backend:cards-external-diffusion'
+include 'backend:cards-reminder'
+include 'backend:node-common'
+include 'backend:supervisor'
+include 'backend:rabbitmq'
 include 'ui:main'
-include 'externalApp'
-include 'karateTests'
-include 'kafkaJavaClient'
-include 'cypressTests'
-include 'gatlingTests'
-include 'dummyModbusDevice'
+include 'src:test:externalApp'
+include 'src:test:api:karate'
+include 'src:test:api:karate:kafka:java-client'
+include 'src:test:cypress'
+include 'src:test:gatling'
+include 'src:test:dummyModbusDevice'
 include 'cli'
-include 'openApiDoc'
+include 'src:docs:api'
 
-project(':services:common').name = 'common-service'
-project(':services:businessconfig').name = 'businessconfig-service'
-project(':services:users').name = 'users-service'
-project(':services:cards-publication').name = 'cards-publication-service'
-project(':services:cards-consultation').name = 'cards-consultation-service'
-project(':services:external-devices').name = 'external-devices-service'
-project(':node-services:cards-external-diffusion').name = 'cards-external-diffusion-service'
-project(':node-services:cards-reminder').name = 'cards-reminder'
-project(':node-services:common').name = 'node-common'
-project(':node-services:supervisor').name = 'supervisor'
-project(':rabbitmq').name = 'rabbitmq'
-project(':ui:main').name = 'web-ui'
-project(':externalApp').projectDir = file('src/test/externalApp')
-project(':karateTests').projectDir = file('src/test/api/karate')
-project(':kafkaJavaClient').projectDir = file('src/test/api/karate/kafka/java-client')
-project(':cypressTests').projectDir = file('src/test/cypress')
-project(':gatlingTests').projectDir = file('src/test/gatling')
-project(':dummyModbusDevice').projectDir = file('src/test/dummyModbusDevice')
-project(':cli').name = 'cli'
-project(':openApiDoc').projectDir = file('src/docs/api')
-
-//we check if the modules have gradle configuration files
-rootProject.children.each { project ->
-    project.buildFileName = "${project.name}.gradle"
-    assert project.projectDir.isDirectory()
-    assert project.buildFile.exists()
-    assert project.buildFile.isFile()
-}
 

@@ -1,0 +1,21 @@
+
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
+
+dependencies {
+    testImplementation testing_deps.karate
+    testImplementation project(':src:test:api:karate:kafka:java-client')
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "karate.options", System.properties.getProperty("karate.options")
+    systemProperty "karate.env", System.properties.getProperty("karate.env")
+    outputs.upToDateWhen { false }
+}
+
+task karateDebug(type: JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.intuit.karate.Main'
+}

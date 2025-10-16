@@ -41,9 +41,9 @@ generateNpmReport() {
 }
 
 echo "Build npm report"
-generateNpmReport node-services/cards-reminder
-generateNpmReport node-services/cards-external-diffusion
-generateNpmReport node-services/supervisor
+generateNpmReport backend/cards-reminder
+generateNpmReport backend/cards-external-diffusion
+generateNpmReport backend/supervisor
 generateNpmReport ui/main
 generateNpmReport src/tooling/migration-rrule-recurrence
 echo "Report done in $report_name"
