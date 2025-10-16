@@ -73,8 +73,7 @@ classes
 .classpath
 
 # Opfab binary directories
-services/*/bin
-tools/spring/spring-oauth2-utilities/bin
+backend/*/bin
 src/test/externalApp/bin
 src/test/dummyModbusDevice/bin
 src/test/gatling/bin
@@ -100,7 +99,7 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/gradle,intellij+all,visualstudiocode
 
 # ignoring logs
-services/**/logs
+backend/**/logs
 
 # ignoring sonar generated reports
 .sonar
@@ -152,9 +151,8 @@ src/tooling/migration-rrule-recurrence/node_modules
 src/tooling/migration-entity-roles/node_modules
 
 # Node modules 
-node-services/*/node_modules
-node-services/*/coverage
-node-services/*/logs
+backend/*/node_modules
+backend/*/coverage
 
 bin/dependencies/report*.txt
 
