@@ -326,6 +326,60 @@ describe('Cards external diffusion', function () {
                 '</a> <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
         );
     });
+    it('Body of email should take into account timezone for formated date', async function () {
+        const publishDate = Date.now();
+        setup();
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters,
+                timezoneForEmails: 'America/New_York'
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    emailBodyTemplate: 'testTemplateMail'
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1'],
+            data: {
+                myDate: 1760554800000 // 2025-10-15 19:00 GMT --> 15:00 in New York
+            }
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template =
+            'mydate={{ dateFormat card.data.myDate format="yyyy-MM-dd HH:mm" }}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toContain('mydate=2025-10-15 15:00'); // 15:00 in New York
+    });
 
     it('Body of email should not contain url of the card when showCardUrls is set to false', async function () {
         const publishDate = Date.now();

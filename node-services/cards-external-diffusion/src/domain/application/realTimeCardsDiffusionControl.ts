@@ -15,6 +15,7 @@ import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
 import {formatInTimeZone} from 'date-fns-tz';
 import {htmlToText} from 'html-to-text';
+import {HandlebarsHelper} from './handlebarsHelpers';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
     private windowInSecondsForCardSearch: number;
@@ -107,6 +108,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         if (resp.isValid()) {
             const userWithPerimeters: UserWithPerimeters = resp.getData();
             const emailToPlainText = this.shouldEmailBePlainText(userWithPerimeters);
+            const timezoneForEmails = userWithPerimeters.timezoneForEmails ?? this.defaultTimeZone;
 
             if (this.isEmailSettingEnabled(userWithPerimeters)) {
                 this.logger.debug(
@@ -117,19 +119,29 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 );
                 const cardsForUser: Card[] = await this.getCardsForUser(cards, userWithPerimeters);
                 for (const cardForUser of cardsForUser) {
-                    await this.sendCardIfAllowed(cardForUser, userWithPerimeters.emailForCardSending, emailToPlainText);
+                    await this.sendCardIfAllowed(
+                        cardForUser,
+                        userWithPerimeters.emailForCardSending,
+                        emailToPlainText,
+                        timezoneForEmails
+                    );
                 }
             }
         }
     }
 
-    async sendCardIfAllowed(card: Card, userEmail: string | undefined, emailToPlainText: boolean): Promise<void> {
+    async sendCardIfAllowed(
+        card: Card,
+        userEmail: string | undefined,
+        emailToPlainText: boolean,
+        timezone: string
+    ): Promise<void> {
         if (userEmail == null) return;
         try {
             const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(card, userEmail, emailToPlainText);
+                    await this.sendMail(card, userEmail, emailToPlainText, timezone);
                 } else {
                     this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
                     await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
@@ -160,12 +172,12 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.emailForCardSending;
     }
 
-    async sendMail(card: Card, to: string, emailToPlainText: boolean): Promise<void> {
+    async sendMail(card: Card, to: string, emailToPlainText: boolean, timezone: string): Promise<void> {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
 
         const subject = this.subjectPrefix + ' - ' + card.titleTranslated;
 
-        let body = await this.processCardTemplate(card);
+        let body = await this.processCardTemplate(card, timezone);
 
         if (emailToPlainText) {
             body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
@@ -192,7 +204,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
     }
 
-    async processCardTemplate(card: Card): Promise<string> {
+    async processCardTemplate(card: Card, timezone: string): Promise<string> {
         const urlOfCard =
             '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(card.id) + ' ">';
 
@@ -217,6 +229,10 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         cardConfig.states[stateName].emailBodyTemplate as string,
                         card.processVersion
                     );
+                    // Set timezone near templateCompiler call to avoid concurrency issues when sending multiple emails with different timezones.
+                    // Safe in single-threaded Node.js event loop when requests are processed sequentially.
+                    // Did not find a better way to pass timezone to Handlebars helpers.
+                    HandlebarsHelper.timezone = timezone;
                     cardBodyHtml =
                         cardBodyHtml + ' <br> ' + templateCompiler({card: cardContent, config: this.customConfig});
                 }
