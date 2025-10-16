@@ -53,7 +53,7 @@ services:
       - "89:89"
     mem_limit: 1g
   greenmail:
-    image: greenmail/standalone:2.1.4
+    image: greenmail/standalone:2.1.7
     ports:
       - 3025:3025
       - 3110:3110
