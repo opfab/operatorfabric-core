@@ -140,7 +140,7 @@ In the example below, the `getUserResponse` creates a `responseCard` object by r
 In addition, if the user choses the refusal option, it overrides the response state defined in the `config.json` with another
 state. It is also possible to dynamically set the severity of the response with a logic from the template. Here the severity of the response depends on the number of choices selected by the user. 
 
-.src/test/resources/bundles/defaultProcess_V1/template/question.handlebars
+.test/resources/bundles/defaultProcess_V1/template/question.handlebars
 [source,js]
 ----
 include::../../../test/resources/bundles/defaultProcess_V1/template/question.handlebars[tag=functionToGetUserResponse_example]
@@ -239,7 +239,7 @@ field of the child card and then you  can get the name of the entity by calling 
 
 === Example 
 
-You can find an example in the file https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/defaultProcess_V1/template/question.handlebars[src/test/resources/bundles/defaultProcess_V1/template/question.handlebars].
+You can find an example in the file https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/resources/bundles/defaultProcess_V1/template/question.handlebars[test/resources/bundles/defaultProcess_V1/template/question.handlebars].
 
 
 == Lock mechanism

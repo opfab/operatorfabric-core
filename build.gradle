@@ -108,7 +108,7 @@ sonar {
         // - backend :
         //     - **/controllers/** : controllers are not unit tested as they are no business logic and there will be tested via cypress e2e tests and API karate test-utilities
         //     - **/src/tooling/** : one-time migration tools, not meant to evolve or be tested
-        //     - **/src/test/** : test code is not tested
+        //     - **/test/** : test code is not tested
         //     - backend/**/tests/* : tests are not relevant
         //     - backend/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
         //     - backend/**/jest.config.js : jest config files are not tested
@@ -129,7 +129,7 @@ sonar {
           '**/controllers/**',
           '**/src/test/**',
           '**/test-utilities/**',
-          'src/test/**',
+          'test/**',
           'backend/**/tests/*',
           'backend/**/server-side/**',
           'backend/**/jest.config.js'
@@ -137,7 +137,7 @@ sonar {
         property 'sonar.coverage.exclusions', coverageExclusions.join(',')
         property 'sonar.exclusions','**/generated/**/*,docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
-        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,backend/**/tests/*'
+        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,test/**,backend/**/tests/*'
         
 
         property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3'

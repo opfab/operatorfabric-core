@@ -156,7 +156,7 @@ services:
       - "./web-ui/nginx.conf:/etc/nginx/conf.d/default.conf"
       - "./web-ui/externalJs:/usr/share/nginx/html/externalJs"
       - "./web-ui/externalCss:/usr/share/nginx/html/externalCss"
-      - "../src/test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
+      - "../test/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
     image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"

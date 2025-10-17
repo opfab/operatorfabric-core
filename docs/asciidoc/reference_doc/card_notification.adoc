@@ -62,7 +62,7 @@ It is possible to cancel a card acknowledgment unless process state configuratio
 
 When the user acknowledges a card, the card detail is closed unless process state configuration has the `closeCardWhenUserAcknowledges` field set to false.
 
-You can see examples in src/test/resources/bundles/defaultProcess_V1/config.json
+You can see examples in test/resources/bundles/defaultProcess_V1/config.json
 
 === Acknowledgment done by entity(ies)
 

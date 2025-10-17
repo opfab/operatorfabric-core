@@ -226,11 +226,11 @@ Compile and run OperatorFabric docker images is the most effective way to check 
 . Stop the `test-environment` docker compose;
 . Go to `${OF_HOME}/config/docker`;
 . Run the `./docker-compose.sh` script (or use the `docker-compose.yml` with a `docker compose` command);
-. Go to `${OF_HOME}/src/test/resources/`;
+. Go to `${OF_HOME}/test/resources/`;
 . Run the following scripts: `./loadTestConf.sh &&  ./send6TestCards.sh`;
 . Open the front-end in a browser and look for any regression.
 
-To automate build and API testing, you can use `${OF_HOME}/src/test/api/karate/buildAndLaunchAll.sh`. 
+To automate build and API testing, you can use `${OF_HOME}/test/api/karate/buildAndLaunchAll.sh`. 
 
 === Merging a Pull Request
 

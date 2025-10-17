@@ -20,12 +20,12 @@ cd bin
 ./startOpfab.sh prod
 #Logs for debug
 docker logs greenmail
-cd ../src/test/api/karate
+cd ../test/api/karate
 ./launchAll.sh
 status_code=$?
 #Logs for debug
 docker logs greenmail
-cd ../../../../bin
+cd ../../../bin
 ./stopOpfab.sh
 # propagate the status code for github actions
 exit $status_code

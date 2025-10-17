@@ -41,7 +41,7 @@ $OF_HOME/bin/startOpfab.sh
 ----
 
 NOTE: Configuration for the dummy modbus device can be provided in
-`src/test/dummyModbusDevice/src/main/resources/application.yml`.
+`test/dummyModbusDevice/src/main/resources/application.yml`.
 
 NOTE: As only one dummy Modbus device is started in this case, the default configuration for external devices has been
 adapted from the one provided in docker mode so both `CDS_1` and `CDS_2` point to the same device, but with different
@@ -50,4 +50,4 @@ the allowed register range, to demonstrate exceptions.
 
 == Dummy devices configuration
 
-See the https://github.com/opfab/operatorfabric-core/blob/develop/src/test/dummyModbusDevice/README.adoc[README for the Dummy Modbus Device module].
+See the https://github.com/opfab/operatorfabric-core/blob/develop/test/dummyModbusDevice/README.adoc[README for the Dummy Modbus Device module].

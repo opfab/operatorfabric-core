@@ -1,0 +1,228 @@
+<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)              -->
+<!-- See AUTHORS.txt                                                       -->
+<!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
+<!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
+<!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
+<!-- SPDX-License-Identifier: MPL-2.0                                      -->
+<!-- This file is part of the OperatorFabric project.                      -->
+
+<html>
+
+<head>
+
+    <script src="/shared/js/opfab-application.js"></script>
+    <script language="javascript">
+        window.addEventListener('load', function () {
+
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const theme = urlParams.get('opfab_theme');
+            switch (theme) {
+                case 'NIGHT':
+                    opfabStyle.setOpfabTheme(opfabStyle.NIGHT_THEME);
+                    break;
+                case 'DAY':
+                default:
+                    opfabStyle.setOpfabTheme(opfabStyle.DAY_THEME);
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="/shared/css/opfab-application.css" />
+
+</head>
+
+<body class="opfab-colors" style="margin: 50px;">
+    <h1>Test Application</h1>
+    <br>
+    <h2>Opfab style examples</h2>
+    <br>
+    <div>
+        <div class="opfab-form-lighter" style="padding: 20px">
+            <h3>Lighter background</h3>
+            <br>
+            <div class="opfab-input">
+                <label>INPUT FIELD </label>
+                <input id="my_input" name="my_input" />
+            </div>
+            <br />
+            <div class="opfab-textarea" style="position: relative">
+                <label> TEXT AREA </label>
+                <textarea id="my_textearea_input" name="my_textearea_input"> </textarea>
+            </div>
+
+            <br />
+            <div class="opfab-select" style="position: relative">
+                <label> SIMPLE SELECT </label>
+                <select id="my_select" name="my_select">
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                </select>
+            </div>
+            <br />
+            <div style="display: grid;grid-template-columns: repeat(3, 25%);">
+                <label class="opfab-radio-button">
+                    <span> RADIO BUTTON</span>
+                    <input type="radio" id="my_radio_button" />
+                    <span class="opfab-radio-button-checkmark"></span>
+                </label>
+                <label class="opfab-checkbox">
+                    CHECKBOX
+                    <input type="checkbox" id="my_checkbox" name="my_checkbox" />
+                    <span class="opfab-checkbox-checkmark"> </span>
+                </label>
+                <label class="opfab-checkbox">
+                    DISABLED CHECKBOX
+                    <input type="checkbox" id="my_checkbox" name="my_checkbox" disabled checked/>
+                    <span class="opfab-checkbox-checkmark"> </span>
+                </label>
+            </div>
+            <br />
+            <div class="opfab-border-box">
+                <label> BORDER BOX </label>
+                <div>My box text</div>
+            </div>
+            <br />
+            <p>TABLE</p>
+            <div class="opfab-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header 1</th>
+                            <th>Header 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Row 1 Column 1</td>
+                            <td>Row 1 Column2</td>
+                        </tr>
+                        <tr>
+                            <td>Row 2 Column 1</td>
+                            <td>Row 2 Column2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <p>BUTTONS</p>
+            <div>
+                <button type="button" class="opfab-btn">ENABLED</button>
+                <button type="button" class="opfab-btn" disabled>DISABLED</button>
+                <button type="button" class="opfab-btn-cancel">CANCEL</button>
+            </div>
+            <br />
+            <p>TOOLTIP</p>
+            <div class="opfab-tooltip">Some tooltip text
+                <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
+            </div>
+
+            <br />
+            <p>DIALOG BOX</p>
+            <button id="showDialogLighterMode" type="button" class="opfab-btn">Show dialog box</button>
+
+            <dialog class="opfab-dialog">
+                <p>This is a dialog box, you can set the text you want.</p>
+                <form method="dialog" style="text-align: center">
+                    <button class="opfab-btn">OK</button>
+                </form>
+            </dialog>
+        </div>
+        <div style="background-color:  var(--opfab-bgcolor-darker); margin-top: 50px; padding: 20px">
+            <h3>Darker background</h3>
+            <br>
+            <div class="opfab-input">
+                <label>INPUT FIELD </label>
+                <input id="my_input" name="my_input" />
+            </div>
+            <br />
+            <div class="opfab-textarea" style="position: relative">
+                <label> TEXT AREA </label>
+                <textarea id="my_textearea_input" name="my_textearea_input"> </textarea>
+            </div>
+
+            <br />
+            <div class="opfab-select" style="position: relative">
+                <label> SIMPLE SELECT </label>
+                <select id="my_select" name="my_select">
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                </select>
+            </div>
+            <br />
+            <div style="display: grid;grid-template-columns: repeat(3, 25%);">
+                <label class="opfab-radio-button">
+                    <span> RADIO BUTTON</span>
+                    <input type="radio" id="my_radio_button" />
+                    <span class="opfab-radio-button-checkmark"></span>
+                </label>
+                <label class="opfab-checkbox">
+                    CHECKBOX
+                    <input type="checkbox" id="my_checkbox" name="my_checkbox" />
+                    <span class="opfab-checkbox-checkmark"> </span>
+                </label>
+                <label class="opfab-checkbox">
+                    DISABLED CHECKBOX
+                    <input type="checkbox" id="my_checkbox" name="my_checkbox" disabled checked/>
+                    <span class="opfab-checkbox-checkmark"> </span>
+                </label>
+            </div>
+            <br />
+            <div class="opfab-border-box">
+                <label> BORDER BOX </label>
+                <div>My box text</div>
+            </div>
+            <br />
+            <p>TABLE</p>
+            <div class="opfab-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Header 1</th>
+                            <th>Header 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Row 1 Column 1</td>
+                            <td>Row 1 Column2</v>
+                        </tr>
+                        <tr>
+                            <td>Row 2 Column 1</td>
+                            <td>Row 2 Column2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <p>BUTTONS</p>
+            <div>
+                <button type="button" class="opfab-btn">ENABLED</button>
+                <button type="button" class="opfab-btn" disabled>DISABLED</button>
+                <button type="button" class="opfab-btn-cancel">CANCEL</button>
+            </div>
+            <br />
+            <p>TOOLTIP</p>
+            <div>
+                <div class="opfab-tooltip">Some tooltip text
+                    <div class="opfab-tooltip-content">Here is an example of a tooltip</div>
+                </div>
+            </div>
+
+            <br />
+            <p>DIALOG BOX</p>
+            <button id="showDialogDarkerMode" type="button" class="opfab-btn">Show dialog box</button>
+        </div>
+    </div>
+
+    <script language="javascript">
+        [document.getElementById('showDialogLighterMode'), document.getElementById('showDialogDarkerMode')].forEach(button => {
+            button.addEventListener("click", () => {
+                const dialog = document.querySelector("dialog");
+                dialog.close();
+                dialog.showModal();
+            });
+        });
+    </script>
+</body>
+
+</html>

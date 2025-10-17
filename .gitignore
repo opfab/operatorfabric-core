@@ -74,9 +74,9 @@ classes
 
 # Opfab binary directories
 backend/*/bin
-src/test/externalApp/bin
-src/test/dummyModbusDevice/bin
-src/test/gatling/bin
+test/externalApp/bin
+test/dummyModbusDevice/bin
+test/gatling/bin
 */**/*.class
 
 ### Gradle ###
@@ -113,11 +113,11 @@ config/**/.env
 
 # Karate tests
 ## Results
-src/test/**/karate/target/**/*
+test/**/karate/target/**/*
 ## Karate jar
-src/test/**/karate.jar
+test/**/karate.jar
 ## Tar.gz bundles
-src/test/**/*.tar.gz
+test/**/*.tar.gz
 
 # UI
 ui/main/node_modules
@@ -141,9 +141,9 @@ config/mongodump/**
 
 # Cypress
 
-src/test/cypress/node_modules
-src/test/cypress/cypress/screenshots
-src/test/cypress/cypress/videos
+test/cypress/node_modules
+test/cypress/cypress/screenshots
+test/cypress/cypress/videos
 
 # migration-opfab3
 src/tooling/migration-opfab3/node_modules
@@ -157,8 +157,8 @@ backend/*/coverage
 bin/dependencies/report*.txt
 
 #OpenApi doc generation
-src/docs/api/build
-src/docs/api/node_modules
+docs/api/build
+docs/api/node_modules
 
 
 # Eclipse LSP files 
