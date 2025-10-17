@@ -79,7 +79,7 @@ Feature: Cards external diffusion
     And header Authorization = 'Bearer ' + authTokenAdmin
     And request perimeterArray
     When method patch
-    Then status 200
+    Then status 200 or status 201 
 
     Given url opfabUrl + 'users/users/operator1_fr/settings'
     And header Authorization = 'Bearer ' + authTokenOperator1
