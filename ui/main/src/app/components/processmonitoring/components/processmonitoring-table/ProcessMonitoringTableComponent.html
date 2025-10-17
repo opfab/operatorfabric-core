@@ -65,7 +65,7 @@
             <div
                 style="background: var(--opfab-bgcolor-darker); padding: 10px"
                 id="opfab-processmonitoring-column-panel">
-                @for (col of columnDefs; track col) {
+                @for (col of columnDefs; track col.field) {
                     <div>
                         @if (col.headerName) {
                             <label class="opfab-checkbox">
