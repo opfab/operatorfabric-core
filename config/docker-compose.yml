@@ -57,12 +57,10 @@ services:
     image: greenmail/standalone:2.1.7
     ports:
       - 3025:3025
-      - 3110:3110
       - 3143:3143
-      - 3465:3465
-      - 3993:3993
-      - 3995:3995
       - 8080:8080
+    environment:
+      - GREENMAIL_OPTS=-Dgreenmail.setup.test.smtp -Dgreenmail.setup.test.imap -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled
   zookeeper:
     image: bitnamilegacy/zookeeper:3
     ports:
