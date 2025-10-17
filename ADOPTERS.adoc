@@ -5,7 +5,7 @@
 // file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
 // SPDX-License-Identifier: CC-BY-4.0
 
-:imagesdir: src/docs/asciidoc/images
+:imagesdir: docs/asciidoc/images
 
 :sectnums:
 :icons: font

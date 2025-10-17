@@ -71,7 +71,7 @@ if [[ $OF_VERSION =~ .+RELEASE$ ]]; then
     # New Api documentation 
     echo "copying new API documentation"
     mkdir -p $HOME/documentation/documentation/current/api/
-    cp -r $OF_HOME/src/docs/api/build/index.html $HOME/documentation/documentation/current/api/
+    cp -r $OF_HOME/docs/api/build/index.html $HOME/documentation/documentation/current/api/
     
     # Copy asciidoctor documentation (including images)
     mkdir -p $HOME/documentation/documentation/current/
@@ -85,7 +85,7 @@ fi
 # New Api Documentation
 echo "copying new API documentation in archives"
 mkdir -p $HOME/documentation/documentation/archives/$OF_VERSION/api/
-cp -r $OF_HOME/src/docs/api/build/index.html $HOME/documentation/documentation/archives/$OF_VERSION/api/
+cp -r $OF_HOME/docs/api/build/index.html $HOME/documentation/documentation/archives/$OF_VERSION/api/
 
 
 # Copy asciidoctor documentation (only single_file_doc)
