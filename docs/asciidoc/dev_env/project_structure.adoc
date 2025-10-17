@@ -31,9 +31,9 @@ service
 * link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/web-ui[web-ui]: project based on Nginx server to serve
 the OperatorFabric UI
 * link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src[src]
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs[docs]
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs/api[apiDoc]: API Documentation
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/docs/asciidoc[asciidoc]: General documentation (Architecture,
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs[docs]
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/api[apiDoc]: API Documentation
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/asciidoc[asciidoc]: General documentation (Architecture,
 Getting Started Guide, etc.)
 ** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main[main]
 *** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main/docker[docker]: contains docker compose files to help with

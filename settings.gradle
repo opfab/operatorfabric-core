@@ -31,6 +31,6 @@ include 'src:test:cypress'
 include 'src:test:gatling'
 include 'src:test:dummyModbusDevice'
 include 'cli'
-include 'src:docs:api'
+include 'docs:api'
 
 

@@ -135,7 +135,7 @@ sonar {
           'backend/**/jest.config.js'
         ]
         property 'sonar.coverage.exclusions', coverageExclusions.join(',')
-        property 'sonar.exclusions','**/generated/**/*,**/src/docs/**/*,**/*Application.java,**/node_modules/**/*'
+        property 'sonar.exclusions','**/generated/**/*,docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,src/test/**,backend/**/tests/*'
         
@@ -164,11 +164,13 @@ asciidoctor {
 
     baseDirFollowsSourceFile()
 
+    sourceDir 'docs/asciidoc'
+
     sources {
         include '*/index.adoc','docs/*'
     }
     resources {
-        from('src/docs/asciidoc') {
+        from('docs/asciidoc') {
             include 'images/*','pdf/*'
         }
     }

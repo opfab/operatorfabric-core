@@ -191,7 +191,7 @@ stop anyone interested in the topic of a PR to comment and review it.
 
 * The PR comment contains the text to insert in release note. Otherwise, it should say why this development doesn't need to be on the release notes.
 * If necessary, the PR should create or add content to a migration guide for the next version, under
-`src/docs/asciidoc/resources`
+`docs/asciidoc/resources`
 * Check that GitHub Action build is passing for the PR
 * The SonarCloud analysis should report no new bug or code smells, and should pass the quality gate
 * Check that the base branch (i.e. the branch into which we want to merge changes) is correct: for feature branches pull requests, this branch should be `develop`.

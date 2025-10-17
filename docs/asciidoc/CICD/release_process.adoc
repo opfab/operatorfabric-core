@@ -129,7 +129,7 @@ release.
 link:https://github.com/opfab/release-notes/[release-notes repository].
 .. Reformat and correct the content as needed.
 .. Check if there is a migration guide for this version, if so, check if the corresponding file has been included in
-src/docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
+docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
 .. Click "Publish release"
 
 . Create a new release_notes.Y.Y.Y.md file with next version number.
@@ -364,7 +364,7 @@ release.
 link:https://github.com/opfab/release-notes/[release-notes repository].
 .. Reformat and correct the content as needed.
 .. Check if there is a migration guide for this version, if so, check if the corresponding file has been included in
-src/docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
+docs/asciidoc/resources/index.adoc and include a link to it at the top of the release notes.
 .. Click "Publish release"
 
 

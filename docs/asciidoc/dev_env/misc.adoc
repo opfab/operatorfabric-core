@@ -30,7 +30,7 @@ To Generate all docker images run `./gradlew buildDocker'
 
 == Generating documentation (from AsciiDoc sources)
 
-The sources for the documentation are located under `src/docs/asciidoc`. To generate HTML pages from these sources,
+The sources for the documentation are located under `docs/asciidoc`. To generate HTML pages from these sources,
 use the `asciidoctor` gradle task from the project root:
 
 [source,bash]
@@ -43,7 +43,7 @@ The task output can be found under `$OF_HOME/build/docs/asciidoc`
 
 == Generating API documentation
 
-The documentation for the API is generated from the open api definition file `src/docs/api/openapi.yml` definitions. To generate the
+The documentation for the API is generated from the open api definition file `docs/api/openapi.yml` definitions. To generate the
 API documentation, use the `generateOpenApiDocs` gradle task:
 
 [source,bash]
@@ -52,4 +52,4 @@ cd $OF_HOME
 ./gradlew generateOpenApiDocs
 ----
 
-The generate html file can be found under `src/docs/api/build`
+The generate html file can be found under `docs/api/build`
