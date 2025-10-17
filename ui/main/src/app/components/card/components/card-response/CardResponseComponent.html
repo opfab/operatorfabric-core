@@ -5,23 +5,25 @@
 <!-- file, You can obtain one at http://mozilla.org/MPL/2.0/.              -->
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 
-<button
-    id="opfab-card-details-btn-response"
-    class="opfab-btn"
-    *ngIf="showButton && isUserEnabledToRespond && !isResponseLocked"
-    [disabled]="lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponseInProgress"
-    (click)="openConfirmSendResponse()">
-    {{ btnValidateLabel | translate }}
-</button>
+@if (showButton && isUserEnabledToRespond && !isResponseLocked) {
+    <button
+        id="opfab-card-details-btn-response"
+        class="opfab-btn"
+        [disabled]="lttdExpiredIsTrue || !isUserEnabledToRespond || sendingResponseInProgress"
+        (click)="openConfirmSendResponse()">
+        {{ btnValidateLabel | translate }}
+    </button>
+}
 
-<button
-    id="opfab-card-details-btn-response"
-    class="opfab-btn"
-    [disabled]="lttdExpiredIsTrue || !isUserEnabledToRespond"
-    *ngIf="showButton && isUserEnabledToRespond && isResponseLocked"
-    (click)="unlockAnswer()">
-    {{ btnUnlockLabel | translate }}
-</button>
+@if (showButton && isUserEnabledToRespond && isResponseLocked) {
+    <button
+        id="opfab-card-details-btn-response"
+        class="opfab-btn"
+        [disabled]="lttdExpiredIsTrue || !isUserEnabledToRespond"
+        (click)="unlockAnswer()">
+        {{ btnUnlockLabel | translate }}
+    </button>
+}
 
 <ng-template #chooseEntitiesForResponsePopup let-modal>
     <div class="modal-header">
