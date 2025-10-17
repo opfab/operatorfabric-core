@@ -18,10 +18,10 @@ export NVM_DIR="$HOME/.nvm"
 source ./bin/load_environment_light.sh;
 cd bin
 ./startOpfab.sh prod
-cd ../src/test/gatling
+cd ../test/gatling
 ../../../gradlew clean gatlingRun
 status_code=$?
-cd ../../../bin
+cd ../../bin
 ./stopOpfab.sh
 # propagate the status code for github actions
 exit $status_code

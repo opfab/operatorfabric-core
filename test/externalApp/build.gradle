@@ -1,0 +1,69 @@
+
+plugins {
+	id "org.springframework.boot"
+	id "io.spring.dependency-management"
+}
+
+apply plugin: 'java'
+
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+bootJar {
+	manifest {
+		attributes("Created-By"             : "Gradle ${gradle.gradleVersion}",
+				"Specification-Title"    : "OperatorFabric Test application",
+				"Implementation-Title"   : "OperatorFabric Test application",
+				"Implementation-Version" : operatorfabric.version,
+				"Specification-Version"  : operatorfabric.version
+		)
+	}
+}
+
+
+task buildDocker(type: Exec) {
+	workingDir project.projectDir
+	commandLine 'docker', 'build', 
+				'--build-arg', "https_proxy=${proxy.https}",
+				'--build-arg', "JAR_FILE=externalApp-${project.version.toUpperCase()}.jar",
+				'-t', "lfeoperatorfabric/of-external-app:${project.version}", '.'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+	}
+
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// This will never actually serve as services rely on bootJars not jars
+// It's just a temporary workaround so build/libs is not flagged as an implicit dependency of docker
+jar {
+	destinationDirectory.set(file("build/unused_plain_jar"))
+}
+
+
+task copyScriptsForDockerImage(type: Copy) {
+	description 'copy script for docker image'
+	from "$project.projectDir/../../src/main/docker/add-certificates.sh"
+	from "$project.projectDir/../../src/main/docker/java-config-docker-entrypoint.sh"
+	into "$project.projectDir/build/docker"
+	doFirst {
+		logger.info "creating $project.projectDir/build/dockerFiles/"
+		new File("$project.projectDir/build/docker/").mkdirs()
+	}
+}
+
+tasks.buildDocker.dependsOn build
+tasks.buildDocker.dependsOn copyScriptsForDockerImage

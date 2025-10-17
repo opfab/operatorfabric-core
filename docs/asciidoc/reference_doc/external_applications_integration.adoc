@@ -19,6 +19,6 @@ To use the shared stylesheet the web application should link the following resou
 - `/shared/css/opfab-application.js` : javascript objects to hande day/night themes
 
 
-Your can find an example of a web page using these resources in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/externalWebAppExample/index.html[src/test/externalWebAppExample/index.html]).
+Your can find an example of a web page using these resources in the OperatorFabric core repository (https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/externalWebAppExample/index.html[test/externalWebAppExample/index.html]).
 
 The example test page can be accessed from OperatorFabric directly at the following url  `http://localhost:2002/external/appExample/` and also using one of the example business menu entries.

@@ -18,6 +18,6 @@ It is expected for the data being pushed to be compliant with the `json` format.
 
 == Calling a resource
 
-Once a resource has been stored, it is possible to call it from the template of a card. See in this template (https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/test/resources/bundles/conferenceAndITIncidentExample/template/usercard_incidentInProgress.handlebars[usercard_incidentInProgress.handlebars]) how the resource `services` is called with the method `opfab.businessconfig.businessData.get()`
+Once a resource has been stored, it is possible to call it from the template of a card. See in this template (https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/resources/bundles/conferenceAndITIncidentExample/template/usercard_incidentInProgress.handlebars[usercard_incidentInProgress.handlebars]) how the resource `services` is called with the method `opfab.businessconfig.businessData.get()`
 
 This prevents writing directly in the template's code long lists and allows easy data duplication between templates.

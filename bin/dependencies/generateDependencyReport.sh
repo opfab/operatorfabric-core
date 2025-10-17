@@ -26,11 +26,11 @@ echo "Build java report"
             tools:spring:spring-test-utilities:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"
-    cd src/test/externalApp
-    ../../../gradlew dependencies >> ../../../bin/dependencies/${report_name}
+    cd test/externalApp
+    ../../gradlew dependencies >> ../../bin/dependencies/${report_name}
     echo "  Java report for test app dummyModbusDevice"
     cd ../dummyModbusDevice
-    ../../../gradlew dependencies >> ../../../bin/dependencies/${report_name}
+    ../../gradlew dependencies >> ../../bin/dependencies/${report_name}
 )
 
 generateNpmReport() {

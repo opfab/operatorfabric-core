@@ -159,8 +159,8 @@ Other users available in development mode are `operator2_fr`, `operator3_fr`, `
 You can check that you see cards into the feed by running the following scripts.
 [source,shell]
 ----
-./src/test/resources/loadTestConf.sh
-./src/test/resources/send6TestCards.sh
+./test/resources/loadTestConf.sh
+./test/resources/send6TestCards.sh
 ----
 
 == Enabling local quality report generation
