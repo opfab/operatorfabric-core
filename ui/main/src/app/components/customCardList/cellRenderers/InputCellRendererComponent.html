@@ -6,7 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div *ngIf="isInputFieldVisible" style="margin: 1px; align-items: center">
+@if (isInputFieldVisible) {
+<div style="margin: 1px; align-items: center">
     <div class="input-container">
         <input
             type="text"
@@ -15,15 +16,17 @@
             (click)="onClick($event)"
             (input)="onInput($event)"
             [attr.maxlength]="maxLength > 0 ? maxLength : null"
-            type="text"
             class="opfab-input"
             style="height: 35px; width: 100%" />
-        <span *ngIf="maxLength>0" class="char-count"> {{ charCount }} </span>
+        @if (maxLength>0) {
+            <span class="char-count"> {{ charCount }} </span>
+        }
     </div>
 </div>
+}
 
-<div
-    *ngIf="!isInputFieldVisible"
-    style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
-    {{ fieldValue }}
-</div>
+@if (!isInputFieldVisible) {
+    <div style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
+        {{ fieldValue }}
+    </div>
+}
