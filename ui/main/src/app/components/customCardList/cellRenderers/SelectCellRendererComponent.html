@@ -47,7 +47,9 @@
         {{ fieldLabel }}
     </div>
 }
-    *ngIf="!isInputFieldVisible"
-    style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
-    {{ fieldLabel }}
-</div>
+
+@if (!isInputFieldVisible) {
+    <div style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
+        {{ fieldLabel }}
+    </div>
+}

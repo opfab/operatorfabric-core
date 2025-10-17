@@ -10,10 +10,12 @@
 <div class="opfab-map" id="ol-map" [hidden]="isSmallscreen()">
     <div id="popup" class="opfab-ol-popup">
         <a href="#" id="popup-closer" class="opfab-ol-popup-closer"></a>
-        <div *ngFor="let lightCard of lightCardsToDisplay; let i = index">
-            <button class="btn btn-cardlink btn-sm" (click)="showCard(lightCard.id)">
-                <span style="text-align: left"> {{ this.displayCardDetailsOnButton(lightCard) }} </span>
-            </button>
-        </div>
+        @for (lightCard of lightCardsToDisplay; track lightCard.id; let i = $index) {
+            <div>
+                <button class="btn btn-cardlink btn-sm" (click)="showCard(lightCard.id)">
+                    <span style="text-align: left"> {{ this.displayCardDetailsOnButton(lightCard) }} </span>
+                </button>
+            </div>
+        }
     </div>
 </div>
