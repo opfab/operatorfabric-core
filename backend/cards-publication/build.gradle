@@ -89,8 +89,8 @@ task buildDocker(type: Exec) {
 
 task copyScriptsForDockerImage(type: Copy) {
     description 'copy script for docker image'
-    from "$project.projectDir/../../src/main/docker/add-certificates.sh"
-    from "$project.projectDir/../../src/main/docker/java-config-docker-entrypoint.sh"
+    from "$project.projectDir/../java-common/add-certificates.sh"
+    from "$project.projectDir/../java-common/java-config-docker-entrypoint.sh"
     into "$project.projectDir/build/docker"
     doFirst {
         logger.info "creating $project.projectDir/build/dockerFiles/"
