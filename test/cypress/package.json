@@ -10,7 +10,7 @@
   "license": "MPL-2.0",
   "devDependencies": {
     "cypress": "15.4.0",
-    "cypress-terminal-report": "7.3.2",
+    "cypress-terminal-report": "7.3.3",
     "prettier": "3.6.2"
   },
   "dependencies": {
