@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -221,7 +221,7 @@ include::license_usage.adoc[leveloffset=+3]
 Compile and run OperatorFabric docker images is the most effective way to check any regression.
 
 . Pull the submitted branch on a testing machine;
-. Run a `docker compose` with the `${OF_HOME}/src/main/docker/test-environment/docker-compose.yml` file;
+. Run a `docker compose` with the `${OF_HOME}/test/test-environment/docker-compose.yml` file;
 . Create `SNAPSHOT` docker images, from the `${OF_HOME}` directory with the following command: `./gradlew clean buildDocker`;
 . Stop the `test-environment` docker compose;
 . Go to `${OF_HOME}/config/docker`;
