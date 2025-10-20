@@ -163,18 +163,3 @@ You can check that you see cards into the feed by running the following scripts.
 ./test/resources/send6TestCards.sh
 ----
 
-== Enabling local quality report generation
-
-This step is optional and is generally not needed (only needed if you want a Sonarqube report locally)
-
-Sonarqube reporting needs a `SonarQube` docker container.
-Use the `${OF_HOME}/src/main/docker/test-quality-environment/docker-compose.yml` to get them all running.
-
-To generate the quality report, run the following commands:
-[source,shell]
-----
-cd ${OF_HOME}
-./gradlew jacocoTestReport
-----
-
-To export the reports into the `SonarQube` docker instance, install and use link:https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/[SonarScanner].
