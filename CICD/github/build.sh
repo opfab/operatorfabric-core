@@ -12,7 +12,7 @@
 # Script launch form the root of the git project by github actions
 
 export OF_VERSION=$(<VERSION)
-docker compose -f src/main/docker/test-environment/docker-compose.yml up -d
+docker compose -f test/test-environment/docker-compose.yml up -d
 source $HOME/.sdkman/bin/sdkman-init.sh;
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -32,6 +32,6 @@ echo "SONAR_TOKEN is not set, skipping sonar analysis."
     ./gradlew --build-cache test jacocoTestReport  buildDocker
 fi  
 status_code=$?
-docker compose -f src/main/docker/test-environment/docker-compose.yml down
+docker compose -f test/test-environment/docker-compose.yml down
 # propagate the status code for github actions
 exit $status_code
