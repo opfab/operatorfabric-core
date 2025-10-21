@@ -145,10 +145,8 @@ test/cypress/node_modules
 test/cypress/cypress/screenshots
 test/cypress/cypress/videos
 
-# migration-opfab3
-src/tooling/migration-opfab3/node_modules
-src/tooling/migration-rrule-recurrence/node_modules
-src/tooling/migration-entity-roles/node_modules
+# migration packages
+migrations/*/node_modules
 
 # Node modules 
 backend/*/node_modules

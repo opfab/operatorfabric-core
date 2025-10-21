@@ -75,7 +75,7 @@ With this parent entity 1 and parent entity 2 need to be declared and the name o
 == Updating the entity roles in the database
 
 In this release the "roles" attribute has been added to the entity object. It defines the utility of an entity. It absorbs and broaden the logic of the attribute "entityAllowedToSendCard" which becomes deprecated.
-To update the entities in your mongo database, you can execute the following script located in `OF_HOME/src/tooling/migration-entity-roles` : 
+To update the entities in your mongo database, you can execute the following script located in `OF_HOME/migrations/migration-entity-roles` : 
 
 `./launchMigration.sh <IP or DNSNameMongoDB> <portMongoDB> <loginMongoDB> <passwordMongoDB>`
 

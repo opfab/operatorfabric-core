@@ -45,5 +45,4 @@ generateNpmReport backend/cards-reminder
 generateNpmReport backend/cards-external-diffusion
 generateNpmReport backend/supervisor
 generateNpmReport ui/main
-generateNpmReport src/tooling/migration-rrule-recurrence
 echo "Report done in $report_name"

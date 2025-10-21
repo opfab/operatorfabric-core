@@ -8,7 +8,7 @@
     "**/node_modules/**",
     "**/bower_components/**",
     "**/vendor/**",
-    "src/tooling/**"
+    "migrations/**"
   ],
   "major": {
     "packageRules": [
