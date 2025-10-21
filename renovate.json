@@ -4,7 +4,7 @@
   "baseBranchPatterns": ["develop"],
   "prConcurrentLimit": 12,
   "ignorePaths": [
-    "ui/main/**",
+    "frontend/**",
     "**/node_modules/**",
     "**/bower_components/**",
     "**/vendor/**",

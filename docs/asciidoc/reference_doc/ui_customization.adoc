@@ -719,7 +719,7 @@ For each configured severity, a column will be exported (but not shown in the UI
 == Customizing browser notification sounds
 
 The sounds used by default by the browser to signal a card of a given severity
-can be found under `ui/main/src/assets/sounds` in the core repository and are packaged in the `web-ui` docker image.
+can be found under `frontend/src/assets/sounds` in the core repository and are packaged in the `web-ui` docker image.
 
 To customize these sounds, you can put the files in the current directory and mount that directory as a volume for
 the web-ui container:

@@ -4,7 +4,7 @@ updates:
     cooldown:
       semver-major-days: 5
       semver-minor-days: 2
-    directory: "/ui/main/"
+    directory: "/frontend/"
     groups:
       angular:
         patterns:
