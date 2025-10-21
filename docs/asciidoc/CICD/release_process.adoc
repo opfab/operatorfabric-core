@@ -46,10 +46,10 @@ Create a working branch for the release candidate. This branch will be used to p
 git checkout -b X.X.X-RC.release.draft
 ----
 +
-. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
+. Use the ./bin/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ----
-./CICD/prepare_release_version.sh -v X.X.X-RC.RELEASE
+./bin/prepare_release_version.sh -v X.X.X-RC.RELEASE
 ----
 +
 You should get the following output:
@@ -212,10 +212,10 @@ git checkout -b X.X.X.release.draft
 +
 
 
-. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
+. Use the ./bin/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ----
-./CICD/prepare_release_version.sh -v X.X.X.RELEASE
+./bin/prepare_release_version.sh -v X.X.X.RELEASE
 ----
 +
 You should get the following output:
@@ -412,10 +412,10 @@ git checkout -b X.X.X.release.draft
 ----
 
 
-. Use the ./CICD/prepare_release_version.sh script to automatically perform all the necessary changes:
+. Use the ./bin/prepare_release_version.sh script to automatically perform all the necessary changes:
 +
 ----
-./CICD/prepare_release_version.sh -v X.X.X.RELEASE
+./bin/prepare_release_version.sh -v X.X.X.RELEASE
 ----
 +
 . Commit the changes and push to GitHub:

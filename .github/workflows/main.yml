@@ -78,24 +78,24 @@ jobs:
 
       # Install all required tools
       - name: Install
-        run: ./CICD/github/install.sh
+        run: ./bin/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         # build.sh set variable for sdk, nvm and gradle
         # if variable is set in install step it is not accessible in this step
-        run: ./CICD/github/build.sh
+        run: ./bin/github/build.sh
         env:
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_karate_tests.sh
+        run: ./bin/github/launch_karate_tests.sh
 
       - name: Cypress tests
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
+        run: ./bin/github/launch_cypress_tests.sh ${{ github.event.inputs.cypressTestFiles }}
 
       - name: Upload cypress screenshots and logs
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -107,7 +107,7 @@ jobs:
             opfab.log
       - name: Load tests
         if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
-        run: ./CICD/github/launch_load_tests.sh
+        run: ./bin/github/launch_load_tests.sh
   publish:
     runs-on: ubuntu-latest
     environment: publishVersion
@@ -141,24 +141,24 @@ jobs:
 
       # Install all required tools
       - name: Install
-        run: ./CICD/github/install.sh
+        run: ./bin/github/install.sh
 
       - name: Build
         if: ${{ github.event.inputs.build  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push'}}
         # set variable in this step (sdk, nvm et gradle)
         # if variable is set in install step it is not accessible in this step
-        run: ./CICD/github/build.sh
+        run: ./bin/github/build.sh
         env:
           # SonarCloud access token should be generated from https://sonarcloud.io/account/security/
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Karate tests
         if: ${{ github.event.inputs.karate  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_karate_tests.sh
+        run: ./bin/github/launch_karate_tests.sh
 
       - name: Cypress tests
         if: ${{ github.event.inputs.cypress  == 'true' || github.event_name == 'schedule' || github.event_name == 'pull_request' || github.event_name == 'push' }}
-        run: ./CICD/github/launch_cypress_tests.sh
+        run: ./bin/github/launch_cypress_tests.sh
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -169,7 +169,7 @@ jobs:
 
       - name: Load tests
         if: ${{ github.event.inputs.gatling  == 'true' || github.event_name == 'schedule' }}
-        run: ./CICD/github/launch_load_tests.sh
+        run: ./bin/github/launch_load_tests.sh
 
       - name: Publish Documentation
         if: ${{ github.event.inputs.doc  == 'true' || github.event_name == 'schedule'}}
@@ -180,7 +180,7 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
           ./gradlew --build-cache generateOpenApiDocs asciidoctor;
-          ./CICD/github/upload_doc.sh
+          ./bin/github/upload_doc.sh
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
@@ -193,7 +193,7 @@ jobs:
           [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
           source ./bin/load_environment_light.sh;
           ./gradlew --build-cache generateOpenApiDocs asciidoctor;
-          ./CICD/github/upload_doc.sh --updateLatest true
+          ./bin/github/upload_doc.sh --updateLatest true
         env:
           GH_DOC_TOKEN: ${{ secrets.GH_DOC_TOKEN}}
 
