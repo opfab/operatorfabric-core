@@ -19,7 +19,7 @@ source ./bin/load_environment_light.sh;
 cd bin
 ./startOpfab.sh prod
 cd ../test/gatling
-../../../gradlew clean gatlingRun
+../../gradlew clean gatlingRun
 status_code=$?
 cd ../../bin
 ./stopOpfab.sh
