@@ -159,7 +159,7 @@ Other users available in development mode are `operator2_fr`, `operator3_fr`, `
 You can check that you see cards into the feed by running the following scripts.
 [source,shell]
 ----
-./test/resources/loadTestConf.sh
-./test/resources/send6TestCards.sh
+./tests/resources/loadTestConf.sh
+./tests/resources/send6TestCards.sh
 ----
 

@@ -92,8 +92,8 @@ cd ./bin
 +
 [source,shell]
 ----
-./test/resources/loadTestConf.sh
-./test/resources/send6TestCards.sh
+./tests/resources/loadTestConf.sh
+./tests/resources/send6TestCards.sh
 ----
 
 TIP: If you want to experiment in more depth and have more details on how it works (as well as some troubleshooting), check out our

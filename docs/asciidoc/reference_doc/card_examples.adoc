@@ -235,7 +235,7 @@ ifdef::single-page-doc[<<template_description, described here>>]
 ifndef::single-page-doc[<</documentation/current/reference_doc/index.adoc#template_description, described here>>]
 . To have an effective example without too many actions to perform, the following example will use an already existing
 configuration. You can find the corresponding bundle of the following example in the test directory of OperatorFabric
-(test/resources/bundles).
+(tests/resources/bundles).
 
 At the card level, the attributes in the card telling OperatorFabric which template to use are the `process` and `state`
 attributes, the `templateName` can be retrieved from the definition of the bundle.

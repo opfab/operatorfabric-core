@@ -74,9 +74,9 @@ classes
 
 # Opfab binary directories
 backend/*/bin
-test/externalApp/bin
-test/dummyModbusDevice/bin
-test/gatling/bin
+tests/externalApp/bin
+tests/dummyModbusDevice/bin
+tests/gatling/bin
 */**/*.class
 
 ### Gradle ###
@@ -113,11 +113,11 @@ config/**/.env
 
 # Karate tests
 ## Results
-test/**/karate/target/**/*
+tests/**/karate/target/**/*
 ## Karate jar
-test/**/karate.jar
+tests/**/karate.jar
 ## Tar.gz bundles
-test/**/*.tar.gz
+tests/**/*.tar.gz
 
 # UI
 ui/main/node_modules
@@ -141,9 +141,9 @@ config/mongodump/**
 
 # Cypress
 
-test/cypress/node_modules
-test/cypress/cypress/screenshots
-test/cypress/cypress/videos
+tests/cypress/node_modules
+tests/cypress/cypress/screenshots
+tests/cypress/cypress/videos
 
 # migration packages
 migrations/*/node_modules

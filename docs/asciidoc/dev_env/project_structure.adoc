@@ -38,14 +38,14 @@ Getting Started Guide, etc.)
 ** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main[main]
 *** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main/docker[docker]: contains docker compose files to help with
 tests and demonstrations
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test[test]
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/api[api] : karate code for automatic api testing (non-regression tests)
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/clientApp[clientApp] : test application that send card (used to test client lib)
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/cypress[cypress] : cypress code for automatic ui testing
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/dummyModbusDevice[dummyModbusDevice] : application emulating a Modbus device for test purposes
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/externalApp[externalApp] : external test application that received card 
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/externalWebAppExample[externalWebAppExample] : example application to show integration of an external application in opfab UI 
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/test/resources[resources] : scripts and data for manual testing 
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests[tests]
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/api[api] : karate code for automatic api testing (non-regression tests)
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/clientApp[clientApp] : test application that send card (used to test client lib)
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/cypress[cypress] : cypress code for automatic ui testing
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/dummyModbusDevice[dummyModbusDevice] : application emulating a Modbus device for test purposes
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalApp[externalApp] : external test application that received card 
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalWebAppExample[externalWebAppExample] : example application to show integration of an external application in opfab UI 
+*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/resources[resources] : scripts and data for manual testing 
 * link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/ui[ui]: Angular sources for the UI
 
 == Conventions regarding project structure and configuration

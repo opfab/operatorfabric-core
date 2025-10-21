@@ -26,7 +26,7 @@ echo "Build java report"
             tools:spring:spring-test-utilities:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"
-    cd test/externalApp
+    cd tests/externalApp
     ../../gradlew dependencies >> ../../bin/dependencies/${report_name}
     echo "  Java report for test app dummyModbusDevice"
     cd ../dummyModbusDevice
