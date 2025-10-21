@@ -10,7 +10,7 @@
 
 cd $OF_HOME
 
-projectBuildPath="test/dummyModbusDevice/build"
+projectBuildPath="tests/dummyModbusDevice/build"
 projectPidFilePath="$projectBuildPath/PIDFILE"
 echo "##########################################################"
     if [ -f "$projectPidFilePath" ]; then

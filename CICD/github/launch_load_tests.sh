@@ -18,7 +18,7 @@ export NVM_DIR="$HOME/.nvm"
 source ./bin/load_environment_light.sh;
 cd bin
 ./startOpfab.sh prod
-cd ../test/gatling
+cd ../tests/gatling
 ../../gradlew clean gatlingRun
 status_code=$?
 cd ../../bin

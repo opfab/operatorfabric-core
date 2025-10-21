@@ -5,7 +5,7 @@ apply plugin: 'io.spring.dependency-management'
 
 dependencies {
     testImplementation testing_deps.karate
-    testImplementation project(':test:api:karate:kafka:java-client')
+    testImplementation project(':tests:api:karate:kafka:java-client')
 }
 
 test {

@@ -9,7 +9,7 @@
 # Load testing with Gatling
 
 Load tests using Gatling are written in java.
-All test java sources are in test/gatling/src/java
+All test java sources are in tests/gatling/src/java
 
 
 IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to edit the tests classes  and replace localhost with the address of your running instance.
@@ -26,7 +26,7 @@ To run only a specific test, launch:
 $OF_HOME/gradlew clean  gatlingRun --simulation=<TestClassName>
 ....
 
-The result will be available in the `test/gatling/build/reports/gatling/` folder.
+The result will be available in the `tests/gatling/build/reports/gatling/` folder.
 
 
 

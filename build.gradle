@@ -130,7 +130,7 @@ sonar {
           '**/controllers/**',
           '**/src/test/**',
           '**/test-utilities/**',
-          'test/**',
+          'tests/**',
           'backend/**/tests/*',
           'backend/**/server-side/**',
           'backend/**/jest.config.js'
@@ -138,7 +138,7 @@ sonar {
         property 'sonar.coverage.exclusions', coverageExclusions.join(',')
         property 'sonar.exclusions','**/generated/**/*,docs/**/*,**/*Application.java,**/node_modules/**/*'
         // exclusions for analyse of duplicated code , test classes are excluded 
-        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,test/**,backend/**/tests/*'
+        property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,tests/**,backend/**/tests/*'
         
 
         property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3'

@@ -18,7 +18,7 @@ Before running Cypress tests for the first time you need to install it using NPM
 
 [source,bash]
 ----
-cd test/cypress
+cd tests/cypress
 npm install
 ----
 
@@ -63,7 +63,7 @@ To launch the Cypress test runner:
 
 [source,bash]
 ----
-cd test/cypress
+cd tests/cypress
 ./node_modules/.bin/cypress open
 ----
 
@@ -90,7 +90,7 @@ To launch the Cypress test runner:
 
 [source,bash]
 ----
-cd test/cypress
+cd tests/cypress
 ./node_modules/.bin/cypress open --config baseUrl=http://localhost:4200
 ----
 

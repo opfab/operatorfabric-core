@@ -9,7 +9,7 @@
 # This file is part of the OperatorFabric project.
 
 applicationOptions="--spring.profiles.active=dev --spring.config.location=classpath:/application.yml,file:${OF_HOME}/config/dev/ --spring.config.name=common,dummy-modbus-device"
-projectBuildPath="test/dummyModbusDevice/build"
+projectBuildPath="tests/dummyModbusDevice/build"
 version=$OF_VERSION
 
 cd $OF_HOME

@@ -74,12 +74,12 @@ export class ScriptCommands extends OpfabCommands {
 
     removePropertyInConf = function (property) {
         const filePath = `./config/web-ui/ui-config/web-ui.json`;
-        cy.exec(`cd ../.. && ./test/resources/uiConfig/removePropertyInJson.sh ${filePath} ${property}`);
+        cy.exec(`cd ../.. && ./tests/resources/uiConfig/removePropertyInJson.sh ${filePath} ${property}`);
     };
 
     setPropertyInConf = function (property, value) {
         const filePath = `./config/web-ui/ui-config/web-ui.json`;
-        cy.exec(`cd ../.. && ./test/resources/uiConfig/updatePropertyInJson.sh ${filePath} ${property} ${value}`);
+        cy.exec(`cd ../.. && ./tests/resources/uiConfig/updatePropertyInJson.sh ${filePath} ${property} ${value}`);
     };
 
     deleteAllArchivedCards = function () {

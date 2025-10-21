@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-dockerComposeFile=test/test-environment/docker-compose.yml
+dockerComposeFile=tests/test-environment/docker-compose.yml
 (cd ../../../
 echo "Stop java services"
 bin/run_all.sh stop
@@ -30,7 +30,7 @@ docker compose -f ${dockerComposeFile} down
 echo "Start opfab"
 cd config/docker
 ./startOpfabInProductionMode.sh
-cd ../../test/api/karate
+cd ../../tests/api/karate
 echo "Start karate testing"
 ./launchAll.sh
 google-chrome target/karate-reports/karate-summary.html &

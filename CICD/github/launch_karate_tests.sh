@@ -20,7 +20,7 @@ cd bin
 ./startOpfab.sh prod
 #Logs for debug
 docker logs greenmail
-cd ../test/api/karate
+cd ../tests/api/karate
 ./launchAll.sh
 status_code=$?
 #Logs for debug

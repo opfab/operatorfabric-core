@@ -11,11 +11,11 @@
 IMPORTANT: If your OperatorFabric instance is not running on localhost, you need to replace localhost with the address
 of your running instance within the `karate-config.js` file.
 
-All the scripts and test files are in test/api/karate. 
+All the scripts and test files are in tests/api/karate. 
 
 ## Run a feature
 
-To launch a specific test, launch in test/api/karate.
+To launch a specific test, launch in tests/api/karate.
 
 ....
 $OF_HOME/gradlew karate --args=myfeature.feature
@@ -25,11 +25,11 @@ The result will be available in the `target` repository.
 
 ## Non regression tests
 
-You can launch operatorFabric non-regression tests via the script launchAll.sh in test/api/karate. 
+You can launch operatorFabric non-regression tests via the script launchAll.sh in tests/api/karate. 
 
 To have the test passed, you need to have a clean Mongo DB database. To do that, you can use the scripts : 
 
-* test/resources/deleteAllCards.sh
-* test/resources/deleteAllArchivedCards.sh
+* tests/resources/deleteAllCards.sh
+* tests/resources/deleteAllArchivedCards.sh
 
 
