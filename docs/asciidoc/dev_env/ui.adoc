@@ -15,13 +15,13 @@ CLI:: stands for *Command Line Interface*
 
 == Build
 
-Within the folder `${OF_HOME}/ui/main`, run `ng build` to build the project.
+Within the folder `${OF_HOME}/frontend`, run `ng build` to build the project.
 
 The build artifacts will be stored in:
 
 [source,shell]
 ----
-${OF_HOME}/ui/main/build/distribution
+${OF_HOME}/frontend/build/distribution
 ----
 
 The previous command could lead to the following error:
@@ -40,7 +40,7 @@ Use `node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build` inst
 
 === Standalone tests
 
-Run in the `${OF_HOME}/ui/main` directory the command `ng test --watch=false` to execute the unit tests
+Run in the `${OF_HOME}/frontend` directory the command `ng test --watch=false` to execute the unit tests
 on https://jasmine.github.io[Jasmine] using https://karma-runner.github.io[Karma] to drive the browser.
 
 === Test during UI development
@@ -63,7 +63,7 @@ This will install the latest version of the Angular command line, which might no
 project, but it's not an issue as when you run `ng serve` the local version of the Angular CLI
 (as defined in the package.json file) will be used.
 
-If it is still not running , launch in the ui/main directory 
+If it is still not running , launch in the frontend directory 
 
 ----
 npm link @angular/cli

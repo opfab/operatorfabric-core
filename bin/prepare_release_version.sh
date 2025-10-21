@@ -73,7 +73,7 @@ sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$newVersion\"/" ./cli/src/packa
 
 
 echo "Using $newVersion for About menu in web-ui.json files"
-jq --arg a "${newVersion}" '.opfabVersion = $a' ./ui/main/package.json > "tmp" && mv "tmp" ./ui/main/package.json
+jq --arg a "${newVersion}" '.opfabVersion = $a' ./frontend/package.json > "tmp" && mv "tmp" ./frontend/package.json
 
 echo "The following files have been updated: "
 echo | git status --porcelain

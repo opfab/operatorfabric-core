@@ -44,5 +44,5 @@ echo "Build npm report"
 generateNpmReport backend/cards-reminder
 generateNpmReport backend/cards-external-diffusion
 generateNpmReport backend/supervisor
-generateNpmReport ui/main
+generateNpmReport frontend
 echo "Report done in $report_name"

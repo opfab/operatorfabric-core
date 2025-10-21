@@ -80,7 +80,7 @@ run ng serve to start a dynamically generated ui on port 4200:
 
 [source,bash]
 ----
-cd ui/main
+cd frontend
 ng serve
 ----
 
