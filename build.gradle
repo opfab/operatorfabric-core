@@ -108,7 +108,6 @@ sonar {
         //     - ui/main/src/karma.conf.js : karma config files are not tested
         // - backend :
         //     - **/controllers/** : controllers are not unit tested as they are no business logic and there will be tested via cypress e2e tests and API karate test-utilities
-        //     - **/src/tooling/** : one-time migration tools, not meant to evolve or be tested
         //     - **/test/** : test code is not tested
         //     - backend/**/tests/* : tests are not relevant
         //     - backend/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
