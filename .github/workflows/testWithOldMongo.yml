@@ -33,21 +33,21 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Install
-        run: ./CICD/github/install.sh
+        run: ./bin/github/install.sh
 
       - name: Build
         run: |
-          ./CICD/github/build.sh
-          ./CICD/github/setOldMongoVersion.sh
+          ./bin/github/build.sh
+          ./bin/github/setOldMongoVersion.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Karate tests
-        run: ./CICD/github/launch_karate_tests.sh
+        run: ./bin/github/launch_karate_tests.sh
 
       - name: Cypress tests
-        run: ./CICD/github/launch_cypress_tests.sh
+        run: ./bin/github/launch_cypress_tests.sh
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

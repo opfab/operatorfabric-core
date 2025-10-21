@@ -3,7 +3,6 @@ name: Verify Copyright headers
 on:
   pull_request:
 
-
 # Declare default permissions as read only.
 permissions: read-all
 
@@ -18,4 +17,5 @@ jobs:
         uses: tj-actions/changed-files@24d32ffd492484c1d75e0c0b894501ddb9d30d62 # v47.0.0
 
       - name: Verify copyright headers
-        run: ./CICD/github/licenceHeaderCheck.sh ${{ steps.changed-files.outputs.all_changed_files }}
+        run: ./bin/github/licenceHeaderCheck.sh ${{ steps.changed-files.outputs.all_changed_files }}
+
