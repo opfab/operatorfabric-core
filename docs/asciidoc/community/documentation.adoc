@@ -135,7 +135,7 @@ set in the configuration of the asciidoctor gradle task:
 .build.gradle
 [source,groovy]
 ----
-include::../../../../build.gradle[tag=asciidoctor_gradle_task_config]
+include::../../../build.gradle[tag=asciidoctor_gradle_task_config]
 ----
 +
 In particular, the version and revision date are set automatically from the version defined in the
