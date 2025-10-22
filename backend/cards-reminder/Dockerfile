@@ -1,4 +1,4 @@
-FROM node:22.20.0-alpine@sha256:cb3143549582cc5f74f26f0992cdef4a422b22128cb517f94173a5f910fa4ee7
+FROM node:22.21.0-alpine@sha256:b410676781397cabae22f81547ddb3e6b975dc04b43626098ce17ea53a447ef1
 RUN apk add --no-cache tzdata
 WORKDIR /usr/app
 RUN chown node:node /usr/app \
