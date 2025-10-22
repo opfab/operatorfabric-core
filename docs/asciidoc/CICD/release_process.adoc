@@ -444,8 +444,6 @@ You then have to follow the following steps as for a classic release:
 * <<publish_release_on_docker_hub_and_documentation, Publish the release on docker hub and documentation>>
 * <<update_version_list_on_website, Updating the version list on the website>>.
 * <<checking_docker_compose, Checking the docker compose files>>.
-* <<publishing_release_on_github, Publishing the release on GitHub>>.
-* <<publishing_client_lib_release, Release the client library jars>>.
 * <<supported_versions, Update supported versions>>.
 * <<advertising_new_release, Advertising the new release>>.
 

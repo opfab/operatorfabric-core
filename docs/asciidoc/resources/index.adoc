@@ -10,8 +10,6 @@
 
 = Resources
 
-include::jar_publication.adoc[leveloffset=+1]
-
 include::migration_guide_to_3.1.adoc[leveloffset=+1]
 
 include::migration_guide_to_3.2.adoc[leveloffset=+1]

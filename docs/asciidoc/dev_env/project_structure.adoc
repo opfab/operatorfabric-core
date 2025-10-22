@@ -7,71 +7,23 @@
 
 = Project Structure
 
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/bin[bin]: contains useful scripts for dev purposes
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/CICD/github[CICD/github]: scripts used by Github for the
-build process
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/client[client]: contains REST APIs simple beans definition, may be
-used by external projects
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/config[config]: contains external configurations for all services , keycloak and docker compose files to help with tests and demonstrations
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/node-services[node-services]: contains the node microservices that make up
-OperatorFabric
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services[services]: contains the java microservices that make up
-OperatorFabric
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/cards-consultation[cards-consultation
-(cards-consultation-service)]: Card consultation service
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/cards-publication[cards-publication
-(cards-publication-service)]: Card publication service
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/external-devices[external-devices
-(external-devices-service)]: External Devices service
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/src[src]: contains swagger templates for services
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/businessconfig[businessconfig (businessconfig-service)]:
-Businessconfig-party information management service
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/services/users[users (users-service)]: Users management
-service
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/web-ui[web-ui]: project based on Nginx server to serve
-the OperatorFabric UI
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src[src]
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs[docs]
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/api[apiDoc]: API Documentation
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/asciidoc[asciidoc]: General documentation (Architecture,
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/backend[backend]: all the backend services that make up OperatorFabric
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/bin[bin]: useful scripts for dev purposes and github actions
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/cli[cli]: operatorfabric command line interface
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/config[config]: external configurations for all services , keycloak and docker compose files to help with tests and demonstrations OperatorFabric
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs[docs]
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/api[apiDoc]: API Documentation
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/docs/asciidoc[asciidoc]: General documentation (Architecture,
 Getting Started Guide, etc.)
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main[main]
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/src/main/docker[docker]: contains docker compose files to help with
-tests and demonstrations
-** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests[tests]
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/api[api] : karate code for automatic api testing (non-regression tests)
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/clientApp[clientApp] : test application that send card (used to test client lib)
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/cypress[cypress] : cypress code for automatic ui testing
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/dummyModbusDevice[dummyModbusDevice] : application emulating a Modbus device for test purposes
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalApp[externalApp] : external test application that received card 
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalWebAppExample[externalWebAppExample] : example application to show integration of an external application in opfab UI 
-*** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/resources[resources] : scripts and data for manual testing 
-* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/ui[ui]: Angular sources for the UI
-
-== Conventions regarding project structure and configuration
-
-Sub-projects must conform to a few rules in order for the configured Gradle
-tasks to work:
-
-=== Java
-
-[horizontal]
-[sub-project]/src/main/java:: contains java source code
-[sub-project]/src/test/java:: contains java tests source code
-[sub-project]/src/main/resources:: contains resource files
-[sub-project]/src/test/resources:: contains test resource files
-
-=== Docker
-
-Services project all have docker image generated in their build cycle. See
-ifdef::single-page-doc[<<gradle_tasks, Gradle Tasks>>]
-ifndef::single-page-doc[<</documentation/current/dev_env/index.adoc#gradle_tasks, Gradle Tasks>>]
-for details.
-
-Per project configuration :
-
-* docker file : *[sub-project]/Dockerfile*
-
-
-
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/frontend[frontend]: the frontend that make up OperatorFabric
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/migrations[migrations]: some scripts useful for migration between certain operatorFabric versions 
+* link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests[tests]
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/api[api] : karate code for automatic api testing (non-regression tests)
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/cypress[cypress] : cypress code for automatic ui testing
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/gatling[gatling] : load testing code with gatling
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/dummyModbusDevice[dummyModbusDevice] : application emulating a Modbus device for test purposes
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalApp[externalApp] : external test application that received card 
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/externalWebAppExample[externalWebAppExample] : example application to show integration of an external application in opfab UI 
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/resources[resources] : scripts and data for manual testing 
+** link:https://github.com/opfab/operatorfabric-core/blob/{gitReference}/tests/test-environment[test-environment] : docker-compose file for unit tests environment
 
