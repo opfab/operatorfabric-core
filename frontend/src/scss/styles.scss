@@ -281,6 +281,11 @@ ngb-pagination {
     @extend %opfab-popover;
 
     max-width: 100%;
+
+    .popover-body {
+        max-height: 600px;
+        overflow: auto;
+    }
 }
 
 .opfab-popover-arrow-shift-right {

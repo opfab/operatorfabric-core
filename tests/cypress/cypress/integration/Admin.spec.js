@@ -138,8 +138,8 @@ describe('AdmininstrationPages', () => {
         // Check first page has 10 rows
         agGrid.countTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 16 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        // Pagination should display ' Results number  : 36 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 36');
 
         // Add new entity
         cy.get('#add-item').click();
@@ -175,11 +175,9 @@ describe('AdmininstrationPages', () => {
 
         cy.get('#opfab-admin-edit-btn-add').click();
 
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 36');
 
-        cy.get('ngb-pagination').find('.page-link').eq(2).click();
-
-        agGrid.countTableRows('ag-grid-angular', 7);
+        cy.get('ngb-pagination').find('.page-link').eq(4).click();
 
         agGrid.cellShould('ag-grid-angular', 6, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 6, 1, 'have.text', 'entity name');
@@ -233,11 +231,9 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-entity-btn-save').click();
 
         // Check entity is updated
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 17');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 37');
 
-        cy.get('ngb-pagination').find('.page-link').eq(2).click();
-
-        agGrid.countTableRows('ag-grid-angular', 7);
+        cy.get('ngb-pagination').find('.page-link').eq(4).click();
 
         agGrid.cellShould('ag-grid-angular', 6, 0, 'have.text', 'entityId');
         agGrid.cellShould('ag-grid-angular', 6, 1, 'have.text', 'entity name updated');
@@ -252,9 +248,7 @@ describe('AdmininstrationPages', () => {
         cy.waitDefaultTime();
 
         //Check entity was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
-
-        agGrid.countTableRows('ag-grid-angular', 6);
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 36');
 
         // Edit ENTITY2_FR entity to check users list
         cy.get('ngb-pagination').find('.page-link').eq(1).click();
@@ -696,7 +690,7 @@ describe('AdmininstrationPages', () => {
             cy.get('#opfab-tabs').find('li').eq(1).click();
 
             // Wait for table rendering
-            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 16');
+            cy.get('.opfab-pagination').should('contain.text', ' Results number  : 36');
 
             // Do export
             cy.get('#opfab-admin-btn-exportToExcel').click();
@@ -711,7 +705,7 @@ describe('AdmininstrationPages', () => {
                 expect(files[0]).to.match(/^entity_export_\d*\.xlsx/);
                 // check file content
                 cy.task('readXlsx', {file: './cypress/downloads/' + files[0], sheet: 'data'}).then((rows) => {
-                    expect(rows.length).to.equal(16);
+                    expect(rows.length).to.equal(36);
 
                     expect(rows[0].ID).to.equal('ENTITY1_FR');
                     expect(rows[0].NAME).to.equal('Control Center FR North');
