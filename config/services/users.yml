@@ -8,24 +8,24 @@ operatorfabric.users:
     users:
       - login: admin
         groups: ["ADMIN"]
-        entities: ["ENTITY1_FR","ENTITY2_FR"]
+        entities: ["ENTITY1_FR", "ENTITY2_FR"]
       - login: operator1_fr
-        firstname : John
-        lastname : Doe
-        groups: ["Dispatcher","Maintainer"]
+        firstname: John
+        lastname: Doe
+        groups: ["Dispatcher", "Maintainer"]
         entities: ["ENTITY1_FR"]
       - login: operator2_fr
         groups: ["Planner", "Maintainer", "Manager"]
         entities: ["ENTITY2_FR"]
       - login: operator3_fr
-        groups: [ "RTE","ADMIN","Maintainer","Dispatcher"]
-        entities: [ "ENTITY3_FR" ]
+        groups: ["RTE", "ADMIN", "Maintainer", "Dispatcher"]
+        entities: ["ENTITY3_FR"]
       - login: operator4_fr
-        groups: ["Maintainer","Dispatcher"]
-        entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR",  "ENTITY4_FR" ]
+        groups: ["Maintainer", "Dispatcher"]
+        entities: ["ENTITY1_FR", "ENTITY2_FR", "ENTITY3_FR", "ENTITY4_FR"]
       - login: operator5_fr
-        groups: [ "RTE","ADMIN","Maintainer","Dispatcher"]
-        entities: [ "ENTITY1_FR" ]
+        groups: ["RTE", "ADMIN", "Maintainer", "Dispatcher"]
+        entities: ["ENTITY1_FR"]
       - login: operator6_fr
         groups: ["Maintainer"]
         entities: ["ENTITY1_FR"]
@@ -59,7 +59,7 @@ operatorfabric.users:
       - login: publisher_test
         groups: ["Dispatcher", "Maintainer", "Manager"]
       - login: opfab
-        groups: ["Dispatcher", "Maintainer", "Manager","ADMIN"]
+        groups: ["Dispatcher", "Maintainer", "Manager", "ADMIN"]
     groups:
       - id: ADMIN
         name: ADMINISTRATORS
@@ -81,7 +81,7 @@ operatorfabric.users:
         name: Supervisor
         description: Supervisor Group
         realtime: true
-        permissions: ["READONLY","ADMIN_BUSINESS_PROCESS","VIEW_ALL_CARDS"]
+        permissions: ["READONLY", "ADMIN_BUSINESS_PROCESS", "VIEW_ALL_CARDS"]
       - id: Manager
         name: Manager
         description: Manager Group
@@ -92,79 +92,160 @@ operatorfabric.users:
         description: Maintainer Group
         realtime: false
     entities:
-     - id: ENTITY1_FR
-       name: Control Center FR North
-       description: Control Center FR North
-       parents : ["ENTITY_FR"]
-       labels: ["FR1 label"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY2_FR
-       name: Control Center FR South
-       description: Control Center FR South
-       parents : ["ENTITY_FR"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY3_FR
-       name: Control Center FR East
-       description: Control Center FR East
-       parents : ["ENTITY_FR"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY4_FR
-       name: Control Center FR West
-       description: Control Center FR West
-       parents : ["ENTITY_FR"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY_FR
-       name: French Control Centers
-       description: French Control Centers
-       roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
-     - id: EUROPEAN_SUPERVISION_CENTERS
-       name: European Supervision Centers
-       description: European Supervision Centers
-       roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
-     - id: IT_SUPERVISOR_ENTITY
-       name: IT SUPERVISION CENTER
-       description: IT SUPERVISION CENTER
-       parents : ["EUROPEAN_SUPERVISION_CENTERS"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY1_IT
-       name: Control Center IT North
-       description: Control Center IT North
-       parents : ["ENTITY_IT"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY2_IT
-       name: Control Center IT Center
-       description: Control Center IT Center
-       parents : ["ENTITY_IT"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY3_IT
-       name: Control Center IT South
-       description: Control Center IT South
-       parents : ["ENTITY_IT"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY_IT
-       name: Italian Control Centers
-       description: Italian Control Centers
-       roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
-     - id: ENTITY1_NL
-       name: Control Center NL North
-       description: Control Center NL North
-       parents : ["ENTITY_NL"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY2_NL
-       name: Control Center NL South
-       description: Control Center NL South
-       parents : ["ENTITY_NL"]
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY_NL
-       name: Dutch Control Centers
-       description: Dutch Control Centers
-       roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
-     - id: ENTITY1_EU
-       name: North Europe Control Center
-       description: North Europe Control Center
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
-     - id: ENTITY2_EU
-       name: South Europe Control Center
-       description: South Europe Control Center
-       roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY1_FR
+        name: Control Center FR North
+        description: Control Center FR North
+        parents: ["ENTITY_FR"]
+        labels: ["FR1 label"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY2_FR
+        name: Control Center FR South
+        description: Control Center FR South
+        parents: ["ENTITY_FR"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY3_FR
+        name: Control Center FR East
+        description: Control Center FR East
+        parents: ["ENTITY_FR"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY4_FR
+        name: Control Center FR West
+        description: Control Center FR West
+        parents: ["ENTITY_FR"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY_FR
+        name: French Control Centers
+        description: French Control Centers
+        roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
+      - id: EUROPEAN_SUPERVISION_CENTERS
+        name: European Supervision Centers
+        description: European Supervision Centers
+        roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
+      - id: IT_SUPERVISOR_ENTITY
+        name: IT SUPERVISION CENTER
+        description: IT SUPERVISION CENTER
+        parents: ["EUROPEAN_SUPERVISION_CENTERS"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY1_IT
+        name: Control Center IT North
+        description: Control Center IT North
+        parents: ["ENTITY_IT"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY2_IT
+        name: Control Center IT Center
+        description: Control Center IT Center
+        parents: ["ENTITY_IT"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY3_IT
+        name: Control Center IT South
+        description: Control Center IT South
+        parents: ["ENTITY_IT"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY_IT
+        name: Italian Control Centers
+        description: Italian Control Centers
+        roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
+      - id: ENTITY1_NL
+        name: Control Center NL North
+        description: Control Center NL North
+        parents: ["ENTITY_NL"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY2_NL
+        name: Control Center NL South
+        description: Control Center NL South
+        parents: ["ENTITY_NL"]
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY_NL
+        name: Dutch Control Centers
+        description: Dutch Control Centers
+        roles: ["ACTIVITY_AREA_GROUP", "CARD_RECEIVER"]
+      - id: ENTITY1_EU
+        name: North Europe Control Center
+        description: North Europe Control Center
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: ENTITY2_EU
+        name: South Europe Control Center
+        description: South Europe Control Center
+        roles: ["ACTIVITY_AREA", "CARD_RECEIVER", "CARD_SENDER"]
+      - id: TEST1
+        name: Test Entity 1
+        description: Test Entity 1
+        roles: ["CARD_RECEIVER"]
+      - id: TEST2
+        name: Test Entity 2
+        description: Test Entity 2
+        roles: ["CARD_RECEIVER"]
+      - id: TEST3
+        name: Test Entity 3
+        description: Test Entity 3
+        roles: ["CARD_RECEIVER"]
+      - id: TEST4
+        name: Test Entity 4
+        description: Test Entity 4
+        roles: ["CARD_RECEIVER"]
+      - id: TEST5
+        name: Test Entity 5
+        description: Test Entity 5
+        roles: ["CARD_RECEIVER"]
+      - id: TEST6
+        name: Test Entity 6
+        description: Test Entity 6
+        roles: ["CARD_RECEIVER"]
+      - id: TEST7
+        name: Test Entity 7
+        description: Test Entity 7
+        roles: ["CARD_RECEIVER"]
+      - id: TEST8
+        name: Test Entity 8
+        description: Test Entity 8
+        roles: ["CARD_RECEIVER"]
+      - id: TEST9
+        name: Test Entity 9
+        description: Test Entity 9
+        roles: ["CARD_RECEIVER"]
+      - id: TEST10
+        name: Test Entity 10
+        description: Test Entity 10
+        roles: ["CARD_RECEIVER"]
+      - id: TEST11
+        name: Test Entity 11
+        description: Test Entity 11
+        roles: ["CARD_RECEIVER"]
+      - id: TEST12
+        name: Test Entity 12
+        description: Test Entity 12
+        roles: ["CARD_RECEIVER"]
+      - id: TEST13
+        name: Test Entity 13
+        description: Test Entity 13
+        roles: ["CARD_RECEIVER"]
+      - id: TEST14
+        name: Test Entity 14
+        description: Test Entity 14
+        roles: ["CARD_RECEIVER"]
+      - id: TEST15
+        name: Test Entity 15
+        description: Test Entity 15
+        roles: ["CARD_RECEIVER"]
+      - id: TEST16
+        name: Test Entity 16
+        description: Test Entity 16
+        roles: ["CARD_RECEIVER"]
+      - id: TEST17
+        name: Test Entity 17
+        description: Test Entity 17
+        roles: ["CARD_RECEIVER"]
+      - id: TEST18
+        name: Test Entity 18
+        description: Test Entity 18
+        roles: ["CARD_RECEIVER"]
+      - id: TEST19
+        name: Test Entity 19
+        description: Test Entity 19
+        roles: ["CARD_RECEIVER"]
+      - id: TEST20
+        name: Test Entity 20
+        description: Test Entity 20
+        roles: ["CARD_RECEIVER"]
 #logging.level.org.opfab: debug
+

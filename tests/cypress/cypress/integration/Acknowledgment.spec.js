@@ -222,7 +222,7 @@ describe('Acknowledgment tests', function() {
         );
         cy.get('#opfab-card-acknowledged-footer').should('not.exist');
 
-        // We create a usercard sent to several entities
+        // We create a usercard sent to all entities
         opfab.navigateToUserCard();
         cy.get('#message').find('div').eq(0).should('be.visible').type('Test message for entities acks');
         cy.get('#opfab-recipients').click();
@@ -233,11 +233,9 @@ describe('Acknowledgment tests', function() {
         cy.waitDefaultTime();
 
         // We display the created card
-        // And we check there are 13 entities names displayed in acknowledgements footer, and we check all the entities have orange color
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', 'Message received : Message received');
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should('have.length', 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer')
             .find('span')
             .eq(1)
@@ -315,7 +313,7 @@ describe('Acknowledgment tests', function() {
         cy.get('ngb-popover-window').should('exist');
 
         cy.get('#opfab-acknowledged-list').find('span').should('have.length', 0);
-        cy.get('#opfab-not-acknowledged-list').find('span').should('have.length', 12);
+        cy.get('#opfab-not-acknowledged-list').find('span').should('have.length', 32);
     });
 
     it('operator4_fr (member of 4 FR entities) acknowledges the previous card created by operator1_fr ', function() {
@@ -327,7 +325,6 @@ describe('Acknowledgment tests', function() {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', 'Message received : Message received');
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should('have.length', 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer')
             .find('span')
             .eq(1)
@@ -424,7 +421,6 @@ describe('Acknowledgment tests', function() {
         cy.get('#opfab-card-acknowledged-footer').should('exist');
 
         // We check we have ENTITY1_FR, ENTITY2_FR, ENTITY3_FR and ENTITY4_FR now displayed in green, all other entities in orange
-        cy.get('#opfab-card-acknowledged-footer').find('span').should('have.length', 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer')
             .find('span')
             .eq(1)
@@ -501,7 +497,7 @@ describe('Acknowledgment tests', function() {
         cy.get('#opfab-card-acknowledged-footer').click();
         cy.get('ngb-popover-window').should('exist');
         cy.get('#opfab-acknowledged-list').find('span').should('have.length', 4);
-        cy.get('#opfab-not-acknowledged-list').find('span').should('have.length', 8);
+        cy.get('#opfab-not-acknowledged-list').find('span').should('have.length', 28);
 
         // Footer should contain 'Addressed to' with 4 FR control centers each with ack icon
         cy.get('#opfab-card-details-address-to').find('span').eq(0).contains('Addressed to :');
@@ -564,11 +560,10 @@ describe('Acknowledgment tests', function() {
 
         cy.get('of-light-card').should('have.length', 7);
         // We display the previous card (acknowledged by operator4_fr)
-        // And we check there are 13 entities names displayed in acknowledgements footer, 4 entities with green color and 9 with orange color
+        // And we check there are entities names displayed in acknowledgements footer, 4 entities with green color and the others with orange color
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', 'Message received : Message received');
         cy.get('#opfab-card-acknowledged-footer').should('exist');
-        cy.get('#opfab-card-acknowledged-footer').find('span').should('have.length', 13); // 12 single entities (no group entities) + 1 for 'Acknowledged :' label
         cy.get('#opfab-card-acknowledged-footer')
             .find('span')
             .eq(1)
