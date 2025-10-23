@@ -6,15 +6,19 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {NgIf} from '@angular/common';
+
 import {Component} from '@angular/core';
 
 import type {ITooltipAngularComp} from 'ag-grid-angular';
 
 @Component({
     template: `
-        <span *ngIf="plainText"> {{ value }}</span>
-        <span *ngIf="!plainText" [innerHTML]="value"></span>
+        @if (plainText) {
+            <span> {{ value }}</span>
+        }
+        @if (!plainText) {
+            <span [innerHTML]="value"></span>
+        }
     `,
     styles: [
         `
@@ -28,7 +32,7 @@ import type {ITooltipAngularComp} from 'ag-grid-angular';
             }
         `
     ],
-    imports: [NgIf]
+    imports: []
 })
 export class CustomTooltipComponent implements ITooltipAngularComp {
     value: any;

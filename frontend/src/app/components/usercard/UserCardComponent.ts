@@ -29,7 +29,7 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UsersService} from '@ofServices/users/UsersService';
-import {NgIf, NgFor, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from '../share/simplified-card-view/SimplifiedCardViewComponent';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
@@ -41,12 +41,10 @@ import {Entity} from '@ofServices/entities/model/Entity';
     templateUrl: './UserCardComponent.html',
     styleUrls: ['./UserCardComponent.scss'],
     imports: [
-        NgIf,
         TranslateModule,
         FormsModule,
         ReactiveFormsModule,
         MultiSelectComponent,
-        NgFor,
         NgClass,
         LightCardModule,
         SimplifiedCardViewComponent,

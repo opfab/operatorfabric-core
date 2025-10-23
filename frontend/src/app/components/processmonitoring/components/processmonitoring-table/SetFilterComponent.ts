@@ -11,18 +11,19 @@ import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 import {FilterDisplayParams} from 'ag-grid-community';
-import {NgForOf} from '@angular/common';
 
 @Component({
     standalone: true,
-    imports: [FormsModule, NgForOf],
+    imports: [FormsModule],
     template: `
         <div style="margin: 10px" id="opfab-set-filter">
-            <label class="opfab-checkbox" *ngFor="let cb of checkboxes">
-                <input type="checkbox" [(ngModel)]="cb.checked" (ngModelChange)="onCheckboxChange()" />
-                {{ cb.label }}
-                <span class="opfab-checkbox-checkmark"></span>
-            </label>
+            @for (cb of checkboxes; track cb) {
+                <label class="opfab-checkbox">
+                    <input type="checkbox" [(ngModel)]="cb.checked" (ngModelChange)="onCheckboxChange()" />
+                    {{ cb.label }}
+                    <span class="opfab-checkbox-checkmark"></span>
+                </label>
+            }
         </div>
     `
 })

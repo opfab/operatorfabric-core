@@ -37,7 +37,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {CardsService} from '@ofServices/cards/CardsService';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardAction} from 'app/model/CardAction';
-import {NgIf} from '@angular/common';
+
 import {CardActionsComponent} from '../card-actions/CardActionsComponent';
 import {CardHeaderComponent} from '../card-header/CardHeaderComponent';
 import {TemplateRenderingComponent} from '../../../share/template-rendering/TemplateRenderingComponent';
@@ -57,7 +57,6 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     styleUrls: ['./CardBodyComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        NgIf,
         CardActionsComponent,
         CardHeaderComponent,
         TemplateRenderingComponent,

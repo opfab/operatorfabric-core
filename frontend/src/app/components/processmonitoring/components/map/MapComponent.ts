@@ -28,14 +28,14 @@ import {TranslateService} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {OpfabMap} from 'app/components/share/map/OpfabMap';
-import {NgFor} from '@angular/common';
+
 import {CardComponent} from '../../../card/CardComponent';
 
 @Component({
     selector: 'of-monitoring-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
-    imports: [NgFor, CardComponent]
+    imports: [CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {
     private readonly translateService: TranslateService;

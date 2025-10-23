@@ -23,14 +23,14 @@
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
-<of-spinner *ngIf="loadingInProgress && !firstQueryHasBeenDone"></of-spinner>
+@if (loadingInProgress && !firstQueryHasBeenDone) {
+<of-spinner></of-spinner>
+}
 
 <div style="height: 5%"></div>
 
-<div
-    *ngIf="firstQueryHasBeenDone"
-    [hidden]="!firstQueryHasResults || technicalError"
-    style="margin-left: 5%; margin-right: 5%">
+@if (firstQueryHasBeenDone) {
+<div [hidden]="!firstQueryHasResults || technicalError" style="margin-left: 5%; margin-right: 5%">
     <of-logging-table
         [result]="results"
         [processGroupVisible]="isProcessGroupFilterVisible"
@@ -47,15 +47,11 @@
     </of-logging-table>
     <br />
 </div>
-
-<div
-    *ngIf="firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress"
-    style="text-align: center; font-size: 20px"
-    translate>
-    shared.noResult
-</div>
-
-<div *ngIf="technicalError" style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
+} @if (firstQueryHasBeenDone && !firstQueryHasResults && !loadingInProgress) {
+<div style="text-align: center; font-size: 20px" translate>shared.noResult</div>
+} @if (technicalError) {
+<div style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
+}
 
 <ng-template #exportInProgress let-modal>
     <div class="modal-body modal-body-rounded">

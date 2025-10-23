@@ -31,12 +31,14 @@
                 [hideApplyFiltersToTimeLineChoice]="hideApplyFiltersToTimeLineChoice"
                 [defaultSorting]="defaultSorting"></of-feed-filter>
         </div>
-        <div *ngIf="!isSmallscreen() || !filterOpen" style="width: 100%">
+        @if (!isSmallscreen() || !filterOpen) {
+        <div style="width: 100%">
             <div id="opfab-card-list" class="opfab-card-list">
-                <div *ngFor="let currentLightCard of lightCards" style="margin-right: -10px">
+                @for (currentLightCard of lightCards; track currentLightCard) {
+                <div style="margin-right: -10px">
                     <div style="padding-right: 20px; margin-bottom: 10px">
+                        @if (shouldLightcardBeNotified(currentLightCard)) {
                         <of-light-card
-                            *ngIf="shouldLightcardBeNotified(currentLightCard)"
                             [lightCard]="currentLightCard"
                             [open]="
                                 currentLightCard.id === (selection | async) ||
@@ -44,20 +46,24 @@
                             "
                             [selection]="selection">
                         </of-light-card>
+                        }
                     </div>
                 </div>
-                <div
-                    *ngIf="!!lightCards && totalNumberOfLightsCards > lightCards.length"
-                    style="text-align: right; font-weight: bold; margin-top: 0px; margin-right: 10px">
+                } @if (!!lightCards && totalNumberOfLightsCards > lightCards.length) {
+                <div style="text-align: right; font-weight: bold; margin-top: 0px; margin-right: 10px">
                     ... {{ totalNumberOfLightsCards - lightCards.length }} <span translate> feed.moreCards </span>
                 </div>
+                }
             </div>
 
-            <div *ngIf="!hideAckAllCardsFeature && !!lightCards && lightCards.length" class="opfab-ack-all-cards">
+            @if (!hideAckAllCardsFeature && !!lightCards && lightCards.length) {
+            <div class="opfab-ack-all-cards">
                 <a id="opfab-feed-ack-all-link" (click)="clickOnAckAll()"
                     ><span translate> feed.acknowledgeAllCards.label </span></a
                 >
             </div>
+            }
         </div>
+        }
     </div>
 </div>

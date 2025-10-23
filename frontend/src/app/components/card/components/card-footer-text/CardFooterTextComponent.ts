@@ -19,14 +19,14 @@ import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgFor} from '@angular/common';
+
 import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
 
 @Component({
     selector: 'of-card-footer-text',
     templateUrl: './CardFooterTextComponent.html',
     styleUrls: ['./CardFooterTextComponent.scss'],
-    imports: [TranslateModule, NgIf, NgFor]
+    imports: [TranslateModule]
 })
 export class CardFooterTextComponent implements OnChanges, OnInit {
     @Input() card: Card;

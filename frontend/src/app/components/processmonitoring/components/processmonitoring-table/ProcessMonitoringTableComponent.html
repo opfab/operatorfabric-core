@@ -30,13 +30,14 @@
                 class="ag-theme-opfab">
             </ag-grid-angular>
 
-            <div *ngIf="gridApi" class="opfab-pagination" style="padding-bottom: 5px">
+            @if (gridApi) {
+            <div class="opfab-pagination" style="padding-bottom: 5px">
                 <div style="white-space: nowrap; margin-top: 17px" id="opfab-processmonitoring-results-number">
                     <span translate> shared.resultsNumber </span> : {{ totalElements }}
                 </div>
                 <div style="width: 40%; margin-top: 5px">
+                    @if (totalPages > 1) {
                     <ngb-pagination
-                        *ngIf="totalPages > 1"
                         [collectionSize]="totalElements"
                         [pageSize]="pageSize"
                         [page]="page"
@@ -44,6 +45,7 @@
                         [maxSize]="3"
                         [rotate]="true">
                     </ngb-pagination>
+                    }
                 </div>
                 <div style="width: 50%; text-align: right; padding-right: 8px">
                     <div
@@ -56,20 +58,24 @@
                     </div>
                 </div>
             </div>
+            }
         </div>
         <!-- Side panel -->
-        <div
-            *ngIf="showColumnPanel"
-            style="background: var(--opfab-bgcolor-darker); padding: 10px"
-            id="opfab-processmonitoring-column-panel">
-            <div *ngFor="let col of columnDefs">
-                <label *ngIf="col.headerName" class="opfab-checkbox">
+        @if (showColumnPanel) {
+        <div style="background: var(--opfab-bgcolor-darker); padding: 10px" id="opfab-processmonitoring-column-panel">
+            @for (col of columnDefs; track col) {
+            <div>
+                @if (col.headerName) {
+                <label class="opfab-checkbox">
                     <input type="checkbox" [checked]="!col.hide" (change)="toggleColumnVisible(col)" />
                     {{ col.headerName }}
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
+                }
             </div>
+            }
         </div>
+        }
     </div>
 </div>
 

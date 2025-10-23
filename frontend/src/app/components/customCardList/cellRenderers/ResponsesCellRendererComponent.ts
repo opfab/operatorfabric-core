@@ -11,13 +11,13 @@ import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgFor, NgIf, NgStyle} from '@angular/common';
+import {NgStyle} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'of-responses-renderer',
     templateUrl: './ResponsesCellRendererComponent.html',
-    imports: [TranslateModule, NgIf, NgbPopover, NgFor, NgStyle]
+    imports: [TranslateModule, NgbPopover, NgStyle]
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp {
     public responses: any[];

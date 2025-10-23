@@ -8,12 +8,10 @@
 
 <div class="opfab-notificationconfiguration-title" translate>notificationConfiguration.title</div>
 
-<div
-    *ngIf="notificationConfigurationPage.isThereProcessStatesToDisplay; else noProcessStateToDisplay"
-    #opfabNotificationConfigurationScreen>
-    <div
-        *ngFor="let processGroup of notificationConfigurationPage.processGroups"
-        class="opfab-notificationconfiguration-processlist">
+@if (notificationConfigurationPage.isThereProcessStatesToDisplay) {
+<div #opfabNotificationConfigurationScreen>
+    @for (processGroup of notificationConfigurationPage.processGroups; track processGroup) {
+    <div class="opfab-notificationconfiguration-processlist">
         <label class="opfab-checkbox">
             <h5 class="font-weight-bold">{{ processGroup.label }}</h5>
             <input
@@ -24,19 +22,24 @@
             <span class="opfab-checkbox-checkmark"></span>
         </label>
         <div class="opfab-notificationconfiguration-processgrid">
-            <ng-container *ngFor="let process of processGroup.processes">
-                <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
-            </ng-container>
+            @for (process of processGroup.processes; track process) {
+
+            <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
+
+            }
         </div>
     </div>
+    }
     <br />
-    <div
-        *ngIf="notificationConfigurationPage.processesWithNoProcessGroup.length"
-        class="opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
-        <ng-container *ngFor="let process of notificationConfigurationPage.processesWithNoProcessGroup">
-            <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
-        </ng-container>
+    @if (notificationConfigurationPage.processesWithNoProcessGroup.length) {
+    <div class="opfab-notificationconfiguration-processlist opfab-notificationconfiguration-processgrid">
+        @for (process of notificationConfigurationPage.processesWithNoProcessGroup; track process) {
+
+        <ng-container *ngTemplateOutlet="processTemplate; context: {process: process}"></ng-container>
+
+        }
     </div>
+    }
     <br />
     <div style="text-align: center; width: 100%">
         <button
@@ -50,15 +53,16 @@
         </button>
     </div>
 </div>
+} @else {
 
-<ng-template #noProcessStateToDisplay>
-    <div
-        id="opfab-notificationconfiguration-no-process-state-available"
-        style="text-align: center; font-size: 20px; padding-top: 100px"
-        translate>
-        shared.noProcessStateAvailable
-    </div>
-</ng-template>
+<div
+    id="opfab-notificationconfiguration-no-process-state-available"
+    style="text-align: center; font-size: 20px; padding-top: 100px"
+    translate>
+    shared.noProcessStateAvailable
+</div>
+
+}
 
 <ng-template #processTemplate let-process="process">
     <div class="opfab-notificationconfiguration-process">
@@ -76,7 +80,8 @@
         </p>
         <table style="margin-left: 15px" aria-label="Table of states and email icon">
             <th scope="col" hidden>state</th>
-            <tr *ngFor="let state of process.states">
+            @for (state of process.states; track state) {
+            <tr>
                 <td style="display: inline-flex; width: 100%">
                     <div style="float: left; width: 100%; max-width: 240px">
                         <label class="opfab-checkbox opfab-notificationconfiguration-state-label"
@@ -90,16 +95,18 @@
                             <span class="opfab-checkbox-checkmark"></span>
                         </label>
                     </div>
+                    @if (notificationConfigurationPage.isEmailEnabled) {
                     <div
-                        *ngIf="notificationConfigurationPage.isEmailEnabled"
                         [id]="'opfab_email_notification_state_td_' + process.id + '.' + state.id"
                         (click)="notificationConfigurationView.clickOnStateNotificationByEmail(process.id, state.id)"
                         style="padding-left: 15px; float: right; margin-top: 5px"
                         class="opfab-notificationconfiguration-slash">
                         <div [id]="'opfab_email_notification_state_div_' + process.id + '.' + state.id"></div>
                     </div>
+                    }
                 </td>
             </tr>
+            }
         </table>
         <br />
     </div>

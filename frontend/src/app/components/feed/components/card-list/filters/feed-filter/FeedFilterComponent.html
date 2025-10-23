@@ -36,7 +36,8 @@
         </div>
     </div>
 </form>
-<div *ngIf="!hideResponseFilter">
+@if (!hideResponseFilter) {
+<div>
     <form
         [formGroup]="responseFilterForm"
         id="opfab-response-filter-form"
@@ -48,6 +49,7 @@
         </label>
     </form>
 </div>
+}
 <div>
     <form [formGroup]="ackFilterForm" id="opfab-ack-filter-form" style="padding-left: 10px">
         <div style="display: flex">
@@ -67,7 +69,8 @@
 
 <of-feed-sort [defaultSorting]="defaultSorting"></of-feed-sort>
 
-<div *ngIf="!hideProcessFilter" style="margin-top: -5px">
+@if (!hideProcessFilter) {
+<div style="margin-top: -5px">
     <div class="opfab-filter-header">
         <span id="opfab-feed-filter-process-title" translate>feed.filters.process.label</span>
     </div>
@@ -85,9 +88,8 @@
                 </of-multi-select>
             </div>
         </div>
-        <div
-            *ngIf="!hideProcessFilter && stateMultiSelect?.options?.length > 0"
-            style="margin-left: 2px; margin-top: 20px; width: 280px">
+        @if (!hideProcessFilter && stateMultiSelect?.options?.length > 0) {
+        <div style="margin-left: 2px; margin-top: 20px; width: 280px">
             <div id="opfab-state">
                 <of-multi-select
                     id="opfab-state-select"
@@ -99,10 +101,11 @@
                 </of-multi-select>
             </div>
         </div>
+        }
     </form>
 </div>
-
-<div *ngIf="!hideTimerTags" style="margin-top: -5px">
+} @if (!hideTimerTags) {
+<div style="margin-top: -5px">
     <div class="opfab-filter-header">
         <span id="opfab-feed-filter-date-title" translate>feed.filters.time.titleIfFilterBasedOnPublishDate</span>
     </div>
@@ -133,7 +136,8 @@
         </div>
     </form>
 </div>
-<div *ngIf="!hideApplyFiltersToTimeLineChoice">
+} @if (!hideApplyFiltersToTimeLineChoice) {
+<div>
     <form
         [formGroup]="timeLineFilterForm"
         id="opfab-timeline-filter-form"
@@ -145,9 +149,10 @@
         </label>
     </form>
 </div>
-
-<div *ngIf="showResetLink()" style="display: flex; justify-content: center">
+} @if (showResetLink()) {
+<div style="display: flex; justify-content: center">
     <div id="opfab-feed-filter-reset" class="opfab-link" style="width: max-content" (click)="reset()">
         <span translate>feed.filters.reset</span>
     </div>
 </div>
+}

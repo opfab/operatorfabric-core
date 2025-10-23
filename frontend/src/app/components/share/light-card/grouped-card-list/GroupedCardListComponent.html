@@ -7,13 +7,14 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<div class="opfab-grouped-row" *ngFor="let currentLightCard of visibleCards">
+@for (currentLightCard of visibleCards; track currentLightCard) {
+<div class="opfab-grouped-row">
     <div class="opfab-grouped-light-card-detail" style="width: 100%">
         <of-light-card [lightCard]="currentLightCard" [groupedCardOpen]="currentLightCard.id === (selection | async)">
         </of-light-card>
     </div>
 </div>
-@if (lightCards?.length > maxVisibleCards) {
+} @if (lightCards?.length > maxVisibleCards) {
 <div style="float: right; margin-right: 20px">
     ... {{ lightCards?.length - maxVisibleCards }} <span translate> feed.moreCards </span>
 </div>

@@ -9,11 +9,12 @@
 <ng-template #tipHasAResponseFromYourEntity>
     <span translate>shared.tips.hasAResponseFromYourEntity</span>
 </ng-template>
+@if (params.value) {
 <em
-    *ngIf="params.value"
     [ngbPopover]="tipHasAResponseFromYourEntity"
     popoverClass="opfab-popover-unclickable"
     container="body"
     triggers="mouseenter:mouseleave"
     style="color: var(--opfab-color-blue)"
     class="fa fa-reply"></em>
+}

@@ -8,17 +8,22 @@
 
 <div class="opfab-activityarea-title" translate>{{ titleI18nKey }}</div>
 
-<of-spinner *ngIf="!isScreenLoaded"></of-spinner>
-<div *ngIf="activityAreaPage?.activityAreaClusters?.length === 0">
+@if (!isScreenLoaded) {
+<of-spinner></of-spinner>
+} @if (activityAreaPage?.activityAreaClusters?.length === 0) {
+<div>
     <div id="opfab-no-activityarea" style="text-align: center; font-size: 20px; padding-top: 100px" translate>
         activityArea.noAreaAvailable
     </div>
 </div>
-<div id="opfab-activity-areas" *ngIf="activityAreaPage?.activityAreaClusters?.length" #opfabActivityAreaScreen>
+} @if (activityAreaPage?.activityAreaClusters?.length) {
+<div id="opfab-activity-areas" #opfabActivityAreaScreen>
     <form [formGroup]="activityAreaForm">
         <div class="opfab-activityarea-container">
-            <div class="opfab-activityarea-clusters" *ngFor="let cluster of activityAreaPage.activityAreaClusters">
-                <div *ngIf="cluster.name !== ' '">
+            @for (cluster of activityAreaPage.activityAreaClusters; track cluster) {
+            <div class="opfab-activityarea-clusters">
+                @if (cluster.name !== ' ') {
+                <div>
                     <label class="opfab-checkbox">
                         <span class="opfab-activityarea-cluster-name">{{ cluster.name }} &nbsp;</span>
                         <input
@@ -29,9 +34,11 @@
                         <span class="opfab-checkbox-checkmark" style="margin-top: 6px; margin-left: 6px"></span>
                     </label>
                 </div>
+                }
 
                 <table class="opfab-activityarea-table" aria-describedby="activity area table">
-                    <tr *ngFor="let line of cluster.lines">
+                    @for (line of cluster.lines; track line) {
+                    <tr>
                         <th class="opfab-table-line" style="width: 60%">
                             <label class="opfab-checkbox opfab-activityarea-checkbox">
                                 <input
@@ -44,46 +51,54 @@
                             </label>
                         </th>
                         <td>
-                            <ng-template #connected>
-                                <div class="opfab-tooltip" style="float: left; margin-top: -12px">
-                                    <span
-                                        class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge"
-                                        style="display: inline"
-                                        >{{ line.connectedUsers.length }} </span
-                                    >&nbsp;&nbsp;<span
-                                        [id]="'table-line-' + line.entityId"
-                                        class="opfab-activityarea-table-line"
-                                        style="overflow: hidden"
-                                        >{{ line.connectedUsersText }}
-                                    </span>
-                                    <span
-                                        *ngIf="isEllipsisActive('table-line-' + line.entityId)"
-                                        class="opfab-tooltip-content bottom"
-                                        style="margin-top: 0px; z-index: 1; text-align: left">
-                                        <div *ngFor="let user of line.connectedUsers">&nbsp; {{ user }} &nbsp;</div>
-                                    </span>
-                                </div>
-                            </ng-template>
-                            <ng-template #disconnected>
-                                <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge"
-                                    >0</span
-                                ></ng-template
-                            >
                             <ng-template #usersDropdown>
-                                <div *ngFor="let user of line.connectedUsers">&nbsp; {{ user }} &nbsp;</div>
+                                @for (user of line.connectedUsers; track user) {
+                                <div>&nbsp; {{ user }} &nbsp;</div>
+                                }
                             </ng-template>
-                            <span *ngIf="line.connectedUsers.length > 0; then connected; else disconnected"></span>
+                            @if (line.connectedUsers.length > 0) {
+
+                            <div class="opfab-tooltip" style="float: left; margin-top: -12px">
+                                <span
+                                    class="opfab-rounded-badge opfab-blue-background opfab-activityarea-badge"
+                                    style="display: inline"
+                                    >{{ line.connectedUsers.length }} </span
+                                >&nbsp;&nbsp;<span
+                                    [id]="'table-line-' + line.entityId"
+                                    class="opfab-activityarea-table-line"
+                                    style="overflow: hidden"
+                                    >{{ line.connectedUsersText }}
+                                </span>
+                                @if (isEllipsisActive('table-line-' + line.entityId)) {
+                                <span
+                                    class="opfab-tooltip-content bottom"
+                                    style="margin-top: 0px; z-index: 1; text-align: left">
+                                    @for (user of line.connectedUsers; track user) {
+                                    <div>&nbsp; {{ user }} &nbsp;</div>
+                                    }
+                                </span>
+                                }
+                            </div>
+
+                            } @else {
+
+                            <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">0</span>
+                            }
                         </td>
                     </tr>
+                    }
                 </table>
             </div>
+            }
         </div>
 
         <br />
 
-        <div *ngIf="displaySendResultError">
+        @if (displaySendResultError) {
+        <div>
             <h4 translate style="text-align: center" class="text-danger">{{ messageAfterSavingSettings }}</h4>
         </div>
+        }
         <div style="text-align: center; width: 100%">
             <button
                 id="opfab-activityarea-btn-confirm"
@@ -97,8 +112,10 @@
         </div>
     </form>
 </div>
+}
 
 <div class="my-3">
-    <of-spinner *ngIf="saveSettingsInProgress" [seeInModal]="true" loadingText="activityArea.savingInProgress">
-    </of-spinner>
+    @if (saveSettingsInProgress) {
+    <of-spinner [seeInModal]="true" loadingText="activityArea.savingInProgress"> </of-spinner>
+    }
 </div>

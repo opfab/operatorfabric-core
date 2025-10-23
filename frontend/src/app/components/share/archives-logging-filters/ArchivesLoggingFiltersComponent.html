@@ -6,29 +6,15 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<ng-template #noProcessStateToDisplay>
-    <div
-        id="opfab-no-process-state-available"
-        style="text-align: center; font-size: 20px; padding-top: 100px"
-        translate>
-        shared.noProcessStateAvailable
-    </div>
-    <div
-        *ngIf="hasCurrentUserRightsToViewAllArchivedCards"
-        style="display: flex; justify-content: center; padding-top: 10px">
-        <a id="opfab-see-all-cards-link" class="opfab-link" (click)="toggleAdminMode()"
-            ><span translate>shared.goToAdminMode</span></a
-        >
-    </div>
-</ng-template>
-
-<div class="opfab-archives-logging" *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
+@if (isThereProcessStateToDisplay()) {
+<div class="opfab-archives-logging">
     <!--2 columns in this case-->
     <!--First column-->
-    <div *ngIf="isProcessGroupFilterVisible() || tags" style="width: 300px">
+    @if (isProcessGroupFilterVisible() || tags) {
+    <div style="width: 300px">
         <div>
+            @if (isProcessGroupFilterVisible()) {
             <of-multi-select
-                *ngIf="isProcessGroupFilterVisible()"
                 id="opfab-processGroup"
                 multiSelectId="processGroup"
                 [parentForm]="this.parentForm"
@@ -36,17 +22,7 @@
                 [options]="processGroupMultiSelectOptions"
                 [selectedOptions]="processGroupSelected">
             </of-multi-select>
-            <of-multi-select
-                *ngIf="!isProcessGroupFilterVisible() && tags"
-                id="opfab-tags"
-                multiSelectId="tags"
-                [parentForm]="this.parentForm"
-                [config]="tagsMultiSelectConfig"
-                [options]="tagsMultiSelectOptions"
-                [selectedOptions]="tagsSelected">
-            </of-multi-select>
-        </div>
-        <div *ngIf="isProcessGroupFilterVisible() && tags">
+            } @if (!isProcessGroupFilterVisible() && tags) {
             <of-multi-select
                 id="opfab-tags"
                 multiSelectId="tags"
@@ -55,14 +31,29 @@
                 [options]="tagsMultiSelectOptions"
                 [selectedOptions]="tagsSelected">
             </of-multi-select>
+            }
         </div>
-    </div>
-
-    <!--Second column-->
-    <div *ngIf="isProcessGroupFilterVisible() || tags" style="width: 300px">
+        @if (isProcessGroupFilterVisible() && tags) {
         <div>
             <of-multi-select
-                *ngIf="!isThereProcessGroup()"
+                id="opfab-tags"
+                multiSelectId="tags"
+                [parentForm]="this.parentForm"
+                [config]="tagsMultiSelectConfig"
+                [options]="tagsMultiSelectOptions"
+                [selectedOptions]="tagsSelected">
+            </of-multi-select>
+        </div>
+        }
+    </div>
+    }
+
+    <!--Second column-->
+    @if (isProcessGroupFilterVisible() || tags) {
+    <div style="width: 300px">
+        <div>
+            @if (!isThereProcessGroup()) {
+            <of-multi-select
                 id="opfab-process"
                 multiSelectId="process"
                 [parentForm]="this.parentForm"
@@ -70,8 +61,8 @@
                 [options]="processMultiSelectOptions"
                 [selectedOptions]="processSelected">
             </of-multi-select>
+            } @if (isThereProcessGroup() && isProcessGroupFilterVisible()) {
             <of-multi-select
-                *ngIf="isThereProcessGroup() && isProcessGroupFilterVisible()"
                 id="opfab-process"
                 multiSelectId="process"
                 [parentForm]="this.parentForm"
@@ -79,12 +70,9 @@
                 [options]="processMultiSelectOptionsWhenSelectedProcessGroup"
                 [selectedOptions]="processSelected">
             </of-multi-select>
+            } @if ( isThereProcessGroup() && !isProcessGroupFilterVisible() &&
+            isThereOnlyOneProcessGroupInDropdownList() ) {
             <of-multi-select
-                *ngIf="
-                    isThereProcessGroup() &&
-                    !isProcessGroupFilterVisible() &&
-                    isThereOnlyOneProcessGroupInDropdownList()
-                "
                 id="opfab-process"
                 multiSelectId="process"
                 [parentForm]="this.parentForm"
@@ -94,6 +82,7 @@
                 "
                 [selectedOptions]="processSelected">
             </of-multi-select>
+            }
         </div>
         <div>
             <of-multi-select
@@ -106,12 +95,14 @@
             </of-multi-select>
         </div>
     </div>
+    }
 
     <!--Only one column in this case-->
-    <div *ngIf="!isProcessGroupFilterVisible() && !tags" style="width: 300px">
+    @if (!isProcessGroupFilterVisible() && !tags) {
+    <div style="width: 300px">
         <div>
+            @if (!isThereProcessGroup()) {
             <of-multi-select
-                *ngIf="!isThereProcessGroup()"
                 id="opfab-process"
                 multiSelectId="process"
                 [parentForm]="this.parentForm"
@@ -119,8 +110,8 @@
                 [options]="processMultiSelectOptions"
                 [selectedOptions]="processSelected">
             </of-multi-select>
+            } @if (isThereProcessGroup() && isThereOnlyOneProcessGroupInDropdownList()) {
             <of-multi-select
-                *ngIf="isThereProcessGroup() && isThereOnlyOneProcessGroupInDropdownList()"
                 id="opfab-process"
                 multiSelectId="process"
                 [parentForm]="this.parentForm"
@@ -130,6 +121,7 @@
                 "
                 [selectedOptions]="processSelected">
             </of-multi-select>
+            }
         </div>
         <div>
             <of-multi-select
@@ -142,8 +134,8 @@
             </of-multi-select>
         </div>
     </div>
-
-    <div *ngIf="!hidePublisherAndRecipientsFields" style="width: 300px">
+    } @if (!hidePublisherAndRecipientsFields) {
+    <div style="width: 300px">
         <div>
             <of-multi-select
                 id="opfab-publisher"
@@ -165,6 +157,7 @@
             </of-multi-select>
         </div>
     </div>
+    }
 
     <div class="opfab-vertical-bar"></div>
 
@@ -185,7 +178,8 @@
                 [timePickerIncrement]="1"
                 formControlName="publishDateRange" />
         </div>
-        <div class="opfab-date-range-input opfab-input" [formGroup]="this.parentForm" *ngIf="!isLoggingScreen">
+        @if (!isLoggingScreen) {
+        <div class="opfab-date-range-input opfab-input" [formGroup]="this.parentForm">
             <label class="opfab-date-range-label" for="opfab-active-date-range" translate
                 >shared.filters.activeDateRange</label
             >
@@ -201,17 +195,16 @@
                 [timePickerIncrement]="1"
                 formControlName="activeDateRange" />
         </div>
+        }
     </div>
 
     <div class="opfab-vertical-bar"></div>
 
     <div class="opfab-buttons">
         <div style="flex-wrap: wrap; max-width: 260px">
+            @if ( hasCurrentUserRightsToViewAllArchivedCards ||
+            hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters ) {
             <label
-                *ngIf="
-                    hasCurrentUserRightsToViewAllArchivedCards ||
-                    hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters
-                "
                 id="opfab-archives-logging-see-only-cards-i-am-recipient-of-checkbox"
                 class="opfab-checkbox"
                 translate
@@ -219,6 +212,7 @@
                 <input type="checkbox" (click)="toggleAdminMode()" [checked]="!isAdminModeChecked" />
                 <span class="opfab-checkbox-checkmark"></span>
             </label>
+            }
         </div>
         <div style="gap: 20px">
             <button id="opfab-archives-logging-btn-search" class="opfab-btn" (click)="query()" translate>
@@ -230,3 +224,15 @@
         </div>
     </div>
 </div>
+} @else {
+
+<div id="opfab-no-process-state-available" style="text-align: center; font-size: 20px; padding-top: 100px" translate>
+    shared.noProcessStateAvailable
+</div>
+@if (hasCurrentUserRightsToViewAllArchivedCards) {
+<div style="display: flex; justify-content: center; padding-top: 10px">
+    <a id="opfab-see-all-cards-link" class="opfab-link" (click)="toggleAdminMode()"
+        ><span translate>shared.goToAdminMode</span></a
+    >
+</div>
+} }

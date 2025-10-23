@@ -23,7 +23,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {Utilities} from '../../../../utils/Utilities';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
-import {NgIf} from '@angular/common';
+
 import {TranslateModule} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../share/multi-select/MultiSelectComponent';
 import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGateway';
@@ -40,7 +40,7 @@ const enum ResponseI18nKeys {
 @Component({
     selector: 'of-card-response',
     templateUrl: './CardResponseComponent.html',
-    imports: [NgIf, TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class CardResponseComponent implements OnChanges, OnInit {
     private readonly modalService = inject(NgbModal);

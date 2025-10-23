@@ -15,14 +15,13 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../utils/Utilities';
 import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/SimplifiedCardViewComponent';
-import {NgIf} from '@angular/common';
 
 @Component({
     selector: 'of-archived-card-detail',
     templateUrl: './ArchivedCardDetailComponent.html',
     styleUrls: ['./ArchivedCardDetailComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SimplifiedCardViewComponent, TranslateModule, NgIf]
+    imports: [SimplifiedCardViewComponent, TranslateModule]
 })
 export class ArchivedCardDetailComponent implements OnInit {
     private readonly translate = inject(TranslateService);
