@@ -36,7 +36,7 @@ import {TemplateCssServer} from '../../../services/templateCss/server/TemplateCs
 import {UserSettingsServer} from '../../../services/userSettings/server/UserSettingsServer';
 import {ModalComponent} from '@ofServices/modal/component/ModalComponent';
 import {SoundServer} from '@ofServices/notifications/server/SoundServer';
-import {NgIf} from '@angular/common';
+
 import {LoadingInProgressComponent} from './loading-in-progress/LoadingInProgressComponent';
 import {LoginComponent} from './login/LoginComponent';
 import {TranslateModule} from '@ngx-translate/core';
@@ -49,7 +49,6 @@ import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
     styleUrls: ['./ApplicationLoadingComponent.scss'],
     templateUrl: './ApplicationLoadingComponent.html',
     imports: [
-        NgIf,
         LoadingInProgressComponent,
         AppLoadedInAnotherTabComponent,
         LoginComponent,

@@ -6,4 +6,6 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<of-custom-card-list-screen *ngIf="displayComponent" [customScreenId]="customScreenId"></of-custom-card-list-screen>
+@if (displayComponent) {
+<of-custom-card-list-screen [customScreenId]="customScreenId"></of-custom-card-list-screen>
+}

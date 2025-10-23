@@ -10,7 +10,7 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {NgForOf, NgIf} from '@angular/common';
+
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 
@@ -18,7 +18,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
     selector: 'of-select-cell-renderer',
     templateUrl: './SelectCellRendererComponent.html',
     styleUrls: ['./SelectCellRendererComponent.scss'],
-    imports: [NgIf, NgForOf, ReactiveFormsModule]
+    imports: [ReactiveFormsModule]
 })
 export class SelectCellRendererComponent implements ICellRendererAngularComp {
     public params: any;

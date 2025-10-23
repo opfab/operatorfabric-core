@@ -10,14 +10,14 @@ import {Component, ViewChild} from '@angular/core';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/TimelineButtonsComponent';
 import {CustomTimelineChartComponent} from './custom-timeline-chart/CustomTimeLineChartComponent';
 import {PinnedCardsComponent} from '../pinned-cards/PinnedCardsComponent';
-import {NgIf} from '@angular/common';
+
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-time-line',
     templateUrl: './TimeLineComponent.html',
     styleUrls: ['./TimeLineComponent.scss'],
-    imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, NgIf, TranslateModule]
+    imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, TranslateModule]
 })
 export class TimeLineComponent {
     @ViewChild('timelineButtons')

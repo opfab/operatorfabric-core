@@ -23,7 +23,7 @@ import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesS
 import {DeviceConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {Observable, of} from 'rxjs';
-import {NgIf} from '@angular/common';
+
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponent';
@@ -32,7 +32,7 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-modal',
     templateUrl: './ExternalDevicesModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class ExternaldevicesModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

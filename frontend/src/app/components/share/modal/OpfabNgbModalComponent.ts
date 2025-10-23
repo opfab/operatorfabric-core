@@ -11,7 +11,7 @@ import {ChangeDetectionStrategy, Component, Input, inject} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ModalConfig} from '@ofServices/modal/model/ModalConfig';
 import {I18n} from 'app/model/I18n';
-import {NgIf, NgClass, NgFor} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {TranslateModule} from '@ngx-translate/core';
 
 @Component({
@@ -19,7 +19,7 @@ import {TranslateModule} from '@ngx-translate/core';
     templateUrl: './OpfabNgbModalComponent.html',
     styleUrls: ['./OpfabNgbModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, NgClass, NgFor, TranslateModule]
+    imports: [NgClass, TranslateModule]
 })
 export class OpfabNgbModalComponent {
     private readonly activeModal = inject(NgbActiveModal);

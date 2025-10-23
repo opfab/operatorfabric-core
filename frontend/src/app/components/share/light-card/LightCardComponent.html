@@ -25,9 +25,9 @@
                 </p>
                 <div style="text-align: right; padding-right: 5px">
                     <div>
+                        @if (lightCard.hasChildCardFromCurrentUserEntity) {
                         <span
                             class="opfab-tooltip"
-                            *ngIf="lightCard.hasChildCardFromCurrentUserEntity"
                             id="opfab-feed-lightcard-hasChildCardFromCurrentUserEntity"
                             style="padding: 0.25rem">
                             <em style="color: var(--opfab-color-blue)" class="fa fa-reply"></em>
@@ -35,13 +35,15 @@
                                 <span translate>shared.tips.hasAResponseFromYourEntity</span>
                             </div>
                         </span>
-                        <span class="opfab-tooltip" *ngIf="this.lightCard.hasBeenAcknowledged" style="padding: 0.25rem">
+                        } @if (this.lightCard.hasBeenAcknowledged) {
+                        <span class="opfab-tooltip" style="padding: 0.25rem">
                             <em style="color: var(--opfab-color-blue)" class="fa fa-check"></em>
                             <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
                                 <span translate>feed.tips.acknowledged</span>
                             </div>
                         </span>
-                        <span class="opfab-tooltip" *ngIf="showGroupedCardsIcon" style="padding: 0.25rem">
+                        } @if (showGroupedCardsIcon) {
+                        <span class="opfab-tooltip" style="padding: 0.25rem">
                             <em
                                 id="opfab-feed-light-card-group-icon"
                                 style="color: var(--opfab-color-blue)"
@@ -52,34 +54,30 @@
                                 <span translate>feed.tips.seeGroupedCards</span>
                             </div>
                         </span>
-                        <span
-                            class="opfab-tooltip"
-                            *ngIf="isGeoMapEnabled && hasGeoLocation"
-                            (click)="zoomToLocation($event)"
-                            style="padding: 0.25rem">
+                        } @if (isGeoMapEnabled && hasGeoLocation) {
+                        <span class="opfab-tooltip" (click)="zoomToLocation($event)" style="padding: 0.25rem">
                             <em style="color: var(--opfab-color-blue)" class="fa fa-location-crosshairs"></em>
                             <div class="opfab-tooltip-content left opfab-lightcard-tooltip">
                                 <span translate>feed.tips.seeGeolocation</span>
                             </div>
                         </span>
+                        }
                     </div>
                 </div>
             </div>
             <div style="display: grid; grid-template-columns: auto auto; margin-top: 8px">
-                <p *ngIf="this.dateToDisplay" id="opfab-lightcard-dates" class="opfab-lightcard-subtitle">
-                    ({{ this.dateToDisplay }})
-                </p>
+                @if (this.dateToDisplay) {
+                <p id="opfab-lightcard-dates" class="opfab-lightcard-subtitle">({{ this.dateToDisplay }})</p>
+                }
 
                 <div style="text-align: right; margin-top: -5px; margin-right: 5px; padding-right: 5px">
+                    @if (!!lightCard.lttd) {
                     <of-countdown
-                        *ngIf="!!lightCard.lttd"
                         [lttd]="lightCard.lttd"
                         [showExpiredLabel]="showExpiredLabel"
                         [expiredLabel]="expiredLabel"></of-countdown>
-                    <span
-                        class="opfab-tooltip expiration-date"
-                        *ngIf="lightCard.expirationDate"
-                        id="opfab-card-expiration-date">
+                    } @if (lightCard.expirationDate) {
+                    <span class="opfab-tooltip expiration-date" id="opfab-card-expiration-date">
                         <em
                             style="color: var(--opfab-color-darker-orange); margin-left: 8px"
                             class="fa fa-hourglass"></em>
@@ -87,6 +85,7 @@
                             <span>{{ this.expirationDateToDisplay }}</span>
                         </div>
                     </span>
+                    }
                 </div>
             </div>
         </div>
@@ -94,22 +93,25 @@
     <div class="opfab-lightcard">
         <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }}"></div>
         <div style="width: 100%; margin-top: 3px; padding: 0.25rem">
-            <span *ngIf="open">
+            @if (open) {
+            <span>
                 <span id="opfab-selected-card-summary">{{ lightCard.summaryTranslated }}</span>
-                <div
-                    id="opfab-from-entity"
-                    *ngIf="fromEntityOrUser"
-                    style="font-style: italic; text-align: right; width: 100%">
+                @if (fromEntityOrUser) {
+                <div id="opfab-from-entity" style="font-style: italic; text-align: right; width: 100%">
                     <span style="text-transform: capitalize" translate>feed.from</span>
                     <span class="text-uppercase">&nbsp;:&nbsp;{{ fromEntityOrUser }}</span>
                 </div>
+                }
             </span>
+            }
         </div>
     </div>
 
     <div class="opfab-lightcard-severity  opfab-bg-sev-{{ lightCard.severity.toString() | lowercase }} "></div>
 </div>
 
-<div *ngIf="open && groupedCardsVisible">
+@if (open && groupedCardsVisible) {
+<div>
     <of-grouped-card-list [lightCards]="getGroupedChildCards()" [selection]="selection"> </of-grouped-card-list>
 </div>
+}

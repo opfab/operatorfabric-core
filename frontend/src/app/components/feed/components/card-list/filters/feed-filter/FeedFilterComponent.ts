@@ -23,7 +23,7 @@ import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/processStatesMultiSelectOptions/ProcessStatesMultiSelectOptionsService';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf} from '@angular/common';
+
 import {FeedSortComponent} from '../feed-sort/FeedSortComponent';
 import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelectComponent';
 
@@ -32,7 +32,7 @@ import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelec
     templateUrl: './FeedFilterComponent.html',
     styleUrls: ['./FeedFilterComponent.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, TranslateModule, NgIf, FeedSortComponent, MultiSelectComponent]
+    imports: [FormsModule, ReactiveFormsModule, TranslateModule, FeedSortComponent, MultiSelectComponent]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;

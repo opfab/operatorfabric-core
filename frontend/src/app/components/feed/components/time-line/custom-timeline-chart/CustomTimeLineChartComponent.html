@@ -14,16 +14,17 @@
     style="overflow: visible">
     <g transform="translate(10,30)">
         <!-- Background rectangle for 7D and W domain -->
-        <g *ngFor="let rectangle of timeLineView.getDayRectangles()">
+        @for (rectangle of timeLineView.getDayRectangles(); track rectangle) {
+        <g>
+            @if (rectangle.changeBgColor) {
             <rect
-                *ngIf="rectangle.changeBgColor"
                 [attr.x]="getXCoordinate(rectangle.start)"
                 [attr.width]="getXCoordinate(rectangle.end) - getXCoordinate(rectangle.start)"
                 y="0"
                 fill="var(--opfab-timeline-week-bgcolor)"
                 [attr.height]="gridHeight"></rect>
+            } @if (rectangle.changeBgColor) {
             <text
-                *ngIf="rectangle.changeBgColor"
                 [attr.x]="(getXCoordinate(rectangle.end) + getXCoordinate(rectangle.start)) / 2"
                 [attr.y]="53"
                 fill="var(--opfab-timeline-week-color)"
@@ -32,8 +33,8 @@
                 stroke-width="0.5px">
                 {{ rectangle.dateToDisplay }}
             </text>
+            } @if (!rectangle.changeBgColor) {
             <text
-                *ngIf="!rectangle.changeBgColor"
                 [attr.x]="(getXCoordinate(rectangle.end) + getXCoordinate(rectangle.start)) / 2"
                 [attr.y]="53"
                 fill="var(--opfab-timeline-week-color2)"
@@ -42,7 +43,9 @@
                 stroke-width="0.5px">
                 {{ rectangle.dateToDisplay }}
             </text>
+            }
         </g>
+        }
 
         <!-- Y axis grid lines -->
         <g>
@@ -52,21 +55,23 @@
                 [attr.y]="gridHeight - 2"
                 fill="#B1B1B1"
                 [attr.height]="2"></rect>
+            @for (i of [0,1,2,3,4]; track i) {
             <line
-                *ngFor="let i of [0,1,2,3,4]"
                 [attr.x1]="0"
                 [attr.x2]="gridWidth"
                 [attr.y1]="gridHeight * i / 5"
                 [attr.y2]="gridHeight * i / 5"
                 stroke="var(--opfab-timeline-grid-color)"
                 stroke-width="0.5px" />
+            }
         </g>
 
         <!-- X axis with labels and vertical bars-->
 
         <g id="opfab-timeline-xaxis">
             <rect [attr.x]="0" [attr.width]="2" y="0" fill="#B1B1B1" [attr.height]="gridHeight"></rect>
-            <g *ngFor="let tick of timeLineView.getXTicks()">
+            @for (tick of timeLineView.getXTicks(); track tick) {
+            <g>
                 <line
                     [attr.x1]="getXCoordinate(tick)"
                     [attr.x2]="getXCoordinate(tick)"
@@ -83,12 +88,14 @@
                     {{ timeLineView.getXTickLabel(tick) }}
                 </text>
             </g>
+            }
             <rect [attr.x]="gridWidth - 2" [attr.width]="2" y="0" fill="#B1B1B1" [attr.height]="gridHeight"></rect>
         </g>
 
         <!-- TIMELINE REAL TIME BAR -->
         <!-- no rounded only up corner possible with svg so use two rectangles -->
-        <g *ngIf="isRealTimeBarVisible()">
+        @if (isRealTimeBarVisible()) {
+        <g>
             <rect
                 [attr.x]="getRealTimeBarTextPosition() - 50"
                 [attr.width]="100"
@@ -121,6 +128,7 @@
                 fill="var(--opfab-timeline-realtimebar-color)"
                 [attr.height]="gridHeight"></rect>
         </g>
+        }
 
         <!-- TIMELINE TITLE -->
         <text
@@ -135,7 +143,8 @@
         </text>
 
         <!-- CIRCLES -->
-        <g *ngFor="let circle of circles$ | async; let index = index" type="button">
+        @for (circle of circles$ | async; track circle; let index = $index) {
+        <g type="button">
             <g
                 id="opfab-timelineCircle-{{ index }}"
                 (click)="onCircleClick(circle)"
@@ -167,6 +176,7 @@
                 </text>
             </g>
         </g>
+        }
     </g>
 </svg>
 <ng-template #tooltipTemplate>
@@ -174,10 +184,11 @@
         (mouseenter)="onMouseEnter()"
         (mouseleave)="openPopover.close()"
         style="padding: 10px; overflow-y: auto; max-height: 500px">
-        <div
-            *ngFor="let title of currentCircleHovered.summary; let i = index"
-            style="padding: 0px; margin: 0px; line-height: 8px">
-            <br *ngIf="i > 0" />
+        @for (title of currentCircleHovered.summary; track title; let i = $index) {
+        <div style="padding: 0px; margin: 0px; line-height: 8px">
+            @if (i > 0) {
+            <br />
+            }
             <button
                 [id]="'opfab-timeline-bubble-btn' + i"
                 class="btn btn-cardlink btn-sm"
@@ -188,5 +199,6 @@
                 </div>
             </button>
         </div>
+        }
     </div>
 </ng-template>

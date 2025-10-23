@@ -17,7 +17,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ActivatedRoute} from '@angular/router';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {OpfabMap} from 'app/components/share/map/OpfabMap';
-import {NgFor} from '@angular/common';
+
 import {GeoMapService} from '@ofServices/geoMap/GeoMapService';
 import {HighlightedCard} from '@ofServices/geoMap/model/HighlightedCard';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
@@ -26,7 +26,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
-    imports: [NgFor]
+    imports: []
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {
     private readonly route = inject(ActivatedRoute);

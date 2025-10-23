@@ -32,7 +32,7 @@ import {SenderCellRendererComponent} from '../cell-renderers/SenderCellRendererC
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {AgGridAngular} from 'ag-grid-angular';
-import {NgForOf, NgIf} from '@angular/common';
+
 import {CardComponent} from '../../../card/CardComponent';
 import {ProcessMonitoringField, ProcessMonitoringFieldEnum} from '@ofServices/config/model/ProcessMonitoringConfig';
 import {AgGrid} from 'app/utils/AgGrid';
@@ -45,7 +45,7 @@ import {SetFilterComponent} from './SetFilterComponent';
     templateUrl: './ProcessMonitoringTableComponent.html',
     styleUrls: ['./ProcessMonitoringTableComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AgGridAngular, NgIf, TranslateModule, NgbPagination, CardComponent, NgForOf]
+    imports: [AgGridAngular, TranslateModule, NgbPagination, CardComponent]
 })
 export class ProcessmonitoringTableComponent {
     private readonly translate = inject(TranslateService);

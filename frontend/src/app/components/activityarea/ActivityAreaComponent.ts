@@ -14,7 +14,7 @@ import {ActivityAreaPage} from 'app/components/activityarea/view/ActivityAreaPag
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgFor} from '@angular/common';
+
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {I18n} from '../../model/I18n';
 
@@ -22,7 +22,7 @@ import {I18n} from '../../model/I18n';
     selector: 'of-activityarea',
     templateUrl: './ActivityAreaComponent.html',
     styleUrls: ['./ActivityAreaComponent.scss'],
-    imports: [TranslateModule, NgIf, SpinnerComponent, FormsModule, ReactiveFormsModule, NgFor]
+    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class ActivityAreaComponent implements OnInit, OnDestroy {
     @Input() titleI18nKey = 'activityArea.title';

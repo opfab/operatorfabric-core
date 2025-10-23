@@ -34,7 +34,7 @@ import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap
 import {CardsFilter} from '@ofServices/cards/model/CardsFilter';
 import {FilterMatchTypeEnum, Filter} from '@ofServices/cards/model/Filter';
 import {CardsService} from '@ofServices/cards/CardsService';
-import {NgIf} from '@angular/common';
+
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {LoggingTableComponent} from './components/logging-table/LoggingTableComponent';
 import {TranslateModule} from '@ngx-translate/core';
@@ -51,7 +51,6 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
         FormsModule,
         ReactiveFormsModule,
         ArchivesLoggingFiltersComponent,
-        NgIf,
         SpinnerComponent,
         LoggingTableComponent,
         TranslateModule

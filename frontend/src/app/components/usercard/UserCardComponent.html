@@ -6,17 +6,14 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-<ng-container *ngIf="!userAllowedToSendCard && !cardLoadingInProgress">
-    <div style="padding-top: 50px; padding-bottom: 50px; text-align: center">
-        <h1 translate>userCard.error.notAvailable</h1>
-    </div>
-</ng-container>
+@if (!userAllowedToSendCard && !cardLoadingInProgress) {
 
-<div
-    [hidden]="displayPreview || sendingCardInProgress"
-    *ngIf="userAllowedToSendCard"
-    class="container"
-    style="padding-top: 20px">
+<div style="padding-top: 50px; padding-bottom: 50px; text-align: center">
+    <h1 translate>userCard.error.notAvailable</h1>
+</div>
+
+} @if (userAllowedToSendCard) {
+<div [hidden]="displayPreview || sendingCardInProgress" class="container" style="padding-top: 20px">
     <div [hidden]="cardLoadingInProgress || prepareCardForPreviewInProgress" id="opfab-usercard-creation">
         <form [formGroup]="userCardForm" class="opfab-form-lighter">
             <div class="opfab-row">
@@ -250,48 +247,54 @@
         </form>
     </div>
 </div>
-
-<div *ngIf="displayPreview">
+} @if (displayPreview) {
+<div>
     <div class="opfab-section-header" style="display: flex; flex-wrap: wrap" id="opfab-entity-recipients">
-        <span translate>userCard.recipients</span>&nbsp;
-        <span *ngFor="let entityId of this.recipients" style="padding-right: 10px">
+        <span translate>userCard.recipients</span>&nbsp; @for (entityId of this.recipients; track entityId) {
+        <span style="padding-right: 10px">
             &nbsp;
             <span
                 [ngClass]="{'opfab-tooltip': hasChildEntities(entityId)}"
                 class="opfab-rounded-badge opfab-activityarea-badge"
                 [class.opfab-blue-background]="this.connectedRecipients.has(entityId)"
                 [class.opfab-grey-background]="!this.connectedRecipients.has(entityId)">
-                {{ getEntityName(entityId) }}
-                <span *ngIf="hasChildEntities(entityId)" class="opfab-tooltip-content top opfab-child-entities">
+                {{ getEntityName(entityId) }} @if (hasChildEntities(entityId)) {
+                <span class="opfab-tooltip-content top opfab-child-entities">
                     {{ getChildEntitiesNames(entityId) }}
                 </span>
+                }
             </span>
         </span>
+        }
     </div>
 
+    @if (!!cardPreview.entityRecipientsForInformation && cardPreview.entityRecipientsForInformation.length) {
     <div
         class="opfab-section-header"
         style="display: flex; flex-wrap: wrap"
-        id="opfab-entity-recipients-for-information"
-        *ngIf="!!cardPreview.entityRecipientsForInformation && cardPreview.entityRecipientsForInformation.length">
-        <span translate>userCard.recipientsForInformation</span>&nbsp;
-        <span *ngFor="let entityId of cardPreview.entityRecipientsForInformation" style="padding-right: 10px">
+        id="opfab-entity-recipients-for-information">
+        <span translate>userCard.recipientsForInformation</span>&nbsp; @for (entityId of
+        cardPreview.entityRecipientsForInformation; track entityId) {
+        <span style="padding-right: 10px">
             <span
                 [ngClass]="{'opfab-tooltip': hasChildEntities(entityId)}"
                 class="opfab-rounded-badge opfab-activityarea-badge"
                 [class.opfab-blue-background]="this.connectedRecipients.has(entityId)"
                 [class.opfab-grey-background]="!this.connectedRecipients.has(entityId)">
-                {{ getEntityName(entityId) }}
-                <span *ngIf="hasChildEntities(entityId)" class="opfab-child-entities opfab-tooltip-content bottom">
+                {{ getEntityName(entityId) }} @if (hasChildEntities(entityId)) {
+                <span class="opfab-child-entities opfab-tooltip-content bottom">
                     {{ getChildEntitiesNames(entityId) }}
                 </span>
+                }
             </span>
         </span>
+        }
     </div>
-
-    <div *ngIf="!cardPreview.entityRecipients.length" id="opfab-you-are-only-one-recipient">
+    } @if (!cardPreview.entityRecipients.length) {
+    <div id="opfab-you-are-only-one-recipient">
         <span class="opfab-color-danger" translate>userCard.youAreTheOnlyRecipient</span>
     </div>
+    }
     <div>
         <div class="opfab-section-header">
             <span translate>userCard.feedPreview</span>
@@ -333,9 +336,10 @@
         </div>
     </div>
 </div>
-
-<of-spinner *ngIf="templateLoadingInProgress || prepareCardForPreviewInProgress"></of-spinner>
-<of-spinner *ngIf="sendingCardInProgress" loadingText="userCard.sendingCardInProgress"></of-spinner>
-<of-spinner
-    *ngIf="cardLoadingInProgress && !templateLoadingInProgress"
-    loadingText="feed.cardLoadingInProgress"></of-spinner>
+} @if (templateLoadingInProgress || prepareCardForPreviewInProgress) {
+<of-spinner></of-spinner>
+} @if (sendingCardInProgress) {
+<of-spinner loadingText="userCard.sendingCardInProgress"></of-spinner>
+} @if (cardLoadingInProgress && !templateLoadingInProgress) {
+<of-spinner loadingText="feed.cardLoadingInProgress"></of-spinner>
+}

@@ -7,19 +7,8 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div>
-    <ng-template #noProcessStateToDisplay>
-        <div
-            id="opfab-no-process-state-available"
-            style="text-align: center; font-size: 20px; padding-top: 100px"
-            translate>
-            shared.noProcessStateAvailable
-        </div>
-    </ng-template>
-
-    <div
-        class="opfab-processmonitoring-header"
-        style="padding-right: 60px"
-        *ngIf="isThereProcessStateToDisplay(); else noProcessStateToDisplay">
+    @if (isThereProcessStateToDisplay()) {
+    <div class="opfab-processmonitoring-header" style="padding-right: 60px">
         <div id="opfab-processmonitoring-date-navigation-links">
             <ul>
                 <li>
@@ -65,11 +54,12 @@
         <div style="display: flex">
             <!--2 columns in this case-->
             <!--First column-->
-            <div *ngIf="isProcessGroupFilterVisible || tags" style="margin-right: 40px">
+            @if (isProcessGroupFilterVisible || tags) {
+            <div style="margin-right: 40px">
                 <div
                     style="min-width: 300px; max-width: 400px; margin-top: 28px; margin-bottom: 54px; max-height: 48px">
+                    @if (isProcessGroupFilterVisible) {
                     <of-multi-select
-                        *ngIf="isProcessGroupFilterVisible"
                         id="opfab-processGroup"
                         multiSelectId="processGroup"
                         [parentForm]="processMonitoringForm"
@@ -77,21 +67,7 @@
                         [options]="processGroupMultiSelectOptions"
                         [selectedOptions]="processGroupSelected">
                     </of-multi-select>
-
-                    <of-multi-select
-                        *ngIf="!isProcessGroupFilterVisible && tags?.length > 0"
-                        id="opfab-tags"
-                        multiSelectId="tags"
-                        [parentForm]="processMonitoringForm"
-                        [config]="tagsMultiSelectConfig"
-                        [options]="tagsMultiSelectOptions"
-                        [selectedOptions]="tagsSelected"
-                        (selectionChange)="tagsChoiceChanged($event)">
-                    </of-multi-select>
-                </div>
-                <div
-                    *ngIf="isProcessGroupFilterVisible && tags?.length > 0"
-                    style="min-width: 300px; max-width: 400px; max-height: 48px">
+                    } @if (!isProcessGroupFilterVisible && tags?.length > 0) {
                     <of-multi-select
                         id="opfab-tags"
                         multiSelectId="tags"
@@ -101,8 +77,23 @@
                         [selectedOptions]="tagsSelected"
                         (selectionChange)="tagsChoiceChanged($event)">
                     </of-multi-select>
+                    }
                 </div>
+                @if (isProcessGroupFilterVisible && tags?.length > 0) {
+                <div style="min-width: 300px; max-width: 400px; max-height: 48px">
+                    <of-multi-select
+                        id="opfab-tags"
+                        multiSelectId="tags"
+                        [parentForm]="processMonitoringForm"
+                        [config]="tagsMultiSelectConfig"
+                        [options]="tagsMultiSelectOptions"
+                        [selectedOptions]="tagsSelected"
+                        (selectionChange)="tagsChoiceChanged($event)">
+                    </of-multi-select>
+                </div>
+                }
             </div>
+            }
             <!--Second column-->
             <div style="margin-right: 40px">
                 <div
@@ -152,8 +143,8 @@
             </div>
 
             <div class="opfab-buttons">
+                @if (mustViewAllCardsFeatureBeDisplayed) {
                 <label
-                    *ngIf="mustViewAllCardsFeatureBeDisplayed"
                     id="opfab-process-monitoring-see-only-cards-i-am-recipient-of-checkbox"
                     style="margin-left: 10px; max-width: 200px"
                     class="opfab-checkbox"
@@ -166,6 +157,7 @@
                         [checked]="!isAdminModeChecked" />
                     <span class="opfab-checkbox-checkmark"></span>
                 </label>
+                }
                 <div style="display: flex; margin-top: 50px">
                     <button id="opfab-process-monitoring-btn-search" class="opfab-btn" (click)="search()" translate>
                         button.search
@@ -181,22 +173,37 @@
             </div>
         </div>
     </div>
+    } @else {
+
+    <div
+        id="opfab-no-process-state-available"
+        style="text-align: center; font-size: 20px; padding-top: 100px"
+        translate>
+        shared.noProcessStateAvailable
+    </div>
+
+    }
 </div>
 
 <!-- Display spinner if loading cards is taking more than 1s -->
-<of-spinner *ngIf="loadingInProgress && !firstQueryHasBeenDone"></of-spinner>
+@if (loadingInProgress && !firstQueryHasBeenDone) {
+<of-spinner></of-spinner>
+}
 
 <div style="height: 2%"></div>
 
-<div *ngIf="firstQueryHasBeenDone" [hidden]="technicalError || !firstQueryHasResults">
-    <div *ngIf="isMapEnabled" style="display: flex; justify-content: flex-start; margin-left: 5%; margin-right: 5%">
+@if (firstQueryHasBeenDone) {
+<div [hidden]="technicalError || !firstQueryHasResults">
+    @if (isMapEnabled) {
+    <div style="display: flex; justify-content: flex-start; margin-left: 5%; margin-right: 5%">
         <label id="opfab-show-map" style="font-weight: bold; margin-left: 5px" class="opfab-checkbox" translate
             >processMonitoring.viewResultOnMap
             <input type="checkbox" (click)="toggleShowMap()" [checked]="isMapViewActivated" />
             <span class="opfab-checkbox-checkmark"></span>
         </label>
     </div>
-    <div *ngIf="!isMapViewActivated" style="margin-left: 5%; margin-right: 5%">
+    } @if (!isMapViewActivated) {
+    <div style="margin-left: 5%; margin-right: 5%">
         <of-processmonitoring-table
             #processMonitoringTable
             [result]="results"
@@ -214,25 +221,18 @@
             (export)="exportToExcel()">
         </of-processmonitoring-table>
     </div>
-
-    <div *ngIf="isMapViewActivated" style="margin-top: -15px; margin-left: 2%; margin-right: 2%">
+    } @if (isMapViewActivated) {
+    <div style="margin-top: -15px; margin-left: 2%; margin-right: 2%">
         <of-monitoring-map [result]="results"></of-monitoring-map>
     </div>
+    }
 </div>
-
-<div
-    *ngIf="
-        document.getElementById('opfab-no-process-state-available') === null &&
-        firstQueryHasBeenDone &&
-        !firstQueryHasResults &&
-        !loadingInProgress
-    "
-    style="text-align: center; font-size: 20px"
-    translate>
-    shared.noResult
-</div>
-
-<div *ngIf="technicalError" style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
+} @if ( document.getElementById('opfab-no-process-state-available') === null && firstQueryHasBeenDone &&
+!firstQueryHasResults && !loadingInProgress ) {
+<div style="text-align: center; font-size: 20px" translate>shared.noResult</div>
+} @if (technicalError) {
+<div style="text-align: center; font-size: 20px" translate>shared.error.technicalError</div>
+}
 
 <ng-template #exportInProgress let-modal>
     <div class="modal-body modal-body-rounded">

@@ -22,7 +22,7 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SignalMapping} from '@ofServices/notifications/model/ExternalDevices';
 import {Observable, of} from 'rxjs';
-import {NgIf} from '@angular/common';
+
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 
@@ -30,7 +30,7 @@ import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
     selector: 'of-signal-mappings-modal',
     templateUrl: './SignalMappingsModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
+    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class SignalMappingsModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

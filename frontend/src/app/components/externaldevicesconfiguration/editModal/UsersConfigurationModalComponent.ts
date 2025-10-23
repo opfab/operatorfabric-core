@@ -15,7 +15,7 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {DeviceConfiguration, UserConfiguration} from '@ofServices/notifications/model/ExternalDevices';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
-import {NgIf} from '@angular/common';
+
 import {TranslateModule} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponent';
@@ -24,7 +24,7 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-users-modal',
     templateUrl: './UsersConfigurationModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    imports: [NgIf, TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class UsersconfigurationModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {NgIf} from '@angular/common';
 import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
@@ -16,7 +15,7 @@ import {CustomCardListComponent} from './CustomCardListComponent';
 @Component({
     selector: 'of-custom-screen',
     templateUrl: './CustomScreenComponent.html',
-    imports: [NgIf, CustomCardListComponent]
+    imports: [CustomCardListComponent]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);

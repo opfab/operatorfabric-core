@@ -19,20 +19,25 @@
         <span translate>feed.received</span>
         {{ getFormattedDate(card.publishDate) }} <span translate> feed.at </span>
         <span>{{ getFormattedTime(card.publishDate) }}</span>
-        <span *ngIf="fromEntityOrRepresentativeSelectedCard" translate> feed.from </span>
+        @if (fromEntityOrRepresentativeSelectedCard) {
+        <span translate> feed.from </span>
+        }
         <span>{{ fromEntityOrRepresentativeSelectedCard }}</span>
-        <span *ngIf="!!card.deletionDate">
+        @if (!!card.deletionDate) {
+        <span>
             <span style="margin-left: 10px; margin-right: 10px">-</span>
             <span translate>feed.deleted</span>
             {{ getFormattedDate(card.deletionDate) }} <span translate> feed.at </span>
             {{ getFormattedTime(card.deletionDate) }}
         </span>
+        }
         <br />
         <span translate> feed.businessPeriod </span>
-        {{ getFormattedDateAndTime(card.startDate) }} - {{ getFormattedDateAndTime(card.endDate) }}
-        <br *ngIf="entityRecipientsForFooter.length > 0" />
-        {{ entityRecipientsForFooter }}
-        <br *ngIf="entityRecipientsForInformationForFooter.length > 0" />
-        {{ entityRecipientsForInformationForFooter }}
+        {{ getFormattedDateAndTime(card.startDate) }} - {{ getFormattedDateAndTime(card.endDate) }} @if
+        (entityRecipientsForFooter.length > 0) {
+        <br />
+        } {{ entityRecipientsForFooter }} @if (entityRecipientsForInformationForFooter.length > 0) {
+        <br />
+        } {{ entityRecipientsForInformationForFooter }}
     </span>
 </div>

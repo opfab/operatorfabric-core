@@ -25,7 +25,7 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TimelineView} from 'app/components/feed/components/time-line/custom-timeline-chart/view/TimelineView';
 import {Observable} from 'rxjs';
 import {format} from 'date-fns';
-import {NgFor, NgIf, AsyncPipe} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
@@ -34,7 +34,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     styleUrls: ['./CustomTimeLineChartComponent.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgFor, NgIf, NgbPopover, AsyncPipe]
+    imports: [NgbPopover, AsyncPipe]
 })
 export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChanges {
     @Input() domainId;

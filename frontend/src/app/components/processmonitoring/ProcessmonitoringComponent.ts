@@ -37,7 +37,7 @@ import {ProcessToMonitor} from 'app/components/processmonitoring/view/ProcessMon
 import {MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslateModule} from '@ngx-translate/core';
-import {NgIf, NgClass} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {ProcessmonitoringTableComponent} from './components/processmonitoring-table/ProcessMonitoringTableComponent';
@@ -59,7 +59,6 @@ import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslateModule,
-        NgIf,
         NgClass,
         MultiSelectComponent,
         FormsModule,

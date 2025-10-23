@@ -10,14 +10,14 @@
 import {Component} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
-import {NgIf} from '@angular/common';
+
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
     selector: 'of-input-cell-renderer',
     templateUrl: './InputCellRendererComponent.html',
     styleUrls: ['./InputCellRendererComponent.scss'],
-    imports: [NgIf, ReactiveFormsModule]
+    imports: [ReactiveFormsModule]
 })
 export class InputCellRendererComponent implements ICellRendererAngularComp {
     public params: any;

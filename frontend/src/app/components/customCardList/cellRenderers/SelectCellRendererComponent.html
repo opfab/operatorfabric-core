@@ -16,13 +16,16 @@
         (click)="$event.stopPropagation()"
         class="opfab-select"
         style="height: 35px; width: 80%">
-        <option *ngFor="let option of selectOptions" [value]="option.value">{{ option.label }}</option>
-        <option *ngIf="allowNewOptionForSelect" value="__other__">{{ otherOptionLabel }}</option>
+        @for (option of selectOptions; track option) {
+        <option [value]="option.value">{{ option.label }}</option>
+        } @if (allowNewOptionForSelect) {
+        <option value="__other__">{{ otherOptionLabel }}</option>
+        }
     </select>
     <div class="input-container">
+        @if (showOtherInput) {
         <input
             #otherInput
-            *ngIf="showOtherInput"
             type="text"
             [formControl]="otherInputControl"
             [attr.maxlength]="maxLength > 0 ? maxLength : null"
@@ -34,12 +37,14 @@
             placeholder="{{ otherOptionPlaceholder }}"
             class="opfab-input"
             style="height: 35px; width: 100%" />
-        <span *ngIf="maxLength>0 && showOtherInput" class="char-count"> {{ charCount }} </span>
+        } @if (maxLength>0 && showOtherInput) {
+        <span class="char-count"> {{ charCount }} </span>
+        }
     </div>
 </div>
 
-<div
-    *ngIf="!isInputFieldVisible"
-    style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
+@if (!isInputFieldVisible) {
+<div style="margin: 0px; align-items: center; text-overflow: ellipsis; overflow: hidden; white-space: nowrap">
     {{ fieldLabel }}
 </div>
+}
