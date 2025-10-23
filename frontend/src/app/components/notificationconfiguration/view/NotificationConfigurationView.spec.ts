@@ -7,14 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Process, State} from '@ofServices/processes/model/Processes';
-import {NotificationConfigurationView} from './NotificationConfigurationView';
-import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
-import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {ConfigService} from 'app/services/config/ConfigService';
-import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
-import {NotificationConfigurationPage} from './NotificationConfigurationPage';
-import {User} from '@ofServices/users/model/User';
+import { Process, State } from '@ofServices/processes/model/Processes';
+import { NotificationConfigurationView } from './NotificationConfigurationView';
+import { RightEnum } from '@ofServices/perimeters/model/Perimeter';
+import { ComputedPerimeter, UserWithPerimeters } from '@ofServices/users/model/UserWithPerimeters';
+import { ConfigService } from 'app/services/config/ConfigService';
+import { loadWebUIConf, setProcessConfiguration, setUserPerimeter } from '@tests/helpers';
+import { NotificationConfigurationPage } from './NotificationConfigurationPage';
+import { User } from '@ofServices/users/model/User';
 
 describe('Notification configuration view ', () => {
     let notificationConfigurationPage: NotificationConfigurationPage;
@@ -23,23 +23,23 @@ describe('Notification configuration view ', () => {
             id: 'process1',
             version: 'v1',
             name: 'process name 1',
-            states: new Map<string, State>([['state1_1', {name: 'State 1_1'}]])
+            states: new Map<string, State>([['state1_1', { name: 'State 1_1' }]])
         },
         {
             id: 'process2',
             version: 'v2',
             name: 'process name 2',
             states: new Map<string, State>([
-                ['state2_1', {name: 'State 2_1'}],
-                ['state2_2', {name: 'State 2_2'}],
-                ['onlyChildState', {name: 'State 2_3', isOnlyAChildState: true}]
+                ['state2_1', { name: 'State 2_1' }],
+                ['state2_2', { name: 'State 2_2' }],
+                ['onlyChildState', { name: 'State 2_3', isOnlyAChildState: true }]
             ])
         },
         {
             id: 'process3',
             version: 'v2',
             name: 'process name 3',
-            states: new Map<string, State>([['state3_1', {name: 'State 3_1'}]])
+            states: new Map<string, State>([['state3_1', { name: 'State 3_1' }]])
         },
         {
             id: 'process4',
@@ -50,7 +50,7 @@ describe('Notification configuration view ', () => {
             id: 'processWithNoName',
             version: 'v2',
             name: '',
-            states: new Map<string, State>([['stateNoName_1', {name: 'State NoName_1'}]])
+            states: new Map<string, State>([['stateNoName_1', { name: 'State NoName_1' }]])
         }
     ];
 
@@ -170,7 +170,7 @@ describe('Notification configuration view ', () => {
 
         it('should not return process group with no process visible for user', async () => {
             expect(notificationConfigurationPage.processGroups).not.toContain(
-                jasmine.objectContaining({id: 'serviceNotVisibleForUser'})
+                jasmine.objectContaining({ id: 'serviceNotVisibleForUser' })
             );
         });
     });
@@ -233,8 +233,8 @@ describe('Notification configuration view ', () => {
                         version: 'v1',
                         name: 'process name 1',
                         states: new Map<string, State>([
-                            ['state1_1', {name: 'State 1_1'}],
-                            ['state1_2', {name: 'State 1_2'}]
+                            ['state1_1', { name: 'State 1_1' }],
+                            ['state1_2', { name: 'State 1_2' }]
                         ])
                     },
                     {
@@ -242,8 +242,8 @@ describe('Notification configuration view ', () => {
                         version: 'v2',
                         name: 'process name 2',
                         states: new Map<string, State>([
-                            ['state2_1', {name: 'State 2_1'}],
-                            ['state2_2', {name: 'State 2_2'}]
+                            ['state2_1', { name: 'State 2_1' }],
+                            ['state2_2', { name: 'State 2_2' }]
                         ])
                     },
                     {
@@ -251,8 +251,8 @@ describe('Notification configuration view ', () => {
                         version: 'v2',
                         name: 'process name 3',
                         states: new Map<string, State>([
-                            ['state3_1', {name: 'State 3_1'}],
-                            ['state3_2', {name: 'State 3_2'}]
+                            ['state3_1', { name: 'State 3_1' }],
+                            ['state3_2', { name: 'State 3_2' }]
                         ])
                     },
                     {
@@ -260,8 +260,8 @@ describe('Notification configuration view ', () => {
                         version: 'v2',
                         name: 'process name 4',
                         states: new Map<string, State>([
-                            ['state4_1', {name: 'State 4_1'}],
-                            ['state4_2', {name: 'State 4_2'}]
+                            ['state4_1', { name: 'State 4_1' }],
+                            ['state4_2', { name: 'State 4_2' }]
                         ])
                     }
                 ],
@@ -334,8 +334,8 @@ describe('Notification configuration view ', () => {
                     version: 'v1',
                     name: 'process name 1',
                     states: new Map<string, State>([
-                        ['state1_1', {name: 'State 1_1'}],
-                        ['state1_2', {name: 'State 1_2'}]
+                        ['state1_1', { name: 'State 1_1' }],
+                        ['state1_2', { name: 'State 1_2' }]
                     ])
                 },
                 {
@@ -343,8 +343,8 @@ describe('Notification configuration view ', () => {
                     version: 'v2',
                     name: 'process name 2',
                     states: new Map<string, State>([
-                        ['state2_1', {name: 'State 2_1'}],
-                        ['state2_2', {name: 'State 2_2'}]
+                        ['state2_1', { name: 'State 2_1' }],
+                        ['state2_2', { name: 'State 2_2' }]
                     ])
                 }
             ]);
@@ -414,7 +414,7 @@ describe('Notification configuration view ', () => {
         });
     });
 
-    describe('email user settings', () => {
+    describe('email user settings', async () => {
         it('email configuration should be enabled if email is from user instead of settings', async () => {
             await loadWebUIConf({});
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
@@ -446,9 +446,9 @@ describe('Notification configuration view ', () => {
                     version: 'v1',
                     name: 'process name 1',
                     states: new Map<string, State>([
-                        ['state1_1', {name: 'State 1_1'}],
-                        ['state1_2', {name: 'State 1_2'}],
-                        ['state1_3', {name: 'State 1_3'}]
+                        ['state1_1', { name: 'State 1_1' }],
+                        ['state1_2', { name: 'State 1_2' }],
+                        ['state1_3', { name: 'State 1_3' }]
                     ])
                 }
             ]);
