@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,14 +20,14 @@ echo -e ""
 
 export HOME=/opfab
 opfab version
-if [ -z "$ENV_NAME" ]; then
+if [[ -z "$ENV_NAME" ]]; then
     # Add opfab-cli to the prompt in red
     export PS1="\033[32mOPFAB-CLI\033[0m \w \$ "
 else
     export PS1="\033[32mOPFAB-CLI\033[0m - \033[31m$ENV_NAME\033[0m \w \$ "
 fi
 
-if [ -n "$OPFAB_URL" ]; then
+if [[ -n "$OPFAB_URL" ]]; then
     opfab login $OPFAB_URL $OPFAB_PORT $OPFAB_LOGIN  $OPFAB_PASSWORD
 else
     echo "No configuration provided. Please run 'opfab login' to login in to OperatorFabric."
