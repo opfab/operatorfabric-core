@@ -24,8 +24,8 @@ export class TaskUserCardTemplateView {
     ) {
         let byhour, byminute;
         if (time) {
-            byhour = [parseInt(time.slice(0, 2))]; // the hours are the 2 first characters
-            byminute = [parseInt(time.slice(-2))]; // the minutes are the 2 last characters
+            byhour = [Number.parseInt(time.slice(0, 2))]; // the hours are the 2 first characters
+            byminute = [Number.parseInt(time.slice(-2))]; // the minutes are the 2 last characters
         }
 
         let rRule;

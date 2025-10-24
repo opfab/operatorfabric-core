@@ -94,7 +94,7 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const savedPageSize = UserPreferencesService.getPreference('opfab.useractionlogs.page.size');
-        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
+        if (savedPageSize) this.pageSize = Number.parseInt(savedPageSize);
         this.initForm();
         this.setInitialDateFrom();
         this.initActionMultiselect();

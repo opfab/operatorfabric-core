@@ -541,10 +541,10 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
     getSpecificCardInformation() {
         const time = (<HTMLInputElement>document.getElementById('time')).value;
-        const durationInMinutes: number = parseInt(
+        const durationInMinutes: number = Number.parseInt(
             (<HTMLInputElement>document.getElementById('durationInMinutes')).value
         );
-        let minutesForReminder: number = parseInt(
+        let minutesForReminder: number = Number.parseInt(
             (<HTMLInputElement>document.getElementById('minutesForReminder')).value
         );
         if (minutesForReminder == null || isNaN(minutesForReminder)) {
@@ -577,7 +577,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
             if ((<HTMLInputElement>document.getElementById('radioButtonNthDay')).checked === true) {
                 if ((<HTMLInputElement>document.getElementById('nthDay')).value) {
-                    const nthDay = parseInt((<HTMLInputElement>document.getElementById('nthDay')).value);
+                    const nthDay = Number.parseInt((<HTMLInputElement>document.getElementById('nthDay')).value);
                     bymonthday.push(nthDay);
                 }
                 if ((<HTMLInputElement>document.getElementById('firstDay')).checked === true) {
@@ -599,7 +599,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
 
             if ((<HTMLInputElement>document.getElementById('radioButtonNthWeekday')).checked === true) {
                 bysetpos = this.occurrenceNumberSelect.getSelectedValues().map((selectedValue) => {
-                    return parseInt(selectedValue);
+                    return Number.parseInt(selectedValue);
                 });
                 if (this.weekdaySelect.getSelectedValues().length > 0) {
                     byweekday = [this.weekdaySelect.getSelectedValues()];

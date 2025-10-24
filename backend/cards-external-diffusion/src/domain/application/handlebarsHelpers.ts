@@ -327,7 +327,7 @@ export class HandlebarsHelper {
     private static registerDateFormat(): void {
         Handlebars.registerHelper('dateFormat', function (value: string | number, options) {
             if (typeof value === 'string') {
-                value = parseInt(value);
+                value = Number.parseInt(value);
             }
             const m = new Date(value);
             const tz = HandlebarsHelper._timezone || 'UTC';

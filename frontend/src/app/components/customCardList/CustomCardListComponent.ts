@@ -185,7 +185,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.readAndAckSelected = this.customCardListView.getDefaultSelectedReadAndAck();
 
         const savedPageSize = UserPreferencesService.getPreference('opfab.customScreens.page.size');
-        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
+        if (savedPageSize) this.pageSize = Number.parseInt(savedPageSize);
         this.listenForLoadingInProcess();
         this.setFiltersVisibility();
         this.setInitialBusinessPeriod();

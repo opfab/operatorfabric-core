@@ -138,8 +138,8 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         this.isCollapsibleUpdatesActivated = isCollapsibleUpdatesActivatedInStorage === 'true';
 
         const savedPageSize = UserPreferencesService.getPreference('opfab.archives.page.size');
-        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
-        this.historySize = parseInt(ConfigService.getConfigValue('archive.history.size', 100));
+        if (savedPageSize) this.pageSize = Number.parseInt(savedPageSize);
+        this.historySize = Number.parseInt(ConfigService.getConfigValue('archive.history.size', 100));
         BusinessConfigAPI.getTags('archive').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('archive.filters.tags.list');
             this.changeDetector.markForCheck();
