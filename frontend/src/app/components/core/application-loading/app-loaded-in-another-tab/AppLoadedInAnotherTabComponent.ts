@@ -50,7 +50,7 @@ export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent 
     private isApplicationActive = false;
 
     public async execute(): Promise<boolean> {
-        this.opfabUrl = window.location.href;
+        this.opfabUrl = globalThis.location.href;
         setTimeout(() => this.checkIfAppLoadedInAnotherTab(), 0);
         this.createListenerForDisconnectSignal();
         return super.execute();

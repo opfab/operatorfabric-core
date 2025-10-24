@@ -143,10 +143,10 @@ export const navigationRoutes: Routes = routes.slice(startIndex, lastIndexOfVisi
         RouterModule.forRoot(routes, {
             enableTracing: false,
             /* sets initialNavigation to false is needed to enable authentication implicit flow
-             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             * otherwise HashLocationStrategy breaks it by handling '#' within `globalThis.location`.
              */
             /* sets initialNavigation to false is needed to enable authentication implicit flow
-             * otherwise HashLocationStrategy breaks it by handling '#' within `window.location`.
+             * otherwise HashLocationStrategy breaks it by handling '#' within `globalThis.location`.
              */
             initialNavigation: 'disabled',
 

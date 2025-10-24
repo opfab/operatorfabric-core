@@ -32,7 +32,7 @@ export class LoadingInProgressComponent implements OnInit, OnDestroy {
     }
 
     reloadPage() {
-        window.location.reload();
+        globalThis.location.reload();
     }
 
     ngOnDestroy() {

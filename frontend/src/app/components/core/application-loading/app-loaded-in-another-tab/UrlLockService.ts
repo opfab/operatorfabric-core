@@ -37,7 +37,7 @@ export class UrlLockService {
 
     public setDisconnectSignalListener(listener: Function): void {
         this.disconnectSignalListener = listener;
-        window.addEventListener('storage', this.listenForDisconnectSignal.bind(this), false);
+        globalThis.addEventListener('storage', this.listenForDisconnectSignal.bind(this), false);
     }
 
     private listenForDisconnectSignal(event): void {

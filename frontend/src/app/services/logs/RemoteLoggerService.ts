@@ -30,7 +30,7 @@ export class RemoteLoggerService {
                 RemoteLoggerService.isActive = true;
                 RemoteLoggerService.regularlyFlush();
                 RemoteLoggerService.postLog(
-                    'Remote log activated - ' + packageInfo.opfabVersion + ' - ' + window.navigator.userAgent
+                    'Remote log activated - ' + packageInfo.opfabVersion + ' - ' + globalThis.navigator.userAgent
                 );
             }
         } else {
