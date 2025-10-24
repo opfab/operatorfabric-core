@@ -55,7 +55,7 @@ class CardRoutesShould {
     private CardRepository repository;
 
     @AfterEach
-    public void cleanCardRepository() {
+    void cleanCardRepository() {
         repository.deleteAll().subscribe();
     }
 

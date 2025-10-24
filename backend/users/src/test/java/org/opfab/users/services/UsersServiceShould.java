@@ -34,7 +34,7 @@ import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
 @DisplayName("UsersService")
-public class UsersServiceShould {
+class UsersServiceShould {
 
     private UserRepositoryStub userRepositoryStub = new UserRepositoryStub();
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
@@ -47,9 +47,9 @@ public class UsersServiceShould {
 
     @BeforeEach
     void clear() {
-        eventBusSpy =  new EventBusSpy();
+        eventBusSpy = new EventBusSpy();
         usersService = new UsersService(userRepositoryStub, groupRepositoryStub, entityRepositoryStub,
-                perimeterRepositoryStub, new NotificationService(userRepositoryStub,eventBusSpy ));
+                perimeterRepositoryStub, new NotificationService(userRepositoryStub, eventBusSpy));
         initPerimeterRepository();
         initGroupRepository();
         initEntityRepository();
@@ -68,8 +68,6 @@ public class UsersServiceShould {
         stateRights.add(state2);
         perimeter1.setStateRights(stateRights);
 
-
-
         perimeter2 = new Perimeter();
         perimeter2.setId("perimeter2");
         perimeter2.setProcess("process1");
@@ -80,7 +78,6 @@ public class UsersServiceShould {
         stateRights2.add(state4);
         perimeter2.setStateRights(stateRights2);
 
-        
         perimeterRepositoryStub.insert(perimeter1);
         perimeterRepositoryStub.insert(perimeter2);
 
@@ -130,7 +127,7 @@ public class UsersServiceShould {
         u1.setComment("comment");
         u1.addGroup("group1");
         u1.addGroup("group2");
-        
+
         u2 = new User();
         u2.setLogin("user2");
         u2.setFirstName("user2FirstName");
@@ -138,7 +135,7 @@ public class UsersServiceShould {
         u2.addGroup("group2");
         u2.addEntity("entity1");
         u2.addEntity("entity2");
-            
+
         u3 = new User();
         u3.setLogin("user3");
         u3.setFirstName("user3FirstName");
@@ -201,7 +198,8 @@ public class UsersServiceShould {
             assertThat(result.getResult().getEntity().getFirstName()).isEqualTo("firstName");
             assertThat(userRepositoryStub.findById("newuser").get().getLogin()).isEqualTo("newuser");
             assertThat(userRepositoryStub.findById("newuser").get().getFirstName()).isEqualTo("firstName");
-            assertThat(userRepositoryStub.findById("newuser").get().getEmail()).isEqualTo("firstName.user1LastName@test.fr");
+            assertThat(userRepositoryStub.findById("newuser").get().getEmail())
+                    .isEqualTo("firstName.user1LastName@test.fr");
         }
 
         @Test
@@ -248,7 +246,7 @@ public class UsersServiceShould {
             user.setLastName("user1LastName");
             user.addGroup("group1");
             user.addGroup("group2");
-            
+
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -265,7 +263,6 @@ public class UsersServiceShould {
             user.addGroup("group1");
             user.addGroup("ADMIN");
 
-            
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("admin").get().getFirstName()).isEqualTo("firstName");
@@ -342,7 +339,7 @@ public class UsersServiceShould {
             user.setLastName("user1LastName");
             user.addGroup("group1");
             user.addGroup("group2");
-            
+
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
@@ -361,7 +358,6 @@ public class UsersServiceShould {
             user.addEntity("entity1");
             user.addEntity("entity2");
 
-            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -386,7 +382,6 @@ public class UsersServiceShould {
             user.addEntity("entity1");
             user.addEntity("entity2");
 
-
             OperationResult<User> result = usersService.updateOrCreateUser(user, false, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -409,7 +404,7 @@ public class UsersServiceShould {
             user.addGroup("group2");
             user.addEntity("entity1");
             user.addEntity("entity2");
-            
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -435,7 +430,6 @@ public class UsersServiceShould {
             user.addEntity("entity1");
             user.addEntity("entity2");
 
-            
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("newuser");
@@ -485,7 +479,7 @@ public class UsersServiceShould {
             user.addGroup("group2");
             user.addEntity("entity1");
             user.addEntity("entity2");
-            
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("user3");
@@ -498,7 +492,6 @@ public class UsersServiceShould {
                     "entity2");
         }
 
-
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_User_Is_Updated_And_Notification_Is_Sent_To_Other_Services() {
 
@@ -510,15 +503,14 @@ public class UsersServiceShould {
             user.addGroup("group2");
             user.addEntity("entity1");
             user.addEntity("entity2");
-            
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user3").get().getFirstName()).isEqualTo("newFirstName");
-            
-            String[] expectedMessageSent = {"user","user3"};
+
+            String[] expectedMessageSent = { "user", "user3" };
             assertThat(eventBusSpy.getMessagesSent()).containsOnly(expectedMessageSent);
         }
-
 
         @Test
         void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_With_Same_Value_THEN_Notification_Is_Not_Sent_To_Other_Services() {
@@ -569,7 +561,7 @@ public class UsersServiceShould {
             user.addGroup("group1");
             user.addGroup("group2");
             user.addEntity("entity1");
-            
+
             OperationResult<User> result = usersService.updateOrCreateUser(user, true, false);
             assertThat(result.isSuccess()).isTrue();
             assertThat(result.getResult().getLogin()).isEqualTo("user2");

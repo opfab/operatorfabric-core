@@ -18,12 +18,12 @@ import java.net.UnknownHostException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ModbusDriverFactoryShould {
+class ModbusDriverFactoryShould {
 
     private static ModbusDriverFactory modbusDriverFactory;
 
     @BeforeAll
-    public static void setUp() {
+    static void setUp() {
         modbusDriverFactory = new ModbusDriverFactory();
     }
 

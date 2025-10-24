@@ -39,7 +39,7 @@ class UpdateCardCommandHandlerShould {
     private UpdateCardCommandHandler cut;
 
     @BeforeAll
-    public void setUp() {
+    void setUp() {
         services = mock(Services.class);
         cardProcessingService = mock(CardProcessingService.class);
         objectMapper = mock(CardObjectMapper.class);
@@ -55,7 +55,8 @@ class UpdateCardCommandHandlerShould {
     @Test
     void executeCommand() throws JsonProcessingException {
         CardCommand cardCommandMock = mock(CardCommand.class);
-        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock (org.opfab.cards.publication.model.Card.class);
+        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock(
+                org.opfab.cards.publication.model.Card.class);
         Card cardMock = mock(Card.class);
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");

@@ -51,7 +51,7 @@ class ArchivedCardRoutesShould {
     private ArchivedCardRepository repository;
 
     @AfterEach
-    public void cleanArchivedCardRepository() {
+    void cleanArchivedCardRepository() {
         repository.deleteAll().subscribe();
 
     }

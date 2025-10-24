@@ -34,7 +34,7 @@ class ModbusDriverShould {
 
 
     @BeforeEach
-    public void initDriver() throws UnknownHostException {
+    void initDriver() throws UnknownHostException {
         modbusMaster = mock(ModbusMaster.class);
         modbusDriver = new ModbusDriver(InetAddress.getByName("123.45.67.1"),123,modbusMaster);
     }

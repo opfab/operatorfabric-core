@@ -57,7 +57,7 @@ class ConnectionRoutesShould {
     }
 
     @BeforeEach
-    public void clearSubscriptions() {
+    void clearSubscriptions() {
         service.clearSubscriptions();
     }
 

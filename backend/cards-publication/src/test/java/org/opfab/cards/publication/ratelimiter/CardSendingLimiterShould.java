@@ -24,23 +24,23 @@ class CardSendingLimiterShould {
     private final int limitPeriodInSec = 60;
 
     @BeforeEach
-    public void init() {
+    void init() {
         testClock = new TestClock(Clock.fixed(Instant.parse("2001-06-09T00:00:00.00Z"), ZoneId.systemDefault()));
         limiter = new CardSendingLimiter(limitCardCount, limitPeriodInSec, testClock);
     }
 
     @Test
     void isPermissionRefusedWhenLimitReached() {
-        for (int i=0; i<limitCardCount; i++) {
+        for (int i = 0; i < limitCardCount; i++) {
             limiter.isNewSendingAllowed("publisher1");
         }
 
         Assertions.assertFalse(limiter.isNewSendingAllowed("PUBLISHER1"));
     }
-    
+
     @Test
     void isLimiterReset() {
-        for (int i=0; i<limitCardCount; i++) {
+        for (int i = 0; i < limitCardCount; i++) {
             limiter.isNewSendingAllowed("publisher1");
         }
         Assertions.assertFalse(limiter.isNewSendingAllowed("PUBLISHER1"));
@@ -50,7 +50,7 @@ class CardSendingLimiterShould {
 
     @Test
     void isPermissionAcceptedWhenWaitAfterLimitReached() {
-        for (int i=0; i<limitCardCount; i++) {
+        for (int i = 0; i < limitCardCount; i++) {
             limiter.isNewSendingAllowed("publisher1");
         }
 
@@ -60,13 +60,13 @@ class CardSendingLimiterShould {
 
     @Test
     void multiplePublishers() {
-        for (int i=0; i<limitCardCount; i++) {
+        for (int i = 0; i < limitCardCount; i++) {
             limiter.isNewSendingAllowed("publisher1");
         }
         testClock.offset(Duration.ofSeconds(30));
         Assertions.assertFalse(limiter.isNewSendingAllowed("PUBLISHER1"));
 
-        for (int i=0; i<limitCardCount; i++) {
+        for (int i = 0; i < limitCardCount; i++) {
             limiter.isNewSendingAllowed("publisher2");
         }
         testClock.offset(Duration.ofSeconds(31));

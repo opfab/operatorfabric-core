@@ -42,7 +42,7 @@ class CreateCardCommandHandlerShould {
     private CreateCardCommandHandler cut;
 
     @BeforeAll
-    public void setUp() {
+    void setUp() {
         services = mock(Services.class);
         cardProcessingService = mock(CardProcessingService.class);
         objectMapper = mock(CardObjectMapper.class);
