@@ -100,11 +100,10 @@ export abstract class BaseUserCardTemplate extends HTMLElement {
     }
 
     private registerFunctionToGetSpecificCardInformation() {
-        const that = this;
         opfab.currentUserCard.registerFunctionToGetSpecificCardInformation(() => {
-            const info = that.getSpecificCardInformation();
-            if (info.card && that.externalRecipients) {
-                if (!info.card.externalRecipients) info.card.externalRecipients = that.externalRecipients;
+            const info = this.getSpecificCardInformation();
+            if (info.card && this.externalRecipients) {
+                if (!info.card.externalRecipients) info.card.externalRecipients = this.externalRecipients;
             }
             return info;
         });

@@ -490,36 +490,35 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     }
 
     initEventListeners() {
-        const that = this;
-        document.querySelector('#radioButtonDailyFreq').addEventListener('click', function () {
-            that.displayDailyFrequencyUI();
+        document.querySelector('#radioButtonDailyFreq').addEventListener('click', () => {
+            this.displayDailyFrequencyUI();
         });
-        document.querySelector('#radioButtonMonthlyFreq').addEventListener('click', function () {
-            that.displayMonthlyFrequencyUI();
+        document.querySelector('#radioButtonMonthlyFreq').addEventListener('click', () => {
+            this.displayMonthlyFrequencyUI();
         });
-        document.querySelector('#radioButtonWithoutRecurrence').addEventListener('click', function () {
-            that.displayWithoutRecurrenceUI();
-        });
-
-        document.querySelector('#selectAllDays').addEventListener('click', function () {
-            that.toggleSelectAllDays();
-        });
-        document.querySelector('#weekdaysCheckboxes').addEventListener('click', function () {
-            that.checkIsAllDaysSelected();
+        document.querySelector('#radioButtonWithoutRecurrence').addEventListener('click', () => {
+            this.displayWithoutRecurrenceUI();
         });
 
-        document.querySelector('#selectAllMonths').addEventListener('click', function () {
-            that.toggleSelectAllMonths();
+        document.querySelector('#selectAllDays').addEventListener('click', () => {
+            this.toggleSelectAllDays();
         });
-        document.querySelector('#monthsCheckboxes').addEventListener('click', function () {
-            that.checkIsAllMonthsSelected();
+        document.querySelector('#weekdaysCheckboxes').addEventListener('click', () => {
+            this.checkIsAllDaysSelected();
         });
 
-        document.querySelector('#radioButtonNthDay').addEventListener('click', function () {
-            that.displayNthDayTable();
+        document.querySelector('#selectAllMonths').addEventListener('click', () => {
+            this.toggleSelectAllMonths();
         });
-        document.querySelector('#radioButtonNthWeekday').addEventListener('click', function () {
-            that.displayNthWeekdayTable();
+        document.querySelector('#monthsCheckboxes').addEventListener('click', () => {
+            this.checkIsAllMonthsSelected();
+        });
+
+        document.querySelector('#radioButtonNthDay').addEventListener('click', () => {
+            this.displayNthDayTable();
+        });
+        document.querySelector('#radioButtonNthWeekday').addEventListener('click', () => {
+            this.displayNthWeekdayTable();
         });
     }
 
