@@ -41,7 +41,7 @@ export class AcknowledgeStatus {
 
         let entitiesNotAcked = listEntitiesToAck;
         if (card.entitiesAcks)
-            entitiesNotAcked = listEntitiesToAck.filter((entityId) => card.entitiesAcks.indexOf(entityId) < 0);
+            entitiesNotAcked = listEntitiesToAck.filter((entityId) => !card.entitiesAcks.includes(entityId));
 
         const userEntitiesNotAcked = entitiesNotAcked.filter((entityId) => {
             return UsersService.getCurrentUserWithPerimeters().userData.entities.includes(entityId);

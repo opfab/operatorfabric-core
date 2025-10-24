@@ -50,7 +50,7 @@ export class GroupedLightCardsService {
     }
 
     static isParentGroupCard(lightCard: Card): boolean {
-        return GroupedLightCardsService.parentsOfGroupedCards.indexOf(lightCard) !== -1;
+        return GroupedLightCardsService.parentsOfGroupedCards.includes(lightCard);
     }
 
     static getChildCardsByTags(tags: string[]): Card[] {
