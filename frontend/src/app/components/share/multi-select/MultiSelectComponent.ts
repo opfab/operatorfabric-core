@@ -95,9 +95,8 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
 
         this.virtualSelectComponent = document.querySelector('#' + this.multiSelectId);
         if (this.virtualSelectComponent) {
-            const currentComponent = this;
-            this.virtualSelectComponent.addEventListener('change', function () {
-                currentComponent.setSelectedOptionsToParentForm();
+            this.virtualSelectComponent.addEventListener('change', () => {
+                this.setSelectedOptionsToParentForm();
             });
             if (this.disabled) this.virtualSelectComponent.disable();
         }
