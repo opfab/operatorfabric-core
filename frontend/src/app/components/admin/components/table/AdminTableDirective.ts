@@ -333,21 +333,17 @@ export abstract class AdminTableDirective implements OnDestroy {
     }
 
     uploadFile(file: File, resourceName?: string) {
-        const read = new FileReader();
         const formData = new FormData();
         formData.append('file', file);
-        read.readAsBinaryString(file);
         let fileName = file.name;
 
         if (resourceName !== undefined) {
             fileName = resourceName;
         }
 
-        read.onload = (e) => {
-            BusinessDataService.updateBusinessData(fileName, formData).subscribe(() => {
-                this.refreshData();
-            });
-        };
+        BusinessDataService.updateBusinessData(fileName, formData).subscribe(() => {
+            this.refreshData();
+        });
     }
 
     refreshData() {
