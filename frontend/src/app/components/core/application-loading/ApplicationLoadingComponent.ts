@@ -161,7 +161,7 @@ export class ApplicationLoadingComponent implements OnInit {
     // To have a cleaner code , we need to refactor the code
     // regarding authentication
     private waitForEmptyTokenInStorageToShowLoginForm() {
-        if (!window.localStorage.getItem('token')) {
+        if (!globalThis.localStorage.getItem('token')) {
             this.showLoginScreen = true;
         } else if (!this.applicationLoaded) {
             setTimeout(() => this.waitForEmptyTokenInStorageToShowLoginForm(), 100);

@@ -16,9 +16,9 @@ export class CodeAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {
         let authCode;
         const searchCodeString = 'code=';
-        const foundIndex = window.location.href.indexOf(searchCodeString);
+        const foundIndex = globalThis.location.href.indexOf(searchCodeString);
         if (foundIndex !== -1) {
-            authCode = window.location.href.substring(foundIndex + searchCodeString.length);
+            authCode = globalThis.location.href.substring(foundIndex + searchCodeString.length);
         } else this.saveOpfabRoute();
         this.checkAuthentication().subscribe((token) => {
             // no token stored or token invalid
@@ -46,14 +46,14 @@ export class CodeAuthenticationHandler extends AuthHandler {
     // so we need to save in the session storage the route before login.
     // We do not use the local storage because the local storage is shared between tabs
     private saveOpfabRoute() {
-        const hash = window.location.hash;
+        const hash = globalThis.location.hash;
         const hashLength = hash.length;
         const routeAfterLogin = hashLength > 2 ? hash.substring(1, hashLength) : '/';
-        window.sessionStorage.setItem('route_after_login_for_code_flow', routeAfterLogin);
+        globalThis.sessionStorage.setItem('route_after_login_for_code_flow', routeAfterLogin);
     }
 
     public getOpfabRouteAfterLogin(): string {
-        return window.sessionStorage.getItem('route_after_login_for_code_flow');
+        return globalThis.sessionStorage.getItem('route_after_login_for_code_flow');
     }
 
     private askToken(code: string): Observable<HttpAuthInfo> {
@@ -69,9 +69,9 @@ export class CodeAuthenticationHandler extends AuthHandler {
 
     private moveToLoginPage() {
         if (!this.delegateUrl) {
-            window.location.href = `${environment.url}auth/code/redirect_uri=${this.getRedirectUri()}`;
+            globalThis.location.href = `${environment.url}auth/code/redirect_uri=${this.getRedirectUri()}`;
         } else {
-            window.location.href = `${this.delegateUrl}&redirect_uri=${this.getRedirectUri()}`;
+            globalThis.location.href = `${this.delegateUrl}&redirect_uri=${this.getRedirectUri()}`;
         }
     }
 

@@ -63,7 +63,7 @@ export abstract class AuthHandler {
     }
 
     public getOpfabRouteAfterLogin(): string {
-        const hash = window.location.hash;
+        const hash = globalThis.location.hash;
         const hashWithoutAuthenticationFields = hash.split('&')[0].split('?')[0];
         const hashLength = hash.length;
         const routeAfterLogin = hashLength > 2 ? hashWithoutAuthenticationFields.substring(1, hashLength) : '/';

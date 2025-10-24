@@ -83,7 +83,7 @@ describe('ExternalAppIFrame view ', () => {
     });
 
     // If a business application is called form a card, it can be called with parameters
-    // To do that, in the card the window.location is set with the url #/businessconfigparty/menu_id/menuItem_id/
+    // To do that, in the card the globalThis.location is set with the url #/businessconfigparty/menu_id/menuItem_id/
     // then is is possible to add params to the url
     // For example: #/businessconfigparty/menu_id/menuItem_id/?myparam=param1&myotherparam=param2
     //
@@ -99,7 +99,7 @@ describe('ExternalAppIFrame view ', () => {
     });
 
     // If a business application is called form a card, it can be called with parameters
-    // To do that, in the card the window.location is set with the url #/businessconfigparty/menu_id/menuItem_id
+    // To do that, in the card the globalThis.location is set with the url #/businessconfigparty/menu_id/menuItem_id
     // then is is possible to add params to the url
     // For example: #/businessconfigparty/menu_id/menuItem_id?myparam=param1&myotherparam=param2
     //

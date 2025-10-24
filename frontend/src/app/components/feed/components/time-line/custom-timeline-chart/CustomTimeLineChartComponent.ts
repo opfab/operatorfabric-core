@@ -68,7 +68,7 @@ export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChange
     ngOnInit(): void {
         this.computeDimensions();
         this.updateRealtime();
-        window.addEventListener('resize', this.onWindowResize);
+        globalThis.addEventListener('resize', this.onWindowResize);
     }
 
     ngOnChanges(): void {
@@ -180,6 +180,6 @@ export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChange
     ngOnDestroy() {
         this.timeLineView.destroy();
         this.isDestroyed = true;
-        window.removeEventListener('resize', this.onWindowResize);
+        globalThis.removeEventListener('resize', this.onWindowResize);
     }
 }
