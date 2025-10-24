@@ -30,7 +30,7 @@
         "jwks-rsa": "3.2.0",
         "jwt-decode": "4.0.0",
         "mongodb": "6.20.0",
-        "nodemailer": "7.0.9",
+        "nodemailer": "7.0.10",
         "quill": "2.0.3",
         "winston": "3.18.3",
         "winston-daily-rotate-file": "5.0.0"
@@ -43,7 +43,7 @@
         "@types/jest": "30.0.0",
         "@types/jsdom": "27.0.0",
         "@types/node": "22.18.12",
-        "@types/nodemailer": "7.0.2",
+        "@types/nodemailer": "7.0.3",
         "@types/sinon": "17.0.4",
         "eslint": "9.38.0",
         "eslint-plugin-jest": "29.0.1",
