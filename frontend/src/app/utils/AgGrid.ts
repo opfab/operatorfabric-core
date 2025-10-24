@@ -17,9 +17,9 @@ export class AgGrid {
         }
         switch (filterOption) {
             case 'contains':
-                return value.indexOf(filterText) >= 0;
+                return value.includes(filterText);
             case 'notContains':
-                return value.indexOf(filterText) < 0;
+                return !value.includes(filterText);
             case 'equals':
                 return Utilities.compareObj(value, filterText) === 0;
             case 'notEqual':

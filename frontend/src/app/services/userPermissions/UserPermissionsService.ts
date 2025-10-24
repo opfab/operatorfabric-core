@@ -41,7 +41,7 @@ export class UserPermissionsService {
     }
 
     private static isUserReadonly(user: UserWithPerimeters): boolean {
-        return user.permissions?.some((permission) => permission === PermissionEnum.READONLY);
+        return user.permissions?.includes(PermissionEnum.READONLY);
     }
 
     public static doesTheUserHavePermissionToEditCard(user: UserWithPerimeters, card: Card): boolean {

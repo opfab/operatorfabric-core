@@ -76,7 +76,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
                                     response = Utilities.compareObj(stateName, params.filterText) !== 0;
                                     break;
                                 case 'contains':
-                                    response = stateName.indexOf(params.filterText) >= 0;
+                                    response = stateName.includes(params.filterText);
                                     break;
                                 case 'startsWith':
                                     response = Utilities.removeEmojis(stateName).startsWith(params.filterText);
@@ -89,7 +89,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
                         }
                     }
                     if (params.filterOption === 'notContains') {
-                        const matchingStates = stateNames.filter((name) => name.indexOf(params.filterText) >= 0);
+                        const matchingStates = stateNames.filter((name) => name.includes(params.filterText));
                         response = matchingStates.length === 0;
                     }
                     return response;

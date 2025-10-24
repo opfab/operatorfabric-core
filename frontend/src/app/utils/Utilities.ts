@@ -95,7 +95,7 @@ export class Utilities {
     }
 
     public static isNavigatorChromiumBased() {
-        return navigator.userAgent.indexOf('Chrom') > -1;
+        return navigator.userAgent.includes('Chrom');
     }
 
     public static removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {

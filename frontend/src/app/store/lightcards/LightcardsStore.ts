@@ -291,9 +291,7 @@ export class LightCardsStore {
     }
 
     private isLightChildCardFromCurrentUserEntity(childCard): boolean {
-        return UsersService.getCurrentUserWithPerimeters().userData.entities.some(
-            (entity) => entity === childCard.publisher
-        );
+        return UsersService.getCurrentUserWithPerimeters().userData.entities.includes(childCard.publisher);
     }
 
     private addOrUpdateParentLightCard(card) {

@@ -165,15 +165,13 @@ export class UsersService {
 
     public static isCurrentUserInAnyGroup(groups: string[]): boolean {
         if (!groups) return false;
-        return (
-            UsersService._userWithPerimeters.userData.groups.filter((group) => groups.indexOf(group) >= 0).length > 0
-        );
+        return UsersService._userWithPerimeters.userData.groups.some((group) => groups.includes(group));
     }
 
     public static hasCurrentUserAnyPermission(permissions: PermissionEnum[]): boolean {
         if (!permissions) return false;
         return (
-            UsersService._userWithPerimeters?.permissions?.filter((permission) => permissions.indexOf(permission) >= 0)
+            UsersService._userWithPerimeters?.permissions?.filter((permission) => permissions.includes(permission))
                 .length > 0
         );
     }
