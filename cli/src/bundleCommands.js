@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 const prompts = require('prompts');
-const fs = require('fs').promises;
+const fs = require('node:fs').promises;
 const utils = require('./utils.js');
 
 const bundleCommand = {

@@ -10,7 +10,7 @@
 const config = require('./configCommands.js');
 const prompts = require('prompts');
 const utils = require('./utils.js');
-const fs = require('fs').promises;
+const fs = require('node:fs').promises;
 const JSON5 = require('json5');
 
 const userCommands = {

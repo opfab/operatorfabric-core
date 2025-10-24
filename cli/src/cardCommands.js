@@ -9,7 +9,7 @@
 
 const config = require('./configCommands.js');
 const prompts = require('prompts');
-const fs = require('fs').promises;
+const fs = require('node:fs').promises;
 const JSON5 = require('json5');
 
 const cardCommands = {
