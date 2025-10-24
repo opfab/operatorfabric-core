@@ -314,7 +314,7 @@ export class HandlebarsHelper {
     private static registerDateFormat() {
         Handlebars.registerHelper('dateFormat', (value, options) => {
             if (typeof value == 'string') {
-                value = parseInt(value);
+                value = Number.parseInt(value);
             }
             const m = new Date(value);
             return format(m, options.hash.format, this.getDateFnsLocaleOption(HandlebarsHelper._locale));

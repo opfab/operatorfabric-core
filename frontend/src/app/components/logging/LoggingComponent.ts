@@ -132,7 +132,7 @@ export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {
 
     ngOnInit() {
         const savedPageSize = UserPreferencesService.getPreference('opfab.archives.page.size');
-        if (savedPageSize) this.pageSize = parseInt(savedPageSize);
+        if (savedPageSize) this.pageSize = Number.parseInt(savedPageSize);
         BusinessConfigAPI.getTags('logging').then((customTags) => {
             this.tags = customTags ?? ConfigService.getConfigValue('logging.filters.tags.list');
             this.changeDetector.markForCheck();
