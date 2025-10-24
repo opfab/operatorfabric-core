@@ -13,14 +13,14 @@ report_name=report-${current_git_branch}.txt
 echo "Dependencies report is done on current git branch $current_git_branch"
 echo "Build java report"
 (
-    echo "  Java report for services"
+    echo "  Java report for backend"
     cd ../../
-    ./gradlew services:cards-publication:dependencies \
-            services:cards-consultation:dependencies \
-            services:businessconfig:dependencies \
-            services:external-devices:dependencies \
-            services:users:dependencies \
-            services:common:dependencies \
+    ./gradlew backend:cards-publication:dependencies \
+            backend:cards-consultation:dependencies \
+            backend:businessconfig:dependencies \
+            backend:external-devices:dependencies \
+            backend:users:dependencies \
+            backend:common:dependencies \
             kafkaJavaClient:dependencies \
             tools:generic:test-utilities:dependencies \
             tools:spring:spring-test-utilities:dependencies \
