@@ -99,7 +99,7 @@ class CardProcessServiceShould {
     private Optional<Jwt> token = Optional.empty();
 
     @BeforeEach
-    public void init() {
+    void init() {
         eventBusSpy = new EventBusSpy();
         cardNotificationService = new CardNotificationService(eventBusSpy, objectMapper, null);
         cardTranslationService = new CardTranslationService(i18NRepositoryMock);

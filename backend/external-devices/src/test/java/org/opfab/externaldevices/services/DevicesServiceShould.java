@@ -58,7 +58,7 @@ class DevicesServiceShould {
     final int CUSTOM_SIGNAL_ID = 4;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         externalDevicesWatchdogProperties.setEnabled(true);
         externalDevicesWatchdogProperties.setSignalId(CUSTOM_SIGNAL_ID);
         devicesService = new DevicesService(configService, externalDeviceDriverFactory,

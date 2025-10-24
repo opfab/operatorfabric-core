@@ -108,12 +108,12 @@ class CardOperationsControllerShould {
     }
 
     @AfterEach
-    public void clean() {
+    void clean() {
         repository.deleteAll().subscribe();
     }
 
     @BeforeEach
-    public void initCardData() {
+    void initCardData() {
         service.clearSubscriptions();
         StepVerifier.create(repository.deleteAll()).expectComplete().verify();
         int processNo = 0;

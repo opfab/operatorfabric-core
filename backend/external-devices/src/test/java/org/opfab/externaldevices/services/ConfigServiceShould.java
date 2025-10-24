@@ -67,7 +67,7 @@ class ConfigServiceShould {
     private static DeviceConfiguration deviceConfiguration3;
 
     @BeforeEach
-    public void init() {
+    void init() {
 
         signalMappingRepository = new SignalMappingRepositoryMock();
         deviceConfigurationRepository = new DeviceConfigurationRepositoryMock();
@@ -417,7 +417,7 @@ class ConfigServiceShould {
     }
 
     @AfterEach
-    public void clean() {
+    void clean() {
         signalMappingRepository.deleteAll();
         deviceConfigurationRepository.deleteAll();
         userConfigurationRepository.deleteAll();

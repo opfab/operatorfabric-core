@@ -33,8 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.smartcardio.Card;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.opfab.cards.consultation.TestUtilities.*;
@@ -80,12 +78,12 @@ public class ArchivedCardRepositoryShould {
     private ArchivedCardRepository repository;
 
     @AfterEach
-    public void clean() {
+    void clean() {
         repository.deleteAll().subscribe();
     }
 
     @BeforeAll
-    public static void initUsers() {
+    static void initUsers() {
         ComputedPerimeter perimeter = new ComputedPerimeter();
         perimeter.setProcess("PROCESS");
         perimeter.setState("anyState");
@@ -130,7 +128,7 @@ public class ArchivedCardRepositoryShould {
     }
 
     @BeforeEach
-    public void initCardData() {
+    void initCardData() {
 
         int processNo = 0;
         // create past cards

@@ -35,7 +35,7 @@ import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
 @DisplayName("PerimetersService")
-public class PerimetersServiceShould {
+class PerimetersServiceShould {
 
     private PerimetersService perimetersService;
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();

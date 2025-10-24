@@ -45,7 +45,7 @@ class DeleteCardCommandHandlerShould {
     private DeleteCardCommandHandler cut;
 
     @BeforeAll
-    public void setUp() {
+    void setUp() {
         services = mock(Services.class);
         cardDeletionService = mock(CardDeletionService.class);
         objectMapper = mock(CardObjectMapper.class);
@@ -71,7 +71,7 @@ class DeleteCardCommandHandlerShould {
         cut.executeCommand(cardCommandMock);
 
         verify(cardDeletionService, times(1))
-                .deleteCardById(any(),notNull(),any());
+                .deleteCardById(any(), notNull(), any());
     }
 
 }

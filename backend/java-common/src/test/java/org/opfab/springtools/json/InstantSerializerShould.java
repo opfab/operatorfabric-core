@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.springtools.json;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  *
  */
-public class InstantSerializerShould {
+class InstantSerializerShould {
 
     private static final Logger log = LoggerFactory.getLogger(InstantSerializer.class);
 
@@ -36,14 +35,14 @@ public class InstantSerializerShould {
     private static InstantSerializer instantSerializer;
 
     @BeforeAll
-    public static void setup(){
+    static void setup() {
         objectMapper = new ObjectMapper();
         instantSerializer = new InstantSerializer();
         objectMapper.registerModule(new SimpleModule().addSerializer(Instant.class, instantSerializer));
     }
 
     @Test
-    void shouldSerializeInstantAsMillisFromEpoch () {
+    void shouldSerializeInstantAsMillisFromEpoch() {
 
         long milliFromEpoch = 123456789L;
         Instant instant = Instant.ofEpochMilli(milliFromEpoch);
@@ -61,7 +60,7 @@ public class InstantSerializerShould {
     }
 
     @Test
-    void shouldSerializeNullAsMillisFromEpoch () {
+    void shouldSerializeNullAsMillisFromEpoch() {
 
         Instant instant = null;
 
@@ -74,8 +73,6 @@ public class InstantSerializerShould {
             log.error(String.format("Unable to serialize %s", Instant.class.getSimpleName()), e);
         }
 
-
     }
-
 
 }

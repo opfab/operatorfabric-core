@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  *
  */
-public class InstantDeserializerShould {
+class InstantDeserializerShould {
 
     private static final Logger log = LoggerFactory.getLogger(InstantDeserializer.class);
 
@@ -38,7 +38,7 @@ public class InstantDeserializerShould {
     private static InstantDeserializer instantDeserializer;
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         objectMapper = new ObjectMapper();
         instantDeserializer = new InstantDeserializer();
         objectMapper.registerModule(new SimpleModule().addDeserializer(Instant.class, instantDeserializer));
