@@ -59,7 +59,6 @@ import {ModalComponent} from './app/services/modal/component/ModalComponent';
 import {NgbModalComponent} from './app/services/modal/component/NgbModalComponent';
 import {SharingService} from './app/components/admin/services/SharingService';
 import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {NgbModule, NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
@@ -116,7 +115,6 @@ bootstrapApplication(AppComponent, {
         {provide: TranslationLib, useClass: AngularTranslationLib},
         {provide: ModalComponent, useClass: NgbModalComponent},
         {provide: SharingService, useClass: SharingService},
-        provideHttpClient(withInterceptorsFromDi()),
-        provideAnimations()
+        provideHttpClient(withInterceptorsFromDi())
     ]
 }).catch((err) => logger.error(JSON.stringify(err)));
