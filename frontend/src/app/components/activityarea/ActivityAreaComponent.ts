@@ -7,7 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    AfterViewChecked,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivityAreaView} from 'app/components/activityarea/view/ActivityAreaView';
 import {ActivityAreaPage} from 'app/components/activityarea/view/ActivityAreaPage';
@@ -24,17 +34,19 @@ import {I18n} from '../../model/I18n';
     styleUrls: ['./ActivityAreaComponent.scss'],
     imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
-export class ActivityAreaComponent implements OnInit, OnDestroy {
+export class ActivityAreaComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() titleI18nKey = 'activityArea.title';
     @Input() askConfirmation = true;
     @Output() confirm = new EventEmitter();
     @ViewChild('opfabActivityAreaScreen') rootElement: ElementRef;
+    @ViewChild('confirmBtn', {static: false}) confirmBtn: ElementRef<HTMLButtonElement>;
 
     activityAreaForm: FormGroup<{}>;
     saveSettingsInProgress = false;
     messageAfterSavingSettings: string;
     displaySendResultError = false;
     isScreenLoaded = false;
+    isOKbuttonFocusDone = false;
 
     activityAreaView: ActivityAreaView;
     activityAreaPage: ActivityAreaPage;
@@ -60,6 +72,13 @@ export class ActivityAreaComponent implements OnInit, OnDestroy {
         });
     }
 
+    ngAfterViewChecked() {
+        //Focus on confirm button when screen is loaded to improve accessibility
+        if (this.isScreenLoaded && this.confirmBtn && !this.isOKbuttonFocusDone) {
+            this.confirmBtn.nativeElement.focus();
+            this.isOKbuttonFocusDone = true; // to avoid refocusing on each change detection cycle
+        }
+    }
     private setCheckboxInputValue(elementId: string, checked: boolean) {
         const element = this.rootElement.nativeElement.querySelector('#' + elementId);
         if (element) {
