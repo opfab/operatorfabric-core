@@ -1,4 +1,4 @@
-FROM node:22.21.0-alpine@sha256:b410676781397cabae22f81547ddb3e6b975dc04b43626098ce17ea53a447ef1
+FROM node:24.11.0-alpine@sha256:f36fed0b2129a8492535e2853c64fbdbd2d29dc1219ee3217023ca48aebd3787
 WORKDIR /usr/app
 RUN chown node:node /usr/app \
     && mkdir -m777 /var/log/opfab

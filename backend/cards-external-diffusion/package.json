@@ -42,7 +42,7 @@
         "@types/html-to-text": "9.0.4",
         "@types/jest": "30.0.0",
         "@types/jsdom": "27.0.0",
-        "@types/node": "22.18.12",
+        "@types/node": "24.10.0",
         "@types/nodemailer": "7.0.3",
         "@types/sinon": "17.0.4",
         "eslint": "9.38.0",
