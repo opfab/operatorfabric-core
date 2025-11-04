@@ -140,7 +140,7 @@ sonar {
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,tests/**,backend/**/tests/*'
         
 
-        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4'
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
@@ -155,7 +155,12 @@ sonar {
         // We are preventing log injection via specific appenders that remove new lines and carriage returns.
         property 'sonar.issue.ignore.multicriteria.e3.ruleKey', 'javasecurity:S5145'
         property 'sonar.issue.ignore.multicriteria.e3.resourceKey', '**/*'
-
+        // Ignoring the rule "Duplicate id found" in HTML files as it is mainly false postive due to the fact that we
+        // are using HTML angular templates that make conditional rendering of the elements
+        // so in the majority of the cases the ids are unique at runtime
+        // furthermore it is not possible to add NO SONAR directive in html files to suppress the issue
+        property 'sonar.issue.ignore.multicriteria.e4.ruleKey', 'Web:S7930'
+        property 'sonar.issue.ignore.multicriteria.e4.resourceKey', '**/*.html'
     }
 }
 
