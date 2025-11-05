@@ -93,7 +93,7 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     initializeMultiselectOptions() {
         this.entities.forEach((entity) => {
             const id = entity.id;
-            if (!this.row || id !== this.row.entityId) {
+            if (id !== this.row?.entityId) {
                 let itemName = entity.name;
                 if (!itemName) {
                     itemName = id;

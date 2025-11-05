@@ -133,7 +133,7 @@ export class EditEntityModalComponent implements OnInit {
         this.entities = EntitiesService.getEntities();
         this.entities.forEach((entity) => {
             const id = entity.id;
-            if (!this.row || id !== this.row.id) {
+            if (id !== this.row?.id) {
                 let itemName = entity.name;
                 if (!itemName) {
                     itemName = id;

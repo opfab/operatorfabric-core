@@ -387,7 +387,7 @@ export abstract class AdminTableDirective implements OnDestroy {
                         );
                     else
                         item[this.getTranslatedHeaderName(field.name)] =
-                            field.valueFormatter && field.valueFormatter.name === 'translateValue'
+                            field.valueFormatter?.name === 'translateValue'
                                 ? this.translateService.instant(
                                       this.i18NPrefix + this.tableType + '.' + line.data[field.name]
                                   )
