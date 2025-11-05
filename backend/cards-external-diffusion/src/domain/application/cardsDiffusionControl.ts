@@ -128,7 +128,9 @@ export default class CardsDiffusionControl {
             .replaceAll('<', '&lt;')
             .replaceAll('>', '&gt;')
             .replaceAll('"', '&quot;')
-            .replaceAll("'", '&#39;');
+            .replaceAll("'", '&#39;')
+            .replaceAll('`', '&#96;')
+            .replaceAll('=', '&#61;');
     }
 
     getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined, timezoneForEmails: string): string {
