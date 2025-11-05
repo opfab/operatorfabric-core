@@ -107,9 +107,8 @@ export class OpfabEventStreamService {
 
     public static setSubscriptionDates(start: number, end: number) {
         if (
-            OpfabEventStreamService.currentPeriod &&
-            start === OpfabEventStreamService.currentPeriod.start &&
-            end === OpfabEventStreamService.currentPeriod.end
+            start === OpfabEventStreamService.currentPeriod?.start &&
+            end === OpfabEventStreamService.currentPeriod?.end
         ) {
             logger.info('EventStreamService - Same period, no need to reload cards', LogOption.LOCAL_AND_REMOTE);
             return;
