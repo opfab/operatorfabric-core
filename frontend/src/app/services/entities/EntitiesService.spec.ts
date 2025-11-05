@@ -45,8 +45,7 @@ describe('EntitiesService', () => {
             const listEntities: Entity[] = [];
             const entity1 = new Entity('ENTITY1', 'Control Room 1', 'Control Room 1', [RoleEnum.CARD_SENDER], [], []);
             const entity2 = new Entity('ENTITY2', 'Control Room 2', 'Control Room 2', [RoleEnum.CARD_SENDER], [], []);
-            listEntities.push(entity1);
-            listEntities.push(entity2);
+            listEntities.push(entity1, entity2);
             EntitiesService.queryAllEntities().subscribe((result) => {
                 expect(result.length).toBe(2);
                 expect(result[0].id).toBe('ENTITY1');
@@ -90,19 +89,12 @@ describe('EntitiesService', () => {
                 ['ENTITY3']
             );
 
-            listEntities.push(entity1);
-            listEntities.push(entity2);
-            listEntities.push(entity3);
-            listEntities.push(entity3_1);
-            listEntities.push(entity3_1_1);
-            listEntities.push(entity3_1_2);
-            listEntities.push(entity3_2);
+            listEntities.push(entity1, entity2, entity3, entity3_1, entity3_1_1, entity3_1_2, entity3_2);
 
             EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(7);
                 const selectedEntities: Entity[] = [];
-                selectedEntities.push(entity2);
-                selectedEntities.push(entity3);
+                selectedEntities.push(entity2, entity3);
                 const allowedEntities = EntitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
                 expect(allowedEntities.length).toBe(3);
                 expect(allowedEntities[0].id).toBe('ENTITY2');
@@ -142,9 +134,7 @@ describe('EntitiesService', () => {
                 ['ENTITYGROUP']
             );
 
-            listEntities.push(entity1);
-            listEntities.push(entity2);
-            listEntities.push(entityGroup);
+            listEntities.push(entity1, entity2, entityGroup);
 
             EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(3);
@@ -181,16 +171,12 @@ describe('EntitiesService', () => {
                 ['ENTITYGROUP']
             );
 
-            listEntities.push(entity1);
-            listEntities.push(entity2);
-            listEntities.push(entityGroup);
+            listEntities.push(entity1, entity2, entityGroup);
 
             EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(3);
                 const selectedEntities: Entity[] = [];
-                selectedEntities.push(entity1);
-                selectedEntities.push(entity2);
-                selectedEntities.push(entityGroup);
+                selectedEntities.push(entity1, entity2, entityGroup);
 
                 const allowedEntities = EntitiesService.resolveEntitiesAllowedToSendCards(selectedEntities);
                 expect(allowedEntities.length).toBe(2);
@@ -235,13 +221,7 @@ describe('EntitiesService', () => {
                 ['ENTITY3']
             );
 
-            listEntities.push(entity1);
-            listEntities.push(entity2);
-            listEntities.push(entity3);
-            listEntities.push(entity3_1);
-            listEntities.push(entity3_1_1);
-            listEntities.push(entity3_1_2);
-            listEntities.push(entity3_2);
+            listEntities.push(entity1, entity2, entity3, entity3_1, entity3_1_1, entity3_1_2, entity3_2);
 
             EntitiesService.loadAllEntitiesData().subscribe((result) => {
                 expect(result.length).toBe(7);
@@ -319,14 +299,7 @@ describe('EntitiesService', () => {
                 ['ENTITY3']
             );
 
-            listEntities.push(entity1);
-            listEntities.push(entity2);
-            listEntities.push(entity2_1);
-            listEntities.push(entity3);
-            listEntities.push(entity3_1);
-            listEntities.push(entity3_1_1);
-            listEntities.push(entity3_1_2);
-            listEntities.push(entity3_2);
+            listEntities.push(entity1, entity2, entity2_1, entity3, entity3_1, entity3_1_1, entity3_1_2, entity3_2);
 
             expect(EntitiesService.getCachedChildEntities().size).toEqual(0);
 
