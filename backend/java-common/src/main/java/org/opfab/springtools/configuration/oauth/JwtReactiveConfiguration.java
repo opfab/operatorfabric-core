@@ -13,6 +13,7 @@ import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -37,6 +38,7 @@ public class JwtReactiveConfiguration extends JwtConfiguration {
             throws IllegalArgumentException {
         return new Converter<Jwt, Mono<AbstractAuthenticationToken>>() {
             @Override
+            @Nullable
             public Mono<AbstractAuthenticationToken> convert(Jwt jwt) throws IllegalArgumentException {
                 AbstractAuthenticationToken authenticationToken = generateOpFabJwtAuthenticationToken(jwt);
                 return Mono.just(authenticationToken);
