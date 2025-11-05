@@ -28,7 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  *
  * @see ApiError
  * @see ApiErrorException
- *
+ * 
  */
 @RestControllerAdvice
 public class OpfabCustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -52,7 +52,13 @@ public class OpfabCustomExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+    @SuppressWarnings("java:S2638") // Find no way to avoid this warning here , add @Nullable is not solving the
+                                    // issue , seems the parent method use @org.jspecify.annotations.Nullable which
+                                    // is not in our classpath. I do not know if adding this dependency will solve
+                                    // the
+                                    // problem and anyway this is overkill to add this dependency only for that.
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
+            HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
         log.error("Uncaught internal server exception", ex);
         return super.handleExceptionInternal(ex, body, headers, status, request);
