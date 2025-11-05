@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-const fs = require('fs');
-const readline = require('readline');
+const fs = require('node:fs');
+const readline = require('node:readline');
 const prompts = require('prompts');
 
 const login = require('./loginCommands.js');
