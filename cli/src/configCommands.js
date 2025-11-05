@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-const os = require('os');
-const fs = require('fs');
+const os = require('node:os');
+const fs = require('node:fs');
 const path = require('path');
 const JSON5 = require('json5');
 
