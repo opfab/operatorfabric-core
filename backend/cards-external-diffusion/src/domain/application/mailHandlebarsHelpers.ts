@@ -9,7 +9,7 @@
 
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 /**
  * Handlebars helpers specific to the mail service.

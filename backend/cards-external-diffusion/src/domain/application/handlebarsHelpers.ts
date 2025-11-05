@@ -9,7 +9,7 @@
 
 import * as Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import {enUS, fr, nl} from 'date-fns/locale';
 import {formatInTimeZone, FormatOptionsWithTZ} from 'date-fns-tz';
 

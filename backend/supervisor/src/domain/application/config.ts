@@ -9,7 +9,7 @@
 import {EntityToSupervise} from './entityToSupervise';
 import SupervisorDatabaseServer from '../server-side/supervisorDatabaseServer';
 import ConfigDTO from '../client-side/configDTO';
-import fs from 'fs';
+import fs from 'node:fs';
 
 export default class Config {
     supervisorDatabaseService: SupervisorDatabaseServer;
