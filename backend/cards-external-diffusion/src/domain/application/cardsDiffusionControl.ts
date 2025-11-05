@@ -114,7 +114,7 @@ export default class CardsDiffusionControl {
     protected base64urlEncode(str: string) {
         const base64 = btoa(str);
         // Replace '+' with '-', '/' with '_' and remove trailing '=' to convert base64 to base64url
-        let base64url = base64.replace(/\+/g, '-').replace(/\//g, '_');
+        let base64url = base64.replaceAll('+', '-').replaceAll('/', '_');
         while (base64url.endsWith('=')) {
             base64url = base64url.slice(0, base64url.length - 1);
         }
@@ -124,11 +124,11 @@ export default class CardsDiffusionControl {
     protected escapeHtml(text: string | undefined): string {
         if (text == null) return '';
         return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
     }
 
     getFormattedDateAndTimeFromEpochDate(epochDate: number | undefined, timezoneForEmails: string): string {
