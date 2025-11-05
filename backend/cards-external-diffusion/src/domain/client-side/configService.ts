@@ -9,7 +9,7 @@
 
 import ConfigDTO from './configDTO';
 
-import fs from 'fs';
+import fs from 'node:fs';
 
 export default class ConfigService {
     config: ConfigDTO;
