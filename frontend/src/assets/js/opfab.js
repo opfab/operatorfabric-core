@@ -98,7 +98,7 @@ opfab.richTextEditor = {
             const element = document.createElement('textarea');
             element.innerHTML = input.trim();
             // escape line breaks for json parsing
-            let decoded = element.childNodes[0].nodeValue.replace(/\n/g, '\\n');
+            let decoded = element.childNodes[0].nodeValue.replaceAll('\n', '\\n');
             element.remove();
             return JSON.parse(decoded);
         }

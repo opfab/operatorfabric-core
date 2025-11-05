@@ -17,19 +17,19 @@ export class Utilities {
     }
 
     public static convertSpacesAndNewLinesInHTML(txt: string): string {
-        return txt.replace(/\n/g, '<br/>').replace(/\s\s/g, '&nbsp;&nbsp;');
+        return txt.replaceAll('\n', '<br/>').replaceAll('  ', '&nbsp;&nbsp;');
     }
 
     public static escapeHtml(html: string): string {
         if (!html) return html;
         return html
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/`/g, '&#96;')
-            .replace(/=/g, '&#61;');
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;')
+            .replaceAll('`', '&#96;')
+            .replaceAll('=', '&#61;');
     }
 
     public static getI18nPrefixFromProcess(process: Process): string {

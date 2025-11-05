@@ -10,13 +10,13 @@
 export function base64urlEncode(str: string) {
     const base64 = btoa(str);
     // Replace '+' with '-', '/' with '_' and remove trailing '=' to convert base64 to base64url
-    let base64url = base64.replace(/\+/g, '-').replace(/\//g, '_');
+    let base64url = base64.replaceAll('+', '-').replaceAll('/', '_');
     while (base64url.endsWith('=')) {
         base64url = base64url.slice(0, base64url.length - 1);
     }
     return base64url;
 }
 export function base64urlDecode(str: string) {
-    const base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    const base64 = str.replaceAll('-', '+').replaceAll('_', '/');
     return atob(base64);
 }

@@ -145,7 +145,7 @@ export class HandlebarsHelper {
 
     private static registerPreserveSpace() {
         Handlebars.registerHelper('preserveSpace', function (value) {
-            return value.replace(/ /g, '\u00A0');
+            return value.replaceAll(' ', '\u00A0');
         });
     }
 
@@ -210,8 +210,8 @@ export class HandlebarsHelper {
     private static registerKeepSpacesAndEndOfLine() {
         Handlebars.registerHelper('keepSpacesAndEndOfLine', function (value) {
             let result = Handlebars.escapeExpression(value);
-            result = result.replace(/\n/g, '<br/>');
-            result = result.replace(/\s\s/g, '&nbsp;&nbsp;');
+            result = result.replaceAll('\n', '<br/>');
+            result = result.replaceAll('  ', '&nbsp;&nbsp;');
             return new Handlebars.SafeString(result);
         });
     }
