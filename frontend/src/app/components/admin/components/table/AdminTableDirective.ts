@@ -196,7 +196,11 @@ export abstract class AdminTableDirective implements OnDestroy {
             const columnDef = {
                 type: field.type,
                 headerName: i18nPrefixForHeader + field.name,
-                field: field.name
+                field: field.name,
+                cellStyle: {
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word'
+                }
             };
             if (field.flex) columnDef['flex'] = field.flex;
             if (field.cellRendererName) columnDef['cellRenderer'] = field.cellRendererName;
