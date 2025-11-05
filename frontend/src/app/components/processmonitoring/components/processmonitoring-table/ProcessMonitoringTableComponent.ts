@@ -213,7 +213,7 @@ export class ProcessmonitoringTableComponent {
 
                 if (column.type === ProcessMonitoringFieldEnum.SET && column.possibleValues?.length > 0) {
                     this.columnDefs[this.columnDefs.length - 1] = {
-                        ...this.columnDefs.at(this.columnDefs.length - 1),
+                        ...this.columnDefs.at(-1),
                         filter: {
                             component: SetFilterComponent
                         },

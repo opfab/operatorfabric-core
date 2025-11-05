@@ -12,7 +12,7 @@ export function base64urlEncode(str: string) {
     // Replace '+' with '-', '/' with '_' and remove trailing '=' to convert base64 to base64url
     let base64url = base64.replaceAll('+', '-').replaceAll('/', '_');
     while (base64url.endsWith('=')) {
-        base64url = base64url.slice(0, base64url.length - 1);
+        base64url = base64url.slice(0, -1);
     }
     return base64url;
 }
