@@ -48,6 +48,9 @@ public class OpfabCustomExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<Object> handleApiError(ApiErrorException exception, final WebRequest request) {
 
         log.info(GENERIC_MSG + " {}", request, exception.getError().getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug("Full stack trace:", exception);
+        }
         return new ResponseEntity<>(exception.getError(), exception.getError().getStatus());
     }
 
