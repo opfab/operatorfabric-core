@@ -17,7 +17,7 @@ package org.opfab.springtools.error.model;
  *
  */
 public class ApiErrorException extends RuntimeException {
-    private final ApiError error;
+    private final transient ApiError error;
 
     public ApiError getError() {
         return error;
