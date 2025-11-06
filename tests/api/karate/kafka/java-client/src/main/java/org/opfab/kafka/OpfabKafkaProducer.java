@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 public class OpfabKafkaProducer {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OpfabKafkaProducer.class);
+    private static final String PROCESS_VERSION = "processVersion";
 
     private KafkaProducer<Object, Object> kafka;
 
@@ -63,7 +64,7 @@ public class OpfabKafkaProducer {
                         .setProcess(cardMap.get("process"))
                         .setState(cardMap.get("state"))
                         .setPublisher(cardMap.get("publisher"))
-                        .setProcessVersion(cardMap.get("processVersion"))
+                        .setProcessVersion(cardMap.get(PROCESS_VERSION))
                         .setStartDate(startDate)
                         .setSeverity(severityType)
                         .setTitle(new I18n(cardMap.get("title"), null))
@@ -84,9 +85,9 @@ public class OpfabKafkaProducer {
                         .setProcess((String) cardMap.get("process"))
                         .setState((String) cardMap.get("state"))
                         .setPublisher((String) cardMap.get("publisher"))
-                        .setProcessVersion((String) cardMap.get("processVersion"))
+                        .setProcessVersion((String) cardMap.get(PROCESS_VERSION))
                         .setStartDate(Instant.ofEpochMilli((Long) cardMap.get("startDate")))
-                        .setSeverity(getSeverity((String) cardMap.get("processVersion")))
+                        .setSeverity(getSeverity((String) cardMap.get(PROCESS_VERSION)))
                         .setTitle(new I18n("message.title", null))
                         .setSummary(new I18n("message.summary", null))
                         .setEntityRecipients(getListFromCvsString((String) cardMap.get("entityRecipients")))
