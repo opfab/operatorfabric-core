@@ -21,7 +21,6 @@ import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -46,8 +45,7 @@ class CreateCardCommandHandlerShould {
         services = mock(Services.class);
         cardProcessingService = mock(CardProcessingService.class);
         objectMapper = mock(CardObjectMapper.class);
-        cut = new CreateCardCommandHandler(services);
-        ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
+        cut = new CreateCardCommandHandler(services, objectMapper);
     }
 
     @Test
@@ -57,9 +55,10 @@ class CreateCardCommandHandlerShould {
 
     @Test
     void executeCommand() throws JsonProcessingException {
-        reset (cardProcessingService);
+        reset(cardProcessingService);
         CardCommand cardCommandMock = mock(CardCommand.class);
-        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock (org.opfab.cards.publication.model.Card.class);
+        org.opfab.cards.publication.model.Card cardPublicationDataMock = mock(
+                org.opfab.cards.publication.model.Card.class);
         Card cardMock = mock(Card.class);
         when(cardCommandMock.getCard()).thenReturn(cardMock);
         when(objectMapper.writeValueAsString(any())).thenReturn("");
