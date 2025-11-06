@@ -21,7 +21,6 @@ import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.services.CardDeletionService;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,8 +48,7 @@ class DeleteCardCommandHandlerShould {
         services = mock(Services.class);
         cardDeletionService = mock(CardDeletionService.class);
         objectMapper = mock(CardObjectMapper.class);
-        cut = new DeleteCardCommandHandler(services);
-        ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
+        cut = new DeleteCardCommandHandler(services, objectMapper);
     }
 
     @Test

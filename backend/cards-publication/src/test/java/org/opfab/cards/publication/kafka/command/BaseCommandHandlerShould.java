@@ -19,7 +19,6 @@ import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -47,8 +46,7 @@ class BaseCommandHandlerShould {
     @BeforeAll
     void setUp() throws JsonProcessingException {
         objectMapper = mock(CardObjectMapper.class);
-        cut = new BaseCommandHandler();
-        ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
+        cut = new BaseCommandHandler(objectMapper);
         org.opfab.cards.publication.model.Card cardPublicationData = new org.opfab.cards.publication.model.Card();
 
         cardCommand = mock(CardCommand.class);

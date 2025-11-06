@@ -14,8 +14,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -23,10 +21,10 @@ public class BaseCommandHandler {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseCommandHandler.class);
 
-    @Autowired
-    private CardObjectMapper objectMapper;
+    private final CardObjectMapper objectMapper;
 
-    protected BaseCommandHandler() {
+    protected BaseCommandHandler(CardObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     protected org.opfab.cards.publication.model.Card buildCardPublicationData(CardCommand cardCommand) {

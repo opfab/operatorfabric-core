@@ -21,7 +21,6 @@ import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -43,8 +42,7 @@ class UpdateCardCommandHandlerShould {
         services = mock(Services.class);
         cardProcessingService = mock(CardProcessingService.class);
         objectMapper = mock(CardObjectMapper.class);
-        cut = new UpdateCardCommandHandler(services);
-        ReflectionTestUtils.setField(cut, "objectMapper", objectMapper);
+        cut = new UpdateCardCommandHandler(services, objectMapper);
     }
 
     @Test

@@ -13,6 +13,7 @@ package org.opfab.cards.publication.kafka.command;
 import org.opfab.avro.CardCommand;
 import org.opfab.avro.CommandType;
 import org.opfab.cards.publication.configuration.Services;
+import org.opfab.cards.publication.kafka.CardObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +23,8 @@ public class UpdateCardCommandHandler extends BaseCommandHandler implements Comm
 
     private final Services services;
 
-    public UpdateCardCommandHandler(Services services) {
+    public UpdateCardCommandHandler(Services services, CardObjectMapper objectMapper) {
+        super(objectMapper);
         this.services = services;
     }
 
