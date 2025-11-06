@@ -173,12 +173,10 @@ public class BusinessconfigController implements UserExtractor {
 
             return result;
         } catch (FileNotFoundException e) {
-            log.error("File not found while loading bundle file", e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.BAD_REQUEST, "Incorrect inner file structure", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (IOException e) {
-            log.error("IOException while loading bundle file", e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.BAD_REQUEST, "unable to load submitted file", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
@@ -252,13 +250,11 @@ public class BusinessconfigController implements UserExtractor {
 
             return null;
         } catch (FileNotFoundException e) {
-            log.error("Bundle directory not found when wanted to delete bundle", e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.NOT_FOUND, "Bundle not found", e.getMessage()),
                     "Bundle directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting bundle directory";
-            log.error(message, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted bundle", e.getMessage()),
                     message, e);
@@ -282,13 +278,11 @@ public class BusinessconfigController implements UserExtractor {
 
             return null;
         } catch (FileNotFoundException e) {
-            log.error("Bundle directory not found when wanted to delete bundle", e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.NOT_FOUND, "Bundle not found", e.getMessage()),
                     "Bundle directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting bundle directory";
-            log.error(message, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted bundle", e.getMessage()),
                     message, e);
@@ -312,17 +306,14 @@ public class BusinessconfigController implements UserExtractor {
             response.setStatus(201);
             return null;
         } catch (FileNotFoundException e) {
-            log.error("File not found while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.BAD_REQUEST, "Incorrect inner file structure", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (IOException e) {
-            log.error("IOException while loading " + endPointName + FILE, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.BAD_REQUEST, "unable to load submitted file", e.getMessage()),
                     UNABLE_TO_LOAD_FILE_MSG, e);
         } catch (ParseException e) {
-            log.error("ParseException while posting the " + file.getOriginalFilename() + FILE, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.BAD_REQUEST,
                             "The file " + file.getOriginalFilename() + " is not json compliant", e.getMessage()),
@@ -420,13 +411,11 @@ public class BusinessconfigController implements UserExtractor {
                     resourceName);
             return null;
         } catch (FileNotFoundException e) {
-            log.error("Resource not found", e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.NOT_FOUND, "Resource not found", e.getMessage()),
                     "Resource directory not found", e);
         } catch (IOException e) {
             String message = "IOException while deleting resource file";
-            log.error(message, e);
             throw new ApiErrorException(
                     new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "unable to delete submitted resource",
                             e.getMessage()),

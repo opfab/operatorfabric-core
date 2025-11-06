@@ -109,9 +109,9 @@ public class CardOperationsController {
                 }
                 return new CardSubscriptionDto(p.rangeStart, p.rangeEnd, p.updatedFrom);
             } catch (IllegalArgumentException e) {
-                log.error("Error searching for old subscription", e);
                 throw new ApiErrorException(
-                        new ApiError(HttpStatus.BAD_REQUEST, e.getMessage()));
+                        new ApiError(HttpStatus.BAD_REQUEST, e.getMessage()), "Error searching for old subscription",
+                        e);
             }
         });
 
