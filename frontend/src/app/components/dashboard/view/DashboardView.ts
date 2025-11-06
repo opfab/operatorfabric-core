@@ -171,7 +171,7 @@ export class Dashboard {
     }
 
     private getEllipseWidth(count: number) {
-        return (Math.log(count) * Math.LOG10E) | 0;
+        return Math.trunc(Math.log(count) * Math.LOG10E);
     }
 
     private isStateNotified(id: string, name: string): boolean {
