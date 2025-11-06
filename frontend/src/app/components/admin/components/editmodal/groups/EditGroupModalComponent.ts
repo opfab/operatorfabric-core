@@ -140,7 +140,7 @@ export class EditGroupModalComponent implements OnInit {
     }
 
     private isUserInCurrentGroup(usr: User): boolean {
-        return usr.groups && usr.groups.findIndex((g) => g === this.row.id) >= 0;
+        return usr.groups?.includes(this.row.id);
     }
 
     update() {

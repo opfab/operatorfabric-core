@@ -92,7 +92,7 @@ export class ExternaldevicesModalComponent implements OnInit {
     }
 
     isUniquedeviceId(deviceId: string): boolean {
-        if (deviceId && this.devices.findIndex((dev) => dev.id === deviceId) >= 0) return false;
+        if (deviceId && this.devices.some((dev) => dev.id === deviceId)) return false;
         else return true;
     }
 
