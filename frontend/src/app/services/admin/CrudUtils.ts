@@ -44,9 +44,7 @@ export class CrudUtilities {
 
     private static isDuplicatedEntityName(label: string, id: string): boolean {
         return (
-            label &&
-            EntitiesService.getEntities().filter((entity) => entity.name === label.trim() && entity.id !== id).length >
-                0
+            label && EntitiesService.getEntities().some((entity) => entity.name === label.trim() && entity.id !== id)
         );
     }
 }

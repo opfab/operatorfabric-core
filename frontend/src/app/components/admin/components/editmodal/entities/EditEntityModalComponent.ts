@@ -149,7 +149,7 @@ export class EditEntityModalComponent implements OnInit {
     }
 
     private isUserInCurrentEntity(usr: User): boolean {
-        return usr.entities && usr.entities.findIndex((g) => g === this.row.id) >= 0;
+        return usr.entities?.includes(this.row.id);
     }
 
     update() {

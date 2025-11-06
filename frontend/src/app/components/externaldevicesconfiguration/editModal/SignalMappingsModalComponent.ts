@@ -76,7 +76,7 @@ export class SignalMappingsModalComponent implements OnInit {
     }
 
     isUniqueDeviceId(mappingId: string): boolean {
-        return mappingId && this.signalMappings.findIndex((dev) => dev.id === mappingId) < 0;
+        return mappingId && !this.signalMappings.some((dev) => dev.id === mappingId);
     }
 
     update() {

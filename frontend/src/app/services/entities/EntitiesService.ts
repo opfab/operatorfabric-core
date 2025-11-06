@@ -53,7 +53,7 @@ export class EntitiesService {
 
     private static deleteFromCachedChildEntities(id: string) {
         const parentEntitiesIds = [...EntitiesService._childEntities.entries()]
-            .filter(([, childs]) => childs.findIndex((child) => child.id === id) >= 0)
+            .filter(([, childs]) => childs.some((child) => child.id === id))
             .map((entry) => entry[0]);
 
         parentEntitiesIds.forEach((parentId) => EntitiesService._childEntities.delete(parentId));
@@ -188,12 +188,12 @@ export class EntitiesService {
             if (r.levels) {
                 r.levels.forEach((l) => {
                     EntitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
-                        if (!resolvedEntities.find((o) => o.id === entity.id)) {
+                        if (!resolvedEntities.some((o) => o.id === entity.id)) {
                             resolvedEntities.push(entity);
                         }
                     });
                 });
-            } else if (!resolvedEntities.find((o) => o.id === r.id)) {
+            } else if (!resolvedEntities.some((o) => o.id === r.id)) {
                 const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
                 if (entity) resolvedEntities.push(entity);
                 else logger.info('Entity not found : ' + r.id);

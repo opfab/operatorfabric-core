@@ -219,8 +219,7 @@ export class ProcessesService {
 
     public static findProcessGroupForProcess(processId: string) {
         for (const [groupId, group] of ProcessesService.processGroups) {
-            if (group.processes.find((process) => process === processId))
-                return {id: groupId, name: group.name, processes: group.processes};
+            if (group.processes.includes(processId)) return {id: groupId, name: group.name, processes: group.processes};
         }
         return null;
     }

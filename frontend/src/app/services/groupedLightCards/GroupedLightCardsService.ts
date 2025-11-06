@@ -63,7 +63,7 @@ export class GroupedLightCardsService {
         const parentCard = GroupedLightCardsService.parentsOfGroupedCards.find((c) => c.id === parent);
         if (parentCard) {
             const childCards = GroupedLightCardsService.getChildCardsByTags(parentCard.tags);
-            return childCards.find((c) => c.id === child) !== undefined;
+            return childCards.some((c) => c.id === child);
         }
         return false;
     }

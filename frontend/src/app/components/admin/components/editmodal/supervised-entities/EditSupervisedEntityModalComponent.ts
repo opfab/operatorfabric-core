@@ -87,7 +87,7 @@ export class EditSupervisedEntityModalComponent implements OnInit {
     }
 
     isEntityAlreadySupervised(entityId: string) {
-        return this.supervisedEntities.findIndex((supervisedEntity) => supervisedEntity.entityId === entityId) >= 0;
+        return this.supervisedEntities.some((supervisedEntity) => supervisedEntity.entityId === entityId);
     }
 
     initializeMultiselectOptions() {
