@@ -341,7 +341,7 @@ public class ProcessesService implements ResourceLoaderAware {
             try {
                 Files.createDirectories(bundlePath);
             } catch (IOException e) {
-                log.error("Impossible to create the necessary folder", bundlePath, e);
+                log.error("Impossible to create the necessary folder {} ", bundlePath, e);
             }
         }
 

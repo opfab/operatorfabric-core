@@ -37,7 +37,7 @@ public class ResponseCardProducer {
     }
 
     public void send(Card cardPublicationData) {
-        log.debug("ResponseCard: {}", cardPublicationData.toString());
+        log.debug("ResponseCard: {}", cardPublicationData);
 
         CardCommand cardCommand = cardCommandFactory.createResponseCard(cardPublicationData);
 

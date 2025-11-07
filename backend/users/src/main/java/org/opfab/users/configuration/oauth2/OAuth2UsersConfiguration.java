@@ -113,7 +113,7 @@ public class OAuth2UsersConfiguration {
 
                 List<GrantedAuthority> authorities = computeAuthorities(user);
 
-                log.debug("user [{}] has these roles {} through the {} mode", principalId, authorities.toString(),
+                log.debug("user [{}] has these roles {} through the {} mode", principalId, authorities,
                         groupsProperties.getMode());
 
                 return new OpFabJwtAuthenticationToken(jwt, user, authorities);

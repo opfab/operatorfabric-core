@@ -130,7 +130,7 @@ public class ConfigService {
             Optional<DeviceConfiguration> deviceConfiguration = deviceConfigurationRepository.findById(deviceId);
             if (deviceConfiguration.isPresent()) {
                 DeviceConfiguration retrievedDeviceConfig = deviceConfiguration.get();
-                log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig.toString());
+                log.debug("{} for device {} : {}", DEBUG_RETRIEVED_CONFIG, deviceId, retrievedDeviceConfig);
                 return retrievedDeviceConfig;
             } else {
                 throw new UnknownExternalDeviceException(
@@ -147,7 +147,7 @@ public class ConfigService {
             Optional<UserConfiguration> userConfiguration = userConfigurationRepository.findById(userLogin);
             if (userConfiguration.isPresent()) {
                 UserConfiguration retrievedUserConfig = userConfiguration.get();
-                log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig.toString());
+                log.debug("{} for user {} : {}", DEBUG_RETRIEVED_CONFIG, userLogin, retrievedUserConfig);
                 return retrievedUserConfig;
             } else {
                 throw new ExternalDeviceConfigurationException(
@@ -165,7 +165,7 @@ public class ConfigService {
         if (signalMapping.isPresent()) {
             SignalMapping retrievedSignalMapping = signalMapping.get();
             log.debug("{} for signal {} : {}", DEBUG_RETRIEVED_CONFIG, signalMappingId,
-                    retrievedSignalMapping.toString());
+                    retrievedSignalMapping);
             return retrievedSignalMapping;
         } else {
             throw new ExternalDeviceConfigurationException(
