@@ -211,8 +211,8 @@ public class DevicesService {
                     try {
                         driver.send(externalDevicesWatchdogProperties.getSignalId());
                     } catch (ExternalDeviceDriverException e) {
-                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): {}", driverId,
-                                driver.toString(), e);
+                        log.error("Watchdog signal couldn't be sent to device {} (driver: {}): ", driverId,
+                                driver, e);
                     }
                 }
             });
@@ -237,8 +237,8 @@ public class DevicesService {
                         driver.connect();
 
                     } catch (ExternalDeviceDriverException e) {
-                        log.error("Impossible to connect  {} (driver: {}): {}", driverId,
-                                driver.toString(), e);
+                        log.error("Impossible to connect  {} (driver: {}): ", driverId,
+                                driver, e);
                     }
                 }
             });

@@ -59,7 +59,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     public void saveCard(Card card) {
-        log.debug("preparing to write {}", card.toString());
+        log.debug("preparing to write {}", card);
         card.lastUpdate = Instant.now();
         template.save(card);
     }
@@ -78,8 +78,9 @@ public class CardRepositoryImpl implements CardRepository {
                 where("process").is(process),
                 where("processInstanceId").is(processInstanceId),
                 where("deletionDate").isNull()));
-        // previous version of the code used updateFirst 
-        // but in certain cases it happened that multiple version of the same card do not have deletionDate
+        // previous version of the code used updateFirst
+        // but in certain cases it happened that multiple version of the same card do
+        // not have deletionDate
         // see https://github.com/opfab/operatorfabric-core/issues/8664
         template.updateMulti(query, Update.update("deletionDate", deletionDate),
                 ArchivedCard.class);
@@ -127,20 +128,22 @@ public class CardRepositoryImpl implements CardRepository {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update,
                 Card.class);
-        log.debug("added {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+        log.debug("added {} occurence(s) of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+                user.getLogin(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
 
-    public UserBasedOperationResult addUserRead(String name, String cardUid) {
+    public UserBasedOperationResult addUserRead(String userName, String cardUid) {
         Update update = new Update()
-                .addToSet(USERS_READS, name)
+                .addToSet(USERS_READS, userName)
                 .set(LAST_UPDATE, Instant.now());
 
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update,
                 Card.class);
-        log.debug("added {} occurrence of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
+        log.debug("added {} occurence(s) of {}'s userReads in the card with uid: {}", updateFirst.getModifiedCount(),
+                userName,
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
@@ -152,7 +155,8 @@ public class CardRepositoryImpl implements CardRepository {
         update.set(LAST_UPDATE, Instant.now());
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
-        log.debug("removed {} occurrence of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+        log.debug("removed {} occurence(s) of {}'s userAcks in the card with uid: {}", updateFirst.getModifiedCount(),
+                userName,
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
@@ -160,7 +164,8 @@ public class CardRepositoryImpl implements CardRepository {
     public UserBasedOperationResult deleteUserRead(String userName, String cardUid) {
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 new Update().pull(USERS_READS, userName).set(LAST_UPDATE, Instant.now()), Card.class);
-        log.debug("removed {} occurrence of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
+        log.debug("removed {} occurence(s) of {}'s usersReads in the card with uid: {}", updateFirst.getModifiedCount(),
+                userName,
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
@@ -207,7 +212,7 @@ public class CardRepositoryImpl implements CardRepository {
                 .pull("actions", "NOT_NOTIFIED");
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
-        log.debug("removed {} occurrence of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
+        log.debug("removed {} occurence(s) of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
     }
