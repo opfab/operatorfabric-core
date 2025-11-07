@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import express, {NextFunction} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {expressjwt, GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
@@ -75,53 +75,40 @@ const supervisorService = new SupervisorService(
     logger
 );
 
-app.get('/status', (req, res) => {
+const processAdminRequest = (req: Request, res: Response, requestProcessor: Function) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
             if (isAdmin) {
-                res.send(supervisorService.isActive());
+                requestProcessor(req, res);
             } else {
                 authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
-            logger.error('Error getting authorization in GET /status' + err);
+            logger.error(`Error processing request ${req.url}: ${err}`);
+            res.status(500).send();
         });
+};
+
+app.get('/status', (req, res) => {
+    processAdminRequest(req, res, () => res.send(supervisorService.isActive()));
 });
 
 app.get('/start', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Start supervisor asked');
-                supervisorService.start();
-                res.send('Start supervisor');
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error getting authorization in GET /start' + err);
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Start supervisor asked');
+        supervisorService.start();
+        res.send('Start supervisor');
+    });
 });
 
 app.get('/stop', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Stop supervisor asked');
-                supervisorService.stop();
-                res.send('Stop supervisor');
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error getting authorization in GET /stop' + err);
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Stop supervisor asked');
+        supervisorService.stop();
+        res.send('Stop supervisor');
+    });
 });
 
 app.get('/config', (req, res) => {
@@ -130,21 +117,11 @@ app.get('/config', (req, res) => {
 });
 
 app.post('/config', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Update configuration');
-                const updated = supervisorService.patch(req.body as object);
-                res.send(updated);
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /config' + err);
-            res.status(403).send();
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Update configuration');
+        const updated = supervisorService.patch(req.body as object);
+        res.send(updated);
+    });
 });
 
 app.get('/healthcheck', (req, res) => {
@@ -152,119 +129,66 @@ app.get('/healthcheck', (req, res) => {
 });
 
 app.get('/supervisedEntities', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                supervisorDatabaseService
-                    .getSupervisedEntities()
-                    .then((entities) => res.send(entities))
-                    .catch((err) => {
-                        logger.error('Error getting supervised entities in database' + err);
-                        res.status(500).send();
-                    });
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /supervisedEntities' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        supervisorDatabaseService
+            .getSupervisedEntities()
+            .then((entities) => res.send(entities))
+            .catch((err) => {
+                logger.error('Error getting supervised entities in database' + err);
+                res.status(500).send();
+            });
+    });
 });
 
 app.post('/supervisedEntities', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                const newEntity: EntityToSupervise = req.body;
-                logger.info('Add supervised entity ' + JSON.stringify(newEntity));
-                supervisorService
-                    .saveSupervisedEntity(newEntity)
-                    .then(() => {
-                        res.send();
-                    })
-                    .catch((err) => {
-                        res.status(500).send();
-                        logger.error('Error saving supervisedEntities in db' + err);
-                    });
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in POST /supervisedEntities' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        const newEntity: EntityToSupervise = req.body;
+        logger.info('Add supervised entity ' + JSON.stringify(newEntity));
+        supervisorService
+            .saveSupervisedEntity(newEntity)
+            .then(() => {
+                res.send();
+            })
+            .catch((err) => {
+                res.status(500).send();
+                logger.error('Error saving supervisedEntities in db' + err);
+            });
+    });
 });
 
 app.delete('/supervisedEntities/:id', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                supervisorService
-                    .deleteSupervisedEntity(req.params.id)
-                    .then((wasDeleted) => {
-                        if (wasDeleted) {
-                            res.send();
-                        } else {
-                            res.status(404).send({message: 'Entity ' + req.params.id + ' not found'});
-                        }
-                    })
-                    .catch((err) => {
-                        res.status(500).send();
-                        logger.error('Error deleting supervisedEntities in db' + err);
-                    });
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in DELETE /supervisedEntities' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        supervisorService
+            .deleteSupervisedEntity(req.params.id)
+            .then((wasDeleted) => {
+                if (wasDeleted) {
+                    res.send();
+                } else {
+                    res.status(404).send({message: 'Entity ' + req.params.id + ' not found'});
+                }
+            })
+            .catch((err) => {
+                res.status(500).send();
+                logger.error('Error deleting supervisedEntities in db' + err);
+            });
+    });
 });
 
 app.get('/logLevel', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                res.send(getLogLevel());
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /logLevel' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => res.send(getLogLevel()));
 });
 
 app.post('/logLevel', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Set log level: ' + JSON.stringify(req.body));
-                const level: string =
-                    req.body.configuredLevel == null ? defaultLogLevel : req.body.configuredLevel.toLowerCase();
-
-                if (setLogLevel(level)) {
-                    res.contentType('text/plain').send(getLogLevel());
-                } else {
-                    res.status(400).send('Bad log level');
-                }
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in POST /logLevel' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Set log level: ' + JSON.stringify(req.body));
+        const level: string =
+            req.body.configuredLevel == null ? defaultLogLevel : req.body.configuredLevel.toLowerCase();
+        if (setLogLevel(level)) {
+            res.contentType('text/plain').send(getLogLevel());
+        } else {
+            res.status(400).send('Bad log level');
+        }
+    });
 });
 
 app.use(function (err: any, req: any, res: any, next: any): void {

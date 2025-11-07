@@ -46,11 +46,7 @@ export default class AuthorizationService {
     public handleUnauthorizedAccess(req: Request, res: Response): void {
         const username = this.jwtToken.getUser(this.jwtToken.getRequestToken(req), this.loginClaim);
         this.logger.warn(
-            'SECURITY : user ' +
-                username +
-                ' try to access resource ' +
-                req.originalUrl +
-                ' without the required authorization'
+            'SECURITY : user ' + username + ' try to access resource ' + req.url + ' without the required authorization'
         );
         res.status(403).send();
     }
