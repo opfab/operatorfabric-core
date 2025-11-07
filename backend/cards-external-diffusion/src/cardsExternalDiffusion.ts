@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import express, {NextFunction} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {expressjwt, GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
@@ -110,130 +110,69 @@ const cardsExternalDiffusionService = new CardsExternalDiffusionService(
     logger
 );
 
-app.get('/status', (req, res) => {
+const processAdminRequest = (req: Request, res: Response, requestProcessor: Function) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
             if (isAdmin) {
-                res.send(cardsExternalDiffusionService.isActive());
+                requestProcessor(req, res);
             } else {
                 authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
-            logger.error('Error in GET /status' + err);
+            logger.error(`Error processing request ${req.url}: ${err}`);
             res.status(500).send();
         });
+};
+
+app.get('/status', (req, res) => {
+    processAdminRequest(req, res, () => res.send(cardsExternalDiffusionService.isActive()));
 });
 
 app.get('/start', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                cardsExternalDiffusionService.start();
-                res.send('Start service');
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /start' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        cardsExternalDiffusionService.start();
+        res.send('Start service');
+    });
 });
 
 app.get('/stop', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Stop card external diffusion service asked');
-                cardsExternalDiffusionService.stop();
-                res.send('Stop service');
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /stop' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Stop card external diffusion service asked');
+        cardsExternalDiffusionService.stop();
+        res.send('Stop service');
+    });
 });
 
 app.get('/config', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                res.send(configService.getConfig());
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /config' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => res.send(configService.getConfig()));
 });
 
 app.post('/config', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
-                const updated = configService.patch(req.body as object);
-                cardsExternalDiffusionService.setConfiguration(updated);
-                res.send(updated);
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in POST /config' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => {
+        logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
+        const updated = configService.patch(req.body as object);
+        cardsExternalDiffusionService.setConfiguration(updated);
+        res.send(updated);
+    });
 });
 
 app.get('/logLevel', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                res.send(getLogLevel());
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in GET /logLevel' + err);
-            res.status(500).send();
-        });
+    processAdminRequest(req, res, () => res.send(getLogLevel()));
 });
 
 app.post('/logLevel', (req, res) => {
-    authorizationService
-        .isAdminUser(req)
-        .then((isAdmin) => {
-            if (isAdmin) {
-                logger.info('Set log level: ' + JSON.stringify(req.body));
-                const level =
-                    req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+    processAdminRequest(req, res, () => {
+        logger.info('Set log level: ' + JSON.stringify(req.body));
+        const level = req.body.configuredLevel == null ? defaultLogLevel : req.body.configuredLevel.toLowerCase();
 
-                if (setLogLevel(level as string)) {
-                    res.contentType('text/plain').send(getLogLevel());
-                } else {
-                    res.status(400).send('Bad log level');
-                }
-            } else {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            }
-        })
-        .catch((err) => {
-            logger.error('Error in POST /logLevel' + err);
-            res.status(500).send();
-        });
+        if (setLogLevel(level as string)) {
+            res.contentType('text/plain').send(getLogLevel());
+        } else {
+            res.status(400).send('Bad log level');
+        }
+    });
 });
 
 app.get('/healthcheck', (req, res) => {
