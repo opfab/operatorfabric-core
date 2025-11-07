@@ -108,6 +108,9 @@ sonar {
         //     - frontend/src/karma.conf.js : karma config files are not tested
         // - backend :
         //     - **/controllers/** : controllers are not unit tested as they are no business logic and there will be tested via cypress e2e tests and API karate test-utilities
+        //     - **/repositories/** : repositories are not unit tested as they are implementations of external interfaces
+        //     - **/model/**: data object with setter/getter and standard methods where unit testing has no value
+        //     - **/rabbit/**: rabbitMq external interface
         //     - **/test/** : test code is not tested
         //     - backend/**/tests/* : tests are not relevant
         //     - backend/**/server-side/** : server-side files (external interfaces) are not tested , they will be tested via cypress e2e tests and API karate tests
@@ -116,7 +119,6 @@ sonar {
         def coverageExclusions = [
           'cli/**',
           'config/**',
-          'frontend/src/app/modules/**',
           'frontend/src/app/server/**',
           'frontend/src/app/**/*Server.ts',
           'frontend/src/app/authentication/**',
@@ -127,8 +129,12 @@ sonar {
           'frontend/**/*.spec.ts',
           'frontend/src/karma.conf.js',
           '**/controllers/**',
+          '**/tests/**',
+          '**/model/**',
+          '**/rabbit/**',
           '**/src/test/**',
           '**/test-utilities/**',
+          '**/repositories/**',
           'tests/**',
           'backend/**/tests/*',
           'backend/**/server-side/**',
