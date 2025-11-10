@@ -16,14 +16,14 @@ import {LoggerService as logger} from 'app/services/logs/LoggerService';
 export class NoneAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {
         UsersService.currentUserWithPerimeters().subscribe((foundUser) => {
-            if (foundUser != null) {
+            if (foundUser == null) {
+                logger.error('None auth mode - Unable to authenticate the user');
+                this.rejectAuthentication.next(new Message('Unable to authenticate user', MessageLevel.ERROR));
+            } else {
                 logger.info('None auth mode - User (' + foundUser.userData.login + ') found');
                 const user = new AuthenticatedUser();
                 user.login = foundUser.userData.login;
                 this.userAuthenticated.next(user);
-            } else {
-                logger.error('None auth mode - Unable to authenticate the user');
-                this.rejectAuthentication.next(new Message('Unable to authenticate user', MessageLevel.ERROR));
             }
         });
     }

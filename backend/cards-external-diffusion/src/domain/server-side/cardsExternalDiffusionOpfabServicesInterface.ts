@@ -70,8 +70,11 @@ export default class CardsExternalDiffusionOpfabServicesInterface
 
     public async getUser(login: string): Promise<GetResponse> {
         const user = this.users.find((user) => user.login === login);
-        if (user != null) return new GetResponse(user, true);
-        else return await this.fetchUser(login);
+        if (user) {
+            return new GetResponse(user, true);
+        } else {
+            return await this.fetchUser(login);
+        }
     }
 
     public async fetchUser(login: string): Promise<GetResponse> {
@@ -120,8 +123,8 @@ export default class CardsExternalDiffusionOpfabServicesInterface
                     Authorization: 'Bearer ' + this.token
                 }
             });
-            if (response?.data != null) {
-                return new GetResponse(response?.data, true);
+            if (response?.data) {
+                return new GetResponse(response.data, true);
             } else {
                 this.logger.warn('No data in HTTP response');
                 return new GetResponse(null, false);

@@ -14,10 +14,9 @@ import {GroupsService} from '../groups/GroupsService';
 
 export class CrudUtilities {
     public static formatArrayToString(arrayToFormat: any) {
-        if (arrayToFormat != null) {
-            arrayToFormat.sort((a, b) => Utilities.compareObj(a, b));
-            return arrayToFormat.join(', ');
-        } else return '';
+        if (arrayToFormat == null) return '';
+        arrayToFormat.sort((a, b) => Utilities.compareObj(a, b));
+        return arrayToFormat.join(', ');
     }
 
     public static formatGroupIdsToNames(groupIds: string[]): string {

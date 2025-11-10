@@ -271,12 +271,13 @@ export class HandlebarsHelper {
     }
 
     public static changeLocale(locale: string): void {
-        if (locale != null) {
+        if (locale) {
             HandlebarsHelper._locale = locale;
         } else {
             HandlebarsHelper._locale = 'en';
         }
     }
+
     /* eslint-disable */
     private static registerSort(): void {
         Handlebars.registerHelper('sort', function () {

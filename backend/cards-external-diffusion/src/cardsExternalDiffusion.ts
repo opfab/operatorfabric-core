@@ -114,8 +114,11 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else res.send(cardsExternalDiffusionService.isActive());
+            if (isAdmin) {
+                res.send(cardsExternalDiffusionService.isActive());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            }
         })
         .catch((err) => {
             logger.error('Error in GET /status' + err);
@@ -127,10 +130,11 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 cardsExternalDiffusionService.start();
                 res.send('Start service');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -143,11 +147,12 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Stop card external diffusion service asked');
                 cardsExternalDiffusionService.stop();
                 res.send('Stop service');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -160,8 +165,11 @@ app.get('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else res.send(configService.getConfig());
+            if (isAdmin) {
+                res.send(configService.getConfig());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            }
         })
         .catch((err) => {
             logger.error('Error in GET /config' + err);
@@ -173,12 +181,13 @@ app.post('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
                 const updated = configService.patch(req.body as object);
                 cardsExternalDiffusionService.setConfiguration(updated);
                 res.send(updated);
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -191,9 +200,10 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 res.send(getLogLevel());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -206,8 +216,7 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level =
                     req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
@@ -217,6 +226,8 @@ app.post('/logLevel', (req, res) => {
                 } else {
                     res.status(400).send('Bad log level');
                 }
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -246,13 +257,14 @@ app.post('/sendDailyEmail', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Sending email with cards from the last 24 hours');
                 cardsExternalDiffusionService.sendDailyRecap().catch((err) => {
                     logger.error('Error in sendDailyEmail' + err);
                 });
                 res.send();
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -265,13 +277,14 @@ app.post('/sendWeeklyEmail', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Sending email with cards from the last 7 days');
                 cardsExternalDiffusionService.sendWeeklyRecap().catch((err) => {
                     logger.error('Error in sendWeeklyEmail' + err);
                 });
                 res.send();
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {

@@ -335,8 +335,8 @@ export abstract class OpfabMap {
                                     tileSize: layer.tileSize,
                                     crossOrigin: 'anonymous'
                                 }),
-                                opacity: layer.opacity !== undefined ? layer.opacity : 1,
-                                zIndex: layer.zIndex !== undefined ? layer.zIndex : 0
+                                opacity: layer.opacity ?? 1,
+                                zIndex: layer.zIndex ?? 0
                             })
                         );
                         break;
@@ -344,8 +344,8 @@ export abstract class OpfabMap {
                         this.map.addLayer(
                             new TileLayer({
                                 source: new OSM({crossOrigin: 'anonymous'}),
-                                opacity: layer.opacity !== undefined ? layer.opacity : 1,
-                                zIndex: layer.zIndex !== undefined ? layer.zIndex : 0
+                                opacity: layer.opacity ?? 1,
+                                zIndex: layer.zIndex ?? 0
                             })
                         );
                         break;
@@ -389,8 +389,8 @@ export abstract class OpfabMap {
             });
 
             // Use opacity and zIndex from configuration
-            const opacity = layerConfig?.opacity !== undefined ? layerConfig.opacity : 1;
-            const zIndex = layerConfig?.zIndex !== undefined ? layerConfig.zIndex : 0;
+            const opacity = layerConfig?.opacity ?? 1;
+            const zIndex = layerConfig?.zIndex ?? 0;
 
             // Create WMTS layer
             const wmtsLayer = new TileLayer({
@@ -541,8 +541,8 @@ export abstract class OpfabMap {
                 const vectorLayer = new VectorLayer({
                     source: layerSource,
                     style: geojson.style ? this.convertFlatStyleToOpenLayersStyle(geojson.style) : defaultStyle,
-                    opacity: geojson.opacity !== undefined ? geojson.opacity : 1,
-                    zIndex: geojson.zIndex !== undefined ? geojson.zIndex : 0
+                    opacity: geojson.opacity ?? 1,
+                    zIndex: geojson.zIndex ?? 0
                 });
 
                 this.map.addLayer(vectorLayer);
@@ -797,9 +797,9 @@ export abstract class OpfabMap {
 
         const imageLayer = new ImageLayer({
             source: imageArcGISSource,
-            opacity: layerConfig.opacity !== undefined ? layerConfig.opacity : 1,
+            opacity: layerConfig.opacity ?? 1,
             visible: layerConfig.visible !== false,
-            zIndex: layerConfig.zIndex !== undefined ? layerConfig.zIndex : 0
+            zIndex: layerConfig.zIndex ?? 0
         });
 
         this.map.addLayer(imageLayer);

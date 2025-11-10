@@ -79,9 +79,11 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
+            if (isAdmin) {
+                res.send(supervisorService.isActive());
+            } else {
                 authorizationService.handleUnauthorizedAccess(req, res);
-            } else res.send(supervisorService.isActive());
+            }
         })
         .catch((err) => {
             logger.error('Error getting authorization in GET /status' + err);
@@ -92,12 +94,12 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 logger.info('Start supervisor asked');
                 supervisorService.start();
                 res.send('Start supervisor');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -109,12 +111,12 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 logger.info('Stop supervisor asked');
                 supervisorService.stop();
                 res.send('Stop supervisor');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -131,12 +133,12 @@ app.post('/config', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 logger.info('Update configuration');
                 const updated = supervisorService.patch(req.body as object);
                 res.send(updated);
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -153,9 +155,7 @@ app.get('/supervisedEntities', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 supervisorDatabaseService
                     .getSupervisedEntities()
                     .then((entities) => res.send(entities))
@@ -163,6 +163,8 @@ app.get('/supervisedEntities', (req, res) => {
                         logger.error('Error getting supervised entities in database' + err);
                         res.status(500).send();
                     });
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -175,9 +177,7 @@ app.post('/supervisedEntities', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 const newEntity: EntityToSupervise = req.body;
                 logger.info('Add supervised entity ' + JSON.stringify(newEntity));
                 supervisorService
@@ -189,6 +189,8 @@ app.post('/supervisedEntities', (req, res) => {
                         res.status(500).send();
                         logger.error('Error saving supervisedEntities in db' + err);
                     });
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -201,9 +203,7 @@ app.delete('/supervisedEntities/:id', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 supervisorService
                     .deleteSupervisedEntity(req.params.id)
                     .then((wasDeleted) => {
@@ -217,6 +217,8 @@ app.delete('/supervisedEntities/:id', (req, res) => {
                         res.status(500).send();
                         logger.error('Error deleting supervisedEntities in db' + err);
                     });
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -229,10 +231,10 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 res.send(getLogLevel());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -245,17 +247,18 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) {
-                authorizationService.handleUnauthorizedAccess(req, res);
-            } else {
+            if (isAdmin) {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
                 const level: string =
-                    req.body.configuredLevel !== null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+                    req.body.configuredLevel == null ? defaultLogLevel : req.body.configuredLevel.toLowerCase();
+
                 if (setLogLevel(level)) {
                     res.contentType('text/plain').send(getLogLevel());
                 } else {
                     res.status(400).send('Bad log level');
                 }
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {

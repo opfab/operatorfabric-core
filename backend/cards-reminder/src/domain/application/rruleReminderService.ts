@@ -129,14 +129,14 @@ export class RRuleReminderService implements EventListener {
         const reminders = await this.databaseService.getItemsToRemindNow();
         for (const reminder of reminders) {
             const card = await this.databaseService.getCardByUid(reminder.cardUid as string);
-            if (card != null) {
-                cardsToRemind.push(card);
-            } else {
+            if (card == null) {
                 // the card has been deleted in this case
                 this.logger.info(
-                    `RRuleReminder - card with uid ${reminder.cardUid} does not exist anymore , remove reminder`
+                    `RRuleReminder - card with uid ${reminder.cardUid} does not exist anymore, remove reminder`
                 );
                 await this.databaseService.removeReminder(reminder.cardId as string);
+            } else {
+                cardsToRemind.push(card);
             }
         }
         return cardsToRemind;

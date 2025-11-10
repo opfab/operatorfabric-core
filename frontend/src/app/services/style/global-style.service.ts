@@ -31,12 +31,10 @@ export class GlobalStyleService {
         const nightDayMode = MenuService.isNightDayModeMenuVisible();
 
         const settings = ConfigService.getConfigValue('settings');
-        if (!nightDayMode) {
-            if (settings?.styleWhenNightDayModeDesactivated) {
-                GlobalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
-            }
-        } else {
+        if (nightDayMode) {
             GlobalStyleService.loadNightModeFromUserPreferences();
+        } else if (settings?.styleWhenNightDayModeDesactivated) {
+            GlobalStyleService.setStyle(settings.styleWhenNightDayModeDesactivated);
         }
     }
 

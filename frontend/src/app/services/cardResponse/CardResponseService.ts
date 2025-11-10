@@ -62,10 +62,10 @@ export class CardResponseService {
 
         return new Promise((resolve, reject) => {
             CardsService.postCard(finalResponseCard).subscribe((resp) => {
-                if (resp.status !== ServerResponseStatus.OK) {
-                    reject(new Error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage));
-                } else {
+                if (resp.status === ServerResponseStatus.OK) {
                     resolve();
+                } else {
+                    reject(new Error('Status: ' + resp.status + ' // Status message: ' + resp.statusMessage));
                 }
             });
         });

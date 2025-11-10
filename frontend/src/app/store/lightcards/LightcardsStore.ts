@@ -208,15 +208,15 @@ export class LightCardsStore {
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
             if (isFromCurrentUser) {
                 const parentCard = this.lightCards.get(card.parentCardId);
-                if (!parentCard) {
+                if (parentCard) {
+                    parentCard.hasChildCardFromCurrentUserEntity = true;
+                    this.addOrUpdateParentLightCard(parentCard);
+                } else {
                     // if parent does not exist yet keep in memory the information that the card with id=parentCardId has a child
                     // and that this child is from current user entity
                     // this can happen as the back doesn't order the cards before sending them
                     // in the subscription (i.e a child can be received before its parent)
                     this.orphanedLightChildCardsFromCurrentEntity.add(card.parentCardId);
-                } else {
-                    parentCard.hasChildCardFromCurrentUserEntity = true;
-                    this.addOrUpdateParentLightCard(parentCard);
                 }
             }
             this.newLightChildCards.next(card);
@@ -319,13 +319,14 @@ export class LightCardsStore {
     public removeLightCard(cardId) {
         this.closeCardIfOpen(cardId);
         const card = this.lightCards.get(cardId);
-        if (!card) {
-            // is a child card
-            this.removeChildCard(cardId);
-        } else {
+        if (card) {
             this.childCards.delete(cardId);
             this.lightCards.delete(cardId);
+        } else {
+            // is a child card
+            this.removeChildCard(cardId);
         }
+
         this.lightCardsEvents.next(this.lightCards);
     }
 

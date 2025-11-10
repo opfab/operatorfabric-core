@@ -132,8 +132,7 @@ export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges
     }
 
     private getValueOrDefault(value: any, defaultValue: any): any {
-        if (value !== undefined) return value;
-        else return defaultValue;
+        return value ?? defaultValue;
     }
 
     ngOnChanges() {

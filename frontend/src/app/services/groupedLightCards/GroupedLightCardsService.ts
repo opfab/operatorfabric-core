@@ -32,13 +32,14 @@ export class GroupedLightCardsService {
                 return; // Do not group cards without tags
             }
             let cardsByTag = GroupedLightCardsService.tagsMap.get(tagString);
-            if (!cardsByTag) {
-                cardsByTag = [];
-                GroupedLightCardsService.parentsOfGroupedCards.push(lightCard);
-            } else {
+            if (cardsByTag) {
                 GroupedLightCardsService.groupedChildCards.push(lightCard);
                 cardsByTag.push(lightCard);
+            } else {
+                cardsByTag = [];
+                GroupedLightCardsService.parentsOfGroupedCards.push(lightCard);
             }
+
             GroupedLightCardsService.tagsMap.set(tagString, cardsByTag);
         });
 

@@ -96,12 +96,12 @@ export class ProcessStatesMultiSelectOptionsService {
                 );
             }
 
-            if (!processList.length) {
-                processMultiSelectOptionsPerProcessGroups.delete(processGroupId);
-            } else {
+            if (processList.length) {
                 const options: Array<MultiSelectOption> = [];
                 processList.forEach((process) => options.push(new MultiSelectOption(process.value, process.label)));
                 processMultiSelectOptionsPerProcessGroups.set(processGroupId, options);
+            } else {
+                processMultiSelectOptionsPerProcessGroups.delete(processGroupId);
             }
         });
         return processMultiSelectOptionsPerProcessGroups;
