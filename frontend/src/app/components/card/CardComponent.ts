@@ -103,8 +103,11 @@ export class CardComponent implements OnInit, OnDestroy {
                     }
                     // the selected card has not changed in between
                     if (this.currentSelectedCardId === cardId) {
-                        if (!this.card) this.cardLoadingInProgress = !!this.currentSelectedCardId;
-                        else this.cardLoadingInProgress = this.card.id !== this.currentSelectedCardId;
+                        if (this.card) {
+                            this.cardLoadingInProgress = this.card.id !== this.currentSelectedCardId;
+                        } else {
+                            this.cardLoadingInProgress = !!this.currentSelectedCardId;
+                        }
                     }
                 }, 1000);
             });

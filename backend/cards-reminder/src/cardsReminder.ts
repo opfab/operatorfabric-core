@@ -95,8 +95,11 @@ app.get('/status', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else res.send(cardsReminderService.isActive());
+            if (isAdmin) {
+                res.send(cardsReminderService.isActive());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
+            }
         })
         .catch((err) => {
             logger.error('Error in GET /status' + err);
@@ -108,11 +111,12 @@ app.get('/start', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Start card reminder service asked');
                 cardsReminderService.start();
                 res.send('Start service');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -125,11 +129,12 @@ app.get('/stop', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Stop card reminder service asked');
                 cardsReminderService.stop();
                 res.send('Stop service');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
@@ -142,17 +147,18 @@ app.get('/reset', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Reset card reminder service asked');
                 cardsReminderService.reset().catch((err) => {
-                    logger.error('Error resetting service in GET /start' + err);
+                    logger.error('Error resetting service in GET /reset: ' + err);
                 });
                 res.send('Reset service');
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
-            logger.error('Error resetting service in GET /start' + err);
+            logger.error('Error resetting service in GET /reset: ' + err);
             res.status(500).send();
         });
 });
@@ -161,13 +167,14 @@ app.get('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 res.send(Logger.getLogLevel());
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
-            logger.error('Error in GET /logLevel' + err);
+            logger.error('Error in GET /logLevel: ' + err);
             res.status(500).send();
         });
 });
@@ -176,20 +183,23 @@ app.post('/logLevel', (req, res) => {
     authorizationService
         .isAdminUser(req)
         .then((isAdmin) => {
-            if (!isAdmin) authorizationService.handleUnauthorizedAccess(req, res);
-            else {
+            if (isAdmin) {
                 logger.info('Set log level: ' + JSON.stringify(req.body));
+
                 const level: string =
                     req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+
                 if (Logger.setLogLevel(level)) {
                     res.contentType('text/plain').send(Logger.getLogLevel());
                 } else {
                     res.status(400).send('Bad log level');
                 }
+            } else {
+                authorizationService.handleUnauthorizedAccess(req, res);
             }
         })
         .catch((err) => {
-            logger.error('Error in POST /logLevel' + err);
+            logger.error('Error in POST /logLevel: ' + err);
             res.status(500).send();
         });
 });

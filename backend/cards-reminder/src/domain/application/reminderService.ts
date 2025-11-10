@@ -8,7 +8,7 @@
  */
 
 import {EventListener} from '../../common/server-side/eventListener';
-import {getNextTimeForRepeating} from '../application/reminderUtils';
+import {getNextTimeForRepeating} from './reminderUtils';
 import {Card} from '../model/card.model';
 import {Reminder} from '../model/reminder.model';
 import {CardOperation} from '../model/card-operation.model';
@@ -129,16 +129,17 @@ export default class ReminderService implements EventListener {
 
         for (const reminder of reminders) {
             const card = await this.databaseService.getCardByUid(reminder.cardUid as string);
-            if (card != null) {
-                cardsToRemind.push(card);
-            } else {
+            if (card == null) {
                 // the card has been deleted in this case
                 this.logger.info(
-                    `Reminder - card with uid ${reminder.cardUid} does not exist anymore , remove reminder`
+                    `Reminder - card with uid ${reminder.cardUid} does not exist anymore, remove reminder`
                 );
                 await this.databaseService.removeReminder(reminder.cardId as string);
+            } else {
+                cardsToRemind.push(card);
             }
         }
+
         return cardsToRemind;
     }
 

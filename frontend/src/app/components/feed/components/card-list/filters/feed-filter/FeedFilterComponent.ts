@@ -409,14 +409,11 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
     initDateTimeFilter() {
         this.dateFilterType = FilterType.PUBLISHDATE_FILTER;
 
-        const savedStart =
-            UserPreferencesService.getPreference('opfab.feed.filter.start') != null
-                ? new Date(+UserPreferencesService.getPreference('opfab.feed.filter.start'))
-                : null;
-        const savedEnd =
-            UserPreferencesService.getPreference('opfab.feed.filter.end') != null
-                ? new Date(+UserPreferencesService.getPreference('opfab.feed.filter.end'))
-                : null;
+        const startPref = UserPreferencesService.getPreference('opfab.feed.filter.start');
+        const savedStart = startPref ? new Date(+startPref) : null;
+
+        const endPref = UserPreferencesService.getPreference('opfab.feed.filter.end');
+        const savedEnd = endPref ? new Date(+endPref) : null;
 
         if (savedStart != null) {
             const savedStartString =

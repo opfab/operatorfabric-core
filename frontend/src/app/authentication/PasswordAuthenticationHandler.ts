@@ -17,11 +17,10 @@ export class PasswordAuthenticationHandler extends AuthHandler {
     initializeAuthentication() {
         this.checkAuthentication().subscribe((token) => {
             // no token stored or token invalid
-            if (!token) this.rejectAuthentication.next(new Message('No token (password mode)'));
-            else {
+            if (token) {
                 if (this.isTokenStillValid()) {
                     this.userAuthenticated.next(null);
-                } else
+                } else {
                     this.rejectAuthentication.next(
                         new Message(
                             'The stored token has expired',
@@ -29,6 +28,9 @@ export class PasswordAuthenticationHandler extends AuthHandler {
                             new I18n('login.error.token.expiration')
                         )
                     );
+                }
+            } else {
+                this.rejectAuthentication.next(new Message('No token (password mode)'));
             }
         });
     }

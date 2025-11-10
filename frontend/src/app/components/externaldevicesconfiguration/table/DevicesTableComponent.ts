@@ -53,25 +53,29 @@ export class DevicesTableComponent extends ExternalDevicesConfigurationDirective
             ExternalDevicesService.enableDevice(deviceData.id).subscribe((response) => {
                 this.waitingDeviceResponse = false;
                 this.showSpinner = false;
-                if (response.status !== ServerResponseStatus.OK)
+                if (response.status === ServerResponseStatus.OK) {
+                    this.refreshData();
+                } else {
                     this.displayMessage(
                         'externalDevicesConfiguration.error.errorWhenEnablingDevice',
                         response.statusMessage,
                         MessageLevel.ERROR
                     );
-                else this.refreshData();
+                }
             });
         } else {
             ExternalDevicesService.disableDevice(deviceData.id).subscribe((response) => {
                 this.waitingDeviceResponse = false;
                 this.showSpinner = false;
-                if (response.status !== ServerResponseStatus.OK)
+                if (response.status === ServerResponseStatus.OK) {
+                    this.refreshData();
+                } else {
                     this.displayMessage(
                         'externalDevicesConfiguration.error.errorWhenDisablingDevice',
                         response.statusMessage,
                         MessageLevel.ERROR
                     );
-                else this.refreshData();
+                }
             });
         }
     }

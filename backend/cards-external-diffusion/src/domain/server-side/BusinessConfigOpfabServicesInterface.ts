@@ -79,22 +79,14 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
     public async fetchTemplate(processId: string, emailTemplate: string, version: string): Promise<Function> {
         const key = processId + '.' + version;
         const cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
-        if (cachedMap != null) {
-            if (!cachedMap.has(emailTemplate)) {
-                await this.addTemplateToCache(processId, emailTemplate, version, key);
-            }
-        } else {
+
+        if (!cachedMap?.has(emailTemplate)) {
             await this.addTemplateToCache(processId, emailTemplate, version, key);
         }
 
         const compiler = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key)?.get(emailTemplate);
-        if (compiler != null) {
-            return compiler;
-        } else {
-            return () => {
-                return null;
-            };
-        }
+
+        return compiler ?? (() => null);
     }
 
     private async addTemplateToCache(
@@ -117,12 +109,12 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         try {
             await this.getToken();
             const response = await this.sendGetProcessConfigRequest(id, version);
-            if (response?.data != null) {
-                return new GetResponse(response.data, true);
-            } else {
+            if (response?.data == null) {
                 this.logger.warn('No process config defined in HTTP response');
                 return new GetResponse([], false);
             }
+
+            return new GetResponse(response.data, true);
         } catch (e) {
             this.logger.warn('Impossible to get process config ' + id, e);
             return new GetResponse([], false);
@@ -133,7 +125,7 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         try {
             await this.getToken();
             const response = await this.sendGetTemplateRequest(processId, templateName, version);
-            if (response?.data != null) {
+            if (response?.data) {
                 return new GetResponse(response.data, true);
             } else {
                 this.logger.warn('No template defined in HTTP response');

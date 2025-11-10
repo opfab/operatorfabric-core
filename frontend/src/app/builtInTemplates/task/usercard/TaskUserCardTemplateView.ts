@@ -64,33 +64,33 @@ export class TaskUserCardTemplateView {
     }
 
     public getFrequency(): string {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.rRule?.freq
-            : undefined;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? undefined
+            : opfab.currentCard.getCard()?.rRule?.freq;
     }
 
     public getWeekDay(): string[] {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.rRule?.byweekday
-            : undefined;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? undefined
+            : opfab.currentCard.getCard()?.rRule?.byweekday;
     }
 
     public getMonth(): number[] {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.rRule?.bymonth
-            : undefined;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? undefined
+            : opfab.currentCard.getCard()?.rRule?.bymonth;
     }
 
     public getMonthDay(): number[] {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.rRule?.bymonthday
-            : undefined;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? undefined
+            : opfab.currentCard.getCard()?.rRule?.bymonthday;
     }
 
     public getSetPos(): number[] {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? opfab.currentCard.getCard()?.rRule?.bysetpos
-            : undefined;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? undefined
+            : opfab.currentCard.getCard()?.rRule?.bysetpos;
     }
 
     public getTaskTitle(): string {
@@ -120,15 +120,15 @@ export class TaskUserCardTemplateView {
     }
 
     public getDurationInMinutes(default_value): number {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? (opfab.currentCard.getCard()?.rRule?.durationInMinutes ?? default_value)
-            : default_value;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? default_value
+            : (opfab.currentCard.getCard()?.rRule?.durationInMinutes ?? default_value);
     }
 
     public getMinutesForReminder(default_value): number {
-        return opfab.currentUserCard.getEditionMode() !== 'CREATE'
-            ? (opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value)
-            : default_value;
+        return opfab.currentUserCard.getEditionMode() === 'CREATE'
+            ? default_value
+            : (opfab.currentCard.getCard()?.data?.minutesForReminder ?? default_value);
     }
 
     public getByHourAndMinutes(): string {

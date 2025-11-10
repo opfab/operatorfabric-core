@@ -23,8 +23,11 @@ export class SenderCellRendererComponent implements ICellRendererAngularComp {
     sender: string;
 
     agInit(params: any): void {
-        if (!params.data.representative) this.sender = params.data.sender;
-        else this.sender = params.data.sender + ' (' + params.data.representative + ')';
+        if (params.data.representative) {
+            this.sender = params.data.sender + ' (' + params.data.representative + ')';
+        } else {
+            this.sender = params.data.sender;
+        }
     }
 
     // noinspection JSUnusedLocalSymbols
