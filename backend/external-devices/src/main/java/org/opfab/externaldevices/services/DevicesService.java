@@ -137,7 +137,7 @@ public class DevicesService {
     public void sendSignalToAllDevicesOfUser(String opFabSignalKey, String userLogin)
             throws ExternalDeviceException, ExternalDeviceConfigurationException, UnknownExternalDeviceException {
 
-        log.info("Send signals " + opFabSignalKey + " for user " + userLogin);
+        log.info("Send signals {} for user {}", opFabSignalKey, userLogin);
         List<ResolvedConfiguration> resolvedConfigurationList = configService
                 .getResolvedConfigurationList(opFabSignalKey, userLogin);
         String exceptionMessage = null;
@@ -171,17 +171,19 @@ public class DevicesService {
 
         String deviceId = resolvedConfiguration.getDeviceConfiguration().id;
         int signalId = resolvedConfiguration.getSignalId();
-        log.info("Try to send signal " + signalId + " for device " + deviceId);
+        log.info("Try to send signal {} for device {}", signalId, deviceId);
 
         Device device = devices.get(deviceId);
         if (device == null) {
-            log.warn("No device with id " + deviceId + " is enabled ");
+            log.warn("No device with id {} is enabled", deviceId);
             throw new ExternalDeviceAvailableException("No device with id " + deviceId + " is enabled ");
         }
 
         ExternalDeviceDriver driver = driversPool.get(getDriverIdFromDevice(device));
         if (driver == null) {
-            log.warn("No driver with id " + getDriverIdFromDevice(device) + " in the driver pool ");
+            if (log.isWarnEnabled()) {
+                log.warn("No driver with id {} in the driver pool ", getDriverIdFromDevice(device));
+            }
             throw new ExternalDeviceAvailableException(
                     "No driver with id " + getDriverIdFromDevice(device) + " in the driver pool ");
         }

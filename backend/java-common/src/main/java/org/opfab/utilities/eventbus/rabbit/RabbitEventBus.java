@@ -144,7 +144,7 @@ public class RabbitEventBus implements EventBus {
                     channelForListening.exchangeDeclare(eventKey, BuiltinExchangeType.FANOUT, true, false, null);
                 }
                 created = true;
-                log.info("Rabbit exchange created for " + eventKey);
+                log.info("Rabbit exchange created for {}", eventKey);
                 createdExchange.add(eventKey);
             } catch (Exception exc) {
                 log.error("Impossible to create rabbitMQ exchange " + eventKey, exc);
@@ -185,7 +185,7 @@ public class RabbitEventBus implements EventBus {
                 channelForListening.basicConsume(queueName, true, deliverCallback, consumerTag -> {
                 });
                 rabbitListeners.put(eventKey, newRabbitListener);
-                log.info("Rabbit listener create for " + eventKey);
+                log.info("Rabbit listener create for {}", eventKey);
             } catch (IOException exc) {
                 log.error("Impossible to add rabbit listener for event  " + eventKey, exc);
             }
@@ -205,7 +205,7 @@ public class RabbitEventBus implements EventBus {
                     channelForListening.queueBind(queueName, exchangeName, exchangeName);
                 }
                 created = true;
-                log.info("Queue created for " + queueName);
+                log.info("Queue created for {}", queueName);
             } catch (Exception exc) {
                 log.error("Impossible to create rabbitMQ queue " + queueName, exc);
                 if (retry == retries) {

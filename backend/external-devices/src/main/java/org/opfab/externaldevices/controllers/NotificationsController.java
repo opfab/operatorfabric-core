@@ -48,7 +48,8 @@ public class NotificationsController implements UserExtractor {
     public Void handleNotification(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestBody Notification notification) {
         User user = extractUserFromJwtToken(request).getUserData();
-        log.debug(RECEIVED_NOTIFICATION, notification.toString(), user.getLogin());
+        if (log.isDebugEnabled())
+            log.debug(RECEIVED_NOTIFICATION, notification, user.getLogin());
 
         try {
             devicesService.sendSignalToAllDevicesOfUser(notification.opfabSignalId, user.getLogin());

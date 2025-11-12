@@ -31,7 +31,8 @@ public class UserActionLogService {
     private UserActionLogRepository userActionLogRepository;
     private LastUserActionRepository lastUserActionRepository;
 
-    public UserActionLogService(UserActionLogRepository userActionLogRepository, LastUserActionRepository lastUserActionRepository) {
+    public UserActionLogService(UserActionLogRepository userActionLogRepository,
+            LastUserActionRepository lastUserActionRepository) {
         this.userActionLogRepository = userActionLogRepository;
         this.lastUserActionRepository = lastUserActionRepository;
     }
@@ -69,7 +70,7 @@ public class UserActionLogService {
     public void deleteLogsByExpirationDate(Integer daysStored) {
         Instant expirationDate = Instant.now().minus(daysStored, ChronoUnit.DAYS);
         this.userActionLogRepository.deleteExpiredLogs(expirationDate);
-        log.info(String.format("User action logs older than %2d days have been deleted", daysStored));
+        log.info("User action logs older than {} days have been deleted", daysStored);
     }
 
 }

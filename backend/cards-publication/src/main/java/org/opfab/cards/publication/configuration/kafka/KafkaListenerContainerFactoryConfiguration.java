@@ -64,8 +64,8 @@ public class KafkaListenerContainerFactoryConfiguration {
         KafkaProperties.Listener listener = kafkaProperties.getListener();
         Integer concurrency = getConcurrency(listener);
         Long pollTimeOut = getPollTimeout(listener);
-        log.info("Concurrency: " + concurrency);
-        log.info("PollTimeout: " + pollTimeOut);
+        log.info("Concurrency:  {}", concurrency);
+        log.info("PollTimeout: {}", pollTimeOut);
         ConcurrentKafkaListenerContainerFactory<String, CardCommand> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setConcurrency(concurrency);
