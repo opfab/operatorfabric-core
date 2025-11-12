@@ -36,8 +36,10 @@ public class LoggingListener implements ModbusEventListener {
 
     @Override
     public void onWriteToSingleHoldingRegister(int address, int value) {
-        log.info("onWriteToSingleHoldingRegister: register " + address + ", value " + value);
-        log.debug("Current state of holding registers: " + currentHoldingRegistersState());
+        log.info("onWriteToSingleHoldingRegister: register {} , value {}", address, value);
+        if (log.isDebugEnabled()) {
+            log.debug("Current state of holding registers:  {}", currentHoldingRegistersState());
+        }
     }
 
     @Override

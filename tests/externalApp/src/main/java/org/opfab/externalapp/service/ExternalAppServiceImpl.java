@@ -120,7 +120,7 @@ public class ExternalAppServiceImpl implements ExternalAppService {
         }
         if (token != null) {
             CardCreationReport result = cardClient.postCard(opfabPublicationUrl, token, card);
-            log.info("Card creation result : '" + result + "'");
+            log.info("Card creation result : '{}'", result);
         }
     }
 

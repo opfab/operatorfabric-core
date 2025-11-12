@@ -39,7 +39,7 @@ public class RemoteLogRoutesConfig implements UserExtractor {
     }
 
     private void logMessage(String login, String message) {
-        log.info(login + " - " + message);
+        log.info("{} - {}", login, message);
     }
 
 }

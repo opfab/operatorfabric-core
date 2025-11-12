@@ -24,7 +24,9 @@ public class HttpClientInterceptor
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
             throws IOException {
-        log.info("Request body: " + new String(body));
+        if (log.isInfoEnabled()) {
+            log.info("Request body: {}", new String(body));
+        }
         return execution.execute(request, body);
     }
 }
