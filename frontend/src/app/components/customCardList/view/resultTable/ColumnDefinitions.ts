@@ -113,7 +113,10 @@ function getDefaultColumnDefinition(column: Column): AgGridColDef {
         col.flex = column.flex;
     }
     if (column.showTooltips) {
-        col.tooltipValueGetter = (params: any) => params.value;
+        col.tooltipValueGetter = (params: any) => {
+            // in case the content of the tooltip is empty, we return undefined to avoid showing an empty tooltip
+            return params.value?.length > 0 || params.value?.htmlValue?.length > 0 ? params.value : undefined;
+        };
     }
     if (column.maxInputLength) {
         col.context.maxInputLength = column.maxInputLength;
