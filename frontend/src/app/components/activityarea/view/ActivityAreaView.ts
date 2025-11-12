@@ -128,23 +128,7 @@ export class ActivityAreaView {
                 });
                 connectedUsers.sort((obj1, obj2) => Utilities.compareObj(obj1.login, obj2.login));
                 connectedUsers.forEach((connectedUser) => {
-                    const entitiesConnected = connectedUser.entitiesConnected;
-                    if (entitiesConnected)
-                        entitiesConnected.forEach((entityId) => {
-                            this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
-                                cluster.lines.forEach((line) => {
-                                    if (line.entityId === entityId) {
-                                        if (connectedUser.firstName || connectedUser.lastName) {
-                                            const firstName = connectedUser.firstName || '';
-                                            const lastName = connectedUser.lastName || '';
-                                            line.connectedUsers.push((firstName + ' ' + lastName).trim());
-                                        } else {
-                                            line.connectedUsers.push(connectedUser.login);
-                                        }
-                                    }
-                                });
-                            });
-                        });
+                    this.addConnectedUserToClusters(connectedUser);
                 });
 
                 this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
@@ -155,6 +139,26 @@ export class ActivityAreaView {
                 return true;
             })
         );
+    }
+
+    private addConnectedUserToClusters(connectedUser: any) {
+        const entitiesConnected = connectedUser.entitiesConnected;
+        if (entitiesConnected)
+            entitiesConnected.forEach((entityId) => {
+                this.activityAreaPage.activityAreaClusters.forEach((cluster) => {
+                    cluster.lines.forEach((line) => {
+                        if (line.entityId === entityId) {
+                            if (connectedUser.firstName || connectedUser.lastName) {
+                                const firstName = connectedUser.firstName || '';
+                                const lastName = connectedUser.lastName || '';
+                                line.connectedUsers.push((firstName + ' ' + lastName).trim());
+                            } else {
+                                line.connectedUsers.push(connectedUser.login);
+                            }
+                        }
+                    });
+                });
+            });
     }
 
     private updateRegularyConnectedUsers() {

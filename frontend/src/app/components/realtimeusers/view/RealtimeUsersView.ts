@@ -22,6 +22,7 @@ import {
     RealtimePageLine
 } from './RealtimePage';
 import {Utilities} from '../../../utils/Utilities';
+import {ScreenColumn} from '@ofServices/config/model/RealTimeScreensConfig';
 
 export class RealtimeUsersView {
     private realtimePage: RealtimePage;
@@ -54,25 +55,7 @@ export class RealtimeUsersView {
                     screen.name = configScreen.screenName;
                     screen.onlyDisplayUsersInGroups = configScreen.onlyDisplayUsersInGroups ?? [];
                     configScreen.screenColumns.forEach((configColumn) => {
-                        // columns
-                        const screenColumn = new RealtimePageScreenColumn();
-                        configColumn.entitiesGroups.forEach((configEntityGroupId) => {
-                            // entitiesGroups
-                            const entityGroup = new RealtimePageEntityGroup();
-                            entityGroup.name = EntitiesService.getEntityName(configEntityGroupId).toUpperCase();
-                            EntitiesService.resolveChildEntities(configEntityGroupId).forEach((childEntity) => {
-                                // lines
-                                const line = new RealtimePageLine();
-                                line.entityId = childEntity.id;
-                                line.entityName = childEntity.name;
-                                line.connectedUsersCount = 0;
-                                line.connectedUsers = '';
-                                entityGroup.lines.push(line);
-                            });
-                            entityGroup.lines.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
-                            screenColumn.entityPages.push(entityGroup);
-                        });
-                        screen.columns.push(screenColumn);
+                        screen.columns.push(this.getScreenColumn(configColumn));
                     });
                     this.realtimeScreens.push(screen);
                 });
@@ -85,6 +68,26 @@ export class RealtimeUsersView {
             this.pageLoaded.next(this.realtimePage);
             this.pageLoaded.complete();
         });
+    }
+
+    private getScreenColumn(configColumn: ScreenColumn): RealtimePageScreenColumn {
+        const screenColumn = new RealtimePageScreenColumn();
+        configColumn.entitiesGroups.forEach((configEntityGroupId) => {
+            const entityGroup = new RealtimePageEntityGroup();
+            entityGroup.name = EntitiesService.getEntityName(configEntityGroupId).toUpperCase();
+            EntitiesService.resolveChildEntities(configEntityGroupId).forEach((childEntity) => {
+                // lines
+                const line = new RealtimePageLine();
+                line.entityId = childEntity.id;
+                line.entityName = childEntity.name;
+                line.connectedUsersCount = 0;
+                line.connectedUsers = '';
+                entityGroup.lines.push(line);
+            });
+            entityGroup.lines.sort((a, b) => Utilities.compareObj(a.entityName, b.entityName));
+            screenColumn.entityPages.push(entityGroup);
+        });
+        return screenColumn;
     }
 
     private updateConnectedUsers() {
