@@ -24,6 +24,7 @@ import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightca
 import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
 import {ConfigService} from '@ofServices/config/ConfigService';
+import {Card} from 'app/model/Card';
 
 export class Dashboard {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -110,22 +111,26 @@ export class Dashboard {
                 const cards = results[1].filter((card) => results[0].applyFilter(card));
                 this.loadProcesses();
                 cards.forEach((lightCard) => {
-                    const dashboardCard = new CardForDashboard();
-                    dashboardCard.title = lightCard.titleTranslated;
-                    dashboardCard.id = lightCard.id;
-                    dashboardCard.publishDate = format(lightCard.publishDate, 'dd/MM - HH:mm :');
-                    this.dashboardPage.processes.forEach((processContent) => {
-                        if (processContent.id === lightCard.process) {
-                            processContent.states.forEach((stateContent) => {
-                                if (stateContent.id === lightCard.state && !lightCard.hasBeenAcknowledged) {
-                                    this.updateCircle(stateContent, lightCard.severity, dashboardCard);
-                                }
-                            });
-                        }
-                    });
+                    this.processOneLightCard(lightCard);
                 });
                 this.dashboardSubject.next(this.dashboardPage);
             });
+    }
+
+    private processOneLightCard(lightCard: Card) {
+        const dashboardCard = new CardForDashboard();
+        dashboardCard.title = lightCard.titleTranslated;
+        dashboardCard.id = lightCard.id;
+        dashboardCard.publishDate = format(lightCard.publishDate, 'dd/MM - HH:mm :');
+        this.dashboardPage.processes.forEach((processContent) => {
+            if (processContent.id === lightCard.process) {
+                processContent.states.forEach((stateContent) => {
+                    if (stateContent.id === lightCard.state && !lightCard.hasBeenAcknowledged) {
+                        this.updateCircle(stateContent, lightCard.severity, dashboardCard);
+                    }
+                });
+            }
+        });
     }
 
     private updateCircle(stateContent: StateContent, severity: Severity, dashboardCard): any {

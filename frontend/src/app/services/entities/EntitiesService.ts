@@ -184,33 +184,38 @@ export class EntitiesService {
 
     public static resolveEntities(recipients: EntitiesTree[]): Entity[] {
         const resolvedEntities = [];
-        recipients.forEach((r) => {
-            if (r.levels) {
-                r.levels.forEach((l) => {
-                    EntitiesService.resolveChildEntitiesByLevel(r.id, l).forEach((entity) => {
-                        if (!resolvedEntities.some((o) => o.id === entity.id)) {
-                            resolvedEntities.push(entity);
-                        }
-                    });
-                });
-            } else if (!resolvedEntities.some((o) => o.id === r.id)) {
-                const entity = EntitiesService.getEntities().find((e) => e.id === r.id);
-                if (entity) resolvedEntities.push(entity);
-                else logger.info('Entity not found : ' + r.id);
-            }
+        recipients.forEach((recipient) => {
+            EntitiesService.resolveEntitiesForOneRecipient(recipient, resolvedEntities);
         });
         return resolvedEntities;
+    }
+
+    private static resolveEntitiesForOneRecipient(recipient: EntitiesTree, resolvedEntities: any[]) {
+        if (recipient.levels) {
+            recipient.levels?.forEach((level) => {
+                EntitiesService.resolveChildEntitiesByLevel(recipient.id, level).forEach((entity) => {
+                    if (!resolvedEntities.some((resolvedEntity) => resolvedEntity.id === entity.id)) {
+                        resolvedEntities.push(entity);
+                    }
+                });
+            });
+        } // add entity if not already in the list
+        else if (!resolvedEntities.some((entity) => entity.id === recipient.id)) {
+            const entity = EntitiesService.getEntities().find((entity) => entity.id === recipient.id);
+            if (entity) resolvedEntities.push(entity);
+            else logger.info('Entity not found : ' + recipient.id);
+        }
     }
 
     /** This method returns the list of entities related to a given parent entity by a specified level of relationship **/
     public static resolveChildEntitiesByLevel(parentId: string, level: number): Entity[] {
         const resolved = new Set<Entity>();
-        const parent = EntitiesService._entities.find((e) => e.id === parentId);
+        const parent = EntitiesService._entities.find((entity) => entity.id === parentId);
         if (parent) {
             if (level === 0) {
                 resolved.add(parent);
             } else if (level > 0) {
-                EntitiesService.findChildEntitiesByLevel(parent, 1, level).forEach((c) => resolved.add(c));
+                EntitiesService.findChildEntitiesByLevel(parent, 1, level).forEach((child) => resolved.add(child));
             }
         }
         return Array.from(resolved);
@@ -221,10 +226,12 @@ export class EntitiesService {
         const children = EntitiesService._entities.filter((child) => child.parents?.includes(parent.id));
 
         if (currentLevel === level) {
-            children.forEach((c) => resolved.add(c));
+            children.forEach((child) => resolved.add(child));
         } else if (currentLevel < level) {
-            children.forEach((c) => {
-                EntitiesService.findChildEntitiesByLevel(c, currentLevel + 1, level).forEach((n) => resolved.add(n));
+            children.forEach((child) => {
+                EntitiesService.findChildEntitiesByLevel(child, currentLevel + 1, level).forEach((n) =>
+                    resolved.add(n)
+                );
             });
         }
         return Array.from(resolved);
