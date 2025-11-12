@@ -133,7 +133,7 @@ sonar {
           '**/model/**',
           '**/rabbit/**',
           '**/src/test/**',
-          '**/test-utilities/**',
+          '**/test-utilities/**', 
           '**/repositories/**',
           'tests/**',
           'backend/**/tests/*',
@@ -146,7 +146,7 @@ sonar {
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,tests/**,backend/**/tests/*'
         
 
-        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4,e5'
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
@@ -167,6 +167,12 @@ sonar {
         // furthermore it is not possible to add NO SONAR directive in html files to suppress the issue
         property 'sonar.issue.ignore.multicriteria.e4.ruleKey', 'Web:S7930'
         property 'sonar.issue.ignore.multicriteria.e4.resourceKey', '**/*.html'
+        // Ignoring the rule "Use `for…of` instead of `.forEach(…)`" as this recommendation is questionable
+        // See https://community.sonarsource.com/t/use-for-of-instead-of-foreach-typescript-s7728/151980
+        // Furthermore, we use a lot of forEach in our code base and changing all these occurrences 
+        // would generate a lot of work with no real benefit
+        property 'sonar.issue.ignore.multicriteria.e5.ruleKey', 'typescript:S7728'
+        property 'sonar.issue.ignore.multicriteria.e5.resourceKey', '**/*'
     }
 }
 
