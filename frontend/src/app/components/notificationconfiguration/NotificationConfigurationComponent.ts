@@ -30,20 +30,20 @@ export class NotificationConfigurationComponent implements OnInit, AfterViewInit
     }
     ngOnInit() {
         this.notificationConfigurationView.setFunctionToSetProcessCheckBoxValue((processId, checked) => {
-            this.setCheckboxInputValue('opfab_notification_process_' + processId, checked);
+            this.setCheckboxInputValue(`opfab_notification_process_${processId}`, checked);
         });
         this.notificationConfigurationView.setFunctionToSetProcessStateCheckBoxValue((processId, stateId, checked) => {
-            this.setCheckboxInputValue('opfab_notification_state_' + processId + '\\.' + stateId, checked);
+            this.setCheckboxInputValue(String.raw`opfab_notification_state_${processId}\.${stateId}`, checked); // dot is to be escaped in id selector
         });
         this.notificationConfigurationView.setFunctionToSetProcessGroupCheckBoxValue((processGroupId, checked) => {
-            this.setCheckboxInputValue('opfab_notification_processgroup_' + processGroupId, checked);
+            this.setCheckboxInputValue(`opfab_notification_processgroup_${processGroupId}`, checked);
         });
         this.notificationConfigurationView.setFunctionToSetEmailEnabled(this.setEmailEnabled.bind(this));
         this.notificationConfigurationPage = this.notificationConfigurationView.getNotificationConfigurationPage();
     }
 
     private setCheckboxInputValue(elementId: string, checked: boolean) {
-        const element = this.rootElement.nativeElement.querySelector('#' + elementId);
+        const element = this.rootElement.nativeElement.querySelector(`#${elementId}`);
         if (element) {
             element.checked = checked;
         }
@@ -51,10 +51,10 @@ export class NotificationConfigurationComponent implements OnInit, AfterViewInit
 
     private setEmailEnabled(processId: string, stateId: string, emailEnabled: boolean) {
         const imageDiv = this.rootElement.nativeElement.querySelector(
-            '#opfab_email_notification_state_div_' + processId + '\\.' + stateId
+            String.raw`#opfab_email_notification_state_div_${processId}\.${stateId}` // dot is to be escaped in id selector
         );
         const imageTd = this.rootElement.nativeElement.querySelector(
-            '#opfab_email_notification_state_td_' + processId + '\\.' + stateId
+            String.raw`#opfab_email_notification_state_td_${processId}\.${stateId}` // dot is to be escaped in id selector
         );
         if (emailEnabled) {
             imageTd?.classList.remove('opfab-notificationconfiguration-slash');
