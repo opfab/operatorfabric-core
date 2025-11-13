@@ -32,7 +32,7 @@ export class RoleCellRendererComponent implements ICellRendererAngularComp {
     }
 
     agInit(params: any): void {
-        const currentEntity = this.entities.filter((entity) => entity.id === params.data.id)[0];
+        const currentEntity = this.entities.find((entity) => entity.id === params.data.id);
 
         if (currentEntity?.roles) {
             currentEntity.roles.forEach((role) => {
