@@ -9,8 +9,8 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.WebProperties;

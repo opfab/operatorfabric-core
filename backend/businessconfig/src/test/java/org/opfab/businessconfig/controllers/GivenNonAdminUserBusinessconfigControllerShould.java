@@ -15,7 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
 import org.opfab.businessconfig.services.ProcessesService;
-import org.opfab.springtools.configuration.test.WithMockOpFabUser;
+import org.opfab.configuration.test.WithMockOpFabUser;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

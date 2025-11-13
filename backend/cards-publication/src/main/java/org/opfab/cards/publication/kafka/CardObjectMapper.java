@@ -21,7 +21,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.model.Card;
-import org.opfab.springtools.json.InstantModule;
+import org.opfab.json.InstantModule;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;

@@ -11,7 +11,7 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.FilterModel;
 import org.opfab.cards.consultation.model.PublisherTypeEnum;
-import org.opfab.springtools.configuration.mongo.PaginationUtils;
+import org.opfab.configuration.mongo.PaginationUtils;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.PermissionEnum;
 import org.opfab.common.users.RightEnum;

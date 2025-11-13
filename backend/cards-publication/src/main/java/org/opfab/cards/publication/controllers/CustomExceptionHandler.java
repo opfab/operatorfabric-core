@@ -9,8 +9,8 @@
 
 package org.opfab.cards.publication.controllers;
 
-import org.opfab.springtools.OpfabCustomExceptionHandler;
-import org.opfab.springtools.error.model.ApiError;
+import org.opfab.error.OpfabCustomExceptionHandler;
+import org.opfab.error.model.ApiError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

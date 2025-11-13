@@ -15,8 +15,8 @@ import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.ProcessRepository;
 import org.opfab.common.businessconfig.Process;
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;

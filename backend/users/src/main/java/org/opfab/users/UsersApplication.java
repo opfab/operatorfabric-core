@@ -18,7 +18,7 @@ import org.opfab.users.mongo.repositories.PerimeterRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
-import org.opfab.springtools.configuration.mongo.MongoConfiguration;
+import org.opfab.configuration.mongo.MongoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

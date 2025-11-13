@@ -9,9 +9,9 @@
 
 package org.opfab.externaldevices;
 
-import org.opfab.springtools.configuration.mongo.MongoConfiguration;
-import org.opfab.springtools.configuration.oauth.JwtConfiguration;
-import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
+import org.opfab.configuration.mongo.MongoConfiguration;
+import org.opfab.configuration.oauth.JwtConfiguration;
+import org.opfab.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

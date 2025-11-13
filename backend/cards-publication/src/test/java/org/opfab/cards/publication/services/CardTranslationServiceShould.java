@@ -15,7 +15,7 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.mocks.I18NRepositoryMock;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiErrorException;
 
 import java.time.Instant;
 import java.util.HashMap;

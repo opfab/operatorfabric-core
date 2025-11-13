@@ -12,7 +12,7 @@
 package org.opfab.cards.consultation.configuration.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.opfab.springtools.json.InstantModule;
+import org.opfab.json.InstantModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;

@@ -9,7 +9,7 @@
 
 package org.opfab.users.controllers;
 
-import org.opfab.springtools.configuration.mongo.PaginationUtils;
+import org.opfab.configuration.mongo.PaginationUtils;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.useractiontracing.model.UserActionLog;
 import org.opfab.users.model.UserActionLogPage;

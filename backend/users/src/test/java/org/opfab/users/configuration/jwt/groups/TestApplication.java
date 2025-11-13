@@ -9,7 +9,7 @@
 
 package org.opfab.users.configuration.jwt.groups;
 
-import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.configuration.oauth.jwt.JwtProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

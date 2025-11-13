@@ -9,8 +9,8 @@
 
 package org.opfab.businessconfig.controllers;
 
-import org.opfab.springtools.OpfabCustomExceptionHandler;
-import org.opfab.springtools.error.model.ApiError;
+import org.opfab.error.OpfabCustomExceptionHandler;
+import org.opfab.error.model.ApiError;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

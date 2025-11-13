@@ -9,7 +9,7 @@
 
 package org.opfab.users.configuration.jwt;
 
-import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.configuration.oauth.jwt.JwtProperties;
 import org.opfab.users.configuration.jwt.groups.GroupsProperties;
 import org.opfab.users.configuration.jwt.groups.GroupsUtils;
 import org.opfab.users.mongo.repositories.MongoUserRepository;

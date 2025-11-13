@@ -9,7 +9,7 @@
 
 package org.opfab.businessconfig.configuration.oauth2;
 
-import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 
 import org.opfab.common.users.CurrentUserWithPerimeters;
 

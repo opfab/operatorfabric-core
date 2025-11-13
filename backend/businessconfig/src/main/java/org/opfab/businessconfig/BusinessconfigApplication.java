@@ -9,8 +9,8 @@
 
 package org.opfab.businessconfig;
 
-import org.opfab.springtools.configuration.oauth.JwtConfiguration;
-import org.opfab.springtools.configuration.oauth.UserServiceCacheImpl;
+import org.opfab.configuration.oauth.JwtConfiguration;
+import org.opfab.configuration.oauth.UserServiceCacheImpl;
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;

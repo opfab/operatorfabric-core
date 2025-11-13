@@ -18,8 +18,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticated;
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
+import static org.opfab.configuration.oauth.OpfabAuthorizationManager.authenticated;
+import static org.opfab.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
 
 /**
  * OAuth 2 http authentication configuration and access rules

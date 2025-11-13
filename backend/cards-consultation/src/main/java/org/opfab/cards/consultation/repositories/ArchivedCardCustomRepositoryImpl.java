@@ -11,7 +11,7 @@ package org.opfab.cards.consultation.repositories;
 
 import org.opfab.cards.consultation.model.*;
 import org.opfab.cards.consultation.model.ArchivedCard;
-import org.opfab.springtools.configuration.mongo.PaginationUtils;
+import org.opfab.configuration.mongo.PaginationUtils;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.PermissionEnum;
 import org.springframework.data.domain.*;
