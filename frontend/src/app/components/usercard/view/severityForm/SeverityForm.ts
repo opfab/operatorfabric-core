@@ -23,7 +23,11 @@ export class SeverityForm {
         const state = ProcessesService.getProcess(processId).states.get(stateId);
         if (state) {
             this.severityVisible = state.userCard?.severityVisible ?? true;
-            this.userCardUIControl.setInputVisibility(InputFieldName.Severity, this.severityVisible);
+            if (this.severityVisible) {
+                this.userCardUIControl.showInput(InputFieldName.Severity);
+            } else {
+                this.userCardUIControl.hideInput(InputFieldName.Severity);
+            }
         }
         this.selectedSeverity = card?.severity ?? UserCardTemplateGateway.getInitialSeverity() ?? Severity.ALARM;
         this.userCardUIControl.setSeverity(this.selectedSeverity);

@@ -62,13 +62,13 @@ export class ProcessStatesForm {
             }
         }
         if (this.processGroups.length === 1) {
-            this.userCardUIControl.setInputVisibility(InputFieldName.ProcessGroup, false);
+            this.userCardUIControl.hideInput(InputFieldName.ProcessGroup);
         } else {
             this.userCardUIControl.setProcessGroupList(
                 this.processGroups.map(({id, label}) => ({id, label})),
                 selected
             );
-            this.userCardUIControl.setInputVisibility(InputFieldName.ProcessGroup, true);
+            this.userCardUIControl.showInput(InputFieldName.ProcessGroup);
         }
         this.userClickOnProcessGroup(selected);
         if (card) this.userCardUIControl.lockProcessAndProcessGroupSelection(true);
@@ -154,7 +154,7 @@ export class ProcessStatesForm {
                 this.currentProcessList.map(({id, label}) => ({id, label})),
                 selected
             );
-            this.userCardUIControl.setInputVisibility(InputFieldName.Process, true);
+            this.userCardUIControl.showInput(InputFieldName.Process);
 
             this.userClickOnProcess(selected);
         }
@@ -167,13 +167,13 @@ export class ProcessStatesForm {
             const states = newProcess.states;
             const selected = this.currentCard?.state ?? states[0].id;
             if (states.length === 1) {
-                this.userCardUIControl.setInputVisibility(InputFieldName.State, false);
+                this.userCardUIControl.hideInput(InputFieldName.State);
             } else {
                 this.userCardUIControl.setStatesList(
                     states.map(({id, label}) => ({id, label})),
                     selected
                 );
-                this.userCardUIControl.setInputVisibility(InputFieldName.State, true);
+                this.userCardUIControl.showInput(InputFieldName.State);
             }
             this.selectedStateId = selected;
         }

@@ -212,9 +212,11 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
     public setUserNotAllowedToSendCard(): void {
         this.userAllowedToSendCard = false;
     }
-    public setInputVisibility(inputName: InputFieldName, visible: boolean): void {
-        if (visible) document.getElementById('opfab-usercard-input-' + inputName).removeAttribute('hidden');
-        else document.getElementById('opfab-usercard-input-' + inputName).setAttribute('hidden', '');
+    public showInput(inputName: InputFieldName): void {
+        document.getElementById('opfab-usercard-input-' + inputName).removeAttribute('hidden');
+    }
+    public hideInput(inputName: InputFieldName): void {
+        document.getElementById('opfab-usercard-input-' + inputName).setAttribute('hidden', '');
     }
     public setSeverity(severity: Severity): void {
         this.userCardForm.get('severity').setValue(severity);

@@ -146,7 +146,10 @@ export class ApplicationLoader {
 
     private setLoggerConfiguration() {
         ConfigService.getConfigValueAsObservable('settings.remoteLoggingEnabled', false).subscribe(
-            (remoteLoggingEnabled) => RemoteLoggerService.setRemoteLoggerActive(remoteLoggingEnabled)
+            (remoteLoggingEnabled) => {
+                if (remoteLoggingEnabled) RemoteLoggerService.enableRemoteLogger();
+                else RemoteLoggerService.disableRemoteLogger();
+            }
         );
     }
 

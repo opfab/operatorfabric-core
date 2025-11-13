@@ -24,19 +24,19 @@ export class RemoteLoggerService {
         if (RemoteLoggerService.isActive) setTimeout(() => this.regularlyFlush(), 5000);
     }
 
-    public static setRemoteLoggerActive(active: boolean): void {
-        if (active) {
-            if (!RemoteLoggerService.isActive) {
-                RemoteLoggerService.isActive = true;
-                RemoteLoggerService.regularlyFlush();
-                RemoteLoggerService.postLog(
-                    'Remote log activated - ' + packageInfo.opfabVersion + ' - ' + globalThis.navigator.userAgent
-                );
-            }
-        } else {
-            RemoteLoggerService.postLog('Remote log deactivated');
-            RemoteLoggerService.isActive = false;
+    public static enableRemoteLogger(): void {
+        if (!RemoteLoggerService.isActive) {
+            RemoteLoggerService.isActive = true;
+            RemoteLoggerService.regularlyFlush();
+            RemoteLoggerService.postLog(
+                'Remote log activated - ' + packageInfo.opfabVersion + ' - ' + globalThis.navigator.userAgent
+            );
         }
+    }
+
+    public static disableRemoteLogger(): void {
+        RemoteLoggerService.postLog('Remote log deactivated');
+        RemoteLoggerService.isActive = false;
     }
 
     public static postLog(logLine: string): void {

@@ -36,7 +36,11 @@ export class PublisherForm {
             this.publisherVisible = state.userCard?.publisherVisible ?? true;
         }
         const isPublisherVisible = entitiesAllowedToSendCard.length > 1 && this.publisherVisible;
-        this.userCardUIControl.setInputVisibility(InputFieldName.Publisher, isPublisherVisible);
+        if (isPublisherVisible) {
+            this.userCardUIControl.showInput(InputFieldName.Publisher);
+        } else {
+            this.userCardUIControl.hideInput(InputFieldName.Publisher);
+        }
 
         const publishers = this.buildPublisherMultiselectList(entitiesAllowedToSendCard);
         const initialSelectedPublisher = this.getInitialSelectedPublisher(publishers, card);

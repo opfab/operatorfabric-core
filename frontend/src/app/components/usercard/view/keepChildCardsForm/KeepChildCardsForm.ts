@@ -29,15 +29,16 @@ export class KeepChildCardsForm {
 
         if (state?.response) {
             this.keepChildCardsVisible = state.userCard?.keepChildCardsVisible ?? false;
-            this.userCardUIControl.setInputVisibility(
-                InputFieldName.KeepChildCards,
-                this.keepChildCardsVisible && editionMode === EditionMode.EDITION
-            );
+            if (this.keepChildCardsVisible && editionMode === EditionMode.EDITION) {
+                this.userCardUIControl.showInput(InputFieldName.KeepChildCards);
+            } else {
+                this.userCardUIControl.hideInput(InputFieldName.KeepChildCards);
+            }
             const cardKeepChildCards = card?.actions?.includes(CardAction.KEEP_CHILD_CARDS);
             this.keepChildCards = cardKeepChildCards ?? UserCardTemplateGateway.getInitialKeepChildCards() ?? true;
             this.userCardUIControl.setKeepChildCards(this.keepChildCards);
         } else {
-            this.userCardUIControl.setInputVisibility(InputFieldName.KeepChildCards, false);
+            this.userCardUIControl.hideInput(InputFieldName.KeepChildCards);
         }
     }
 

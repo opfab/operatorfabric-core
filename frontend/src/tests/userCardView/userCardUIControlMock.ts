@@ -52,6 +52,9 @@ export class UserCardUIControlMock implements UserCardUIControl {
         this.template = undefined;
         this.userNotAllowedToSendCard = false;
     }
+    hideInput(inputName: InputFieldName): void {
+        this.inputVisibility_FctCalls[inputName] = false;
+    }
     lockProcessAndProcessGroupSelection(lock: boolean): void {
         this.processAndProcessGroupLocked = lock;
     }
@@ -64,13 +67,9 @@ export class UserCardUIControlMock implements UserCardUIControl {
     setFunctionToRenderTemplate(fct: (html: string) => Promise<void>) {
         this.fctToRenderTemplate = fct;
     }
-    setInputVisibility(inputName: InputFieldName, visible: boolean): void {
-        this.inputVisibility_FctCalls[inputName] = visible;
-    }
     setLoadingTemplateInProgress(loading: boolean) {
         // implementation not needed for tests
     }
-
     setProcessGroupList(processGroups: MultiselectItem[], selected: string) {
         this.processGroups = processGroups;
         this.selectedProcessGroup = selected;
@@ -107,5 +106,8 @@ export class UserCardUIControlMock implements UserCardUIControl {
     }
     setUserNotAllowedToSendCard(): void {
         this.userNotAllowedToSendCard = true;
+    }
+    showInput(inputName: InputFieldName): void {
+        this.inputVisibility_FctCalls[inputName] = true;
     }
 }

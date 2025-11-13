@@ -35,10 +35,10 @@ export class MultiselectItem {
 }
 
 export interface UserCardUIControl {
+    hideInput(inputName: InputFieldName);
     lockProcessAndProcessGroupSelection(lock: boolean);
     renderTemplate(html: string);
     setDate(inputName: InputFieldName, value: number);
-    setInputVisibility(inputName: InputFieldName, visible: boolean);
     setLoadingTemplateInProgress(loading: boolean);
     setPublisherList(publishers: MultiselectItem[], selected: string);
     setProcessGroupList(processGroups: MultiselectItem[], selected: string);
@@ -51,4 +51,5 @@ export interface UserCardUIControl {
     setKeepChildCards(keepChildCards: boolean);
     setStatesList(states: MultiselectItem[], selected: string);
     setUserNotAllowedToSendCard();
+    showInput(inputName: InputFieldName);
 }
