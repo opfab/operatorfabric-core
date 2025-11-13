@@ -96,7 +96,7 @@ describe('Question UserCard template', () => {
         const view = new QuestionUserCardTemplateView();
         const quillEditor = new QuillEditorMock();
         quillEditor.setContents(
-            '{"ops":[{"insert":"Question\\n"},{"attributes":{"bold":true},"insert":"first line in bold"},{"insert":"\\n"},{"attributes":{"color":"#e60000"},"insert":"second line red"},{"insert":"\\n"}]}'
+            String.raw`{"ops":[{"insert":"Question\n"},{"attributes":{"bold":true},"insert":"first line in bold"},{"insert":"\n"},{"attributes":{"color":"#e60000"},"insert":"second line red"},{"insert":"\n"}]}`
         );
         const title = '';
 

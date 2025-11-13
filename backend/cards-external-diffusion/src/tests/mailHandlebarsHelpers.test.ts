@@ -17,8 +17,7 @@ describe('Handlebars Services', () => {
 
     describe('#executeTemplate', () => {
         it('deltaToHtml helper', async function () {
-            const richMessage =
-                '{\\"ops\\":[{\\"attributes\\":{\\"bold\\":true},\\"insert\\":\\"test\\"},{\\"insert\\":\\"\\n\\"}]}';
+            const richMessage = String.raw`{\"ops\":[{\"attributes\":{\"bold\":true},\"insert\":\"test\"},{\"insert\":\"\n\"}]}`;
             const template = `{{{ deltaToHtml "${richMessage}" }}}`;
 
             const templateCompiler = Handlebars.compile(template);
