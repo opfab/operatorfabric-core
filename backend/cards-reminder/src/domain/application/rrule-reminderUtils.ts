@@ -14,10 +14,7 @@ const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
     let nextTime = -1;
-
-    if (startingDate == null) {
-        startingDate = Date.now();
-    }
+    startingDate ??= Date.now();
     if (card.timeSpans != null && card.timeSpans.length > 0) nextTime = -1;
     else if (startingDate > card.startDate) {
         nextTime = getNextDateTimeFromRRule(startingDate, card);
