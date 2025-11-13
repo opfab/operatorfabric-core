@@ -63,7 +63,7 @@ export function severityOrdinal(severity: Severity) {
     return result;
 }
 
-export function readOrdinal(flag: boolean) {
+export function readOrdinal(flag: boolean | undefined) {
     return flag ? 1 : 0;
 }
 

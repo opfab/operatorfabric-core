@@ -400,8 +400,12 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
         }
     }
 
+    // Exclude sonar rule S2301: Selector parameter types are acceptable here as there are two boolean parameters
+    // if we want to fix the issue we will have to cover all 4 states of acknowledgment filter
+    // and so we will need 4 methods or a more complex structure
     private getAckPreference(ack: boolean, notAck: boolean): string {
-        if (ack && notAck) return 'all';
+        // prettier-ignore
+        if (ack && notAck) return 'all'; // NOSONAR
         else if (!ack && !notAck) return 'none';
         else return ack ? 'ack' : 'notack';
     }

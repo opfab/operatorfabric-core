@@ -69,7 +69,11 @@ export class DatesForm {
         fields.forEach((field) => {
             const visibilityInConfiguration = state.userCard?.[`${field}Visible`];
             this[`${field}Visible`] = visibilityInConfiguration ?? defaultVisibility;
-            this.userCardUIControl.setInputVisibility(field, this[`${field}Visible`]);
+            if (this[`${field}Visible`]) {
+                this.userCardUIControl.showInput(field);
+            } else {
+                this.userCardUIControl.hideInput(field);
+            }
         });
     }
 

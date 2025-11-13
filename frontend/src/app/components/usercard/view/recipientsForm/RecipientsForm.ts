@@ -116,12 +116,17 @@ export class RecipientsForm {
         const state = ProcessesService.getProcess(processId).states.get(stateId);
         if (state) {
             this.recipientVisible = state.userCard?.recipientVisible ?? true;
-            this.userCardUIControl.setInputVisibility(InputFieldName.Recipients, this.recipientVisible);
+            if (this.recipientVisible) {
+                this.userCardUIControl.showInput(InputFieldName.Recipients);
+            } else {
+                this.userCardUIControl.hideInput(InputFieldName.Recipients);
+            }
             this.recipientForInformationVisible = state.userCard?.recipientForInformationVisible ?? false;
-            this.userCardUIControl.setInputVisibility(
-                InputFieldName.RecipientsForInformation,
-                this.recipientForInformationVisible
-            );
+            if (this.recipientForInformationVisible) {
+                this.userCardUIControl.showInput(InputFieldName.RecipientsForInformation);
+            } else {
+                this.userCardUIControl.hideInput(InputFieldName.RecipientsForInformation);
+            }
         }
         this.loadRecipients(EntitiesService.getEntities());
         this.loadRecipientsForInformation(EntitiesService.getEntities());
