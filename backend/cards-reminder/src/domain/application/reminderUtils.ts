@@ -26,10 +26,7 @@ export function getNextTimeForRepeating(card: Card, startingDate?: number): numb
 }
 
 function getNextTimeForRepeatingFromTimeSpan(timeSpan: TimeSpan, startingDate?: number): number {
-    if (startingDate == null) {
-        startingDate = Date.now();
-    }
-
+    startingDate ??= Date.now();
     if (timeSpan.start < startingDate) {
         return -1;
     } else {

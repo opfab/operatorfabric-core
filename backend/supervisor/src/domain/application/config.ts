@@ -110,10 +110,9 @@ export default class Config {
         if (this.configFilePath != null) {
             const rawdata = fs.readFileSync(this.configFilePath);
             this.supervisorConfig = JSON.parse(rawdata.toString());
-            if (this.supervisorConfig.entitiesToSupervise == null) this.supervisorConfig.entitiesToSupervise = [];
-            if (this.supervisorConfig.processesToSupervise == null) this.supervisorConfig.processesToSupervise = [];
-            if (this.supervisorConfig.considerConnectedIfUserInGroups == null)
-                this.supervisorConfig.considerConnectedIfUserInGroups = [];
+            this.supervisorConfig.entitiesToSupervise ??= [];
+            this.supervisorConfig.processesToSupervise ??= [];
+            this.supervisorConfig.considerConnectedIfUserInGroups ??= [];
         }
     }
 
