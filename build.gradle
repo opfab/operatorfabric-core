@@ -146,7 +146,7 @@ sonar {
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,tests/**,backend/**/tests/*'
         
 
-        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4,e5,e6'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4,e5,e6,e7'
 
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
@@ -185,6 +185,13 @@ sonar {
         // The required effort outweighs the potential benefit, so we are choosing to ignore this rule.
         property 'sonar.issue.ignore.multicriteria.e6.ruleKey', 'Web:S6853'
         property 'sonar.issue.ignore.multicriteria.e6.resourceKey', '**/*'
+
+        // Ignoring the rule "Prefer top-level await over using a promise chain (typescript:S7785)"
+        // The use of await at the top level implies to modify ts configuration of our node project
+        // I did not succeed to find the correct configuration , so for now we disable the rule
+        property 'sonar.issue.ignore.multicriteria.e7.ruleKey', 'typescript:S7785'
+        property 'sonar.issue.ignore.multicriteria.e7.resourceKey', '**/*'
+
     }
 }
 
