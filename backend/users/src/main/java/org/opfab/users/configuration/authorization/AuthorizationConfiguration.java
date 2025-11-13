@@ -7,9 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
-package org.opfab.users.configuration.oauth2;
+package org.opfab.users.configuration.authorization;
 
 import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
 import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
@@ -29,17 +27,16 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-
 /**
  * OAuth 2 http authentication configuration and access rules
  *
  *
  */
 @Configuration
-public class WebSecurityConfiguration {
-
-    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
-    public static final String LOGGERS_PATH ="/actuator/loggers/**";
+@SuppressWarnings("java:S1075") // Suppress "URIs should not be hardcoded" as these URIs never change
+public class AuthorizationConfiguration {
+    public static final String PROMETHEUS_PATH = "/actuator/prometheus**";
+    public static final String LOGGERS_PATH = "/actuator/loggers/**";
 
     public static final String USER_PATH = "/users/{login}";
     public static final String USERS_SETTINGS_PATH = "/users/{login}/settings";
@@ -56,16 +53,14 @@ public class WebSecurityConfiguration {
     public static final String NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotified/**";
     public static final String EMAIL_NOTIFICATION_CONFIGURATION_PATH = "/notificationconfiguration/processstatenotifiedbymail/**";
 
-    
     public static final String CURRENTUSER_INTERNAL_PATH = "/internal/CurrentUserWithPerimeters";
     public static final String USER_WITH_PERIMETERS_PATH = "/UserWithPerimeters";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String VIEW_USER_ACTION_LOGS_ROLE = "VIEW_USER_ACTION_LOGS";
 
-    
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
+            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
         configureCommon(http);
         http
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
@@ -76,44 +71,43 @@ public class WebSecurityConfiguration {
         return http.build();
     }
 
-    /**This method handles the configuration to be shared with the test WebSecurityConfiguration class (access rules to be tested)
-     * */
+    /**
+     * This method handles the configuration to be shared with the test
+     * WebSecurityConfiguration class (access rules to be tested)
+     */
     public static void configureCommon(final HttpSecurity http) throws Exception {
         http
                 .sessionManagement(sessionManagement -> sessionManagement
-                    .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                )
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                    .requestMatchers(HttpMethod.GET,PROMETHEUS_PATH).permitAll()
-                    .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticated())
-                    .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqual(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, USERS) .access(authenticated())
-                    .requestMatchers(USERS_PATH).access(hasAnyRole(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, GROUPS).access(authenticated())
-                    .requestMatchers(GROUPS_PATH).access(hasAnyRole(ADMIN_ROLE))
-                    .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticated())
-                    .requestMatchers(ENTITIES_PATH).access(hasAnyRole(ADMIN_ROLE))
-                    .requestMatchers(PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
-                    .requestMatchers(USER_ACTION_LOGS).access(hasAnyRole(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
-                    .requestMatchers(LAST_USER_ACTION).access(hasAnyRole(ADMIN_ROLE,VIEW_USER_ACTION_LOGS_ROLE))
-                    .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
-                    .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
-                    .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers(NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
-                    .requestMatchers(EMAIL_NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
-                    .anyRequest().access(authenticated())
-                );
+                        .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
+                        .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticated())
+                        .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqual(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.PATCH, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.GET, USERS_PERIMETERS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.GET, USERS).access(authenticated())
+                        .requestMatchers(USERS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.GET, GROUPS).access(authenticated())
+                        .requestMatchers(GROUPS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.GET, ENTITIES_PATH).access(authenticated())
+                        .requestMatchers(ENTITIES_PATH).access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers(PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers(USER_ACTION_LOGS).access(hasAnyRole(ADMIN_ROLE, VIEW_USER_ACTION_LOGS_ROLE))
+                        .requestMatchers(LAST_USER_ACTION).access(hasAnyRole(ADMIN_ROLE, VIEW_USER_ACTION_LOGS_ROLE))
+                        .requestMatchers(USER_WITH_PERIMETERS_PATH).access(hasAnyRole(ADMIN_ROLE))
+                        .requestMatchers(CURRENTUSER_INTERNAL_PATH).authenticated()
+                        .requestMatchers(LOGGERS_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers(NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
+                        .requestMatchers(EMAIL_NOTIFICATION_CONFIGURATION_PATH).hasRole(ADMIN_ROLE)
+                        .anyRequest().access(authenticated()));
     }
-
 
     public static AuthorizationManager<RequestAuthorizationContext> authenticated() {
         return AuthenticatedAuthorizationManager.authenticated();
@@ -125,12 +119,12 @@ public class WebSecurityConfiguration {
 
     public static AuthorizationManager<RequestAuthorizationContext> hasRoleOrLogin(String role) {
         return AuthorizationManagers.allOf(
-                            AuthorizationManagers.anyOf(AuthorityAuthorizationManager.hasAnyRole(role), 
-                            new OpfabLoginAuthorizationManager()));
+                AuthorizationManagers.anyOf(AuthorityAuthorizationManager.hasAnyRole(role),
+                        new OpfabLoginAuthorizationManager()));
     }
 
     public static AuthorizationManager<RequestAuthorizationContext> hasRoleAndLoginNotEqual(String role) {
         return AuthorizationManagers.allOf(AuthorityAuthorizationManager.hasAnyRole(role),
-                            new OpfabLoginNotEqualAuthorizationManager());
+                new OpfabLoginNotEqualAuthorizationManager());
     }
 }

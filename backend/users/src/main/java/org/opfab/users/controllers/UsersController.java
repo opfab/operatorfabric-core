@@ -18,7 +18,7 @@ import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.configuration.jwt.groups.GroupsMode;
 import org.opfab.users.configuration.jwt.groups.GroupsProperties;
-import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.configuration.authorization.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
@@ -66,11 +66,11 @@ public class UsersController implements UserExtractor {
 
     @Autowired
     public UsersController(UserRepository userRepository, UserSettingsRepository userSettingsRepository,
-                           GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
-                           UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
-                           GroupsProperties groupsProperties,
-                           @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
-                           LastUserActionRepository lastUserActionRepository) {
+            GroupRepository groupRepository, EntityRepository entityRepository, PerimeterRepository perimeterRepository,
+            UserActionLogRepository userActionLogRepository, EventBus eventBus, JwtProperties jwtProperties,
+            GroupsProperties groupsProperties,
+            @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
+            LastUserActionRepository lastUserActionRepository) {
         this.jwtProperties = jwtProperties;
         this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
@@ -108,7 +108,8 @@ public class UsersController implements UserExtractor {
 
     @SuppressWarnings("java:S4684") // No security issue as each field of the object can be set via the API
     @PostMapping(produces = { "application/json" }, consumes = { "application/json" })
-    public User createUser(HttpServletRequest request, HttpServletResponse response, @Valid @RequestBody User userToCreate)
+    public User createUser(HttpServletRequest request, HttpServletResponse response,
+            @Valid @RequestBody User userToCreate)
             throws ApiErrorException {
 
         User user = this.extractUserFromJwtToken(request);
@@ -154,8 +155,7 @@ public class UsersController implements UserExtractor {
         if (result.isSuccess()) {
             logUserAction(user.getLogin(), user.getEntities(), "Delete user " + login);
             return null;
-        }
-        else {
+        } else {
             throw createExceptionFromOperationResult(result);
         }
     }

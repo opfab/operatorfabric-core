@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.configuration.oauth2;
+package org.opfab.users.configuration.jwt;
 
 import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.User;
@@ -18,10 +18,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import java.util.Collection;
 
 /**
- * Custom OperatorFabric Jwt Authentication Token whose custom principal is a
- * {@link User} object
- *
- *
+ * See README.md for documentation
  */
 public class OpFabJwtAuthenticationToken extends JwtAuthenticationToken {
 

@@ -15,7 +15,7 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
-import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.configuration.authorization.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -53,9 +53,9 @@ public class PerimetersController implements UserExtractor {
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public PerimetersController(PerimeterRepository perimeterRepository, GroupRepository groupRepository,
-                                UserRepository userRepository, EventBus eventBus,
-                                UserActionLogRepository userActionLogRepository,
-                                LastUserActionRepository lastUserActionRepository) {
+            UserRepository userRepository, EventBus eventBus,
+            UserActionLogRepository userActionLogRepository,
+            LastUserActionRepository lastUserActionRepository) {
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
         perimetersService = new PerimetersService(perimeterRepository, groupRepository, notificationService);
         this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);

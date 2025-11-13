@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.configuration.oauth2;
+package org.opfab.users.configuration.authorization;
 
 import java.util.function.Supplier;
 import org.springframework.security.authorization.AuthorizationDecision;

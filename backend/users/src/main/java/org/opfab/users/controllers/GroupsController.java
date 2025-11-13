@@ -15,7 +15,7 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
-import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.configuration.authorization.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.GroupRepository;
@@ -53,9 +53,9 @@ public class GroupsController implements UserExtractor {
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public GroupsController(GroupRepository groupRepository, UserRepository userRepository,
-                            PerimeterRepository perimeterRepository, EventBus eventBus,
-                            UserActionLogRepository userActionLogRepository,
-                            LastUserActionRepository lastUserActionRepository) {
+            PerimeterRepository perimeterRepository, EventBus eventBus,
+            UserActionLogRepository userActionLogRepository,
+            LastUserActionRepository lastUserActionRepository) {
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
         this.groupsService = new GroupsService(groupRepository, userRepository, perimeterRepository,
                 notificationService);
@@ -175,7 +175,7 @@ public class GroupsController implements UserExtractor {
         OperationResult<String> result = groupsService.updateGroupUsers(id, users);
         if (result.isSuccess()) {
             logUserAction(user.getLogin(), user.getEntities(),
-                     "Update group users for group " + id + " with users " + users );
+                    "Update group users for group " + id + " with users " + users);
             return null;
         } else {
             throw createExceptionFromOperationResult(result);
