@@ -21,7 +21,7 @@ import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
-import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

@@ -20,7 +20,7 @@ import org.opfab.cards.publication.model.Card;
 import org.opfab.cards.publication.model.I18n;
 import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.SeverityEnum;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiErrorException;
 import org.opfab.test.EventBusSpy;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.User;

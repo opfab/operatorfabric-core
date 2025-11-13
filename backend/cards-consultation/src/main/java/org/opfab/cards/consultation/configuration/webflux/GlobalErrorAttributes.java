@@ -11,8 +11,8 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;

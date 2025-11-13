@@ -20,11 +20,11 @@ import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.SecurityFilterChain;
-import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
-import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
+import org.opfab.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.configuration.oauth.CustomAuthenticationEntryPoint;
 
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
-import static org.opfab.springtools.configuration.oauth.OpfabAuthorizationManager.authenticated;
+import static org.opfab.configuration.oauth.OpfabAuthorizationManager.hasAnyRole;
+import static org.opfab.configuration.oauth.OpfabAuthorizationManager.authenticated;
 
 /**
  * OAuth 2 http authentication configuration and access rules

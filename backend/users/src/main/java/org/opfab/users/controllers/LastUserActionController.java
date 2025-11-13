@@ -9,8 +9,8 @@
 
 package org.opfab.users.controllers;
 
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.opfab.useractiontracing.model.LastUserAction;
 import org.opfab.useractiontracing.services.LastUserActionService;
 import org.springframework.http.HttpStatus;

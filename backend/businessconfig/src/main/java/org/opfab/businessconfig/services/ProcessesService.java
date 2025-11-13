@@ -19,8 +19,8 @@ import net.minidev.json.parser.ParseException;
 
 import org.opfab.businessconfig.model.*;
 import org.opfab.businessconfig.model.Process;
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.opfab.utilities.PathUtils;
 import org.opfab.utilities.StringUtils;
 import org.opfab.utilities.eventbus.EventBus;

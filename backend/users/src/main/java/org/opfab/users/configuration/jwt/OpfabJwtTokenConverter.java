@@ -19,7 +19,7 @@ import java.util.Set;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.PermissionEnum;
 import org.opfab.users.model.User;
-import org.opfab.springtools.configuration.oauth.jwt.JwtProperties;
+import org.opfab.configuration.oauth.jwt.JwtProperties;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

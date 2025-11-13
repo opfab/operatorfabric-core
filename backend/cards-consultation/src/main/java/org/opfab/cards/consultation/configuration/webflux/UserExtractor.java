@@ -10,7 +10,7 @@
 
 package org.opfab.cards.consultation.configuration.webflux;
 
-import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;

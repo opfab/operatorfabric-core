@@ -19,7 +19,7 @@ import org.opfab.cards.consultation.application.IntegrationTestApplication;
 import org.opfab.cards.consultation.configuration.webflux.ConnectionRoutesConfig;
 import org.opfab.cards.consultation.services.CardSubscription;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
-import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
+import org.opfab.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.User;
 import org.springframework.beans.factory.annotation.Autowired;

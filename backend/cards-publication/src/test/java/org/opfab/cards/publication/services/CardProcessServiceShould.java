@@ -24,7 +24,7 @@ import org.opfab.cards.publication.model.PublisherTypeEnum;
 import org.opfab.cards.publication.model.RRule;
 import org.opfab.cards.publication.model.SeverityEnum;
 import org.opfab.cards.publication.model.TimeSpan;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiErrorException;
 import org.opfab.test.EventBusSpy;
 import org.opfab.common.users.ComputedPerimeter;
 import org.opfab.common.users.CurrentUserWithPerimeters;

@@ -29,7 +29,7 @@ import org.opfab.cards.consultation.configuration.webflux.CardRoutesConfig;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardWithChildCards;
 import org.opfab.cards.consultation.repositories.CardRepository;
-import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
+import org.opfab.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.test.EmptyListComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;

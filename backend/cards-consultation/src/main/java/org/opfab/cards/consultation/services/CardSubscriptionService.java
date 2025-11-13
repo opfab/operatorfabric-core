@@ -15,7 +15,7 @@ import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
-import org.opfab.springtools.configuration.oauth.UserServiceCache;
+import org.opfab.configuration.oauth.UserServiceCache;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.utilities.eventbus.EventListener;

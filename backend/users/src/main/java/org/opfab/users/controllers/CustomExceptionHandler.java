@@ -9,8 +9,8 @@
 
 package org.opfab.users.controllers;
 
-import org.opfab.springtools.OpfabCustomExceptionHandler;
-import org.opfab.springtools.error.model.ApiError;
+import org.opfab.error.OpfabCustomExceptionHandler;
+import org.opfab.error.model.ApiError;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;

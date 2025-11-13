@@ -19,8 +19,8 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.firewall.StrictServerWebExchangeFirewall;
-import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
-import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
+import org.opfab.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.configuration.oauth.CustomAuthenticationEntryPoint;
 
 import reactor.core.publisher.Mono;
 

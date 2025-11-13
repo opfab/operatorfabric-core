@@ -18,7 +18,7 @@ import org.opfab.cards.consultation.configuration.webflux.ArchivedCardRoutesConf
 import org.opfab.cards.consultation.model.ArchivedCard;
 import org.opfab.cards.consultation.model.ArchivedCardWithChildCards;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
-import org.opfab.springtools.configuration.test.WithMockOpFabUserReactive;
+import org.opfab.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.test.EmptyListComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;

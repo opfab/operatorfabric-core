@@ -9,8 +9,8 @@
 
 package org.opfab.users.configuration.authorization;
 
-import org.opfab.springtools.configuration.oauth.CustomAccessDeniedHandler;
-import org.opfab.springtools.configuration.oauth.CustomAuthenticationEntryPoint;
+import org.opfab.configuration.oauth.CustomAccessDeniedHandler;
+import org.opfab.configuration.oauth.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;

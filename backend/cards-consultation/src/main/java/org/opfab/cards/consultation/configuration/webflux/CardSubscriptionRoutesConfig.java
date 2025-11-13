@@ -13,7 +13,7 @@ import org.opfab.cards.consultation.controllers.CardOperationsController;
 import org.opfab.cards.consultation.controllers.CardOperationsGetParameters;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
 import org.opfab.cards.consultation.services.CardSubscriptionService;
-import org.opfab.springtools.configuration.oauth.OpFabJwtAuthenticationToken;
+import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

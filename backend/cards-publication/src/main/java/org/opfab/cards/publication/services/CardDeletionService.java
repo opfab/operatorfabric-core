@@ -11,8 +11,8 @@ package org.opfab.cards.publication.services;
 
 import org.opfab.cards.publication.model.*;
 import org.opfab.cards.publication.repositories.CardRepository;
-import org.opfab.springtools.error.model.ApiError;
-import org.opfab.springtools.error.model.ApiErrorException;
+import org.opfab.error.model.ApiError;
+import org.opfab.error.model.ApiErrorException;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.PermissionEnum;
 import org.springframework.security.oauth2.jwt.Jwt;

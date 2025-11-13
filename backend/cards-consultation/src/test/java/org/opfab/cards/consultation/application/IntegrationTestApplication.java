@@ -16,8 +16,8 @@ import org.opfab.cards.consultation.configuration.ThreadPoolTaskSchedulerConfigu
 import org.opfab.cards.consultation.configuration.json.JacksonConfig;
 import org.opfab.cards.consultation.repositories.ArchivedCardRepository;
 import org.opfab.cards.consultation.repositories.CardRepository;
-import org.opfab.springtools.configuration.mongo.MongoConfiguration;
-import org.opfab.springtools.configuration.test.UserServiceCacheMock;
+import org.opfab.configuration.mongo.MongoConfiguration;
+import org.opfab.configuration.test.UserServiceCacheMock;
 import org.opfab.test.EventBusSpy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
