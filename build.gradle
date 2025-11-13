@@ -146,33 +146,45 @@ sonar {
         property 'sonar.cpd.exclusions','**/model/**/*,**/src/test/**/*,**/*.spec.ts,tests/**,backend/**/tests/*'
         
 
-        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4,e5'
+        property 'sonar.issue.ignore.multicriteria', 'e1,e2,e3,e4,e5,e6'
+
         // ignore rule S2004 "Refactor this code to not nest functions more than 4 levels deep" for test files
         // we need to create nested test and this rule is blocking us
         property 'sonar.issue.ignore.multicriteria.e1.ruleKey', 'typescript:S2004'
         property 'sonar.issue.ignore.multicriteria.e1.resourceKey', '**/*.spec.ts'
+        
         // Ignoring the rule: "Mouse events should have corresponding keyboard events"
         // Reason: There are alternative ways to ensure accessibility without providing a keyboard event for each mouse event.
         // For instance, a modal window with a close button that only responds to mouse events is not necessarily a problem,
         // provided that the modal can also be closed by pressing the Escape key.
         property 'sonar.issue.ignore.multicriteria.e2.ruleKey', 'Web:MouseEventWithoutKeyboardEquivalentCheck'
         property 'sonar.issue.ignore.multicriteria.e2.resourceKey', '**/*'
+
         // Ignoring the rule: "Change this code to not log user-controlled data" 
         // We are preventing log injection via specific appenders that remove new lines and carriage returns.
         property 'sonar.issue.ignore.multicriteria.e3.ruleKey', 'javasecurity:S5145'
         property 'sonar.issue.ignore.multicriteria.e3.resourceKey', '**/*'
+
         // Ignoring the rule "Duplicate id found" in HTML files as it is mainly false postive due to the fact that we
         // are using HTML angular templates that make conditional rendering of the elements
         // so in the majority of the cases the ids are unique at runtime
         // furthermore it is not possible to add NO SONAR directive in html files to suppress the issue
         property 'sonar.issue.ignore.multicriteria.e4.ruleKey', 'Web:S7930'
         property 'sonar.issue.ignore.multicriteria.e4.resourceKey', '**/*.html'
+
         // Ignoring the rule "Use `for…of` instead of `.forEach(…)`" as this recommendation is questionable
         // See https://community.sonarsource.com/t/use-for-of-instead-of-foreach-typescript-s7728/151980
         // Furthermore, we use a lot of forEach in our code base and changing all these occurrences 
         // would generate a lot of work with no real benefit
         property 'sonar.issue.ignore.multicriteria.e5.ruleKey', 'typescript:S7728'
         property 'sonar.issue.ignore.multicriteria.e5.resourceKey', '**/*'
+
+        // Ignoring the rule "Label elements should have a text label and an associated control (Web:S6853)"
+        // This rule does not apply to our project because our custom input components do not use a label as a direct ancestor of the input element.
+        // Addressing this would require a major redesign of all input components and force all OpFab users to update their templates.
+        // The required effort outweighs the potential benefit, so we are choosing to ignore this rule.
+        property 'sonar.issue.ignore.multicriteria.e6.ruleKey', 'Web:S6853'
+        property 'sonar.issue.ignore.multicriteria.e6.resourceKey', '**/*'
     }
 }
 
