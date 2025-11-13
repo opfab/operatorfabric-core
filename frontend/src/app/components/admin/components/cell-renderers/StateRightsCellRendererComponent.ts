@@ -37,9 +37,7 @@ export class StateRightsCellRendererComponent implements ICellRendererAngularCom
     agInit(params: any): void {
         const stateRightsValues = params.getValue();
 
-        const currentProcessDef = this.processesDefinition.filter(
-            (processDef) => processDef.id === params.data.process
-        )[0];
+        const currentProcessDef = this.processesDefinition.find((processDef) => processDef.id === params.data.process);
         if (currentProcessDef) {
             stateRightsValues.forEach((stateRight) => {
                 if (currentProcessDef.states.get(stateRight.state))

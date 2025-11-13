@@ -41,7 +41,7 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
     objectArrayToString(arr: any, renderer: string, data: any): string {
         if (renderer && renderer === 'stateRightsCellRenderer') {
             arr.map((str) => {
-                const currentProcessDef = this.processesDefinition.filter((processDef) => processDef.id === data.id)[0];
+                const currentProcessDef = this.processesDefinition.find((processDef) => processDef.id === data.id);
                 if (currentProcessDef) str.state = currentProcessDef.states.get(str.state).name;
                 return str;
             });
@@ -60,9 +60,9 @@ export class PerimetersTableComponent extends AdminTableDirective implements OnI
                     if (params.filterOption === 'blank') return params.data.stateRights.length === 0;
                     if (params.filterOption === 'notblank') return params.data.stateRights.length > 0;
 
-                    const currentProcessDef = this.processesDefinition.filter(
+                    const currentProcessDef = this.processesDefinition.find(
                         (processDef) => processDef.id === params.data.process
-                    )[0];
+                    );
                     const stateNames = [];
                     for (const stateRight of params.data.stateRights) {
                         if (currentProcessDef.states.get(stateRight.state)) {
