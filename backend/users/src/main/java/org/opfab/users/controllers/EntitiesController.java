@@ -15,7 +15,7 @@ import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
-import org.opfab.users.configuration.oauth2.UserExtractor;
+import org.opfab.users.configuration.authorization.UserExtractor;
 import org.opfab.users.model.*;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
@@ -52,8 +52,8 @@ public class EntitiesController implements UserExtractor {
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
     public EntitiesController(EntityRepository entityRepository, UserRepository userRepository,
-                              EventBus eventBus, UserActionLogRepository userActionLogRepository,
-                              LastUserActionRepository lastUserActionRepository) {
+            EventBus eventBus, UserActionLogRepository userActionLogRepository,
+            LastUserActionRepository lastUserActionRepository) {
         this.entitiesService = new EntitiesService(entityRepository, userRepository,
                 new NotificationService(userRepository, eventBus));
         this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);

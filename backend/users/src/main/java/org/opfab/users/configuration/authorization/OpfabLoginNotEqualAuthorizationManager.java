@@ -7,19 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-package org.opfab.users.configuration.oauth2;
+package org.opfab.users.configuration.authorization;
 
 import java.util.function.Supplier;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-
 public class OpfabLoginNotEqualAuthorizationManager extends OpfabLoginAuthorizationManager {
 
     @Override
     public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-        
+
         return new AuthorizationDecision(!checkUserLogin(supplier.get(), context));
     }
 
