@@ -16,6 +16,10 @@ import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTempl
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 
+function mockGetCard(message: string, title: string) {
+    CardTemplateGateway.setCard({data: {richMessage: message, messageTitle: title}} as Card);
+}
+
 describe('Message UserCard template', () => {
     let view: MessageUserCardTemplateView;
 
@@ -24,10 +28,6 @@ describe('Message UserCard template', () => {
         TranslationService.setTranslationLib(new TranslationLibMock());
         view = new MessageUserCardTemplateView();
     });
-
-    function mockGetCard(message: string, title: string) {
-        CardTemplateGateway.setCard({data: {richMessage: message, messageTitle: title}} as Card);
-    }
 
     it('GIVEN an existing card WHEN user edit card THEN message is actual message', () => {
         UserCardTemplateGateway.setEditionMode('EDITION');

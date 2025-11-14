@@ -24,58 +24,43 @@ import {Entity} from '@ofServices/entities/model/Entity';
 import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 
+function getTestProcesses(): Process[] {
+    const state1 = new State();
+    state1.acknowledgmentAllowed = AcknowledgmentAllowedEnum.ALWAYS;
+    state1.consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
+
+    const state2 = new State();
+    state2.acknowledgmentAllowed = AcknowledgmentAllowedEnum.ALWAYS;
+    state2.consideredAcknowledgedForUserWhen =
+        ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED;
+
+    const statesList = new Map();
+    statesList.set('state1', state1);
+    statesList.set('state2', state2);
+
+    const testProcess = new Process('testProcess', '1', null, null, statesList);
+    return [testProcess];
+}
+
+function isCardAcknowledge(cardTemplate: any): boolean {
+    return AcknowledgeStatus.isCardAcknowledgedForCurrentUser(
+        getOneCard({
+            process: 'testProcess',
+            processVersion: '1',
+            state: 'state2',
+            publisher: cardTemplate.publisher ?? 'test',
+            publisherType: 'ENTITY',
+            userRecipients: cardTemplate.userRecipients ?? [],
+            entityRecipients: cardTemplate.entityRecipients,
+            hasBeenAcknowledged: cardTemplate.hasBeenAcknowledged,
+            entitiesAcks: cardTemplate.entitiesAcks
+        })
+    );
+}
+
 describe('AcknowledgeStatus', () => {
     let userMemberOfEntity1: User, userMemberOfEntity1AndEntity3: User;
     let usersServerMock: UsersServerMock;
-
-    beforeAll(async () => {
-        await setEntities([
-            new Entity('ENTITY1', 'ENTITY 1', '', [], null, null),
-            new Entity('ENTITY2', 'ENTITY 2', '', [], null, ['PARENT']),
-            new Entity('ENTITY3', 'ENTITY 3', '', [], null, ['PARENT']),
-            new Entity('ENTITY_FR', 'ENTITY FR', '', [], null, null),
-            new Entity('PARENT', 'PARENT', '', [], null, null)
-        ]);
-        await setProcessConfiguration(getTestProcesses());
-
-        userMemberOfEntity1 = new User('userMemberOfEntity1', '', '', null, [], ['ENTITY1']);
-        userMemberOfEntity1AndEntity3 = new User(
-            'userMemberOfEntity1AndEntity3',
-            '',
-            null,
-            '',
-            [],
-            ['ENTITY1', 'ENTITY3', 'PARENT']
-        );
-    });
-
-    beforeEach(() => {
-        usersServerMock = new UsersServerMock();
-        usersServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, '')
-        );
-        UsersService.setUsersServer(usersServerMock);
-
-        UsersService.loadUserWithPerimetersData().subscribe();
-    });
-
-    function getTestProcesses(): Process[] {
-        const state1 = new State();
-        state1.acknowledgmentAllowed = AcknowledgmentAllowedEnum.ALWAYS;
-        state1.consideredAcknowledgedForUserWhen = ConsideredAcknowledgedForUserWhenEnum.USER_HAS_ACKNOWLEDGED;
-
-        const state2 = new State();
-        state2.acknowledgmentAllowed = AcknowledgmentAllowedEnum.ALWAYS;
-        state2.consideredAcknowledgedForUserWhen =
-            ConsideredAcknowledgedForUserWhenEnum.ALL_ENTITIES_OF_USER_HAVE_ACKNOWLEDGED;
-
-        const statesList = new Map();
-        statesList.set('state1', state1);
-        statesList.set('state2', state2);
-
-        const testProcess = new Process('testProcess', '1', null, null, statesList);
-        return [testProcess];
-    }
 
     function getUserMemberOfEntity1WithPerimeter(): UserWithPerimeters {
         return new UserWithPerimeters(userMemberOfEntity1, [
@@ -131,6 +116,37 @@ describe('AcknowledgeStatus', () => {
             [PermissionEnum.READONLY]
         );
     }
+    beforeAll(async () => {
+        await setEntities([
+            new Entity('ENTITY1', 'ENTITY 1', '', [], null, null),
+            new Entity('ENTITY2', 'ENTITY 2', '', [], null, ['PARENT']),
+            new Entity('ENTITY3', 'ENTITY 3', '', [], null, ['PARENT']),
+            new Entity('ENTITY_FR', 'ENTITY FR', '', [], null, null),
+            new Entity('PARENT', 'PARENT', '', [], null, null)
+        ]);
+        await setProcessConfiguration(getTestProcesses());
+
+        userMemberOfEntity1 = new User('userMemberOfEntity1', '', '', null, [], ['ENTITY1']);
+        userMemberOfEntity1AndEntity3 = new User(
+            'userMemberOfEntity1AndEntity3',
+            '',
+            null,
+            '',
+            [],
+            ['ENTITY1', 'ENTITY3', 'PARENT']
+        );
+    });
+
+    beforeEach(() => {
+        usersServerMock = new UsersServerMock();
+        usersServerMock.setResponseForCurrentUserWithPerimeter(
+            new ServerResponse(getUserMemberOfEntity1WithPerimeter(), ServerResponseStatus.OK, '')
+        );
+        UsersService.setUsersServer(usersServerMock);
+
+        UsersService.loadUserWithPerimetersData().subscribe();
+    });
+
     describe('ConsideredAcknowledgedForUserWhen of the state is UserHasAcknowledged', () => {
         it('the card is not acknowledged if no user has ack the card, no entity has ack the card', () => {
             const cardWithoutAcks = getOneCard({
@@ -188,21 +204,6 @@ describe('AcknowledgeStatus', () => {
         });
     });
     describe('ConsideredAcknowledgedForUserWhen of the state is AllEntitiesOfUserHaveAcknowledged', () => {
-        function isCardAcknowledge(cardTemplate: any) {
-            return AcknowledgeStatus.isCardAcknowledgedForCurrentUser(
-                getOneCard({
-                    process: 'testProcess',
-                    processVersion: '1',
-                    state: 'state2',
-                    publisher: cardTemplate.publisher ?? 'test',
-                    publisherType: 'ENTITY',
-                    userRecipients: cardTemplate.userRecipients ?? [],
-                    entityRecipients: cardTemplate.entityRecipients,
-                    hasBeenAcknowledged: cardTemplate.hasBeenAcknowledged,
-                    entitiesAcks: cardTemplate.entitiesAcks
-                })
-            );
-        }
         beforeEach(() => {
             usersServerMock.setResponseForCurrentUserWithPerimeter(
                 new ServerResponse(getUserMemberOfEntity1AndEntity3WithPerimeter(), ServerResponseStatus.OK, '')

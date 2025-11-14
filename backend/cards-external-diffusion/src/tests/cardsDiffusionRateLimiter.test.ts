@@ -10,15 +10,15 @@
 import 'jest';
 import CardsDiffusionRateLimiter from '../domain/application/cardsDiffusionRateLimiter';
 
+function setCurrentTime(dateTime: string): void {
+    jest.setSystemTime(new Date(dateTime));
+}
+
 describe('Cards external diffusion', function () {
     beforeEach(() => {
         jest.useFakeTimers();
         setCurrentTime('2017-01-01 01:00');
     });
-
-    function setCurrentTime(dateTime: string): void {
-        jest.setSystemTime(new Date(dateTime));
-    }
 
     it('Should not allow to send card when limit is reached for a destination', async function () {
         const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter().setLimitPeriodInSec(10).setSendRateLimit(2);

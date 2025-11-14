@@ -66,34 +66,34 @@ async function sendCard(card): Promise<void> {
     await rruleReminderService.onMessage(message);
 }
 
+function getTestCard(): any {
+    const startDate = new Date('2017-01-01 01:00').valueOf();
+    const rRule = new RRule(
+        Frequency.DAILY,
+        1,
+        1,
+        Day.MO,
+        [Day.MO, Day.TU, Day.WE, Day.TH, Day.FR, Day.SA, Day.SU],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        [12],
+        [23],
+        [],
+        [],
+        'Europe/Paris'
+    );
+    rRule.byhour = [2];
+    rRule.byminute = [10];
+
+    return {
+        uid: 'uid1',
+        id: 'id1',
+        secondsBeforeTimeSpanForReminder: 300,
+        rRule,
+        startDate
+    };
+}
+
 describe('Cards reminder with rrule structure', function () {
-    function getTestCard(): any {
-        const startDate = new Date('2017-01-01 01:00').valueOf();
-        const rRule = new RRule(
-            Frequency.DAILY,
-            1,
-            1,
-            Day.MO,
-            [Day.MO, Day.TU, Day.WE, Day.TH, Day.FR, Day.SA, Day.SU],
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            [12],
-            [23],
-            [],
-            [],
-            'Europe/Paris'
-        );
-        rRule.byhour = [2];
-        rRule.byminute = [10];
-
-        return {
-            uid: 'uid1',
-            id: 'id1',
-            secondsBeforeTimeSpanForReminder: 300,
-            rRule,
-            startDate
-        };
-    }
-
     beforeEach(() => {
         opfabServicesInterfaceStub.clean();
         rruleRemindDatabaseServiceStub.clean();

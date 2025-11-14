@@ -11,12 +11,12 @@ import {AboutView} from './AboutView';
 import packageInfo from '../../../../../../package.json';
 import {loadWebUIConf} from '@tests/helpers';
 
+async function loadApplicationConfig(applications: any) {
+    await loadWebUIConf({about: applications});
+}
+
 describe('About view ', () => {
     const opfab = {name: 'OperatorFabric', version: packageInfo.opfabVersion, rank: 0};
-
-    async function loadApplicationConfig(applications: any) {
-        await loadWebUIConf({about: applications});
-    }
 
     it('GIVEN an application list in web-ui.json WHEN getting about array THEN get an applications list by rank ', async () => {
         const applications = {

@@ -26,6 +26,27 @@ import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 
 declare const opfabStyle;
 
+function getNavbarNavigationBar(): NavbarMenuElement[] {
+    return new NavbarMenuView().getNavbarMenu().upperMenuElements;
+}
+
+async function stubMenuConfigLoading(menuConfig: any) {
+    const configServerMock = new ConfigServerMock();
+    configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConfig, ServerResponseStatus.OK, null));
+    ConfigService.setConfigServer(configServerMock);
+    await firstValueFrom(ConfigService.loadUiMenuConfig());
+}
+
+async function stubCurrentUserData(userGroups: string[], permissions: PermissionEnum[] = []) {
+    const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
+    const userWithPerimeters = new UserWithPerimeters(user, new Array(), permissions, new Map());
+    await setUserPerimeter(userWithPerimeters);
+}
+
+function getNavbarMenu(): NavbarMenu {
+    return new NavbarMenuView().getNavbarMenu();
+}
+
 describe('NavbarMenuView', () => {
     beforeEach(() => {
         TranslationService.setTranslationLib(new TranslationLibMock());
@@ -752,25 +773,4 @@ describe('NavbarMenuView', () => {
             navbarMenuView.destroy();
         });
     });
-
-    function getNavbarNavigationBar(): NavbarMenuElement[] {
-        return new NavbarMenuView().getNavbarMenu().upperMenuElements;
-    }
-
-    async function stubMenuConfigLoading(menuConfig: any) {
-        const configServerMock = new ConfigServerMock();
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(menuConfig, ServerResponseStatus.OK, null));
-        ConfigService.setConfigServer(configServerMock);
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-    }
-
-    async function stubCurrentUserData(userGroups: string[], permissions: PermissionEnum[] = []) {
-        const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const userWithPerimeters = new UserWithPerimeters(user, new Array(), permissions, new Map());
-        await setUserPerimeter(userWithPerimeters);
-    }
-
-    function getNavbarMenu(): NavbarMenu {
-        return new NavbarMenuView().getNavbarMenu();
-    }
 });

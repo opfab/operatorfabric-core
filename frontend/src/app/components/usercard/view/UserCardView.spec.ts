@@ -38,6 +38,22 @@ import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 declare const opfab: any;
 
+async function setCurrentUserConfiguration(
+    computedPerimeters: ComputedPerimeter[],
+    permissions: Array<PermissionEnum> = null
+): Promise<void> {
+    await setUserPerimeter({
+        computedPerimeters,
+        userData: {
+            login: 'test',
+            firstName: 'test',
+            lastName: 'test',
+            entities: ['ENTITY1', 'ENTITY2']
+        },
+        permissions: permissions
+    });
+}
+
 describe('UserCard view ', () => {
     let userCardView: UserCardView;
     let userCardUIControlMock: UserCardUIControlMock;
@@ -53,22 +69,6 @@ describe('UserCard view ', () => {
     function setCardDataResponse(cardData: CardWithChildCards) {
         cardsServerMock.setResponseFunctionForLoadCard(() => {
             return new ServerResponse(cardData, ServerResponseStatus.OK, '');
-        });
-    }
-
-    async function setCurrentUserConfiguration(
-        computedPerimeters: ComputedPerimeter[],
-        permissions: Array<PermissionEnum> = null
-    ): Promise<void> {
-        await setUserPerimeter({
-            computedPerimeters,
-            userData: {
-                login: 'test',
-                firstName: 'test',
-                lastName: 'test',
-                entities: ['ENTITY1', 'ENTITY2']
-            },
-            permissions: permissions
         });
     }
 

@@ -11,20 +11,21 @@
 import {Severity} from 'app/model/Severity';
 import {getSeveralLightCards} from '@tests/helpers';
 import {GroupedLightCardsService} from './GroupedLightCardsService';
+import {Card} from 'app/model/Card';
+
+function getCardWithTag(tags: string[]): Card[] {
+    return getSeveralLightCards(1, {
+        startDate: Date.now(),
+        endDate: null,
+        publishDate: Date.now(),
+        severity: Severity.ALARM,
+        hasBeenAcknowledged: false,
+        hasChildCardFromCurrentUserEntity: false,
+        tags: tags
+    });
+}
 
 describe('GroupedLightCardsService ', () => {
-    function getCardWithTag(tags: string[]) {
-        return getSeveralLightCards(1, {
-            startDate: Date.now(),
-            endDate: null,
-            publishDate: Date.now(),
-            severity: Severity.ALARM,
-            hasBeenAcknowledged: false,
-            hasChildCardFromCurrentUserEntity: false,
-            tags: tags
-        });
-    }
-
     describe('group cards', () => {
         it('no child cards', () => {
             const cards = getCardWithTag(['tag1']);

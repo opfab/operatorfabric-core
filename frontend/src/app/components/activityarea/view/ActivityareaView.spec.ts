@@ -25,6 +25,73 @@ import {Severity} from 'app/model/Severity';
 import {OpfabStore} from '../../../store/OpfabStore';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 
+async function mockEntitiesService() {
+    const entities: Entity[] = [
+        new Entity(
+            'CLUSTERING_ENTITY',
+            'CLUSTERING_ENTITY_NAME',
+            '',
+            [RoleEnum.CARD_SENDER, RoleEnum.ACTIVITY_AREA_GROUP],
+            [],
+            []
+        ),
+
+        new Entity(
+            'ENTITY1',
+            'ENTITY1_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['CLUSTERING_ENTITY']
+        ),
+        new Entity(
+            'ENTITY2',
+            'ENTITY2_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['CLUSTERING_ENTITY']
+        ),
+
+        new Entity(
+            'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE',
+            'ENTITY3_NAME',
+            '',
+            [RoleEnum.CARD_SENDER],
+            [],
+            ['CLUSTERING_ENTITY']
+        ),
+
+        new Entity(
+            'ENTITY_WITH_NO_CLUSTERING_PARENT',
+            'ENTITY4_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['ENTITY1']
+        ),
+
+        new Entity(
+            'ENTITY_WITH_NO_PARENT',
+            'ENTITY5_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            null
+        ),
+        new Entity('ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE', 'ENTITY6_NAME', '', [], [], []),
+        new Entity(
+            'ENTITY_WITH_TWO_PARENTS',
+            'ENTITY_WITH_TWO_PARENTS_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['CLUSTERING_ENTITY', 'ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE']
+        )
+    ];
+    await setEntities(entities);
+}
+
 describe('ActivityAreaView', () => {
     let usersServerMock: UsersServerMock;
     let settingsServerMock: UserSettingsServerMock;
@@ -57,73 +124,6 @@ describe('ActivityAreaView', () => {
         activityAreaView.setFunctionToSetClusterCheckBoxValue((clusterId: string, checked: boolean) => {
             clusterCheckboxActivated += 'cluster:' + clusterId + ',checked:' + checked + ';';
         });
-    }
-
-    async function mockEntitiesService() {
-        const entities: Entity[] = [
-            new Entity(
-                'CLUSTERING_ENTITY',
-                'CLUSTERING_ENTITY_NAME',
-                '',
-                [RoleEnum.CARD_SENDER, RoleEnum.ACTIVITY_AREA_GROUP],
-                [],
-                []
-            ),
-
-            new Entity(
-                'ENTITY1',
-                'ENTITY1_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['CLUSTERING_ENTITY']
-            ),
-            new Entity(
-                'ENTITY2',
-                'ENTITY2_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['CLUSTERING_ENTITY']
-            ),
-
-            new Entity(
-                'ENTITY_WITH_NO_ACTIVITY_AREA_ROLE',
-                'ENTITY3_NAME',
-                '',
-                [RoleEnum.CARD_SENDER],
-                [],
-                ['CLUSTERING_ENTITY']
-            ),
-
-            new Entity(
-                'ENTITY_WITH_NO_CLUSTERING_PARENT',
-                'ENTITY4_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['ENTITY1']
-            ),
-
-            new Entity(
-                'ENTITY_WITH_NO_PARENT',
-                'ENTITY5_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                null
-            ),
-            new Entity('ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE', 'ENTITY6_NAME', '', [], [], []),
-            new Entity(
-                'ENTITY_WITH_TWO_PARENTS',
-                'ENTITY_WITH_TWO_PARENTS_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['CLUSTERING_ENTITY', 'ENTITY_WITH_NO_PARENT_AND_NO_ACTIVITY_AREA_ROLE']
-            )
-        ];
-        await setEntities(entities);
     }
 
     function mockSettingsService() {

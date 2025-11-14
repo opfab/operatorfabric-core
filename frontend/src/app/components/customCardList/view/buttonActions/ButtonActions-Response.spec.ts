@@ -31,6 +31,97 @@ import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ButtonActions} from './ButtonActions';
 
+function getCustomScreenDefinitionExample(): CustomScreenDefinition {
+    return {
+        id: 'testId',
+        name: 'name',
+        processIds: [],
+        headerFilters: [],
+        results: {
+            columns: []
+        },
+        responseButtons: [
+            {
+                id: 'button1',
+                label: 'label1',
+                getUserResponses: (cards: any[], responsesData: Map<string, any>) => {
+                    const responseCards = [];
+                    cards.forEach((card: any) => {
+                        const userInputs = responsesData.get(card.id);
+                        let comment = '';
+                        if (userInputs) {
+                            comment = userInputs.comment ?? '';
+                        }
+                        responseCards.push({data: {parentCard: card.id, comment: comment}});
+                    });
+                    return {valid: true, errorMsg: '', responseCards: responseCards};
+                }
+            },
+            {
+                id: 'button2',
+                label: 'label2',
+                getUserResponses: (_cards: any) => {
+                    return {valid: false, errorMsg: 'Error test', responseCards: {}};
+                }
+            }
+        ]
+    };
+}
+
+async function configureUserPerimeter() {
+    await setUserPerimeter({
+        computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
+        userData: {
+            login: 'test',
+            firstName: 'firstName',
+            lastName: 'lastName',
+            entities: ['entity1']
+        }
+    });
+}
+
+async function configureEntities() {
+    await setEntities([
+        {
+            id: 'entity1',
+            name: 'entity1 name',
+            roles: [RoleEnum.CARD_SENDER]
+        }
+    ]);
+}
+
+async function configureProcesses() {
+    const myState = new State();
+    myState.response = {state: 'myState'};
+
+    const statesList = new Map();
+    statesList.set('myState', myState);
+
+    const process = [new Process('myProcess', '1', 'my process label', null, statesList)];
+    await setProcessConfiguration(process);
+}
+
+function sendTwoCards() {
+    const card = getOneLightCard({
+        publisher: 'entity0',
+        publisherType: 'ENTITY',
+        process: 'myProcess',
+        state: 'myState',
+        entitiesAllowedToRespond: ['entity1'],
+        id: 'id1'
+    });
+
+    const card2 = getOneLightCard({
+        publisher: 'entity0',
+        publisherType: 'ENTITY',
+        process: 'myProcess',
+        state: 'myState',
+        entitiesAllowedToRespond: ['entity1'],
+        id: 'id2'
+    });
+    sendLightCards([card, card2]);
+}
+
 describe('CustomCardListView - Button actions - Responses', () => {
     beforeAll(() => {
         mockTranslation();
@@ -43,43 +134,6 @@ describe('CustomCardListView - Button actions - Responses', () => {
         CustomScreenService.clearCustomScreenDefinitions();
     });
     const customScreenDefinition = getCustomScreenDefinitionExample();
-
-    function getCustomScreenDefinitionExample(): CustomScreenDefinition {
-        return {
-            id: 'testId',
-            name: 'name',
-            processIds: [],
-            headerFilters: [],
-            results: {
-                columns: []
-            },
-            responseButtons: [
-                {
-                    id: 'button1',
-                    label: 'label1',
-                    getUserResponses: (cards: any[], responsesData: Map<string, any>) => {
-                        const responseCards = [];
-                        cards.forEach((card: any) => {
-                            const userInputs = responsesData.get(card.id);
-                            let comment = '';
-                            if (userInputs) {
-                                comment = userInputs.comment ?? '';
-                            }
-                            responseCards.push({data: {parentCard: card.id, comment: comment}});
-                        });
-                        return {valid: true, errorMsg: '', responseCards: responseCards};
-                    }
-                },
-                {
-                    id: 'button2',
-                    label: 'label2',
-                    getUserResponses: (_cards: any) => {
-                        return {valid: false, errorMsg: 'Error test', responseCards: {}};
-                    }
-                }
-            ]
-        };
-    }
 
     describe('When get responses buttons', () => {
         it('should get button list', () => {
@@ -123,60 +177,6 @@ describe('CustomCardListView - Button actions - Responses', () => {
             await configureEntities();
             await configureUserPerimeter();
             sendTwoCards();
-
-            async function configureUserPerimeter() {
-                await setUserPerimeter({
-                    computedPerimeters: [new ComputedPerimeter('myProcess', 'myState', RightEnum.ReceiveAndWrite)],
-                    userData: {
-                        login: 'test',
-                        firstName: 'firstName',
-                        lastName: 'lastName',
-                        entities: ['entity1']
-                    }
-                });
-            }
-
-            async function configureEntities() {
-                await setEntities([
-                    {
-                        id: 'entity1',
-                        name: 'entity1 name',
-                        roles: [RoleEnum.CARD_SENDER]
-                    }
-                ]);
-            }
-
-            async function configureProcesses() {
-                const myState = new State();
-                myState.response = {state: 'myState'};
-
-                const statesList = new Map();
-                statesList.set('myState', myState);
-
-                const process = [new Process('myProcess', '1', 'my process label', null, statesList)];
-                await setProcessConfiguration(process);
-            }
-
-            function sendTwoCards() {
-                const card = getOneLightCard({
-                    publisher: 'entity0',
-                    publisherType: 'ENTITY',
-                    process: 'myProcess',
-                    state: 'myState',
-                    entitiesAllowedToRespond: ['entity1'],
-                    id: 'id1'
-                });
-
-                const card2 = getOneLightCard({
-                    publisher: 'entity0',
-                    publisherType: 'ENTITY',
-                    process: 'myProcess',
-                    state: 'myState',
-                    entitiesAllowedToRespond: ['entity1'],
-                    id: 'id2'
-                });
-                sendLightCards([card, card2]);
-            }
         });
         it('be send', async () => {
             const responseData = new Map<string, any>();

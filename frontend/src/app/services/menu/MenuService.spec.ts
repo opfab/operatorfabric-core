@@ -17,27 +17,27 @@ import {UsersService} from '../users/UsersService';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 
+async function setMenuConfig(config: any) {
+    const configServerMock = new ConfigServerMock();
+    configServerMock.setResponseForMenuConfiguration(new ServerResponse(config, ServerResponseStatus.OK, ''));
+    ConfigService.setConfigServer(configServerMock);
+    await firstValueFrom(ConfigService.loadUiMenuConfig());
+}
+
+async function setCurrentUser(userGroups: string[]) {
+    const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
+    const usersServerMock = new UsersServerMock();
+    usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
+    const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
+    const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
+    usersServerMock.setResponseForCurrentUserWithPerimeter(
+        new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
+    );
+    UsersService.setUsersServer(usersServerMock);
+    await firstValueFrom(UsersService.loadUserWithPerimetersData());
+}
+
 describe('MenuService', () => {
-    async function setMenuConfig(config: any) {
-        const configServerMock = new ConfigServerMock();
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(config, ServerResponseStatus.OK, ''));
-        ConfigService.setConfigServer(configServerMock);
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-    }
-
-    async function setCurrentUser(userGroups: string[]) {
-        const user = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const usersServerMock = new UsersServerMock();
-        usersServerMock.setResponseForUser(new ServerResponse(user, ServerResponseStatus.OK, null));
-        const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, userGroups, []);
-        const userWithPerimeters = new UserWithPerimeters(userForPerimeter, new Array(), null, new Map());
-        usersServerMock.setResponseForCurrentUserWithPerimeter(
-            new ServerResponse(userWithPerimeters, ServerResponseStatus.OK, null)
-        );
-        UsersService.setUsersServer(usersServerMock);
-        await firstValueFrom(UsersService.loadUserWithPerimetersData());
-    }
-
     describe('Night day mode menu', () => {
         it('night day mode menu is not visible if not define in ui-menu.json', async () => {
             await setMenuConfig({navigationBar: [], topRightMenus: []});
