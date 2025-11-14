@@ -17,17 +17,17 @@ import {EntityToSupervise} from '../domain/application/entityToSupervise';
 
 const logger = getLogger();
 
-describe('supervisor config service', function () {
-    function getDefaultConfig(): ConfigDTO {
-        const defaultConfig = new ConfigDTO();
-        defaultConfig.secondsBetweenConnectionChecks = 30;
-        defaultConfig.secondsBetweenAcknowledgmentChecks = 30;
-        const entities = [new EntityToSupervise('ENTITY1', ['ENTITY2'])];
-        defaultConfig.entitiesToSupervise = entities;
-        defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard = 2;
-        return defaultConfig;
-    }
+function getDefaultConfig(): ConfigDTO {
+    const defaultConfig = new ConfigDTO();
+    defaultConfig.secondsBetweenConnectionChecks = 30;
+    defaultConfig.secondsBetweenAcknowledgmentChecks = 30;
+    const entities = [new EntityToSupervise('ENTITY1', ['ENTITY2']), new EntityToSupervise('ENTITY3', ['ENTITY4'])];
+    defaultConfig.entitiesToSupervise = entities;
+    defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard = 2;
+    return defaultConfig;
+}
 
+describe('supervisor config service', function () {
     it('Patch configuration parameter secondsBetweenConnectionChecks should update it ', async function () {
         const defaultConfig = getDefaultConfig();
         const supervisorDatabaseService = new SupervisorDatabaseServerStub();
@@ -162,16 +162,6 @@ describe('supervisor config service', function () {
 describe('Regulary check if entities are connected', function () {
     let opfabServicesInterface: OpfabServicesInterfaceStub;
     let supervisorService: SupervisorService;
-
-    function getDefaultConfig(): ConfigDTO {
-        const defaultConfig = new ConfigDTO();
-        defaultConfig.secondsBetweenConnectionChecks = 30;
-        defaultConfig.secondsBetweenAcknowledgmentChecks = 30;
-        const entities = [new EntityToSupervise('ENTITY1', ['ENTITY2']), new EntityToSupervise('ENTITY3', ['ENTITY4'])];
-        defaultConfig.entitiesToSupervise = entities;
-        defaultConfig.nbOfConsecutiveNotConnectedToSendFirstCard = 2;
-        return defaultConfig;
-    }
 
     beforeEach(async () => {
         const defaultConfig = getDefaultConfig();

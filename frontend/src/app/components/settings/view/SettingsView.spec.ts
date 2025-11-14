@@ -21,23 +21,23 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
 
-describe('Settings view ', () => {
-    async function setUserConf() {
-        const userWithPerimeters = new UserWithPerimeters(
-            new User('user', '', '', '', [], [], 'userEmail@mail.com'),
-            new Array(),
-            null,
-            new Map(),
-            new Map(),
-            false,
-            false,
-            false,
-            false,
-            'userWithPerimeterEmail@mail.com'
-        );
-        await setUserPerimeter(userWithPerimeters);
-    }
+async function setUserConf() {
+    const userWithPerimeters = new UserWithPerimeters(
+        new User('user', '', '', '', [], [], 'userEmail@mail.com'),
+        new Array(),
+        null,
+        new Map(),
+        new Map(),
+        false,
+        false,
+        false,
+        false,
+        'userWithPerimeterEmail@mail.com'
+    );
+    await setUserPerimeter(userWithPerimeters);
+}
 
+describe('Settings view ', () => {
     describe('isSettingsVisible', () => {
         let settingsView: SettingsView;
 

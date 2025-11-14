@@ -22,6 +22,40 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Card} from 'app/model/Card';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
+async function setUserRights(
+    computedPerimeters: ComputedPerimeter[],
+    userData: User = {
+        login: 'test',
+        firstName: 'test',
+        lastName: 'test',
+        entities: ['ENTITY1', 'ENTITY2']
+    },
+    permissions: Array<PermissionEnum> = null
+) {
+    await setUserPerimeter({
+        computedPerimeters,
+        userData: userData,
+        permissions: permissions
+    });
+}
+
+async function setEntitiesConfiguration() {
+    await setEntities([
+        new Entity(
+            'ENTITY1',
+            'ENTITY1_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['PARENT_ENTITY']
+        ),
+        new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
+        new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
+        new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
+        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null)
+    ]);
+}
+
 describe('UserCard ProcessStateForm ', () => {
     let processStateForm: ProcessStatesForm;
     let userCardUIControlMock: UserCardUIControlMock;
@@ -31,40 +65,6 @@ describe('UserCard ProcessStateForm ', () => {
         userCardUIControlMock.initMock();
         processStateForm = new ProcessStatesForm(userCardUIControlMock);
         processStateForm.init(card);
-    }
-
-    async function setUserRights(
-        computedPerimeters: ComputedPerimeter[],
-        userData: User = {
-            login: 'test',
-            firstName: 'test',
-            lastName: 'test',
-            entities: ['ENTITY1', 'ENTITY2']
-        },
-        permissions: Array<PermissionEnum> = null
-    ) {
-        await setUserPerimeter({
-            computedPerimeters,
-            userData: userData,
-            permissions: permissions
-        });
-    }
-
-    async function setEntitiesConfiguration() {
-        await setEntities([
-            new Entity(
-                'ENTITY1',
-                'ENTITY1_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['PARENT_ENTITY']
-            ),
-            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
-            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
-            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
-            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null)
-        ]);
     }
 
     describe('Set processes on init ', () => {

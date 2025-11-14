@@ -16,6 +16,23 @@ import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/h
 import {NotificationConfigurationPage} from './NotificationConfigurationPage';
 import {User} from '@ofServices/users/model/User';
 
+async function setDefaultUserPerimeter() {
+    await setUserPerimeter({
+        computedPerimeters: [
+            new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'onlyChildState', RightEnum.Receive, true),
+            new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.Receive, true)
+        ],
+        userData: null
+    });
+}
+
+function getNotificationConfigurationPage(): NotificationConfigurationPage {
+    return new NotificationConfigurationView().getNotificationConfigurationPage();
+}
+
 describe('Notification configuration view ', () => {
     let notificationConfigurationPage: NotificationConfigurationPage;
     const defaultProcesses: Process[] = [
@@ -53,23 +70,6 @@ describe('Notification configuration view ', () => {
             states: new Map<string, State>([['stateNoName_1', {name: 'State NoName_1'}]])
         }
     ];
-
-    async function setDefaultUserPerimeter() {
-        await setUserPerimeter({
-            computedPerimeters: [
-                new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
-                new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
-                new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true),
-                new ComputedPerimeter('process2', 'onlyChildState', RightEnum.Receive, true),
-                new ComputedPerimeter('processWithNoName', 'stateNoName_1', RightEnum.Receive, true)
-            ],
-            userData: null
-        });
-    }
-
-    function getNotificationConfigurationPage() {
-        return new NotificationConfigurationView().getNotificationConfigurationPage();
-    }
 
     describe('getNotificationConfigurationPage with no processGroup ', () => {
         beforeAll(async () => {

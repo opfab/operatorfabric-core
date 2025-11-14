@@ -11,6 +11,10 @@ import {NavbarView} from './NavbarView';
 import {NavbarPage} from './NavbarPage';
 import {loadWebUIConf} from '@tests/helpers';
 
+function getNavbarPage(): NavbarPage {
+    return new NavbarView().getNavbarPage();
+}
+
 describe('NavbarView', () => {
     describe('get environment name and color', () => {
         it('should set showEnvironmentName to false if no environmentName define in web-ui.json', async () => {
@@ -89,8 +93,4 @@ describe('NavbarView', () => {
             expect(navbarPage.logo.width).toEqual(30);
         });
     });
-
-    function getNavbarPage(): NavbarPage {
-        return new NavbarView().getNavbarPage();
-    }
 });

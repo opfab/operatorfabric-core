@@ -21,6 +21,33 @@ import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../store/OpfabStore';
 
+async function initProcesses() {
+    await setProcessConfiguration([
+        {
+            id: 'process1',
+            version: 'v1',
+            name: 'process name',
+            states: new Map<string, State>([['state1', {name: 'State 1'}]])
+        },
+        {
+            id: 'process2',
+            version: 'v2',
+            name: 'process name 2',
+            states: new Map<string, State>([
+                ['state2', {name: 'State 2'}],
+                ['state3', {name: 'State 3'}],
+                ['childState', {name: 'child state', isOnlyAChildState: true}]
+            ])
+        },
+        {
+            id: 'processWithOnlyChildState',
+            version: 'v3',
+            name: 'process with only child state',
+            states: new Map<string, State>([['state1', {name: 'Child state', isOnlyAChildState: true}]])
+        }
+    ]);
+}
+
 describe('Dashboard', () => {
     let dashboard: Dashboard;
     let filteredLightCardStore: FilteredLightCardsStore;
@@ -37,33 +64,6 @@ describe('Dashboard', () => {
     afterEach(() => {
         dashboard.destroy();
     });
-
-    async function initProcesses() {
-        await setProcessConfiguration([
-            {
-                id: 'process1',
-                version: 'v1',
-                name: 'process name',
-                states: new Map<string, State>([['state1', {name: 'State 1'}]])
-            },
-            {
-                id: 'process2',
-                version: 'v2',
-                name: 'process name 2',
-                states: new Map<string, State>([
-                    ['state2', {name: 'State 2'}],
-                    ['state3', {name: 'State 3'}],
-                    ['childState', {name: 'child state', isOnlyAChildState: true}]
-                ])
-            },
-            {
-                id: 'processWithOnlyChildState',
-                version: 'v3',
-                name: 'process with only child state',
-                states: new Map<string, State>([['state1', {name: 'Child state', isOnlyAChildState: true}]])
-            }
-        ]);
-    }
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
         await setProcessConfiguration([]);

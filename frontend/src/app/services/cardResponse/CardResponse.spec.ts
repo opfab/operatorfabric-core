@@ -23,6 +23,46 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
 import {NotificationDecision} from '@ofServices/notifications/NotificationDecision';
 import {CardAction} from 'app/model/CardAction';
 
+async function initEnitiesService() {
+    await setEntities([
+        new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
+        new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
+        new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, null)
+    ]);
+}
+
+async function initProcessService() {
+    const state1 = new State();
+    state1.response = {state: 'state2', externalRecipients: ['externalRecipient']};
+    const state2 = new State();
+
+    const statesList = new Map();
+    statesList.set('state1', state1);
+    statesList.set('state2', state2);
+
+    const testProcess = new Process('testProcess', '1', null, null, statesList);
+    await setProcessConfiguration([testProcess]);
+}
+
+async function initUser() {
+    await setUserPerimeter(
+        new UserWithPerimeters(new User('user1', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY1']), [
+            {
+                process: 'testProcess',
+                state: 'state1',
+                rights: RightEnum.ReceiveAndWrite,
+                filteringNotificationAllowed: true
+            },
+            {
+                process: 'testProcess',
+                state: 'state2',
+                rights: RightEnum.ReceiveAndWrite,
+                filteringNotificationAllowed: true
+            }
+        ])
+    );
+}
+
 describe('Card response service', () => {
     let card: Card;
     let cardServerMock: CardsServerMock;
@@ -53,49 +93,6 @@ describe('Card response service', () => {
         cardServerMock.setResponseFunctionForPostCard(() => new ServerResponse(undefined, ServerResponseStatus.OK, ''));
         CardsService.setCardsServer(cardServerMock);
     });
-
-    async function initEnitiesService() {
-        await setEntities([
-            new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),
-            new Entity('ENTITY3', 'ENTITY 3', '', [RoleEnum.CARD_SENDER], null, null)
-        ]);
-    }
-
-    async function initProcessService() {
-        const state1 = new State();
-        state1.response = {state: 'state2', externalRecipients: ['externalRecipient']};
-        const state2 = new State();
-
-        const statesList = new Map();
-        statesList.set('state1', state1);
-        statesList.set('state2', state2);
-
-        const testProcess = new Process('testProcess', '1', null, null, statesList);
-        await setProcessConfiguration([testProcess]);
-    }
-
-    async function initUser() {
-        await setUserPerimeter(
-            new UserWithPerimeters(
-                new User('user1', 'firstName', 'lastName', null, ['group1'], ['ENTITY2', 'ENTITY1']),
-                [
-                    {
-                        process: 'testProcess',
-                        state: 'state1',
-                        rights: RightEnum.ReceiveAndWrite,
-                        filteringNotificationAllowed: true
-                    },
-                    {
-                        process: 'testProcess',
-                        state: 'state2',
-                        rights: RightEnum.ReceiveAndWrite,
-                        filteringNotificationAllowed: true
-                    }
-                ]
-            )
-        );
-    }
 
     it('Should not send card if user is not allowed to respond', async () => {
         let exceptionThrow = false;

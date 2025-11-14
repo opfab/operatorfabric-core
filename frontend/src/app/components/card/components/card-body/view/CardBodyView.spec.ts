@@ -21,6 +21,71 @@ import {Card} from 'app/model/Card';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 
+function getTestProcesses(): Process[] {
+    const state1 = new State();
+
+    const state2 = new State();
+    state2.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.NEVER;
+
+    const state3 = new State();
+    state3.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT;
+
+    const state4 = new State();
+    state4.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.FOR_ALL_USERS;
+
+    const statesList = new Map();
+    statesList.set('state1', state1);
+    statesList.set('state2', state2);
+    statesList.set('state3', state3);
+    statesList.set('state4', state4);
+
+    const testProcess = new Process('testProcess', '1', null, null, statesList);
+    return [testProcess];
+}
+
+function getUserMemberOfEntity1WithPerimeter(user: User): UserWithPerimeters {
+    return new UserWithPerimeters(user, [
+        {
+            process: 'testProcess',
+            state: 'state1',
+            rights: RightEnum.ReceiveAndWrite
+        },
+        {
+            process: 'testProcess',
+            state: 'state2',
+            rights: RightEnum.ReceiveAndWrite
+        },
+        {
+            process: 'testProcess',
+            state: 'state3',
+            rights: RightEnum.ReceiveAndWrite
+        },
+        {
+            process: 'testProcess',
+            state: 'state4',
+            rights: RightEnum.ReceiveAndWrite
+        }
+    ]);
+}
+
+function getUserWithPerimeters(userEntities: string[]) {
+    const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
+    return getUserMemberOfEntity1WithPerimeter(userForPerimeter);
+}
+
+async function mockProcessesService() {
+    const processesServerMock = new ProcessesServerMock();
+    processesServerMock.setResponseForProcessesDefinition(
+        new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
+    );
+    processesServerMock.setResponseForProcessesWithAllVersions(
+        new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
+    );
+    ProcessesService.setProcessServer(processesServerMock);
+    await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
+    await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
+}
+
 describe('CardBodyView', () => {
     let configServerMock: ConfigServerMock;
     let card: Card;
@@ -33,71 +98,6 @@ describe('CardBodyView', () => {
         configServerMock = new ConfigServerMock();
         ConfigService.setConfigServer(configServerMock);
     });
-
-    async function mockProcessesService() {
-        const processesServerMock = new ProcessesServerMock();
-        processesServerMock.setResponseForProcessesDefinition(
-            new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
-        );
-        processesServerMock.setResponseForProcessesWithAllVersions(
-            new ServerResponse(getTestProcesses(), ServerResponseStatus.OK, '')
-        );
-        ProcessesService.setProcessServer(processesServerMock);
-        await firstValueFrom(ProcessesService.loadAllProcessesWithLatestVersion());
-        await firstValueFrom(ProcessesService.loadAllProcessesWithAllVersions());
-    }
-
-    function getTestProcesses(): Process[] {
-        const state1 = new State();
-
-        const state2 = new State();
-        state2.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.NEVER;
-
-        const state3 = new State();
-        state3.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.ONLY_FOR_USERS_ALLOWED_TO_EDIT;
-
-        const state4 = new State();
-        state4.showAcknowledgmentFooter = ShowAcknowledgmentFooterEnum.FOR_ALL_USERS;
-
-        const statesList = new Map();
-        statesList.set('state1', state1);
-        statesList.set('state2', state2);
-        statesList.set('state3', state3);
-        statesList.set('state4', state4);
-
-        const testProcess = new Process('testProcess', '1', null, null, statesList);
-        return [testProcess];
-    }
-
-    function getUserMemberOfEntity1WithPerimeter(user: User): UserWithPerimeters {
-        return new UserWithPerimeters(user, [
-            {
-                process: 'testProcess',
-                state: 'state1',
-                rights: RightEnum.ReceiveAndWrite
-            },
-            {
-                process: 'testProcess',
-                state: 'state2',
-                rights: RightEnum.ReceiveAndWrite
-            },
-            {
-                process: 'testProcess',
-                state: 'state3',
-                rights: RightEnum.ReceiveAndWrite
-            },
-            {
-                process: 'testProcess',
-                state: 'state4',
-                rights: RightEnum.ReceiveAndWrite
-            }
-        ]);
-    }
-
-    function getUserWithPerimeters(userEntities: string[]) {
-        const userForPerimeter = new User('currentUser', 'firstname', 'lastname', null, [], userEntities);
-        return getUserMemberOfEntity1WithPerimeter(userForPerimeter);
-    }
 
     it('GIVEN a card WHEN publisher is not an entity THEN acknowledgement footer is not shown', async () => {
         const userWithPerimeters = getUserWithPerimeters(['ENTITY1']);

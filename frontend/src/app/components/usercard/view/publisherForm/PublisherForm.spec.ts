@@ -18,6 +18,48 @@ import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
 
 declare const opfab: any;
 
+async function setEntitiesConfiguration() {
+    await setEntities([
+        new Entity(
+            'ENTITY1',
+            'ENTITY1_NAME',
+            '',
+            [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
+            [],
+            ['PARENT_ENTITY']
+        ),
+        new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
+        new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
+        new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
+        new Entity('ENTITY_WITH_NO_NAME', '', '', [RoleEnum.CARD_SENDER], [], []),
+        new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null),
+        new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
+    ]);
+}
+
+async function setUserWithEntities(entities: string[]) {
+    await setUserPerimeter({
+        computedPerimeters: [],
+        userData: {
+            login: 'test',
+            firstName: 'test',
+            lastName: 'test',
+            entities
+        }
+    });
+}
+
+async function setProcessConfigWithUserCardConfig(userCardConfig) {
+    await setProcessConfiguration([
+        {
+            id: 'testProcessId',
+            version: 'v1',
+            name: 'process name 1',
+            states: new Map<string, State>([['testStateId', {name: 'testState', userCard: userCardConfig}]])
+        }
+    ]);
+}
+
 describe('UserCard PublisherForm', () => {
     let userCardUIControl: UserCardUIControlMock;
     let publisherForm: PublisherForm;
@@ -32,47 +74,6 @@ describe('UserCard PublisherForm', () => {
         publisherForm = new PublisherForm(userCardUIControl);
     });
 
-    async function setEntitiesConfiguration() {
-        await setEntities([
-            new Entity(
-                'ENTITY1',
-                'ENTITY1_NAME',
-                '',
-                [RoleEnum.ACTIVITY_AREA, RoleEnum.CARD_SENDER],
-                [],
-                ['PARENT_ENTITY']
-            ),
-            new Entity('ENTITY2', 'ENTITY2_NAME', '', [RoleEnum.CARD_SENDER], [], ['PARENT_ENTITY']),
-            new Entity('ENTITY3', 'ENTITY3_NAME', '', [RoleEnum.ACTIVITY_AREA], [], []),
-            new Entity('ENTITY4', 'ENTITY4_NAME', '', [RoleEnum.CARD_SENDER], [], []),
-            new Entity('ENTITY_WITH_NO_NAME', '', '', [RoleEnum.CARD_SENDER], [], []),
-            new Entity('PARENT_ENTITY', 'PARENT_ENTITY_NAME', '', [RoleEnum.CARD_SENDER], [], null),
-            new Entity('NO_ROLES_ENTITY', 'NO_ROLES_ENTITY_NAME', '', null, [], null)
-        ]);
-    }
-
-    async function setUserWithEntities(entities: string[]) {
-        await setUserPerimeter({
-            computedPerimeters: [],
-            userData: {
-                login: 'test',
-                firstName: 'test',
-                lastName: 'test',
-                entities
-            }
-        });
-    }
-
-    async function setProcessConfigWithUserCardConfig(userCardConfig) {
-        await setProcessConfiguration([
-            {
-                id: 'testProcessId',
-                version: 'v1',
-                name: 'process name 1',
-                states: new Map<string, State>([['testStateId', {name: 'testState', userCard: userCardConfig}]])
-            }
-        ]);
-    }
     describe('Set process and state', () => {
         describe('With no restriction on publisher list in state definition', () => {
             beforeEach(async () => {

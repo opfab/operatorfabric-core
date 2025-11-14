@@ -22,11 +22,52 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
 
 declare const opfabStyle;
 
+async function stubUiMenuConfigLoading(config: any) {
+    const configServerMock = new ConfigServerMock();
+    configServerMock.setResponseForMenuConfiguration(new ServerResponse(config, ServerResponseStatus.OK, null));
+    ConfigService.setConfigServer(configServerMock);
+    await firstValueFrom(ConfigService.loadUiMenuConfig());
+}
+
+function checkNightDayModeMenuText(navbarMenuView: NavbarMenuView, text: string) {
+    navbarMenuView
+        .getNavbarMenu()
+        .rightMenuElements.filter((menu) => menu.id === 'nightdaymode')
+        .forEach((menu) => {
+            expect(menu.label).toEqual(text);
+        });
+}
+
 describe('NavbarMenuView - OnMenuClick', () => {
     const translationLib = new TranslationLibMock();
     let applicationRouterMock: ApplicationRouterMock;
 
     const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
+
+    function clickOnMenu({
+        menuId = 'MyMenuId',
+        isCoreMenu = false,
+        isCustomScreen = false,
+        linkType = MenuEntryLinkType.IFRAME,
+        url = '',
+        openInNewTab = false
+    }): NavbarMenuView {
+        TranslationService.setTranslationLib(translationLib);
+        const navbarMenuView = new NavbarMenuView();
+        const navbarMenuElement = new NavbarMenuElement();
+        navbarMenuElement.id = menuId;
+        navbarMenuElement.isCoreMenu = isCoreMenu;
+        navbarMenuElement.isCustomScreen = isCustomScreen;
+        navbarMenuElement.linkType = linkType;
+        navbarMenuElement.url = url;
+        navbarMenuView.onMenuClick(navbarMenuElement, openInNewTab);
+        return navbarMenuView;
+    }
+
+    function mockRouter() {
+        applicationRouterMock = new ApplicationRouterMock();
+        NavigationService.setApplicationRouter(applicationRouterMock);
+    }
 
     beforeEach(async () => {
         opfabStyle.setOpfabTheme = () => {};
@@ -211,45 +252,4 @@ describe('NavbarMenuView - OnMenuClick', () => {
             checkNightDayModeMenuText(navbarMenuView, 'Translation (en) of menu.switchToDayMode');
         });
     });
-
-    function clickOnMenu({
-        menuId = 'MyMenuId',
-        isCoreMenu = false,
-        isCustomScreen = false,
-        linkType = MenuEntryLinkType.IFRAME,
-        url = '',
-        openInNewTab = false
-    }): NavbarMenuView {
-        TranslationService.setTranslationLib(translationLib);
-        const navbarMenuView = new NavbarMenuView();
-        const navbarMenuElement = new NavbarMenuElement();
-        navbarMenuElement.id = menuId;
-        navbarMenuElement.isCoreMenu = isCoreMenu;
-        navbarMenuElement.isCustomScreen = isCustomScreen;
-        navbarMenuElement.linkType = linkType;
-        navbarMenuElement.url = url;
-        navbarMenuView.onMenuClick(navbarMenuElement, openInNewTab);
-        return navbarMenuView;
-    }
-
-    async function stubUiMenuConfigLoading(config: any) {
-        const configServerMock = new ConfigServerMock();
-        configServerMock.setResponseForMenuConfiguration(new ServerResponse(config, ServerResponseStatus.OK, null));
-        ConfigService.setConfigServer(configServerMock);
-        await firstValueFrom(ConfigService.loadUiMenuConfig());
-    }
-
-    function mockRouter() {
-        applicationRouterMock = new ApplicationRouterMock();
-        NavigationService.setApplicationRouter(applicationRouterMock);
-    }
-
-    function checkNightDayModeMenuText(navbarMenuView: NavbarMenuView, text: string) {
-        navbarMenuView
-            .getNavbarMenu()
-            .rightMenuElements.filter((menu) => menu.id === 'nightdaymode')
-            .forEach((menu) => {
-                expect(menu.label).toEqual(text);
-            });
-    }
 });
