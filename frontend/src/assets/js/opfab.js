@@ -42,9 +42,9 @@ opfab.multiSelect = {
             noOptionsText: opfab.utils.getTranslation('multiSelect.noOptionsText'),
             noSearchResultsText: opfab.utils.getTranslation('multiSelect.noSearchResultsText'),
             search: config.search,
-            hideClearButton: config.multiple !== undefined ? !config.multiple : false,
-            allowNewOption: config.allowNewOption !== undefined ? config.allowNewOption : false,
-            autoSelectFirstOption: config.autoSelectFirstOption !== undefined ? config.autoSelectFirstOption : false,
+            hideClearButton: config.multiple === false,
+            allowNewOption: config.allowNewOption ?? false,
+            autoSelectFirstOption: config.autoSelectFirstOption ?? false,
             position: config.position
         });
         return multiSelect;
