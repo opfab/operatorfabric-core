@@ -55,7 +55,7 @@ class DevicesServiceShould {
     private static final String TEST_DEVICE_ID = "testDeviceId";
     private static final String TEST_DEVICE_ID_2 = "testDeviceId2";
     public static final String FAKE_HOST = "123.45.67.1";
-    final int CUSTOM_SIGNAL_ID = 4;
+    private static final int CUSTOM_SIGNAL_ID = 4;
 
     @BeforeEach
     void setUp() {

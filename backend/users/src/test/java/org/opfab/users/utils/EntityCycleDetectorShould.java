@@ -66,7 +66,7 @@ class EntityCycleDetectorShould {
         assertThat(underTest.hasCycle()).isFalse();
     }
 
-    private final List<String> UNKNOWNPARENTS = Stream.of("unknownParent0", "unknownParent1", "unknownParent2")
+    private static final List<String> UNKNOWNPARENTS = Stream.of("unknownParent0", "unknownParent1", "unknownParent2")
             .toList();
 
     @Test
