@@ -31,9 +31,9 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BaseCommandHandlerShould {
 
-    private final String ANY_STRING = "any_string";
-    private final String DATA_KEY = "key";
-    private final String DATA_VALUE = "value";
+    private static final String ANY_STRING = "any_string";
+    private static final String DATA_KEY = "key";
+    private static final String DATA_VALUE = "value";
 
     private CardObjectMapper objectMapper;
 
