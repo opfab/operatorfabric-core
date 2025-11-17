@@ -46,7 +46,7 @@ import static org.opfab.cards.consultation.TestUtilities.roundingToMillis;
 @SpringBootTest(classes = { IntegrationTestApplication.class, CardSubscriptionService.class,
         CardOperationsController.class, CustomScreenDataFields.class })
 class CardOperationsControllerShould {
-    private static String TEST_ID = "testClient";
+    private static final String TEST_ID = "testClient";
 
     private static Instant now = roundingToMillis(Instant.now());
     private static Instant nowPlusOne = now.plus(1, ChronoUnit.HOURS);

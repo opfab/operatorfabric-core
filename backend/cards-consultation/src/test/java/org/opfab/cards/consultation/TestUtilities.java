@@ -26,7 +26,7 @@ public class TestUtilities {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TestUtilities.class);
 
-    private static DateTimeFormatter ZONED_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    private static final DateTimeFormatter ZONED_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
             .withZone(ZoneOffset.UTC);
 
     public static String format(Instant now) {
