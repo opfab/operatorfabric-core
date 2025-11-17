@@ -18,8 +18,6 @@ const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
 export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
-    opfabUrlInMailContent: any;
-
     protected dailyEmailTitle: string;
     protected weeklyEmailTitle: string;
     protected titlePrefix: string;

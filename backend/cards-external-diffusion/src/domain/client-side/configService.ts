@@ -76,7 +76,7 @@ export default class ConfigService {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (Object.prototype.hasOwnProperty.call(this.config, key) && value != null) {
+                if (Object.hasOwn(this.config, key) && value != null) {
                     (this.config as any)[key] = value;
                 }
             }

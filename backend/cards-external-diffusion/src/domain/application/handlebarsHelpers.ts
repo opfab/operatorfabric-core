@@ -213,7 +213,7 @@ export class HandlebarsHelper {
             buffer = '';
             index = 0;
             for (key in obj) {
-                if (!Object.hasOwnProperty.call(obj, key)) {
+                if (!Object.hasOwn(obj, key)) {
                     continue;
                 }
                 buffer +=
