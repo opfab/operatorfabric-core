@@ -130,11 +130,7 @@ export default class Config {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (
-                    Object.prototype.hasOwnProperty.call(this.supervisorConfig, key) &&
-                    value != null &&
-                    key !== 'entitiesToSupervise'
-                ) {
+                if (Object.hasOwn(this.supervisorConfig, key) && value != null && key !== 'entitiesToSupervise') {
                     (this.supervisorConfig as any)[key] = value;
                 }
             }
