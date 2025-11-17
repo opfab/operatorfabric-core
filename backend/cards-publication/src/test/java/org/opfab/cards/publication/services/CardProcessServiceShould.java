@@ -857,9 +857,11 @@ class CardProcessServiceShould {
         List<ComputedPerimeter> list = new ArrayList<>();
         list.add(c1);
         testCurrentUserWithPerimeters.setComputedPerimeters(list);
-        Optional<CurrentUserWithPerimeters> user = Optional.of(testCurrentUserWithPerimeters);
+        Optional<CurrentUserWithPerimeters> testCurrentUserWithPerimetersAsOptional = Optional
+                .of(testCurrentUserWithPerimeters);
 
-        Assertions.assertThatThrownBy(() -> cardProcessingService.processCard(card, user, token, false))
+        Assertions.assertThatThrownBy(
+                () -> cardProcessingService.processCard(card, testCurrentUserWithPerimetersAsOptional, token, false))
                 .isInstanceOf(AccessDeniedException.class)
                 .hasMessage(
                         "user not authorized to send card with process PROCESS_CARD_USER and state state1 as it is not permitted by his perimeters, the card is rejected");
@@ -883,8 +885,7 @@ class CardProcessServiceShould {
         List<ComputedPerimeter> list = new ArrayList<>();
         list.add(cp);
         testCurrentUserWithPerimeters.setComputedPerimeters(list);
-        Optional<CurrentUserWithPerimeters> user = Optional.of(testCurrentUserWithPerimeters);
-        cardProcessingService.processCard(card, user, token, false);
+        cardProcessingService.processCard(card, Optional.of(testCurrentUserWithPerimeters), token, false);
 
         Assertions.assertThat(TestHelpers.checkCardCount(cardRepositoryMock, 1)).isTrue();
     }

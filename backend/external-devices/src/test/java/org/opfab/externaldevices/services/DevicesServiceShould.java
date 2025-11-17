@@ -427,13 +427,13 @@ class DevicesServiceShould {
     }
 
     private DeviceConfiguration buildDeviceConfiguration(int port, String deviceId, boolean isEnabled) {
-        DeviceConfiguration deviceConfigurationData = new DeviceConfiguration();
-        deviceConfigurationData.setId(deviceId);
-        deviceConfigurationData.setHost(FAKE_HOST);
-        deviceConfigurationData.setPort(port);
-        deviceConfigurationData.setSignalMappingId("testSignalMapping");
-        deviceConfigurationData.setIsEnabled(isEnabled);
-        return deviceConfigurationData;
+        DeviceConfiguration deviceConfiguration = new DeviceConfiguration();
+        deviceConfiguration.setId(deviceId);
+        deviceConfiguration.setHost(FAKE_HOST);
+        deviceConfiguration.setPort(port);
+        deviceConfiguration.setSignalMappingId("testSignalMapping");
+        deviceConfiguration.setIsEnabled(isEnabled);
+        return deviceConfiguration;
     }
 
 }
