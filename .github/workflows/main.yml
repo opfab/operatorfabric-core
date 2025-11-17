@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.inputs.dockerPush  != 'true' && github.event.inputs.dockerPushLatest  != 'true' &&  github.event.inputs.doc  != 'true' && github.event.inputs.docLatest  != 'true' && github.event_name != 'schedule' }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Job  status
         env:
@@ -115,7 +115,7 @@ jobs:
       contents: write
     if: ${{ github.event.inputs.dockerPush  == 'true' || github.event.inputs.dockerPushLatest  == 'true'  ||  github.event.inputs.doc  == 'true' || github.event.inputs.docLatest  == 'true' || github.event_name == 'schedule' }}
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
 
       - name: Job  status
         env:
