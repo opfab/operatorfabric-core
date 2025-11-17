@@ -51,14 +51,12 @@ export class SystemNotificationService {
     public static requestPermissionForSystemNotification() {
         if (Notification.permission === 'default') {
             Notification.requestPermission();
-        } else {
-            if (Notification.permission === 'denied') {
-                AlertMessageService.sendAlertMessage({
-                    message: null,
-                    level: MessageLevel.ALARM,
-                    i18n: {key: 'settings.systemNotificationsDisabledInBrowser'}
-                });
-            }
+        } else if (Notification.permission === 'denied') {
+            AlertMessageService.sendAlertMessage({
+                message: null,
+                level: MessageLevel.ALARM,
+                i18n: {key: 'settings.systemNotificationsDisabledInBrowser'}
+            });
         }
     }
 

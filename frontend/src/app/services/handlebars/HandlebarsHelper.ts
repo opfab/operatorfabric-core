@@ -288,12 +288,10 @@ export class HandlebarsHelper {
                     arrayToSort.sort(sortOnKey(sortKey));
                 } else if (isObject) {
                     arrayToSort.sort(sortOnKey('templatedObjectkey'));
+                } else if (typeof arrayToSort[0] === 'string') {
+                    arrayToSort.sort((a, b) => a.localeCompare(b));
                 } else {
-                    if (typeof arrayToSort[0] === 'string') {
-                        arrayToSort.sort((a, b) => a.localeCompare(b));
-                    } else {
-                        arrayToSort.sort((a, b) => a - b);
-                    }
+                    arrayToSort.sort((a, b) => a - b);
                 }
             }
             return arrayToSort;

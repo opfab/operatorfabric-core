@@ -41,9 +41,7 @@ export class FeedFilterAndSortIconsComponent implements OnChanges {
         if (this.filterSelected) {
             if (this.filterActive) this.filterIconCssClass = 'opfab-icon-filter-open-active';
             else this.filterIconCssClass = 'opfab-icon-filter-open';
-        } else {
-            if (this.filterActive) this.filterIconCssClass = 'opfab-icon-filter-active';
-            else this.filterIconCssClass = 'opfab-icon-filter';
-        }
+        } else if (this.filterActive) this.filterIconCssClass = 'opfab-icon-filter-active';
+        else this.filterIconCssClass = 'opfab-icon-filter';
     }
 }
