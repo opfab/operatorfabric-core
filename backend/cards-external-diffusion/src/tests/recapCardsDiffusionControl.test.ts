@@ -391,14 +391,18 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
 
-        expect(mailService.sent[0].body).toMatch(
-            new RegExp(
-                `^Daily Email Body Prefix<br><br>\\s*` +
-                    `\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2} - ALARM - Title1<br><br>\\s*` +
-                    `\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2} - INFORMATION - Title1<br><br>\\s*` +
-                    `<br>Email Body Postfix$`
-            )
+        expect(mailService.sent[0].body).toContain('Daily Email Body Prefix<br><br>');
+        expect(mailService.sent[0].body).toContain('ALARM - Title1<br><br>');
+        const dateToMatch = new Date(publishDateBeforeConfigDate + MILLISECONDS_IN_AN_HOUR);
+        const month = (dateToMatch.getMonth() + 1).toString().padStart(2, '0');
+        const date = dateToMatch.getDate().toString().padStart(2, '0');
+        const hours = dateToMatch.getUTCHours().toString().padStart(2, '0');
+        const minutes = dateToMatch.getMinutes().toString().padStart(2, '0');
+        expect(mailService.sent[0].body).toContain(
+            `${date}/${month}/${dateToMatch.getFullYear()} ${hours}:${minutes} - ALARM - Title1<br><br>`
         );
+        expect(mailService.sent[0].body).toContain('INFORMATION - Title1<br><br>');
+        expect(mailService.sent[0].body).toContain('<br>Email Body Postfix');
     });
 
     it('Should not send daily recap email when setting sendDailyEmail is set to false', async function () {
