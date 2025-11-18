@@ -343,6 +343,7 @@ describe('Cards external diffusion', function () {
         const publishDateBeforeConfigDate = time - MILLISECONDS_IN_A_DAY / 2;
         setup();
         recapCardsDiffusionControl.setShowCardUrls(false);
+        recapCardsDiffusionControl.setDefaultTimeZone('Europe/Paris');
         initConfig();
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
@@ -396,7 +397,7 @@ describe('Cards external diffusion', function () {
         const dateToMatch = new Date(publishDateBeforeConfigDate + MILLISECONDS_IN_AN_HOUR);
         const month = (dateToMatch.getMonth() + 1).toString().padStart(2, '0');
         const date = dateToMatch.getDate().toString().padStart(2, '0');
-        const hours = dateToMatch.getUTCHours().toString().padStart(2, '0');
+        const hours = dateToMatch.getHours().toString().padStart(2, '0');
         const minutes = dateToMatch.getMinutes().toString().padStart(2, '0');
         expect(mailService.sent[0].body).toContain(
             `${date}/${month}/${dateToMatch.getFullYear()} ${hours}:${minutes} - ALARM - Title1<br><br>`
