@@ -127,7 +127,8 @@ public class ExternalAppServiceImpl implements ExternalAppService {
     private String recipientsToString(List<String> recipients) {
         StringBuilder ret = new StringBuilder();
         for (int i = 0; i < recipients.size(); i++) {
-            ret.append(recipients.get(i) + " ");
+            ret.append(recipients.get(i));
+            ret.append(" ");
         }
         if (!ret.isEmpty()) {
             return ret.substring(0, ret.length() - 1);

@@ -240,7 +240,7 @@ export class EditPerimeterModalComponent implements OnInit {
 
     public removeOrClearStateRight(indexToRemove: number) {
         this.clearStateRight(indexToRemove);
-        const indexFound = this.stateRightControlsIndexes.findIndex((element) => element === indexToRemove);
+        const indexFound = this.stateRightControlsIndexes.indexOf(indexToRemove);
         if (indexFound !== -1) {
             this.stateRightControlsIndexes.splice(indexFound, 1);
         }
