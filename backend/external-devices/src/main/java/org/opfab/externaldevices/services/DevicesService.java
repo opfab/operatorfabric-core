@@ -144,11 +144,6 @@ public class DevicesService {
         for (ResolvedConfiguration resolvedConfiguration : resolvedConfigurationList) {
             try {
                 sendSignalToOneDevice(resolvedConfiguration);
-            } catch (ExternalDeviceConfigurationException e) {
-                exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
-                        resolvedConfiguration.getSignalId(), userLogin,
-                        resolvedConfiguration.getDeviceConfiguration().id, "due to a configuration error");
-                log.warn(exceptionMessage, e);
             } catch (ExternalDeviceDriverException e) {
                 exceptionMessage = buildSignalSendingExceptionMessage(opFabSignalKey,
                         resolvedConfiguration.getSignalId(), userLogin,
@@ -166,8 +161,7 @@ public class DevicesService {
     }
 
     private void sendSignalToOneDevice(ResolvedConfiguration resolvedConfiguration)
-            throws ExternalDeviceException, ExternalDeviceDriverException, ExternalDeviceConfigurationException,
-            ExternalDeviceAvailableException {
+            throws ExternalDeviceDriverException, ExternalDeviceAvailableException {
 
         String deviceId = resolvedConfiguration.getDeviceConfiguration().id;
         int signalId = resolvedConfiguration.getSignalId();
