@@ -8,7 +8,7 @@
  */
 
 import express, {NextFunction, Request, Response} from 'express';
-import {expressjwt, GetVerificationKey} from 'express-jwt';
+import {expressjwt} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
@@ -36,7 +36,7 @@ app.use(
                 rateLimit: true,
                 jwksRequestsPerMinute: 5,
                 jwksUri: jwksUri
-            }) as GetVerificationKey,
+            }),
             algorithms: ['RS256']
         })(req, res, next) as Promise<void>
 );
