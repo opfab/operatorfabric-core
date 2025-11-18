@@ -95,23 +95,24 @@ describe('Card response service', () => {
     });
 
     it('Should not send card if user is not allowed to respond', async () => {
-        let exceptionThrow = false;
+        let errorThrown: Error;
         try {
             await CardResponseService.sendResponse(card, {publisher: 'ENTITY3'});
         } catch (e) {
-            exceptionThrow = true;
+            errorThrown = e;
         }
-        expect(exceptionThrow).toBeTrue();
+        expect(errorThrown).toBeDefined();
+        expect(errorThrown.message).toContain('Response card publisher not allowed');
     });
 
     it('Should send card if user is allowed to respond', async () => {
-        let exceptionThrow = false;
+        let errorThrown: Error;
         try {
             await CardResponseService.sendResponse(card, {publisher: 'ENTITY1'});
         } catch (e) {
-            exceptionThrow = true;
+            errorThrown = e;
         }
-        expect(exceptionThrow).toBeFalse();
+        expect(errorThrown).toBeUndefined();
     });
 
     it('Should add parent card publisher to entity recipients if not already present', async () => {
