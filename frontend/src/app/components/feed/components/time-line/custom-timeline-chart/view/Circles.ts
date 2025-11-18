@@ -210,6 +210,6 @@ export class Circles {
     }
 
     private getEllipseWidth(count: number) {
-        return Math.trunc(Math.log(count) * Math.LOG10E);
+        return Math.trunc(Math.log10(count));
     }
 }
