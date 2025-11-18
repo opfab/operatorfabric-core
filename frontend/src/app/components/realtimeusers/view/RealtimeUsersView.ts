@@ -115,29 +115,30 @@ export class RealtimeUsersView {
                     });
                 }
             });
-            this.computeLinesInformations();
+            this.computeScreensContent();
         });
     }
 
-    private computeLinesInformations() {
+    private computeScreensContent() {
         this.realtimeScreens.forEach((screen) => {
             screen.columns.forEach((column) => {
                 column.entityPages.forEach((entityGroup) => {
-                    entityGroup.lines.forEach((line) => {
-                        const connectedUsers = this.getUsersInDisplayedGroups(
-                            line.entityId,
-                            screen.onlyDisplayUsersInGroups
-                        );
-
-                        line.connectedUsersCount = connectedUsers.length;
-                        line.connectedUsers = connectedUsers
-                            .map((user) => {
-                                return this.userNameToDisplay.get(user) ?? user;
-                            })
-                            .join(', ');
-                    });
+                    this.computeLinesForEntityGroup(entityGroup, screen);
                 });
             });
+        });
+    }
+
+    private computeLinesForEntityGroup(entityGroup: RealtimePageEntityGroup, screen: RealtimePageScreen) {
+        entityGroup.lines.forEach((line) => {
+            const connectedUsers = this.getUsersInDisplayedGroups(line.entityId, screen.onlyDisplayUsersInGroups);
+
+            line.connectedUsersCount = connectedUsers.length;
+            line.connectedUsers = connectedUsers
+                .map((user) => {
+                    return this.userNameToDisplay.get(user) ?? user;
+                })
+                .join(', ');
         });
     }
 
