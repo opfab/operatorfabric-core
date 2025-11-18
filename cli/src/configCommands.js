@@ -9,7 +9,7 @@
 
 const os = require('node:os');
 const fs = require('node:fs');
-const path = require('path');
+const path = require('node:path');
 const JSON5 = require('json5');
 
 const config = {
