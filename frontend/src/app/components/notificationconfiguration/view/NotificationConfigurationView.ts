@@ -193,7 +193,7 @@ export class NotificationConfigurationView {
     }
 
     public getNotificationConfigurationPage(): NotificationConfigurationPage {
-        return _.cloneDeep(this.notificationConfigurationPage);
+        return structuredClone(this.notificationConfigurationPage);
     }
 
     public clickOnState(processId: string, stateId: string): void {
