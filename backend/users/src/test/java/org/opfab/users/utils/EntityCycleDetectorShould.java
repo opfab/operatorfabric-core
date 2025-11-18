@@ -94,12 +94,12 @@ class EntityCycleDetectorShould {
         withoutAnyParentAndRefersItself.setId(entityId);
         withoutAnyParentAndRefersItself
                 .setDescription("this entity has unknown parents AND references itself");
-        withoutAnyParentAndRefersItself.setParents(this.mixeParentRef(UNKNOWNPARENTS, entityId));
+        withoutAnyParentAndRefersItself.setParents(this.mixeParentRef(entityId));
         EntityCycleDetector underTest = new EntityCycleDetector(withoutAnyParentAndRefersItself, noEntities);
         assertThat(underTest.hasCycle()).isTrue();
     }
 
-    private List<String> mixeParentRef(List<String> idCollections, String... ids) {
+    private List<String> mixeParentRef(String... ids) {
         List<String> collect = Arrays.stream(ids).collect(Collectors.toList());
         collect.addAll(UNKNOWNPARENTS);
         return collect;
@@ -198,8 +198,7 @@ class EntityCycleDetectorShould {
         Entity allEntityAndItselfAsParents = new Entity();
         allEntityAndItselfAsParents.setId(testedEntity);
         allEntityAndItselfAsParents.setDescription("with unknown parents");
-        allEntityAndItselfAsParents.setParents(this.mixeParentRef(this.buildList(entityWithNoParent,
-                entityReferencingUnknownParents, entityReferencingEntityWithNoParents), testedEntity));
+        allEntityAndItselfAsParents.setParents(this.mixeParentRef(testedEntity));
         EntityCycleDetector underTest = new EntityCycleDetector(allEntityAndItselfAsParents, entities);
         assertThat(underTest.hasCycle()).isTrue();
     }
