@@ -12,10 +12,6 @@ import {Observable, catchError, forkJoin, of, take} from 'rxjs';
 import {Severity} from 'app/model/Severity';
 
 export class Utilities {
-    public static cloneObj(obj: object) {
-        return obj ? JSON.parse(JSON.stringify(obj)) : undefined;
-    }
-
     public static convertSpacesAndNewLinesInHTML(txt: string): string {
         return txt.replaceAll('\n', '<br/>').replaceAll('  ', '&nbsp;&nbsp;');
     }

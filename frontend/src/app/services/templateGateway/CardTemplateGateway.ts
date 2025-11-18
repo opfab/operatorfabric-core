@@ -8,7 +8,6 @@
  */
 
 import {Card} from 'app/model/Card';
-import {Utilities} from '../../utils/Utilities';
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 
 export class CardTemplateGateway {
@@ -82,11 +81,11 @@ export class CardTemplateGateway {
     }
 
     public static getChildCards(): Card[] {
-        return Utilities.cloneObj(CardTemplateGateway._childCards);
+        return structuredClone(CardTemplateGateway._childCards);
     }
 
     public static getCard(): Card {
-        return Utilities.cloneObj(CardTemplateGateway._card);
+        return structuredClone(CardTemplateGateway._card);
     }
 
     public static getDisplayContext() {
@@ -102,7 +101,7 @@ export class CardTemplateGateway {
     }
 
     public static getUserResponseFromTemplate(emitter: string) {
-        return Utilities.cloneObj(CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter));
+        return structuredClone(CardTemplateGateway._functionToGetUserResponseFromTemplate(emitter));
     }
 
     public static hideLoadingSpinner() {
