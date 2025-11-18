@@ -101,7 +101,7 @@ class CardRepositoryShould {
     }
 
     @AfterEach
-    public void clean() {
+    void clean() {
         repository.deleteAll().subscribe();
     }
 

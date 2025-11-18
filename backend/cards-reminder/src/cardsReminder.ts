@@ -145,7 +145,7 @@ app.post('/logLevel', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Set log level: ' + JSON.stringify(req.body));
         const level: string =
-            req.body.configuredLevel != null ? req.body.configuredLevel.toLowerCase() : defaultLogLevel;
+            req.body.configuredLevel == null ? defaultLogLevel : req.body.configuredLevel.toLowerCase();
         if (Logger.setLogLevel(level)) {
             res.contentType('text/plain').send(Logger.getLogLevel());
         } else {

@@ -38,7 +38,7 @@ const cardCommands = {
             case 'send':
                 await this.sendCard(args.slice(1));
                 break;
-            case 'delete': 
+            case 'delete':
                 await this.deleteCard(args.slice(1));
                 break;
             case 'reset-ratelimiter':
@@ -56,7 +56,7 @@ const cardCommands = {
     async sendCard(args) {
         let cardFile = args[0];
         let cardCustomization = args[1];
-       
+
         if (!cardFile) {
             cardFile = (
                 await prompts({
@@ -76,7 +76,7 @@ const cardCommands = {
             fileContent = await fs.readFile(cardFile, 'utf8');
         }
         catch (error) {
-            console.error('Failed to read card file',cardFile);
+            console.error('Failed to read card file', cardFile);
             console.error('Error:', error);
             return;
         }
@@ -86,9 +86,9 @@ const cardCommands = {
         const token = config.getConfig('access_token');
         const options = {
             method: 'POST',
-            body: card, 
+            body: card,
             headers: {
-                'Content-Type': 'application/json', 
+                'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             }
         };
@@ -107,8 +107,7 @@ const cardCommands = {
             const result = await response.json();
             console.error(result);
         }
-        else 
-        {
+        else {
             console.error('Failed to send card');
             console.error(`Server response : ${await response.text()} \n`);
         }
@@ -185,15 +184,14 @@ const cardCommands = {
         if (response.ok) {
             console.error('Rate limiter reset');
         }
-        else
-        {
+        else {
             console.error('Failed to reset rate limiter');
             console.error('Response:', response);
         }
     },
 
     prepareCard(card, cardCustomization) {
-        const now = new Date().getTime();
+        const now = Date.now();
         let jsonCard = JSON5.parse(card);
         if (cardCustomization) {
             const jsonUpdate = JSON5.parse(cardCustomization);

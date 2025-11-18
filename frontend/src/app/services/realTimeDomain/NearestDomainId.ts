@@ -33,6 +33,6 @@ export class NearestDomainId {
             }
         }
 
-        return this.domainOrderedList[this.domainOrderedList.length - 1].id;
+        return this.domainOrderedList.at(-1).id;
     }
 }

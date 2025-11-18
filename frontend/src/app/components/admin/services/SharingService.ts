@@ -64,7 +64,7 @@ export class SharingService implements OnDestroy {
             case AdminItemType.SUPERVISED_ENTITY:
                 return this.supervisedEntitiesService;
             default:
-                throw Error('No CrudService associated with ' + adminItemType);
+                throw new Error('No CrudService associated with ' + adminItemType);
         }
     }
 

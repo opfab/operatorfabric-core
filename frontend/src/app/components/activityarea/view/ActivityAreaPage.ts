@@ -8,18 +8,11 @@
  */
 
 export class ActivityAreaLine {
-    entityId: string;
-    entityName: string;
-    isUserConnected: boolean;
-    connectedUsers: string[];
-    connectedUsersText: string;
-    constructor() {
-        this.entityId = '';
-        this.entityName = '';
-        this.isUserConnected = false;
-        this.connectedUsers = [];
-        this.connectedUsersText = '';
-    }
+    entityId = '';
+    entityName = '';
+    isUserConnected = false;
+    connectedUsers: string[] = [];
+    connectedUsersText = '';
 }
 
 export class ActivityAreaPage {
