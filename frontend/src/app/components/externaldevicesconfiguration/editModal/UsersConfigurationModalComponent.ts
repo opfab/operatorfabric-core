@@ -103,7 +103,7 @@ export class UsersconfigurationModalComponent implements OnInit {
 
     formToUserConfig() {
         return {
-            userLogin: this.userLogin.value as string,
+            userLogin: this.userLogin.value,
             externalDeviceIds: this.externalDeviceIds.value
         };
     }

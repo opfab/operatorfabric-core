@@ -150,10 +150,10 @@ export class EditUserModalComponent implements OnInit {
         if (this.row) {
             this.userForm.value['login'] = this.row.login;
         }
-        this.login.setValue((this.login.value as string).trim());
-        if (this.lastName.value) this.lastName.setValue((this.lastName.value as string).trim());
-        if (this.firstName.value) this.firstName.setValue((this.firstName.value as string).trim());
-        if (this.comment.value) this.comment.setValue((this.comment.value as string).trim());
+        this.login.setValue(this.login.value.trim());
+        if (this.lastName.value) this.lastName.setValue(this.lastName.value.trim());
+        if (this.firstName.value) this.firstName.setValue(this.firstName.value.trim());
+        if (this.comment.value) this.comment.setValue(this.comment.value.trim());
     }
 
     get login() {
