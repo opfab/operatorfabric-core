@@ -116,7 +116,7 @@ public class ExternalAppService {
 
     private void notifyExternalApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
         if (externalRecipientUrl.startsWith("kafka:")) {
-            notifyExternalKafkaApplication(card);
+            log.warn("Kafka card suppression notification not implemented");
         } else {
             notifyExternalHttpApplication(card, externalRecipientUrl, jwt);
         }
@@ -124,10 +124,6 @@ public class ExternalAppService {
 
     private void callExternalKafkaApplication(Card card) {
         responseCardProducer.send(card);
-    }
-
-    private void notifyExternalKafkaApplication(Card card) {
-        log.warn("Kafka card suppression notification not implemented");
     }
 
     private void callExternalHttpApplication(Card card, String externalRecipientUrl, Optional<Jwt> jwt) {
