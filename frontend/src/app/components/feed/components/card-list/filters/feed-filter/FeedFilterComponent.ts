@@ -459,16 +459,16 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
 
         if (
             status.start != null &&
-            !isNaN(status.start) &&
+            !Number.isNaN(status.start) &&
             status.end != null &&
-            !isNaN(status.end) &&
+            !Number.isNaN(status.end) &&
             status.start > status.end
         ) {
             this.displayMessage('shared.endDateBeforeStartDate', '', MessageLevel.ERROR);
             return;
         }
 
-        if (status.start == null || isNaN(status.start)) {
+        if (status.start == null || Number.isNaN(status.start)) {
             UserPreferencesService.removePreference('opfab.feed.filter.start');
             this.endMinDate = null;
         } else {
@@ -477,7 +477,7 @@ export class FeedFilterComponent implements OnInit, OnDestroy {
                 this.endMinDate = this.timeFilterForm.value.dateTimeFrom;
             }
         }
-        if (status.end == null || isNaN(status.end)) {
+        if (status.end == null || Number.isNaN(status.end)) {
             UserPreferencesService.removePreference('opfab.feed.filter.end');
             this.startMaxDate = null;
         } else {

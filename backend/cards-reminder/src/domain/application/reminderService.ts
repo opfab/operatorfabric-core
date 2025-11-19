@@ -51,7 +51,7 @@ export default class ReminderService implements EventListener {
             if (
                 card.secondsBeforeTimeSpanForReminder === undefined ||
                 card.secondsBeforeTimeSpanForReminder === null ||
-                isNaN(card.secondsBeforeTimeSpanForReminder) ||
+                Number.isNaN(Number(card.secondsBeforeTimeSpanForReminder)) ||
                 card.secondsBeforeTimeSpanForReminder < 0
             ) {
                 this.logger.debug(`Reminder - Card ${card.id} (uid=${card.uid}) is not a card to remind`);

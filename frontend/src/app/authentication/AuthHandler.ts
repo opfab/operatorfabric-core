@@ -143,9 +143,8 @@ export abstract class AuthHandler {
         }
     }
     protected isTokenStillValid(): boolean {
-        // + to convert the stored number as a string back to number
-        const expirationDate = +localStorage.getItem('expirationDate');
-        const isNotANumber = isNaN(expirationDate);
+        const expirationDate = Number(localStorage.getItem('expirationDate'));
+        const isNotANumber = Number.isNaN(expirationDate);
         const stillValid = expirationDate - this.secondsToCloseSession * 1000 > Date.now();
         return !isNotANumber && stillValid;
     }
@@ -162,9 +161,8 @@ export abstract class AuthHandler {
     }
 
     private isTokenExpired(): boolean {
-        // + to convert the stored number as a string back to number
-        const expirationDate = +localStorage.getItem('expirationDate');
-        const isNotANumber = isNaN(expirationDate);
+        const expirationDate = Number(localStorage.getItem('expirationDate'));
+        const isNotANumber = Number.isNaN(expirationDate);
         const stillValid = expirationDate > Date.now();
         return !isNotANumber && stillValid;
     }

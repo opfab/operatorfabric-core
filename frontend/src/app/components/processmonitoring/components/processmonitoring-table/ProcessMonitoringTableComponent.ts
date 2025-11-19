@@ -192,7 +192,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
+                        flex: Number.isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
@@ -204,7 +204,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
+                        flex: Number.isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
                         resizable: false,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
@@ -269,7 +269,7 @@ export class ProcessmonitoringTableComponent {
     computeColumnSizeAverage(): number {
         let columnSizeAverage = 0;
         this.processMonitoringFields.forEach((column) => {
-            columnSizeAverage += isNaN(Number(column.size)) ? 1 : Number(column.size);
+            columnSizeAverage += Number.isNaN(Number(column.size)) ? 1 : Number(column.size);
         });
         return columnSizeAverage / this.processMonitoringFields.length;
     }

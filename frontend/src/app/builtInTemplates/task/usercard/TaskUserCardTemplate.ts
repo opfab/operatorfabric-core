@@ -546,7 +546,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
         let minutesForReminder: number = Number.parseInt(
             (<HTMLInputElement>document.getElementById('minutesForReminder')).value
         );
-        if (minutesForReminder == null || isNaN(minutesForReminder)) {
+        if (minutesForReminder == null || Number.isNaN(Number(minutesForReminder))) {
             minutesForReminder = 0;
         }
         const taskTitle = (<HTMLInputElement>document.getElementById('taskTitle')).value;

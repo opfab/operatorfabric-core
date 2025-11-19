@@ -94,7 +94,7 @@ export class SettingsView {
     }
 
     private isReplayIntervalInvalid(): boolean {
-        return this.newSettings?.replayInterval == null || isNaN(this.newSettings?.replayInterval);
+        return this.newSettings?.replayInterval == null || Number.isNaN(Number(this.newSettings?.replayInterval));
     }
 
     public async saveSettings(): Promise<ServerResponse<any>> {
