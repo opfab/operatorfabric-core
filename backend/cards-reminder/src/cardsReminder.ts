@@ -38,7 +38,7 @@ app.use(
                 jwksUri: jwksUri
             }),
             algorithms: ['RS256']
-        })(req, res, next) as Promise<void>
+        })(req, res, next)
 );
 
 app.use(express.static('public'));
