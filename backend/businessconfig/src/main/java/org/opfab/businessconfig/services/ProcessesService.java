@@ -42,8 +42,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.slf4j.LoggerFactory;
@@ -62,8 +60,8 @@ public class ProcessesService implements ResourceLoaderAware {
     @Value("${operatorfabric.businessconfig.storage.path}")
     private String storagePath;
     private ObjectMapper objectMapper;
-    private Map<String, Process> defaultCache;
-    private Table<String, String, Process> completeCache;
+    private Map<String, Process> currentProcessesCache;
+    private Table<String, String, Process> allProcessVersionsCache;
     private ResourceLoader resourceLoader;
     private LocalValidatorFactoryBean validator;
     private ProcessGroups processGroupsCache;
@@ -76,8 +74,8 @@ public class ProcessesService implements ResourceLoaderAware {
 
     public ProcessesService(ObjectMapper objectMapper, LocalValidatorFactoryBean validator, EventBus eventBus) {
         this.objectMapper = objectMapper;
-        this.completeCache = HashBasedTable.create();
-        this.defaultCache = new HashMap<>();
+        this.allProcessVersionsCache = HashBasedTable.create();
+        this.currentProcessesCache = new HashMap<>();
         this.validator = validator;
         this.eventBus = eventBus;
     }
@@ -102,9 +100,9 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public List<Process> listProcesses(Boolean allVersions) {
         if ((allVersions == null) || Boolean.FALSE.equals(allVersions)) {
-            return new ArrayList<>(defaultCache.values());
+            return new ArrayList<>(currentProcessesCache.values());
         } else {
-            return new ArrayList<>(completeCache.values());
+            return new ArrayList<>(allProcessVersionsCache.values());
         }
     }
 
@@ -114,7 +112,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * @return registered processes
      */
     public List<Process> listProcessHistory(String processId) {
-        return completeCache.values().stream().filter(p -> p.id().equals(processId)).toList();
+        return allProcessVersionsCache.values().stream().filter(p -> p.id().equals(processId)).toList();
     }
 
     /**
@@ -181,68 +179,81 @@ public class ProcessesService implements ResourceLoaderAware {
     }
 
     /**
-     * Loads process data to defaultCache (not thread safe)
+     * This method populate two caches:
+     * - currentProcessesCache : contains current version of process
+     * definitions in a map with process id as key
+     * - allProcessVersionsCache : contains all versions of process definitions in a
+     * two keys table (process id, version)
+     *
+     * These definitions are stored in instances of "Process" and are loaded from
+     * "config.json" files.
+     *
+     * Each current process definition file is located in a process bundle folder .
+     * In this folder, subfolders contains all process definition version files.
+     *
+     * Example of folder structure:
+     * ..storagePath/bundles/
+     * .....└── process1/
+     * ........├── config.json (current version)
+     * ........├── version1/
+     * ........│....└── config.json (specific version)
+     * ....... └── version2/
+     * .............└── config.json (specific version)
+     *
+     *
      */
     public void loadCache() {
-        log.info("loading processes from {}", new File(storagePath).getAbsolutePath());
+        Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath + BUNDLE_FOLDER);
+        File[] bundleDirectories;
         try {
-            Map<String, Map<String, Process>> completeResult = new HashMap<>();
-            Resource root = this.resourceLoader.getResource(PATH_PREFIX + storagePath + BUNDLE_FOLDER);
-            // load default Processes and recursively loads versioned Processes
-            Map<String, Process> result = loadCache0(root.getFile(),
-                    Process::id,
-                    (f, p) -> completeResult.put(
-                            p.id(),
-                            loadCache0(f, Process::version, null)));
-            this.completeCache.clear();
-            this.defaultCache.clear();
-            this.defaultCache.putAll(result);
-            completeResult.keySet()
-                    .forEach(k1 -> completeResult.get(k1).keySet()
-                            .forEach(k2 -> completeCache.put(k1, k2, completeResult.get(k1).get(k2))));
+            bundleDirectories = root.getFile().listFiles(File::isDirectory);
         } catch (IOException e) {
-            log.warn("Unreadable Process config files at  {}", storagePath);
+            log.warn("Impossible to read bundle repository  {}", PATH_PREFIX + storagePath + BUNDLE_FOLDER);
+            return;
         }
-
+        if (bundleDirectories != null) {
+            for (File bundleDirectory : bundleDirectories) {
+                Process process = getProcessFromConfigFile(bundleDirectory);
+                if (process != null) {
+                    currentProcessesCache.put(process.id(), process);
+                    populateCacheWithProcessVersions(bundleDirectory);
+                }
+            }
+        }
     }
 
-    /**
-     * Loads a cache for Process resource bundle. Loops over a folder sub folders
-     * (depth 1) to find config.json files.
-     * These files contain Json serialized {@link Process} objects.
-     *
-     * @param root         lookup folder
-     * @param keyExtractor key cache extractor from loaded {@link Process}
-     * @param onEachActor  do something on each subfolder. Optional.
-     * @return loaded cache
-     */
-    private Map<String, Process> loadCache0(File root,
-            Function<Process, String> keyExtractor,
-            BiConsumer<File, Process> onEachActor) {
-        Map<String, Process> result = new HashMap<>();
-        if (root.listFiles() != null)
-            Arrays.stream(root.listFiles())
-                    .filter(File::isDirectory)
-                    .forEach(f -> {
-                        File[] configFile = f.listFiles((sf, name) -> name.equals(CONFIG_FILE_NAME));
-                        if (configFile != null && configFile.length >= 1) {
-                            try {
-                                Process process = objectMapper.readValue(configFile[0], Process.class);
-                                Optional<String> validationError = getConfigFileValidationErrors(process);
-                                if (validationError.isPresent()) {
-                                    log.warn("Unreadable process config file({}) because these validation errors: {}",
-                                            f.getAbsolutePath(), validationError.get());
-                                    return;
-                                }
-                                result.put(keyExtractor.apply(process), process);
-                                if (onEachActor != null)
-                                    onEachActor.accept(f, process);
-                            } catch (IOException e) {
-                                log.warn("Unreadable process config file " + f.getAbsolutePath(), e);
-                            }
-                        }
-                    });
-        return result;
+    private Process getProcessFromConfigFile(File configFilePath) {
+        File configFile = new File(configFilePath, CONFIG_FILE_NAME);
+        if (!configFile.exists()) {
+            log.warn("No config.json file at {}", configFilePath);
+            return null;
+        }
+        try {
+            Process process = objectMapper.readValue(configFile, Process.class);
+            Optional<String> validationError = getConfigFileValidationErrors(process);
+            if (validationError.isPresent()) {
+                log.warn("Unreadable config.json file({}) because these validation errors: {}",
+                        configFile.getAbsolutePath(), validationError.get());
+                return null;
+            }
+            return process;
+        } catch (IOException e) {
+            log.warn("Unreadable config.json file " + configFile.getAbsolutePath(), e);
+            return null;
+        }
+    }
+
+    private void populateCacheWithProcessVersions(File bundleDir) {
+        File[] versionDirs = bundleDir.listFiles(File::isDirectory);
+        if (versionDirs != null) {
+            for (File versionDir : versionDirs) {
+                Process versionedProcess = getProcessFromConfigFile(versionDir);
+                if (versionedProcess != null) {
+                    allProcessVersionsCache.put(versionedProcess.id(), versionedProcess.version(),
+                            versionedProcess);
+                }
+            }
+        }
     }
 
     /**
@@ -270,7 +281,7 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Resource fetchResource(String processId, ResourceTypeEnum type, String version,
             String name) throws FileNotFoundException {
-        Map<String, Process> versions = completeCache.row(processId);
+        Map<String, Process> versions = allProcessVersionsCache.row(processId);
         if (versions.isEmpty())
             throw new FileNotFoundException("No resource exist for " + processId);
 
@@ -433,8 +444,8 @@ public class ProcessesService implements ResourceLoaderAware {
         PathUtils.copy(existingVersionPath.resolve(CONFIG_FILE_NAME), existingConfigPath);
 
         // update caches
-        defaultCache.put(process.id(), process);
-        completeCache.put(process.id(), process.version(), process);
+        currentProcessesCache.put(process.id(), process);
+        allProcessVersionsCache.put(process.id(), process.version(), process);
 
         pushProcessChangeInEventBus();
 
@@ -452,9 +463,9 @@ public class ProcessesService implements ResourceLoaderAware {
      */
     public Process fetch(String id, String version) {
         if (version == null)
-            return this.defaultCache.get(id);
-        if (this.completeCache.contains(id, version))
-            return this.completeCache.get(id, version);
+            return this.currentProcessesCache.get(id);
+        if (this.allProcessVersionsCache.contains(id, version))
+            return this.allProcessVersionsCache.get(id, version);
         else
             return null;
     }
@@ -468,7 +479,7 @@ public class ProcessesService implements ResourceLoaderAware {
     public synchronized void delete(String id) throws IOException {
 
         // this condition avoids path traversal security issues
-        if (!defaultCache.containsKey(id)) {
+        if (!currentProcessesCache.containsKey(id)) {
             throw new FileNotFoundException("Unable to find a bundle with the given id");
         }
         // process root
@@ -492,10 +503,10 @@ public class ProcessesService implements ResourceLoaderAware {
     public synchronized void deleteVersion(String id, String version) throws IOException {
 
         // this condition avoids path traversal security issues
-        if (!completeCache.contains(id, version)) {
+        if (!allProcessVersionsCache.contains(id, version)) {
             throw new FileNotFoundException("Unable to find a bundle with the given id and version");
         }
-        Process process = defaultCache.get(id);
+        Process process = currentProcessesCache.get(id);
         Path processRootPath = Paths.get(this.storagePath + BUNDLE_FOLDER)
                 .resolve(id)
                 .normalize();
@@ -505,7 +516,7 @@ public class ProcessesService implements ResourceLoaderAware {
          * heavy operations like file system access)
          */
         if ((process.version().equals(version)) &&
-                completeCache.row(id).size() == 1) {
+                allProcessVersionsCache.row(id).size() == 1) {
             // delete the whole bundle
             // delete process root from disk
             PathUtils.delete(processRootPath);
@@ -519,16 +530,16 @@ public class ProcessesService implements ResourceLoaderAware {
                 // choose the most recent through filesystem walk
                 try (Stream<Path> files = Files.list(processRootPath)
                         .filter(p -> !p.equals(processVersionPath) && Files.isDirectory(p)
-                                && completeCache.contains(id, p.getFileName().toString()))) {
+                                && allProcessVersionsCache.contains(id, p.getFileName().toString()))) {
                     Optional<Path> versionBecomingNewDefault = files
                             .max(this::comparePathsByModifiedTimeManagingException);
                     if (versionBecomingNewDefault.isPresent()) {
                         Path versionBecomingNewDefaultPath = versionBecomingNewDefault.get();
                         Files.copy(versionBecomingNewDefaultPath.resolve(CONFIG_FILE_NAME),
                                 processRootPath.resolve(CONFIG_FILE_NAME), StandardCopyOption.REPLACE_EXISTING);
-                        Process defaultProcess = completeCache.get(id,
+                        Process defaultProcess = allProcessVersionsCache.get(id,
                                 versionBecomingNewDefaultPath.getFileName().toString());
-                        defaultCache.put(id, defaultProcess);
+                        currentProcessesCache.put(id, defaultProcess);
                     } else {
                         throw new IOException("Inconsistent file system state");
                     }
@@ -539,7 +550,7 @@ public class ProcessesService implements ResourceLoaderAware {
             // delete version folder
             PathUtils.delete(processVersionPath);
             log.debug("removed process:{} with version:{} from filesystem", id, version);
-            completeCache.remove(id, version);
+            allProcessVersionsCache.remove(id, version);
             pushProcessChangeInEventBus();
         }
     }
@@ -560,14 +571,14 @@ public class ProcessesService implements ResourceLoaderAware {
                         .filter(path -> path != storageRoot) // Avoid deleting the storage root folder
                         .forEach(PathUtils::silentDelete);
             } finally {
-                this.completeCache.clear();
-                this.defaultCache.clear();
+                this.allProcessVersionsCache.clear();
+                this.currentProcessesCache.clear();
                 this.processGroupsCache = new ProcessGroups(new ArrayList<>());
             }
         } else {
-            this.completeCache.clear();
-            this.defaultCache.clear();
-            new ProcessGroups(new ArrayList<>());
+            this.allProcessVersionsCache.clear();
+            this.currentProcessesCache.clear();
+            this.processGroupsCache = new ProcessGroups(new ArrayList<>());
         }
         pushProcessChangeInEventBus();
     }
@@ -578,12 +589,12 @@ public class ProcessesService implements ResourceLoaderAware {
      * @param id process id
      */
     private void removeFromCache(String id) {
-        Object removed = defaultCache.remove(id);
+        Object removed = currentProcessesCache.remove(id);
         if (removed != null) {
-            log.debug("removed process:{} from defaultCache", id);
+            log.debug("removed process:{} from currentProcessesCache", id);
         }
-        completeCache.row(id).clear();
-        log.debug("removed process:{} from completeCache", id);
+        allProcessVersionsCache.row(id).clear();
+        log.debug("removed process:{} from allProcessVersionsCache", id);
     }
 
     private int comparePathsByModifiedTimeManagingException(Path p1, Path p2) {
