@@ -93,7 +93,7 @@
                             @for (label of labels.value; track label; let i = $index) {
                             <div class="label-chip">
                                 {{ label }}
-                                <span tabindex="0" (click)="removeLabel(i)" (keydown.enter)="removeLabel(i)"> x </span>
+                                <span (click)="removeLabel(i)" (keydown.enter)="removeLabel(i)"> x </span>
                             </div>
                             }
                             <input
