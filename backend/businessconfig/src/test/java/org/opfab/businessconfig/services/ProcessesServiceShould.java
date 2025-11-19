@@ -36,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.opfab.businessconfig.model.ResourceTypeEnum.*;
 import static org.opfab.utilities.PathUtils.copy;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.tuple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,13 +78,12 @@ class ProcessesServiceShould {
     @Test
     void listProcessHistory() {
         List<Process> processHistory = service.listProcessHistory("first");
-        assertThat(processHistory).hasSize(3);
-        assertThat(processHistory.get(0).id()).isEqualTo("first");
-        assertThat(processHistory.get(0).version()).isEqualTo("0.1");
-        assertThat(processHistory.get(1).id()).isEqualTo("first");
-        assertThat(processHistory.get(1).version()).isEqualTo("0.5");
-        assertThat(processHistory.get(2).id()).isEqualTo("first");
-        assertThat(processHistory.get(2).version()).isEqualTo("v1");
+        assertThat(processHistory)
+                .extracting(Process::id, Process::version)
+                .containsExactlyInAnyOrder(
+                        tuple("first", "0.1"),
+                        tuple("first", "0.5"),
+                        tuple("first", "v1"));
     }
 
     @Test
