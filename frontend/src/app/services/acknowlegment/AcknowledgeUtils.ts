@@ -9,6 +9,7 @@
 
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {UsersService} from '@ofServices/users/UsersService';
+import {LoggerService as logger} from '@ofServices/logs/LoggerService';
 
 export class AcknowledgeUtils {
     public static getCurrentUserEntitiesAllowedToAcknowledge(): string[] {
@@ -19,11 +20,21 @@ export class AcknowledgeUtils {
 
         const parentsIds = new Set<string>();
         currentUserEntities.forEach((entityId) => {
-            const parents = EntitiesService.getEntity(entityId).parents;
-            if (parents?.length) {
-                parents.forEach((parentId) => {
-                    parentsIds.add(parentId);
-                });
+            const entity = EntitiesService.getEntity(entityId);
+
+            if (entity) {
+                const parents = entity.parents;
+                if (parents?.length) {
+                    parents.forEach((parentId) => {
+                        parentsIds.add(parentId);
+                    });
+                }
+            } else {
+                // This use case may happen in case of an entity having a parent entityId that does not exist
+                // it happens when loading entities on startup via yml configuration
+                // the actual loading code does not check the validity of parent entityIds
+                // (issue: https://github.com/opfab/operatorfabric-core/issues/9235)
+                logger.warn(`Entity with id ${entityId} not found`);
             }
         });
 
