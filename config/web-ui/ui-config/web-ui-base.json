@@ -102,7 +102,7 @@
                 },
                 {
                     "type": "geojson",
-                    "url": "https://opendata.agenceore.fr/api/explore/v2.1/catalog/datasets/reseau-aerien-haute-tension-htb/exports/geojson?lang=fr&timezone=Europe%2FBerlin",
+                    "url": "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/lignes-electriques-htb-strasbourg/exports/geojson",
                     "style": {
                         "stroke-color": "red"
                     },
