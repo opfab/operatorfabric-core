@@ -34,6 +34,7 @@ export type AgGridColDef = {
     type: string;
     width?: number;
     wrapText?: boolean;
+    valueFormatter?: Function;
 };
 
 export function getColumnsDefinitionForAgGrid(customScreenDefinition: CustomScreenDefinition): AgGridColDef[] {
@@ -216,6 +217,7 @@ function setColumnForNumberArray(col: AgGridColDef) {
     col.autoHeight = true;
     col.wrapText = true;
     col.cellRenderer = 'htmlCellRenderer';
+    col.valueFormatter = defaultColumnValueFormatter;
     col.filterValueGetter = (params: any) => {
         const v = params.data[params.column.colId]?.value;
         return Array.isArray(v) ? v.join(' ') : '';
@@ -250,6 +252,7 @@ function setColumnForPeriodArray(col: AgGridColDef) {
     col.autoHeight = true;
     col.wrapText = true;
     col.cellRenderer = 'htmlCellRenderer';
+    col.valueFormatter = defaultColumnValueFormatter;
     col.comparator = (valueA: any, valueB: any): number => {
         // compare the first startDate and the following if equal
         const arrayA = valueA.value ?? [];
@@ -299,6 +302,7 @@ function setColumnForResponses(col: AgGridColDef) {
     col.field = 'responses';
     col.type = 'responses';
     col.cellRenderer = 'responsesCellRenderer';
+    col.valueFormatter = defaultColumnValueFormatter;
     col.comparator = (valueA: any, valueB: any) => {
         const responseA = valueA.value.map((response) => response.entityName).join(' ');
         const responseB = valueB.value.map((response) => response.entityName).join(' ');
@@ -320,6 +324,7 @@ function setColumnForSelect(col: AgGridColDef) {
     col.sortable = false;
     col.filter = false;
     col.cellRenderer = 'selectCellRenderer';
+    col.valueFormatter = defaultColumnValueFormatter;
 
     // If there is a tooltip, i.e., tooltipValueGetter is defined, we need to override it
     // because for select fields, the tooltip should display the label of the selected option,
@@ -399,6 +404,9 @@ const valueComparator = (valueA: any, valueB: any): number => {
 
 const defaultFilterValueGetter = (params: any): any => {
     return params.data[params.column.colId]?.value ?? '';
+};
+const defaultColumnValueFormatter = (params: any): any => {
+    return params.value?.name ?? '';
 };
 const stringFilterValueGetter = (params: any): string => {
     return params.data[params.column.colId].stringValue;

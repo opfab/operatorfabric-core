@@ -262,10 +262,12 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
                 input: {},
                 numberArray: {},
                 period: {},
+                periodArray: {},
                 responseFromMyEntities: {},
                 responses: {},
                 severity: {},
-                typeOfState: {}
+                typeOfState: {},
+                number: {}
             },
             defaultColDef: {
                 editable: false,
