@@ -25,7 +25,7 @@
         "@types/amqplib": "0.10.8",
         "@types/jest": "30.0.0",
         "@types/node": "24.10.1",
-        "@types/sinon": "20.0.0",
+        "@types/sinon": "21.0.0",
         "@types/express": "5.0.5",
         "@types/config": "3.3.5",
         "eslint": "9.39.1",
