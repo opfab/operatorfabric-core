@@ -57,6 +57,8 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-entities').find('.vscomp-option-text').eq(1).click({force: true});
         cy.get('#opfab-entities').click();
 
+        cy.get('#opfab-email').type('testuser@test.com');
+
         cy.get('#opfab-admin-user-btn-add').click();
 
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 19');
@@ -99,6 +101,8 @@ describe('AdmininstrationPages', () => {
         // Select new entity
         cy.get('#opfab-entities').find('.vscomp-option-text').eq(2).click({force: true});
         cy.get('#opfab-entities').click();
+
+        cy.get('#opfab-email').should('have.value', 'testuser@test.com');
 
         cy.get('#opfab-admin-user-btn-save').click();
 

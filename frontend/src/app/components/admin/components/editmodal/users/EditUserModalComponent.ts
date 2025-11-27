@@ -40,6 +40,7 @@ export class EditUserModalComponent implements OnInit {
         comment: FormControl<string | null>;
         groups: FormControl<[] | null>;
         entities: FormControl<[] | null>;
+        email: FormControl<string | null>;
     }>;
 
     entitiesMultiSelectOptions: Array<MultiSelectOption> = [];
@@ -77,15 +78,16 @@ export class EditUserModalComponent implements OnInit {
             lastName: new FormControl('', []),
             comment: new FormControl('', []),
             groups: new FormControl([]),
-            entities: new FormControl([])
+            entities: new FormControl([]),
+            email: new FormControl('', Validators.email)
         });
 
         if (this.row) {
             // If the modal is used for edition, initialize the modal with current data from this row
 
             // For 'simple' fields (where the value is directly displayed), we use the form's patching method
-            const {login, firstName, lastName, comment} = this.row;
-            this.userForm.patchValue({login, firstName, lastName, comment}, {onlySelf: false});
+            const {login, firstName, lastName, comment, email} = this.row;
+            this.userForm.patchValue({login, firstName, lastName, comment, email}, {onlySelf: false});
 
             // Otherwise, we use the selectedItems property of the of-multiselect component
             UsersService.getUser(login).subscribe((user) => {
@@ -111,7 +113,7 @@ export class EditUserModalComponent implements OnInit {
 
     update() {
         this.cleanForm();
-        UsersService.update({...this.userForm.value, email: this.row?.email}).subscribe(() => {
+        UsersService.update(this.userForm.value).subscribe(() => {
             this.activeModal.close('Update button clicked on user modal');
             // We call the activeModal "close" method and not "dismiss" to indicate that the modal was closed because the
             // user chose to perform an action (here, update the selected item).
@@ -154,6 +156,7 @@ export class EditUserModalComponent implements OnInit {
         if (this.lastName.value) this.lastName.setValue(this.lastName.value.trim());
         if (this.firstName.value) this.firstName.setValue(this.firstName.value.trim());
         if (this.comment.value) this.comment.setValue(this.comment.value.trim());
+        if (this.email.value) this.email.setValue(this.email.value.trim());
     }
 
     get login() {
@@ -178,6 +181,10 @@ export class EditUserModalComponent implements OnInit {
 
     get entities() {
         return this.userForm.get('entities');
+    }
+
+    get email() {
+        return this.userForm.get('email');
     }
 
     dismissModal(reason: string): void {

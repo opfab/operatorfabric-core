@@ -99,6 +99,19 @@
                         <label for="opfab-comment" translate>admin.input.user.comment</label>
                         <input formControlName="comment" name="comment" id="opfab-comment" type="text" />
                     </div>
+                    <div class="opfab-settings-item">
+                        <div class="opfab-input">
+                            <label for="opfab-setting-email" translate>settings.email</label>
+                            <input id="opfab-email" type="email" formControlName="email" autocomplete="off" />
+                        </div>
+                        @if (email.invalid) {
+                        <div class="opfab-input-invalid" style="margin-top: 0px">
+                            @if (email.errors.email) {
+                            <div translate>settings.input.errors.invalidEmail</div>
+                            }
+                        </div>
+                        }
+                    </div>
                 </div>
             </div>
         </form>
