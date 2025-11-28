@@ -36,6 +36,8 @@ export class UserCardTemplateGateway {
 
     private static _functionToBeCalledBeforeCardSending: Function;
 
+    private static _functionToSendDestroyToTemplate: Function;
+
     public static init() {
         UserCardTemplateGateway._editionMode = null;
         UserCardTemplateGateway._endDate = null;
@@ -59,6 +61,7 @@ export class UserCardTemplateGateway {
     }
 
     public static initTemplateFunctions() {
+        UserCardTemplateGateway.sendDestroyToTemplate(); // Send destroy to previous template if any
         UserCardTemplateGateway._functionToGetSpecficCardInformationFromTemplate = () => {
             logger.info(
                 new Date().toISOString() +
@@ -67,6 +70,7 @@ export class UserCardTemplateGateway {
             return {valid: false, errorMsg: 'Impossible to respond due to a technical error in the template'};
         };
         UserCardTemplateGateway._functionToSendEntityUsedForSendingCardToTemplate = () => {};
+        UserCardTemplateGateway._functionToSendDestroyToTemplate = () => {};
     }
 
     public static getEditionMode(): string {
@@ -121,6 +125,13 @@ export class UserCardTemplateGateway {
         return UserCardTemplateGateway._userEntityChildCard;
     }
 
+    public static sendDestroyToTemplate() {
+        if (UserCardTemplateGateway._functionToSendDestroyToTemplate) {
+            UserCardTemplateGateway._functionToSendDestroyToTemplate();
+            // avoid multiple destroy calls
+            UserCardTemplateGateway._functionToSendDestroyToTemplate = () => {};
+        }
+    }
     public static sendEntityUsedForSendingCardToTemplate(senderEntity: any) {
         UserCardTemplateGateway._functionToSendEntityUsedForSendingCardToTemplate(senderEntity);
     }
@@ -241,6 +252,9 @@ export class UserCardTemplateGateway {
         UserCardTemplateGateway._startDate = value;
     }
 
+    public static setTemplateListenerForDestroy(listener: Function) {
+        UserCardTemplateGateway._functionToSendDestroyToTemplate = listener;
+    }
     public static setTemplateListenerForEntityUsedForSendingCard(listener: Function) {
         UserCardTemplateGateway._functionToSendEntityUsedForSendingCardToTemplate = listener;
     }

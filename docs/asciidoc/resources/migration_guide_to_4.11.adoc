@@ -13,3 +13,22 @@ We do not provide a Java client library for release 4.11.0. We choose to stop ma
 
 The old Java client library is still available in the Maven central repository but it will not be updated anymore.
 
+== Destroy listener for templates 
+
+
+It is now possible to be notified when a template is destroyed, i.e., when a card or user card is removed from the display.
+It is strongly recommended to use this feature to clean up resources allocated by your template, especially event listeners.
+
+For cards  :
+
+```
+opfab.currentCard.listenToDestroy(() => {// Do some stuff});
+```
+
+For usercards : 
+
+```
+opfab.currentUserCard.listenToDestroy(() => {// Do some stuff});
+```
+
+Only one listener can be registered at a time. If you register another listener, the previous listener will not receive events.

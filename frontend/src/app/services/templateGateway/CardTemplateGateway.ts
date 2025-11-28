@@ -34,6 +34,7 @@ export class CardTemplateGateway {
 
     private static _functionToGetUserResponseFromTemplate: Function;
     private static _functionToEditCard: Function;
+    private static _functionToSendDestroyToTemplate: Function;
 
     public static init() {
         CardTemplateGateway._card = undefined;
@@ -51,9 +52,11 @@ export class CardTemplateGateway {
     }
 
     public static initTemplateFunctions() {
+        CardTemplateGateway.sendDestroyToTemplate(); // Send destroy to previous template if any
         CardTemplateGateway._functionToSendResponseLockToTemplate = () => {};
         CardTemplateGateway._functionToSendResponseUnlockToTemplate = () => {};
         CardTemplateGateway._functionToSendChildCardsToTemplate = (childCards: Card[]) => {};
+        CardTemplateGateway._functionToSendDestroyToTemplate = () => {};
         CardTemplateGateway._functionToSendLttdExpiredToTemplate = (lttdExpired: boolean) => {};
         CardTemplateGateway._functionToSendScreenSizeToTemplate = (size: string) => {};
         CardTemplateGateway._functionToSendStyleChangeToTemplate = () => {};
@@ -128,6 +131,14 @@ export class CardTemplateGateway {
         CardTemplateGateway._functionToSendChildCardsToTemplate(CardTemplateGateway.getChildCards());
     }
 
+    public static sendDestroyToTemplate() {
+        if (CardTemplateGateway._functionToSendDestroyToTemplate) {
+            CardTemplateGateway._functionToSendDestroyToTemplate();
+            // Avoid calling destroy multiple times
+            CardTemplateGateway._functionToSendDestroyToTemplate = () => {};
+        }
+    }
+
     public static sendLttdExpiredToTemplate(expired: boolean) {
         CardTemplateGateway._functionToSendLttdExpiredToTemplate(expired);
     }
@@ -195,6 +206,10 @@ export class CardTemplateGateway {
 
     public static setTemplateListenerForChildCards(listener: Function) {
         CardTemplateGateway._functionToSendChildCardsToTemplate = listener;
+    }
+
+    public static setTemplateListenerForDestroy(listener: Function) {
+        CardTemplateGateway._functionToSendDestroyToTemplate = listener;
     }
 
     public static setTemplateListenerForLttdExpired(listener: Function) {

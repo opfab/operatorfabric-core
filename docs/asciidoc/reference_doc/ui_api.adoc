@@ -233,6 +233,15 @@ An example of usage can be found in the file https://github.com/opfab/operatorfa
 ``` 
     const isUserRequired = opfab.currentCard.isUserMemberOfAnEntityRequiredToRespond()
 ```
+=== Function listenToDestroy
+
+Register a function to listen for template destruction (i.e., when a card is removed from display). This is especially useful if you need to remove JavaScript event listeners.
+
+```
+    opfab.currentCard.listenToDestroy(() => {// Do some stuff});
+```
+
+Only one listener can be registered at a time. If you register another listener, the previous listener will not receive events.
 
 === Function listenToResponseLock
 
@@ -429,6 +438,16 @@ When editing a user card, the template can get the response sent by the entity o
 [WARNING]
 The method returns only one child card and is therefore not compatible with the fact that the user is in more than one activity area authorized to send the card. In this case, if there is more than one child card, only one will be returned.
 
+
+=== Function listenToDestroy
+
+Register a function to listen for template destruction (i.e., when a usercard is removed from display). This is especially useful if you need to remove JavaScript event listeners.
+
+```
+       opfab.currentUserCard.listenToDestroy(() => {// Do some stuff});
+```
+
+Only one listener can be registered at a time. If you register another listener, the previous listener will not receive events.
 
 === Function listenToEntityUsedForSendingCard
 
