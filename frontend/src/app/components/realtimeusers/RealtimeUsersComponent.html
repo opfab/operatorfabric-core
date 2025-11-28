@@ -50,7 +50,7 @@
                                 </span>
                                 @if (isEllipsisActive('grouped-label-' + line.entityId)) {
                                 <span>
-                                    <span class="opfab-tooltip-content bottom" style="z-index: 1; text-align: left">
+                                    <span class="opfab-tooltip-content top" style="z-index: 1; text-align: left">
                                         @for (user of line.connectedUsers.split(', '); track user) {
                                         <div>{{ user }}</div>
                                         }
