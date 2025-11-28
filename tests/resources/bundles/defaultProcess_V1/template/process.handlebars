@@ -36,6 +36,11 @@
             if (document.getElementById(rect)) document.getElementById(rect).setAttribute("fill",stateColor);
             else console.log("element not found " + rect);
 
+            
+            const chart = document.getElementById('chart');
+            chart.addEventListener("click",  this.showDialogExample); 
+            opfab.currentCard.listenToDestroy(() => chart.removeEventListener("click", this.showDialogExample));
+
             opfab.currentCard.listenToScreenSize((size) => {
                 const chart = document.getElementById('chart');
                 if (chart) {
@@ -47,13 +52,13 @@
                     chart.setAttribute("height", "311px");
                     }
 
-                    chart.addEventListener("click", () => {
-                        const dialog = document.querySelector("dialog");
-                        dialog.close();
-                        dialog.showModal();
-                    });
                 }
             });
+        },
+        showDialogExample: function() {
+            const dialog = document.querySelector("dialog");
+            dialog.close();
+            dialog.showModal();
         }
     } 
     cardTemplate.initSvg();

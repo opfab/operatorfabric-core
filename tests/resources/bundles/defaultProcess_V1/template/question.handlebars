@@ -88,6 +88,7 @@
     cardTemplate = {
 
         answerSelect: null,
+        eventListener: null, 
         answersOptions: [
                         { label: "Time frame is too short to decide", value: "time_frame_is_too_short_to_decide" },
                         { label: "Constraints on the network", value: "constraints_on_the_network" },
@@ -119,6 +120,15 @@
 
         },
 
+        toggleResponseDisplay: function() {
+            const toggleSwitch = document.getElementById('opfab-toggle');
+            if (toggleSwitch.checked) {
+                document.getElementById('opfab-answer-selector').style.display = 'block';
+            } else {
+                document.getElementById('opfab-answer-selector').style.display = 'none';
+            }
+        },
+
         initCardTemplate: function() {
 
             let today = new Date();
@@ -129,12 +139,10 @@
             document.getElementById('date').innerHTML = date;
 
             const toggleSwitch = document.getElementById('opfab-toggle');
-            toggleSwitch.addEventListener('change', function() {
-                if (toggleSwitch.checked) {
-                    document.getElementById('opfab-answer-selector').style.display = 'block';
-                } else {
-                    document.getElementById('opfab-answer-selector').style.display = 'none';
-                }
+            toggleSwitch.addEventListener('change', this.toggleResponseDisplay);
+            opfab.currentCard.listenToDestroy(() => {
+                console.log("Destroying event listener");
+                toggleSwitch.removeEventListener('change', this.toggleResponseDisplay);
             });
 
             opfab.currentCard.listenToChildCards((childCards) => {
@@ -223,6 +231,7 @@
 
         opfab.cards.sendResponseCard(opfab.currentCard.getCard(), responseCard.responseCard);
     }
+
 
     cardTemplate.init();
 </script>

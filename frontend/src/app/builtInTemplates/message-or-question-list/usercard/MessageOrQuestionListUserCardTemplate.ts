@@ -70,8 +70,12 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
             search: true
         });
 
-        document.querySelector('#message-select').addEventListener('change', () => {
+        const messageSelectListener = () => {
             this.fillTextAndRecipientFields();
+        };
+        document.querySelector('#message-select').addEventListener('change', messageSelectListener);
+        opfab.currentUserCard.listenToDestroy(() => {
+            document.querySelector('#message-select').removeEventListener('change', messageSelectListener);
         });
     }
 

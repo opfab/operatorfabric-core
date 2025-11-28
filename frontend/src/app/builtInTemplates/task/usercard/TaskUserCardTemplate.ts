@@ -48,6 +48,7 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     ];
 
     hasMonthlyFreqAlreadyBeenDisplayedInCreateMode = false;
+    listeners = [];
 
     constructor() {
         super();
@@ -490,35 +491,48 @@ export class TaskUserCardTemplate extends BaseUserCardTemplate {
     }
 
     initEventListeners() {
-        document.querySelector('#radioButtonDailyFreq').addEventListener('click', () => {
+        this.addClickListener('radioButtonDailyFreq', () => {
             this.displayDailyFrequencyUI();
         });
-        document.querySelector('#radioButtonMonthlyFreq').addEventListener('click', () => {
+        this.addClickListener('radioButtonMonthlyFreq', () => {
             this.displayMonthlyFrequencyUI();
         });
-        document.querySelector('#radioButtonWithoutRecurrence').addEventListener('click', () => {
+        this.addClickListener('radioButtonWithoutRecurrence', () => {
             this.displayWithoutRecurrenceUI();
         });
 
-        document.querySelector('#selectAllDays').addEventListener('click', () => {
+        this.addClickListener('selectAllDays', () => {
             this.toggleSelectAllDays();
         });
-        document.querySelector('#weekdaysCheckboxes').addEventListener('click', () => {
+        this.addClickListener('weekdaysCheckboxes', () => {
             this.checkIsAllDaysSelected();
         });
 
-        document.querySelector('#selectAllMonths').addEventListener('click', () => {
+        this.addClickListener('selectAllMonths', () => {
             this.toggleSelectAllMonths();
         });
-        document.querySelector('#monthsCheckboxes').addEventListener('click', () => {
+        this.addClickListener('monthsCheckboxes', () => {
             this.checkIsAllMonthsSelected();
         });
 
-        document.querySelector('#radioButtonNthDay').addEventListener('click', () => {
+        this.addClickListener('radioButtonNthDay', () => {
             this.displayNthDayTable();
         });
-        document.querySelector('#radioButtonNthWeekday').addEventListener('click', () => {
+        this.addClickListener('radioButtonNthWeekday', () => {
             this.displayNthWeekdayTable();
+        });
+        opfab.currentUserCard.listenToDestroy(() => this.removeListeners());
+    }
+
+    addClickListener(id: string, listener: any) {
+        const tag = document.querySelector(`#${id}`);
+        tag.addEventListener('click', listener);
+        this.listeners.push({tag, listener});
+    }
+
+    removeListeners() {
+        this.listeners.forEach((listener) => {
+            listener.tag?.removeEventListener('click', listener.listener);
         });
     }
 

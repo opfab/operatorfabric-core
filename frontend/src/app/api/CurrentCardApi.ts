@@ -29,6 +29,7 @@ export class CurrentCardAPI {
             listenToResponseLock: (listener) => CardTemplateGateway.setTemplateListenerForResponseLock(listener),
             listenToResponseUnlock: (listener) => CardTemplateGateway.setTemplateListenerForResponseUnlock(listener),
             listenToChildCards: (listener) => CardTemplateGateway.setTemplateListenerForChildCards(listener),
+            listenToDestroy: (listener) => CardTemplateGateway.setTemplateListenerForDestroy(listener),
             listenToLttdExpired: (listener) => CardTemplateGateway.setTemplateListenerForLttdExpired(listener),
             listenToStyleChange: (listener) => CardTemplateGateway.setTemplateListenerForStyleChange(listener),
             listenToScreenSize: (listener) => CardTemplateGateway.setTemplateListenerForScreenSize(listener),

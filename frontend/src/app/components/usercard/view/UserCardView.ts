@@ -282,4 +282,8 @@ export class UserCardView {
             this.useCurrentDateForCardStartDate
         );
     }
+
+    public destroy() {
+        UserCardTemplateGateway.sendDestroyToTemplate();
+    }
 }

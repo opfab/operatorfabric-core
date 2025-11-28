@@ -420,5 +420,6 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         if (this.intervalIdForConnectedRecipientsUpdate) {
             this.stopUpdateRegularlyConnectedUser();
         }
+        this.userCardView.destroy();
     }
 }

@@ -29,6 +29,8 @@ export class CurrentUserCardAPI {
             getStartDate: UserCardTemplateGateway.getStartDate,
             getUserEntityChildCard: UserCardTemplateGateway.getUserEntityChildCard,
 
+            listenToDestroy: (listener) => UserCardTemplateGateway.setTemplateListenerForDestroy(listener),
+
             listenToEntityUsedForSendingCard: (listener) =>
                 UserCardTemplateGateway.setTemplateListenerForEntityUsedForSendingCard(listener),
 
