@@ -14,7 +14,7 @@
     "dependencies": {
         "axios": "1.13.2",
         "config": "4.1.1",
-        "express": "5.2.0",
+        "express": "5.2.1",
         "jwt-decode": "4.0.0",
         "amqp-connection-manager": "5.0.0",
         "amqplib": "0.10.9",
