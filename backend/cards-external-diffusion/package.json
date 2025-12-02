@@ -38,7 +38,7 @@
     "devDependencies": {
         "@types/amqplib": "0.10.8",
         "@types/config": "3.3.5",
-        "@types/express": "5.0.5",
+        "@types/express": "5.0.6",
         "@types/html-to-text": "9.0.4",
         "@types/jest": "30.0.0",
         "@types/jsdom": "27.0.0",
