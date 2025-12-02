@@ -13,7 +13,7 @@ operatorfabric:
     logFile: "opfab.%DATE%.log"
     logLevel: info
   emailToCard:
-    adminPort: 2108
+    adminPort: 2109
     activeOnStartup: true
     defaultConfig:
       secondsBetweenConnectionChecks: 10
