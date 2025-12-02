@@ -6,6 +6,11 @@ operatorfabric:
           jwk-set-uri: http://localhost:89/auth/realms/dev/protocol/openid-connect/certs
     jwt:
       login-claim: preferred_username
+  servicesUrls:
+    authToken: "http://127.0.0.1:2002/auth/token"
+    users: "http://127.0.0.1:2103"
+    cardsPublication: "http://127.0.0.1:2102"
+    cardsConsultation: "http://127.0.0.1:2104"
   internalAccount:
     login: opfab
     password: test # use for test environment only
@@ -27,6 +32,6 @@ operatorfabric:
           password: 'a'
         - mailbox: 'operator2@test.com'
           password: 'b'
-    adminPort: 2108
+    adminPort: 2109
     activeOnStartup: true
 
