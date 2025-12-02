@@ -1,0 +1,19 @@
+operatorfabric:
+  emailToCard:
+    adminPort: 2109
+    activeOnStartup: true
+    defaultConfig:
+      secondsBetweenConnectionChecks: 10
+      host: 'localhost'
+      port: 3143
+      tls: false
+      authTimeout: 5000
+      mailboxes:
+        - mailbox: 'operator1@test.com'
+          password: 'a'
+        - mailbox: 'operator2@test.com'
+          password: 'b'
+  logConfig:
+    logFolder: /var/log/opfab/
+    logFile: "opfab.%DATE%.log"
+    logLevel: info
