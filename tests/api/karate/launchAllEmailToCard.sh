@@ -8,4 +8,5 @@
 # SPDX-License-Identifier: MPL-2.0
 # This file is part of the OperatorFabric project.
 
-node build/emailToCard.js
+echo "Launch Karate tests for Email To Card"
+../../../gradlew karate --args="`cat emailToCardTests.txt`"
