@@ -27,6 +27,7 @@
         "jwt-decode": "4.0.0",
         "mailparser": "3.9.0",
         "mongodb": "7.0.0",
+        "multer": "2.0.2",
         "winston": "3.18.3",
         "winston-daily-rotate-file": "5.0.0"
     },
@@ -37,6 +38,7 @@
         "@types/imap-simple": "4.2.10",
         "@types/jest": "30.0.0",
         "@types/mailparser": "3.4.6",
+        "@types/multer": "2.0.0",
         "@types/node": "24.10.1",
         "@types/sinon": "20.0.0",
         "eslint": "9.39.1",
