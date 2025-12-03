@@ -10,7 +10,9 @@
 			"templateName" : "template",
 			"styles" : [ "style" ],
 			"type" : "CANCELED",
-			"emailBodyTemplate" : "email_template",
+			"email" : {
+				"bodyTemplate" : "email_template"
+			},
 			"editCardEnabledOnUserInterface": false,
 			"copyCardEnabledOnUserInterface": false,
 		    "showAcknowledgmentFooter" : "OnlyForEmittingEntity"

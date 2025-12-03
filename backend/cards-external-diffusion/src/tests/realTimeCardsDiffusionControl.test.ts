@@ -129,7 +129,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -184,7 +186,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -241,7 +245,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -295,7 +301,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -348,7 +356,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -403,7 +413,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };
@@ -456,7 +468,9 @@ describe('Cards external diffusion', function () {
             version: '1',
             states: {
                 processState: {
-                    emailBodyTemplate: 'testTemplateMail'
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
                 }
             }
         };

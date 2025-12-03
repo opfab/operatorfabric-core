@@ -34,7 +34,7 @@ public record ProcessStates(
     UserCard userCard,
     Response response,
     String templateName,
-    String emailBodyTemplate,
+    Email email,
     List<String> styles,
     TypeOfStateEnum type,
     Boolean isOnlyAChildState,
