@@ -19,7 +19,9 @@
                 "publisherList": [{"id": "ENTITY_FR", "levels": [1]}]
             },
             "templateName": "template",
-            "emailBodyTemplate": "templateMail",
+            "email": {
+                "bodyTemplate": "templateMail"
+            },
             "styles": ["style"],
             "acknowledgmentAllowed": "Always",
             "type": "FINISHED"
@@ -65,7 +67,9 @@
             "name": "⚠️ Network Contingencies ⚠️",
             "description": "Contingencies state",
             "templateName": "contingencies",
-            "emailBodyTemplate": "contingenciesMail",
+            "email": {
+                "bodyTemplate": "contingenciesMail"
+            },
             "styles": ["contingencies"],
             "acknowledgmentAllowed": "Always",
             "type": "INPROGRESS",

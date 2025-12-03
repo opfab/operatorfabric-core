@@ -19,7 +19,7 @@ The old Java client library is still available in the Maven central repository b
 It is now possible to be notified when a template is destroyed, i.e., when a card or user card is removed from the display.
 It is strongly recommended to use this feature to clean up resources allocated by your template, especially event listeners.
 
-For cards  :
+For cards :
 
 ```
 opfab.currentCard.listenToDestroy(() => {// Do some stuff});
@@ -45,3 +45,25 @@ So :
 * `of-cards-publication-service` is now `of-cards-publication`
 * `of-businessconfig-service` is now `of-businessconfig`
 * `of-cards-external-diffusion-service` is now `of-cards-external-diffusion`
+
+== Email configuration in bundles
+
+The state parameter `emailBodyTemplate` has been moved to `email.bodyTemplate`. So you have to update
+your file `config.json` if needed. For example:
+
+Replace
+----
+  processState: {
+      emailBodyTemplate: 'testTemplateMail'
+  }
+----
+
+With
+
+----
+  processState: {
+      email: {
+          bodyTemplate: 'testTemplateMail'
+      }
+  }
+----

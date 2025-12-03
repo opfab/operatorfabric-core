@@ -46,7 +46,7 @@ public class ProcessStates {
 
     private String templateName = null;
 
-    private String emailBodyTemplate = null;
+    private Email email = null;
 
     private String emailAttachmentTemplate = null;
 
@@ -265,17 +265,17 @@ public class ProcessStates {
         this.templateName = templateName;
     }
 
-    public ProcessStates emailBodyTemplate(String emailBodyTemplate) {
-        this.emailBodyTemplate = emailBodyTemplate;
+    public ProcessStates email(Email email) {
+        this.email = email;
         return this;
     }
 
-    public String getEmailBodyTemplate() {
-        return emailBodyTemplate;
+    public Email getEmail() {
+        return email;
     }
 
-    public void setEmailBodyTemplate(String emailBodyTemplate) {
-        this.emailBodyTemplate = emailBodyTemplate;
+    public void setEmail(Email email) {
+        this.email = email;
     }
 
     public ProcessStates emailAttachmentTemplate(String emailAttachmentTemplate) {
@@ -415,7 +415,7 @@ public class ProcessStates {
                 Objects.equals(this.color, processStates.color) &&
                 Objects.equals(this.userCard, processStates.userCard) &&
                 Objects.equals(this.templateName, processStates.templateName) &&
-                Objects.equals(this.emailBodyTemplate, processStates.emailBodyTemplate) &&
+                Objects.equals(this.email, processStates.email) &&
                 Objects.equals(this.emailAttachmentTemplate, processStates.emailAttachmentTemplate) &&
                 Objects.equals(this.emailAttachmentFileName, processStates.emailAttachmentFileName) &&
                 Objects.equals(this.styles, processStates.styles) &&
@@ -431,7 +431,7 @@ public class ProcessStates {
         return Objects.hash(response, acknowledgmentAllowed, consideredAcknowledgedForUserWhen,
                 cancelAcknowledgmentAllowed, showAcknowledgmentFooter, closeCardWhenUserAcknowledges,
                 editCardEnabledOnUserInterface, copyCardEnabledOnUserInterface, deleteCardEnabledOnUserInterface, name,
-                description, showDetailCardHeader, color, userCard, templateName, emailBodyTemplate, emailAttachmentTemplate, emailAttachmentFileName, styles, type,
+                description, showDetailCardHeader, color, userCard, templateName, email, emailAttachmentTemplate, emailAttachmentFileName, styles, type,
                 isOnlyAChildState, validateAnswerButtonLabel, modifyAnswerButtonLabel, automaticPinWhenAcknowledged);
     }
 
@@ -461,7 +461,7 @@ public class ProcessStates {
         sb.append("    color: ").append(toIndentedString(color)).append("\n");
         sb.append("    userCard: ").append(toIndentedString(userCard)).append("\n");
         sb.append("    templateName: ").append(toIndentedString(templateName)).append("\n");
-        sb.append("    emailBodyTemplate: ").append(toIndentedString(emailBodyTemplate)).append("\n");
+        sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    emailAttachmentTemplate: ").append(toIndentedString(emailAttachmentTemplate)).append("\n");
         sb.append("    emailAttachmentFileName: ").append(toIndentedString(emailAttachmentFileName)).append("\n");
         sb.append("    styles: ").append(toIndentedString(styles)).append("\n");

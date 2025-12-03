@@ -231,10 +231,10 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             (this.showCardUrls ? '</a>' : '');
 
         const stateName = cardContent.state;
-        if (cardConfig?.states?.[stateName]?.emailBodyTemplate != null) {
+        if (cardConfig?.states?.[stateName]?.email?.bodyTemplate != null) {
             const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
                 cardContent.process,
-                cardConfig.states[stateName].emailBodyTemplate as string,
+                cardConfig.states[stateName].email.bodyTemplate as string,
                 cardContent.processVersion
             );
             // Set timezone near templateCompiler call to avoid concurrency issues when sending multiple emails with different timezones.
