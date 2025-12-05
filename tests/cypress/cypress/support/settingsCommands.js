@@ -45,12 +45,6 @@ export class SettingsCommands extends OpfabCommands {
         this.save();
     };
 
-    setEmailAddressAndSave = function (email) {
-        cy.get('#opfab-setting-input-email').clear();
-        cy.get('#opfab-setting-input-email').type(email);
-        this.save();
-    };
-
     clickHallwayModeAndSave = function () {
         cy.get('#opfab-setting-input-hallway-mode-checkbox').click();
         this.save();

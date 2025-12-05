@@ -13,7 +13,6 @@ OpFab can send card notifications via email. These notifications are sent when a
 == Configuring Email Notifications
 
 Users can enable email notifications in their user settings. If the parameter
-`operatorfabric.users.getEmailFromUserInsteadOfSettingsThey` is set to true, the email address is fetched from the token.
 The email address is displayed in the settings screen but the field is readonly.
 If the parameter is absent or set to false, the user must provide an email address (in the settings screen) for receiving
 notifications and select the processes/states they want to be notified about.

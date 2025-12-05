@@ -224,7 +224,6 @@ describe('Feed notification configuration tests', function () {
 
         // All cards minus the cards to check should be visible
         cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
-
     });
 
     it('Check envelop icon is present only if mail option is checked and mail address is filled', function () {
@@ -238,7 +237,6 @@ describe('Feed notification configuration tests', function () {
 
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
-        settings.setEmailAddressAndSave('mail@test.com');
         settings.clickOnSendNotificationByEmailAndSave();
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
@@ -252,7 +250,6 @@ describe('Feed notification configuration tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToSettings();
-        settings.setEmailAddressAndSave('mail@test.com');
         settings.clickOnSendNotificationByEmailAndSave();
 
         opfab.navigateToNotificationConfiguration();

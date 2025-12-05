@@ -34,8 +34,6 @@ public class CurrentUserWithPerimeters {
 
     private Boolean sendWeeklyEmail = null;
 
-    private String emailForCardSending = null;
-
     private String timezoneForEmails = null;
 
     private List<PermissionEnum> permissions = null;
@@ -171,19 +169,6 @@ public class CurrentUserWithPerimeters {
         this.sendWeeklyEmail = sendWeeklyEmail;
     }
 
-    public CurrentUserWithPerimeters emailForCardSending(String emailForCardSending) {
-        this.emailForCardSending = emailForCardSending;
-        return this;
-    }
-
-    public String getEmailForCardSending() {
-        return emailForCardSending;
-    }
-
-    public void setEmailForCardSending(String emailForCardSending) {
-        this.emailForCardSending = emailForCardSending;
-    }
-
     public CurrentUserWithPerimeters timezoneForEmails(String timezoneForEmails) {
         this.timezoneForEmails = timezoneForEmails;
         return this;
@@ -237,7 +222,6 @@ public class CurrentUserWithPerimeters {
                 Objects.equals(this.emailToPlainText, currentUserWithPerimeters.emailToPlainText) &&
                 Objects.equals(this.sendDailyEmail, currentUserWithPerimeters.sendDailyEmail) &&
                 Objects.equals(this.sendWeeklyEmail, currentUserWithPerimeters.sendWeeklyEmail) &&
-                Objects.equals(this.emailForCardSending, currentUserWithPerimeters.emailForCardSending) &&
                 Objects.equals(this.timezoneForEmails, currentUserWithPerimeters.timezoneForEmails) &&
                 Objects.equals(this.permissions, currentUserWithPerimeters.permissions);
     }
@@ -245,8 +229,7 @@ public class CurrentUserWithPerimeters {
     @Override
     public int hashCode() {
         return Objects.hash(userData, computedPerimeters, processesStatesNotNotified, processesStatesNotifiedByEmail,
-                sendCardsByEmail, emailToPlainText, sendDailyEmail, sendWeeklyEmail, emailForCardSending,
-                timezoneForEmails, permissions);
+                sendCardsByEmail, emailToPlainText, sendDailyEmail, sendWeeklyEmail, timezoneForEmails, permissions);
     }
 
     @Override
@@ -263,7 +246,6 @@ public class CurrentUserWithPerimeters {
         sb.append("    emailToPlainText: ").append(toIndentedString(emailToPlainText)).append("\n");
         sb.append("    sendDailyEmail: ").append(toIndentedString(sendDailyEmail)).append("\n");
         sb.append("    sendWeeklyEmail: ").append(toIndentedString(sendWeeklyEmail)).append("\n");
-        sb.append("    emailForCardSending: ").append(toIndentedString(emailForCardSending)).append("\n");
         sb.append("    timezoneForEmails: ").append(toIndentedString(timezoneForEmails)).append("\n");
         sb.append("    permissions: ").append(toIndentedString(permissions)).append("\n");
         sb.append("}");
