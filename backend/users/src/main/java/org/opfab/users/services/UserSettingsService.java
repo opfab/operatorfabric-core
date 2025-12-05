@@ -98,7 +98,6 @@ public class UserSettingsService {
                 || (userSettingsPatch.getEmailToPlainText() != null)
                 || (userSettingsPatch.getSendDailyEmail() != null)
                 || (userSettingsPatch.getSendWeeklyEmail() != null)
-                || (userSettingsPatch.getEmail() != null)
                 || (userSettingsPatch.getTimezoneForEmails() != null))
             notificationService.publishUpdatedUserMessage(userLoginToPatch);
 

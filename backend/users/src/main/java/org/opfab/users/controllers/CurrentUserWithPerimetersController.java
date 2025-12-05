@@ -44,7 +44,6 @@ public class CurrentUserWithPerimetersController implements UserExtractor {
             UserSettingsRepository userSettingsRepository, UserActionLogRepository userActionLogRepository,
             EventBus eventBus,
             @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated,
-            @Value("${operatorfabric.users.getEmailFromUserInsteadOfSettings:false}") boolean getEmailFromUserInsteadOfSettings,
             LastUserActionRepository lastUserActionRepository) {
 
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
@@ -56,8 +55,7 @@ public class CurrentUserWithPerimetersController implements UserExtractor {
                 notificationService, userActionLogService, userActionLogActivated);
         this.currentUserWithPerimetersService = new CurrentUserWithPerimetersService(usersService,
                 userSettingsService,
-                entityRepository,
-                getEmailFromUserInsteadOfSettings);
+                entityRepository);
     }
 
     @GetMapping(produces = { "application/json" })

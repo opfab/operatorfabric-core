@@ -21,14 +21,11 @@ public class CurrentUserWithPerimetersService {
     private UserSettingsService userSettingsService;
     private EntityRepository entityRepository;
 
-    private boolean getEmailFromUserInsteadOfSettings;
-
     public CurrentUserWithPerimetersService(UsersService usersService, UserSettingsService userSettingsService,
-            EntityRepository entityRepository, boolean getEmailFromUserInsteadOfSettings) {
+            EntityRepository entityRepository) {
         this.usersService = usersService;
         this.userSettingsService = userSettingsService;
         this.entityRepository = entityRepository;
-        this.getEmailFromUserInsteadOfSettings = getEmailFromUserInsteadOfSettings;
     }
 
     public CurrentUserWithPerimeters fetchUserWithPerimeters(String login) {
@@ -89,11 +86,6 @@ public class CurrentUserWithPerimetersService {
             userWithPerimeterData.setEmailToPlainText(operationResult.getResult().getEmailToPlainText());
             userWithPerimeterData.setSendDailyEmail(operationResult.getResult().getSendDailyEmail());
             userWithPerimeterData.setSendWeeklyEmail(operationResult.getResult().getSendWeeklyEmail());
-            if (this.getEmailFromUserInsteadOfSettings) {
-                userWithPerimeterData.setEmailForCardSending(userData.getEmail() == null ? "" : userData.getEmail());
-            } else {
-                userWithPerimeterData.setEmailForCardSending(operationResult.getResult().getEmail());
-            }
             userWithPerimeterData.setTimezoneForEmails(operationResult.getResult().getTimezoneForEmails());
         }
     }

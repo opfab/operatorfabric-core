@@ -11,7 +11,7 @@ import 'jest';
 import CardsRoutingUtilities from '../domain/application/cardRoutingUtilities';
 
 describe('Card routing', function () {
-    const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1']};
+    const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1'], email: 'test@opfab.com'};
     const perimetersWithReceiveAndWriteRight = [
         {
             process: 'defaultProcess',
@@ -33,14 +33,12 @@ describe('Card routing', function () {
 
     const currentUserWithReceiveAndWriteRight = {
         userData: user,
-        emailForCardSending: 'test@opfab.com',
         processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
         computedPerimeters: perimetersWithReceiveAndWriteRight
     };
 
     const currentUserWithReceiveRight = {
         userData: user,
-        emailForCardSending: 'test@opfab.com',
         processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
         computedPerimeters: perimetersWithReceiveRight
     };
@@ -311,14 +309,12 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightNoMailForProcessState = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['messageState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
 
         const currentUserWithReceiveRightNoMailForProcessState = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['messageState']},
             computedPerimeters: perimetersWithReceiveRight
         };
@@ -347,14 +343,12 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightWithFilteringNotification = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['processState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
         const currentUserWithReceiveRightWithFilteringNotification = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['processState']},
             computedPerimeters: perimetersWithReceiveRight
@@ -362,14 +356,12 @@ describe('Card routing', function () {
 
         const currentUserWithReceiveAndWriteRightWithFilteringNotificationNotForProcessState = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['otherState']},
             computedPerimeters: perimetersWithReceiveAndWriteRight
         };
         const currentUserWithReceiveRightWithFilteringNotificationNotForProcessState = {
             userData: user,
-            emailForCardSending: 'test@opfab.com',
             processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
             processesStatesNotNotified: {defaultProcess: ['otherState']},
             computedPerimeters: perimetersWithReceiveRight

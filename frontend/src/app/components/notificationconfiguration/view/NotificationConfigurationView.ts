@@ -54,8 +54,7 @@ export class NotificationConfigurationView {
             (ConfigService.getConfigValue('settings.sendDailyEmail', false) ||
                 ConfigService.getConfigValue('settings.sendWeeklyEmail', false) ||
                 ConfigService.getConfigValue('settings.sendCardsByEmail', false)) &&
-            (ConfigService.getConfigValue('settings.email')?.length > 0 ||
-                this.isEmailFromUserInsteadOfSettingsAndFieldIsNotEmpty());
+            this.isEmailNotEmpty();
 
         this.notificationConfigurationPage.isThereProcessStatesToDisplay =
             this.notificationConfigurationPage.processGroups.length > 0 ||
@@ -64,11 +63,8 @@ export class NotificationConfigurationView {
         this.lastProcessesStatesNotifiedByEmailSaved = this.getCheckedStatesForEmailNotificationPerProcesses();
     }
 
-    private isEmailFromUserInsteadOfSettingsAndFieldIsNotEmpty(): boolean {
-        return (
-            ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false) &&
-            UsersService.getCurrentUserWithPerimeters().emailForCardSending?.length > 0
-        );
+    private isEmailNotEmpty(): boolean {
+        return UsersService.getCurrentUserWithPerimeters().userData?.email?.length > 0;
     }
 
     private getProcessList(): ProcessForNotification[] {

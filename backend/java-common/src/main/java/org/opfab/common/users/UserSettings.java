@@ -66,8 +66,6 @@ public class UserSettings {
 
     private Boolean sendWeeklyEmail = null;
 
-    private String email = null;
-
     private String timezoneForEmails = null;
 
     public UserSettings login(String login) {
@@ -407,19 +405,6 @@ public class UserSettings {
         this.sendWeeklyEmail = sendWeeklyEmail;
     }
 
-    public UserSettings email(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public UserSettings timezoneForEmails(String timezoneForEmails) {
         this.timezoneForEmails = timezoneForEmails;
         return this;
@@ -466,7 +451,6 @@ public class UserSettings {
                 Objects.equals(this.emailToPlainText, userSettings.emailToPlainText) &&
                 Objects.equals(this.sendDailyEmail, userSettings.sendDailyEmail) &&
                 Objects.equals(this.sendWeeklyEmail, userSettings.sendWeeklyEmail) &&
-                Objects.equals(this.email, userSettings.email) &&
                 Objects.equals(this.timezoneForEmails, userSettings.timezoneForEmails);
     }
 
@@ -477,7 +461,7 @@ public class UserSettings {
                 systemNotificationInformation, playSoundOnExternalDevice, replayEnabled, replayInterval, hallwayMode,
                 remoteLoggingEnabled, showAcknowledgmentFooter, openNextCardOnAcknowledgment,
                 processesStatesNotNotified, processesStatesNotifiedByEmail, entitiesDisconnected, sendCardsByEmail,
-                emailToPlainText, sendDailyEmail, sendWeeklyEmail, email, timezoneForEmails);
+                emailToPlainText, sendDailyEmail, sendWeeklyEmail, timezoneForEmails);
     }
 
     @Override
@@ -513,7 +497,6 @@ public class UserSettings {
         sb.append("    emailToPlainText: ").append(toIndentedString(emailToPlainText)).append("\n");
         sb.append("    sendDailyEmail: ").append(toIndentedString(sendDailyEmail)).append("\n");
         sb.append("    sendWeeklyEmail: ").append(toIndentedString(sendWeeklyEmail)).append("\n");
-        sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    timezoneForEmails: ").append(toIndentedString(timezoneForEmails)).append("\n");
         sb.append("}");
         return sb.toString();

@@ -10,7 +10,6 @@
 export class UserWithPerimeters {
     readonly sendDailyEmail?: true;
     readonly sendWeeklyEmail?: true;
-    readonly emailForCardSending?: string;
     readonly timezoneForEmails?: string;
     readonly userData: UserData;
     readonly processesStatesNotNotified?: any;
@@ -22,4 +21,5 @@ export class UserData {
     readonly login: string;
     readonly groups: string[];
     readonly entities: string[];
+    readonly email?: string;
 }

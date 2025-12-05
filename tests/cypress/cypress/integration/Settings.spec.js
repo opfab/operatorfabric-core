@@ -23,22 +23,9 @@ describe('Settings', function () {
 
     it('Should propose to save settings ', () => {
         opfab.loginWithUser('operator1_fr');
-        checkEmailValidation();
         checkCancelNavigation();
-        checkExitWithoutSaving();
         checkAcceptSaving();
-        checkLeavingWithInvalidForms()
     });
-
-
-    function checkEmailValidation() {
-        opfab.navigateToSettings();
-        cy.get('#opfab-settings-btn-save').should('be.enabled')
-        cy.get('#opfab-setting-input-email').type('test');
-        cy.get('#opfab-settings-btn-save').should('be.disabled')
-        cy.get('#opfab-setting-input-email').type('@domain');
-        cy.get('#opfab-settings-btn-save').should('be.enabled')
-    }
 
     function checkCancelNavigation() {
         opfab.navigateToSettings();
@@ -47,32 +34,18 @@ describe('Settings', function () {
         cy.get('#opfab-btn-cancel').click();
     }
 
-    function checkExitWithoutSaving() {
-        cy.get('#opfab-setting-input-email').clear();
-        cy.get('#opfab-setting-input-email').type('test@test.fr');
-        cy.get('#opfab-navbar-menu-archives').click();
-        cy.get('#opfab-btn-doNotSave').click();
-        cy.get('of-archives').should('exist');
-        opfab.navigateToSettings();
-        cy.get('#opfab-setting-input-email').should('have.value', '');
-    }
-
     function checkAcceptSaving() {
-        cy.get('#opfab-setting-input-email').type('test@test.fr');
+        cy.get('#opfab-setting-input-replayInterval').clear();
+        cy.get('#opfab-setting-input-replayInterval').type('200');
         cy.get('#opfab-navbar-menu-archives').click();
         cy.get('#opfab-btn-save').click();
         cy.get('#opfab-btn-ok').click();
         cy.get('of-archives').should('exist');
         opfab.navigateToSettings();
-        cy.get('#opfab-setting-input-email').should('have.value', 'test@test.fr');
-    }
-
-    function checkLeavingWithInvalidForms() {
-        cy.get('#opfab-setting-input-email').clear();
-        cy.get('#opfab-setting-input-email').type('test');
-        cy.get('#opfab-navbar-menu-archives').click();
+        cy.get('#opfab-setting-input-replayInterval').should('have.value', '200');
+        cy.get('#opfab-setting-input-replayInterval').clear();
+        cy.get('#opfab-setting-input-replayInterval').type('10'); // we set the default value
+        cy.get('#opfab-settings-btn-save').click();
         cy.get('#opfab-btn-ok').click();
-        cy.get('of-archives').should('not.exist');
-        cy.get('#opfab-setting-input-email').should('have.value', 'test');
     }
 });

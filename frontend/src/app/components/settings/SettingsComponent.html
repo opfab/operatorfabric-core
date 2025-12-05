@@ -120,20 +120,16 @@
                 [selectedOptions]="languageSelectedOption">
             </of-multi-select>
         </div>
-        } @if (settingsView.isSettingVisible('sendCardsByEmail')) {
+        } @if (settingsView.isEmailNotEmpty()) { @if (settingsView.isSettingVisible('sendCardsByEmail')) {
         <div class="opfab-settings-item">
             <div class="opfab-input">
                 <label for="opfab-setting-email" translate>settings.email</label>
-                @if (settingsView.isEmailFromUserInsteadOfSettings()) {
                 <input
                     id="opfab-setting-input-email"
                     type="email"
                     formControlName="email"
                     autocomplete="off"
                     readonly />
-                } @else {
-                <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off" />
-                }
             </div>
             @if (email.invalid) {
             <div class="opfab-input-invalid" style="margin-top: 0px">
@@ -193,7 +189,7 @@
             </div>
             }
         </div>
-        } @if (settingsView.isSettingVisible('hallwayMode') ||
+        } }@if (settingsView.isSettingVisible('hallwayMode') ||
         settingsView.isSettingVisible('openNextCardOnAcknowledgment')) {
         <div class="opfab-settings-item" style="margin-top: 30px">
             @if (settingsView.isSettingVisible('hallwayMode')) {

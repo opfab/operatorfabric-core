@@ -3,7 +3,6 @@
 #
 
 operatorfabric.users:
-  getEmailFromUserInsteadOfSettings: false
   default:
     users:
       - login: admin
@@ -14,9 +13,11 @@ operatorfabric.users:
         lastname: Doe
         groups: ["Dispatcher", "Maintainer"]
         entities: ["ENTITY1_FR"]
+        email : operator1_fr@opfab.com
       - login: operator2_fr
         groups: ["Planner", "Maintainer", "Manager"]
         entities: ["ENTITY2_FR"]
+        email : operator2_fr@opfab.com
       - login: operator3_fr
         groups: ["RTE", "ADMIN", "Maintainer", "Dispatcher"]
         entities: ["ENTITY3_FR"]
