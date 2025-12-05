@@ -24,11 +24,6 @@ dependencies {
     testImplementation project(':backend:test-utilities')
 }
 
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude module: "spring-boot-starter-tomcat"
-}
-
 tasks.named("processResources") {
     duplicatesStrategy = 'include'
 }

@@ -28,7 +28,8 @@ public class OpfabLoginAuthorizationManager implements AuthorizationManager<Requ
     }
 
     @Override
-    public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
+    public AuthorizationDecision authorize(Supplier<? extends Authentication> supplier,
+                                           RequestAuthorizationContext context) {
         return new AuthorizationDecision(checkUserLogin(supplier.get()));
     }
 

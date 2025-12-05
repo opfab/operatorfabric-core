@@ -12,7 +12,7 @@ package org.opfab.configuration.mongo;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.mongodb.autoconfigure.MongoProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguration;
