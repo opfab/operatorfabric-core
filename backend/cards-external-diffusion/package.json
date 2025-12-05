@@ -50,7 +50,7 @@
         "globals": "16.5.0",
         "jest": "30.2.0",
         "nodemon": "3.1.11",
-        "prettier": "3.7.3",
+        "prettier": "3.7.4",
         "rimraf": "6.1.2",
         "sinon": "21.0.0",
         "ts-jest": "29.4.6",
