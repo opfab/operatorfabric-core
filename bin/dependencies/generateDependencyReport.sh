@@ -20,10 +20,7 @@ echo "Build java report"
             backend:businessconfig:dependencies \
             backend:external-devices:dependencies \
             backend:users:dependencies \
-            backend:common:dependencies \
-            kafkaJavaClient:dependencies \
-            tools:generic:test-utilities:dependencies \
-            tools:spring:spring-test-utilities:dependencies \
+            backend:java-common:dependencies \
         >  bin/dependencies/${report_name}
     echo "  Java report for test app externalApp"
     cd tests/externalApp

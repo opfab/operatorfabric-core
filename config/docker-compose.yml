@@ -79,7 +79,7 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
   users:
     container_name: users
-    image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-users:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
@@ -94,7 +94,7 @@ services:
       - "./services/common.yml:/config/common.yml"
   businessconfig:
     container_name: businessconfig
-    image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-businessconfig:SNAPSHOT"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}
@@ -109,7 +109,7 @@ services:
       - "./services/businessconfig.yml:/config/application.yml"
   cards-publication:
     container_name: cards-publication
-    image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-publication:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
@@ -124,7 +124,7 @@ services:
       - "./services/cards-publication.yml:/config/application.yml"
   cards-consultation:
     container_name: cards-consultation
-    image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-consultation:SNAPSHOT"
     depends_on:
       - mongodb
       - rabbitmq
@@ -159,7 +159,7 @@ services:
       - "../tests/externalWebAppExample:/usr/share/nginx/html/external/appExample"
   cards-external-diffusion:
     container_name: cards-external-diffusion
-    image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "2106:2106"
@@ -198,7 +198,7 @@ services:
   #     - "./services/custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
-    image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
+    image: "lfeoperatorfabric/of-external-devices:SNAPSHOT"
     depends_on:
       - mongodb
     user: ${USER_ID}:${USER_GID}

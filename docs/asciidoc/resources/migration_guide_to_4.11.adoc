@@ -32,3 +32,16 @@ opfab.currentUserCard.listenToDestroy(() => {// Do some stuff});
 ```
 
 Only one listener can be registered at a time. If you register another listener, the previous listener will not receive events.
+
+== Docker naming change
+
+Some docker images where postfixed with `-services` and some others were not. To have a more consistent naming, all postfixes `-services` have been removed.
+
+So : 
+
+* `of-users-service` is now `of-users`
+* `of-external-devices-service` is now `of-external-devices`
+* `of-cards-consultation-service` is now `of-cards-consultation`
+* `of-cards-publication-service` is now `of-cards-publication`
+* `of-businessconfig-service` is now `of-businessconfig`
+* `of-cards-external-diffusion-service` is now `of-cards-external-diffusion`
