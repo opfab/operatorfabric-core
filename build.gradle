@@ -3,7 +3,7 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "4.0.5"
     id "org.springframework.boot" version "$springBoot" apply false
     id "io.spring.dependency-management" version "1.1.7" apply false
-    id 'org.sonarqube' version '6.3.1.5724'
+    id 'org.sonarqube' version '7.2.0.6526'
     id "com.github.davidmc24.gradle.plugin.avro" version "1.9.1" apply false
 }
 
@@ -194,6 +194,20 @@ sonar {
 
     }
 }
+// All builds should be done before sonar analysis
+tasks.named('sonar') {
+    dependsOn 'frontend:runBuild'
+    dependsOn 'backend:cards-external-diffusion:test'
+    dependsOn 'backend:cards-reminder:test'
+    dependsOn 'backend:supervisor:test'
+    dependsOn 'backend:node-common:test'
+    dependsOn 'backend:cards-publication:test'
+    dependsOn 'backend:cards-consultation:test'
+    dependsOn 'backend:businessconfig:test'
+    dependsOn 'backend:users:test'
+    dependsOn 'backend:external-devices:test'
+}
+
 
 //tag::asciidoctor_gradle_task_config[]
 asciidoctor {
