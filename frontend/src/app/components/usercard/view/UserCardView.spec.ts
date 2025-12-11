@@ -279,8 +279,8 @@ describe('UserCard view ', () => {
             await userCardView.init();
 
             expect(userCardUIControlMock.recipients).toEqual([
-                {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: ''},
+                {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''}
             ]);
         });
     });
@@ -442,16 +442,16 @@ describe('UserCard view ', () => {
                 userCardView = new UserCardView(userCardUIControlMock);
                 await userCardView.init();
                 expect(userCardUIControlMock.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY3', label: 'ENTITY3_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: ''},
+                    {id: 'ENTITY3', label: 'ENTITY3_NAME', alias: ''}
                 ]);
                 userCardUIControlMock.setFunctionToRenderTemplate(async () => {});
 
                 await userCardView.userClicksOnState('state1_2');
                 expect(userCardUIControlMock.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'},
-                    {id: 'ENTITY3', label: 'ENTITY3_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: ''},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''},
+                    {id: 'ENTITY3', label: 'ENTITY3_NAME', alias: ''}
                 ]);
             });
             it('should reset initially selected recipients in UI if a new state is selected', async () => {

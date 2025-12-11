@@ -33,7 +33,7 @@ async function setEntitiesConfiguration() {
         new Entity(
             'ENTITY1',
             'ENTITY1_NAME',
-            '',
+            'ENTITY1_DESCRIPTION',
             [RoleEnum.CARD_SENDER, RoleEnum.CARD_RECEIVER],
             [],
             ['PARENT_ENTITY']
@@ -81,9 +81,9 @@ describe('UserCard RecipientsForm', () => {
                 await setEntitiesConfiguration();
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'},
-                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''},
+                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_NAME', alias: ''}
                 ]);
             });
             it('Should use entity description as label if usercard.useDescriptionFieldForEntityList is true in web-ui config', async () => {
@@ -104,9 +104,9 @@ describe('UserCard RecipientsForm', () => {
                 recipientsForm = new RecipientsForm(userCardUIControl);
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_DESCRIPTION'},
-                    {id: 'ENTITY2', label: 'ENTITY2_DESCRIPTION'},
-                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_DESCRIPTION'}
+                    {id: 'ENTITY1', label: 'ENTITY1_DESCRIPTION', alias: undefined},
+                    {id: 'ENTITY2', label: 'ENTITY2_DESCRIPTION', alias: undefined},
+                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_DESCRIPTION', alias: undefined}
                 ]);
             });
             it(`Should contain all entities by label alphabetical order`, async () => {
@@ -120,11 +120,11 @@ describe('UserCard RecipientsForm', () => {
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY5', label: '123'},
-                    {id: 'ENTITY1', label: 'AAA'},
-                    {id: 'ENTITY3', label: 'BBB'},
-                    {id: 'ENTITY2', label: 'aaa'},
-                    {id: 'ENTITY4', label: 'bbb'}
+                    {id: 'ENTITY5', label: '123', alias: ''},
+                    {id: 'ENTITY1', label: 'AAA', alias: ''},
+                    {id: 'ENTITY3', label: 'BBB', alias: ''},
+                    {id: 'ENTITY2', label: 'aaa', alias: ''},
+                    {id: 'ENTITY4', label: 'bbb', alias: ''}
                 ]);
             });
             it('Should use entity id if entity name is not defined', async () => {
@@ -135,8 +135,8 @@ describe('UserCard RecipientsForm', () => {
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1'},
-                    {id: 'ENTITY2', label: 'ENTITY2'}
+                    {id: 'ENTITY1', label: 'ENTITY1', alias: ''},
+                    {id: 'ENTITY2', label: 'ENTITY2', alias: ''}
                 ]);
             });
             it(`Should be initialized from template if template calls method setDropdownEntityRecipientList`, async () => {
@@ -148,8 +148,8 @@ describe('UserCard RecipientsForm', () => {
                     new EntitiesTree('ENTITY2')
                 ]);
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''}
                 ]);
             });
             it(`Should be initialized from template with child entities if template calls method setDropdownEntityRecipientList`, async () => {
@@ -158,8 +158,8 @@ describe('UserCard RecipientsForm', () => {
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 opfab.currentUserCard.setDropdownEntityRecipientList([new EntitiesTree('PARENT_ENTITY', [1])]);
                 expect(userCardUIControl.recipients).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''}
                 ]);
             });
         });
@@ -263,9 +263,9 @@ describe('UserCard RecipientsForm', () => {
                 await setEntitiesConfiguration();
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipientsForInformation).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'},
-                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''},
+                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_NAME', alias: ''}
                 ]);
             });
             it('Should use entity description as label if usercard.useDescriptionFieldForEntityList is true in web-ui config', async () => {
@@ -286,9 +286,9 @@ describe('UserCard RecipientsForm', () => {
                 recipientsForm = new RecipientsForm(userCardUIControl);
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipientsForInformation).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_DESCRIPTION'},
-                    {id: 'ENTITY2', label: 'ENTITY2_DESCRIPTION'},
-                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_DESCRIPTION'}
+                    {id: 'ENTITY1', label: 'ENTITY1_DESCRIPTION', alias: undefined},
+                    {id: 'ENTITY2', label: 'ENTITY2_DESCRIPTION', alias: undefined},
+                    {id: 'PARENT_ENTITY', label: 'PARENT_ENTITY_DESCRIPTION', alias: undefined}
                 ]);
             });
             it(`Should contain all entities by label alphabetical order`, async () => {
@@ -302,11 +302,11 @@ describe('UserCard RecipientsForm', () => {
                 await setProcessConfigWithUserCardConfig({});
                 recipientsForm.setProcessAndState('process1', 'state1_1');
                 expect(userCardUIControl.recipientsForInformation).toEqual([
-                    {id: 'ENTITY5', label: '123'},
-                    {id: 'ENTITY1', label: 'AAA'},
-                    {id: 'ENTITY3', label: 'BBB'},
-                    {id: 'ENTITY2', label: 'aaa'},
-                    {id: 'ENTITY4', label: 'bbb'}
+                    {id: 'ENTITY5', label: '123', alias: ''},
+                    {id: 'ENTITY1', label: 'AAA', alias: ''},
+                    {id: 'ENTITY3', label: 'BBB', alias: ''},
+                    {id: 'ENTITY2', label: 'aaa', alias: ''},
+                    {id: 'ENTITY4', label: 'bbb', alias: ''}
                 ]);
             });
             it(`Should be initialized from template if template calls method setDropdownEntityRecipientForInformationList`, async () => {
@@ -318,8 +318,8 @@ describe('UserCard RecipientsForm', () => {
                     new EntitiesTree('ENTITY2')
                 ]);
                 expect(userCardUIControl.recipientsForInformation).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''}
                 ]);
             });
             it(`Should be initialized from template with child entities if template calls method setDropdownEntityRecipientForInformationList`, async () => {
@@ -330,8 +330,8 @@ describe('UserCard RecipientsForm', () => {
                     new EntitiesTree('PARENT_ENTITY', [1])
                 ]);
                 expect(userCardUIControl.recipientsForInformation).toEqual([
-                    {id: 'ENTITY1', label: 'ENTITY1_NAME'},
-                    {id: 'ENTITY2', label: 'ENTITY2_NAME'}
+                    {id: 'ENTITY1', label: 'ENTITY1_NAME', alias: 'ENTITY1_DESCRIPTION'},
+                    {id: 'ENTITY2', label: 'ENTITY2_NAME', alias: ''}
                 ]);
             });
         });

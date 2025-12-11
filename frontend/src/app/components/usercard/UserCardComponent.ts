@@ -225,7 +225,9 @@ export class UserCardComponent implements OnDestroy, UserCardUIControl, AfterVie
         this.userCardForm.get('keepChildCards')?.setValue(keepChildCards);
     }
     public setRecipientsList(recipients: MultiselectItem[]) {
-        this.recipientsOptions = recipients.map((entity) => new MultiSelectOption(entity.id, entity.label));
+        this.recipientsOptions = recipients.map(
+            (entity) => new MultiSelectOption(entity.id, entity.label, entity.alias)
+        );
     }
 
     public setSelectedRecipients(selected: string[]) {
