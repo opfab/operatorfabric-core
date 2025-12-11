@@ -60,7 +60,8 @@ export class RecipientsForm {
                 const label = this.useDescriptionFieldForEntityList ? entity.description : entity.name || entity.id;
                 recipients.push({
                     id: entity.id,
-                    label: label
+                    label: label,
+                    alias: this.useDescriptionFieldForEntityList ? undefined : entity.description // add for searching purpose
                 });
             }
         });

@@ -32,6 +32,7 @@ export enum EditionMode {
 export class MultiselectItem {
     id: string;
     label: string;
+    alias?: string;
 }
 
 export interface UserCardUIControl {

@@ -10,11 +10,13 @@
 export class MultiSelectOption {
     public value: string;
     public label: string;
+    public alias: string; // used for searching in addition to the label
     public options: Array<MultiSelectOption>;
 
-    public constructor(value: string, label: string) {
+    public constructor(value: string, label: string, alias?: string) {
         this.value = value;
         this.label = label;
+        this.alias = alias;
     }
 }
 export class MultiSelectConfig {
