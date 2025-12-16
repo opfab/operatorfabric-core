@@ -90,7 +90,7 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization" , "opfab"
         property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
-        property 'sonar.sources', 'frontend,backend/cards-external-diffusion,backend/cards-reminder,backend/supervisor,backend/common,cli'
+        property 'sonar.sources', 'frontend,backend/cards-external-diffusion,backend/cards-reminder,backend/supervisor,backend/email-to-card,backend/common,cli'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','frontend/reports/coverage/lcov.info,backend/**/coverage/lcov.info'
@@ -200,6 +200,10 @@ tasks.named('sonar') {
     dependsOn 'backend:cards-external-diffusion:test'
     dependsOn 'backend:cards-reminder:test'
     dependsOn 'backend:supervisor:test'
+    dependsOn 'backend:email-to-card:npmInstall'
+    dependsOn 'backend:email-to-card:runLint'
+    dependsOn 'backend:email-to-card:runPrettier'
+    dependsOn 'backend:email-to-card:runBuild'
     dependsOn 'backend:node-common:test'
     dependsOn 'backend:cards-publication:test'
     dependsOn 'backend:cards-consultation:test'
