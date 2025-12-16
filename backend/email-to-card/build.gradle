@@ -75,7 +75,7 @@ task buildDocker(type: Exec) {
     commandLine 'docker', 'build', '-t', "lfeoperatorfabric/of-${project.name}:${project.version}", '.'
 }
 
-//build.dependsOn(test)
+// build.dependsOn(test)
 build.dependsOn(runBuild)
 
 clean.dependsOn(deleteRuntimeConfigFile)
