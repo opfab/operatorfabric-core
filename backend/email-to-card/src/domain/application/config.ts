@@ -57,11 +57,7 @@ export default class Config {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (
-                    Object.prototype.hasOwnProperty.call(this.emailToCardConfig, key) &&
-                    value != null &&
-                    key !== 'entitiesToSupervise'
-                ) {
+                if (Object.hasOwn(this.emailToCardConfig, key) && value != null && key !== 'entitiesToSupervise') {
                     (this.emailToCardConfig as any)[key] = value;
                 }
             }

@@ -12,7 +12,7 @@ import ConfigDTO from './../client-side/configDTO';
 import {EmailServerInterface} from '../server-side/emailServerInterface';
 
 export default class EmailToCardApplication {
-    private emailServer: EmailServerInterface;
+    private readonly emailServer: EmailServerInterface;
     private active = false;
     private readonly config: Config;
 
