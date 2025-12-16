@@ -82,8 +82,8 @@ PRJ_STRC_FIELDS=3
 declare -a dependentProjects
 i=0
 for service in "${services[@]}"; do
- dependentProjects[$i]="$service-service"
- dependentProjects[$i+1]="services/$service"
+ dependentProjects[$i]="$service"
+ dependentProjects[$i+1]="backend/$service"
  dependentProjects[$i+2]=$service
  i=$((i+$PRJ_STRC_FIELDS))
 done
