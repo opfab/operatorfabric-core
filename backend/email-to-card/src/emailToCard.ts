@@ -8,9 +8,9 @@
  */
 
 import express, {NextFunction, Request, Response} from 'express';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import Busboy from 'busboy';
+import path from 'node:path';
+import fs from 'node:fs';
 import {expressjwt, GetVerificationKey} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
@@ -40,7 +40,7 @@ app.use(
         expressjwt({
             secret: secret as GetVerificationKey,
             algorithms: ['RS256']
-        })(req, res, next) as Promise<void>
+        })(req, res, next)
 );
 
 app.use(express.static('public'));
@@ -81,26 +81,6 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, {recursive: true});
 }
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.originalname); // garde le nom original
-    }
-});
-
-const upload = multer({
-    storage,
-    fileFilter: (req, file, cb) => {
-        if (file.originalname.endsWith('.js')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only .js files are allowed'));
-        }
-    }
-});
-
 app.use(function (err: any, req: any, res: any, next: any): void {
     if (err.name === 'UnauthorizedError') {
         logger.warn('SECURITY : try to access resource ' + req.originalUrl + ' without valid token');
@@ -134,37 +114,88 @@ app.get('/healthcheck', (req, res) => {
     res.send();
 });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', (req: Request, res: Response) => {
     processAdminRequest(req, res, () => {
         logger.info('Upload file endpoint');
 
-        const file = req.file;
+        const busboy = Busboy({
+            headers: req.headers
+        });
 
-        if (!file) {
-            return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
-        }
+        let fileReceived = false;
+        let savedFileName: string | null = null;
+        let savedFileSize = 0;
 
-        logger.info(`File received : ${file.originalname}, size : ${file.size} bytes`);
+        busboy.on('file', (fieldname, file, info) => {
+            if (fieldname !== 'file') {
+                file.resume();
+                return;
+            }
 
-        //const result = supervisorService.processFile(file);
+            const filename = info.filename;
 
-        res.send({success: true});
+            if (!filename?.endsWith('.js')) {
+                file.resume();
+                busboy.emit('error', new Error('Only .js files are allowed'));
+                return;
+            }
+
+            fileReceived = true;
+            savedFileName = path.basename(filename);
+            const filePath = path.join(uploadDir, savedFileName);
+
+            const writeStream = fs.createWriteStream(filePath);
+
+            file.on('data', (data) => {
+                savedFileSize += data.length;
+            });
+
+            file.pipe(writeStream);
+
+            writeStream.on('error', (err) => {
+                busboy.emit('error', err);
+            });
+        });
+
+        busboy.on('finish', () => {
+            if (!fileReceived) {
+                return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
+            }
+
+            logger.info(`File received : ${savedFileName}, size : ${savedFileSize} bytes`);
+
+            res.send({success: true});
+        });
+
+        busboy.on('error', (err: unknown) => {
+            logger.error('Upload error:', err);
+
+            if (err instanceof Error) {
+                res.status(400).send(err.message);
+            } else {
+                res.status(400).send('Upload error');
+            }
+        });
+
+        req.pipe(busboy);
     });
 });
 
 app.delete('/delete', (req, res) => {
     processAdminRequest(req, res, () => {
-        const filename = req.query.filename as string;
+        const uploadDir = path.join(__dirname, '../config/js');
 
+        const filename = req.query.filename as string;
         if (!filename) {
             return res.status(400).send('Missing filename parameter');
         }
 
-        if (filename.includes('/') || filename.includes('\\')) {
+        const allowedFiles = fs.readdirSync(uploadDir);
+        if (!allowedFiles.includes(filename)) {
             return res.status(400).send('Invalid filename');
         }
 
-        const filePath = path.join(__dirname, '../config/js', filename);
+        const filePath = path.join(uploadDir, filename);
 
         fs.access(filePath, fs.constants.F_OK, (err) => {
             if (err) {
