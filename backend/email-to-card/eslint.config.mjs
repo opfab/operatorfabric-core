@@ -1,6 +1,6 @@
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import pluginJest from 'eslint-plugin-jest'
+import pluginJest from 'eslint-plugin-jest';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
