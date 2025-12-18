@@ -49,6 +49,13 @@ export default class EmailToCardApplication {
     }
 
     private checkMailBoxRegularly(): void {
+        const intervalSeconds = this.config.getEmailToCardConfig().secondsBetweenConnectionChecks;
+
+        if (intervalSeconds <= 0) {
+            this.logger.error('Invalid secondsBetweenConnectionChecks: ' + intervalSeconds + '. Must be positive.');
+            return;
+        }
+
         if (this.active) {
             this.logger.info('checkMailBoxRegularly');
 
@@ -63,6 +70,6 @@ export default class EmailToCardApplication {
         }
         setTimeout(() => {
             this.checkMailBoxRegularly();
-        }, this.config.getEmailToCardConfig().secondsBetweenConnectionChecks * 1000);
+        }, intervalSeconds * 1000);
     }
 }
