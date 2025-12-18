@@ -41,9 +41,10 @@ export default class EmailServer implements EmailServerInterface {
             }
         };
         const emails: Email[] = [];
+        let connection;
 
         try {
-            const connection = await imaps.connect(options);
+            connection = await imaps.connect(options);
             await connection.openBox('INBOX');
 
             const searchCriteria = ['UNSEEN'];
@@ -65,18 +66,24 @@ export default class EmailServer implements EmailServerInterface {
 
                 const email = new Email(
                     headerPart?.body.from[0],
-                    headerPart?.body.to,
+                    headerPart?.body.to ?? [],
                     headerPart?.body.subject[0],
                     parsed.text?.trim() || '<empty>'
                 );
 
                 emails.push(email);
             }
-
-            connection.end();
         } catch (err: any) {
             this.logger.error('Failed to check mailbox: ' + err.message);
             throw err;
+        } finally {
+            if (connection) {
+                try {
+                    connection.end();
+                } catch (endErr) {
+                    this.logger.warn('Error closing connection: ' + endErr);
+                }
+            }
         }
         return emails;
     }
