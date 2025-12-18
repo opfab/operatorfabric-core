@@ -8,6 +8,9 @@
   "heartbeatSendingInterval": 30,
   "defaultEntryPage": "feed",
   "dateRangePickerConfig":"default",
+  "activityArea" : {
+        "hideConnectedUsers" : true
+  },
   "alerts": {
     "alarmLevelAutoClose": false,
     "messageOnBottomOfTheScreen": false,

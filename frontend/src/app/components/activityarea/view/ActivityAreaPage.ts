@@ -17,6 +17,7 @@ export class ActivityAreaLine {
 
 export class ActivityAreaPage {
     activityAreaClusters: ActivityAreaEntityCluster[];
+    isConnectedUsersVisible = true;
 
     constructor() {
         this.activityAreaClusters = [];
