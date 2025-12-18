@@ -51,6 +51,7 @@
                             </label>
                         </th>
                         <td>
+                            @if (activityAreaPage.isConnectedUsersVisible) {
                             <ng-template #usersDropdown>
                                 @for (user of line.connectedUsers; track user) {
                                 <div>&nbsp; {{ user }} &nbsp;</div>
@@ -84,7 +85,7 @@
                             } @else {
 
                             <span class="opfab-rounded-badge opfab-grey-background opfab-activityarea-badge">0</span>
-                            }
+                            } }
                         </td>
                     </tr>
                     }

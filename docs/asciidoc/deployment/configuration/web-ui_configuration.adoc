@@ -56,10 +56,10 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
     }
   }
 ----
-|alerts.doNotAlertForHiddenCardReceived|false|no| if set to true, alert messages are not shown when receiving cards not visible in the feed
-|alerts.alarmLevelAutoClose|false|no| if set to true, the ALARM (red) alert message will automatically close after a few seconds
-|alerts.messageOnBottomOfTheScreen|false|no| if set to true, the alert message is shown on the bottom of the page
-
+|activityArea.hideConnectedUsers|false|no|If set to true, connected users are not displayed in the activity area screen
+|alerts.doNotAlertForHiddenCardReceived|false|no|If set to true, alert messages are not shown when receiving cards not visible in the feed
+|alerts.alarmLevelAutoClose|false|no|If set to true, the ALARM (red) alert message will automatically close after a few seconds
+|alerts.messageOnBottomOfTheScreen|false|no|If set to true, the alert message is shown on the bottom of the page
 |archive.filters.hidePublisherAndRecipientsFields|false|no|If set to true, the emitter and recipients fields will not be displayed in the archives filters
 |archive.filters.publishDate.days|10|no|The default search period (days) for publish date filter in archives page
 |archive.filters.tags.list||no|List of tags to choose from in the corresponding filter in archives page

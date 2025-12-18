@@ -18,6 +18,7 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {OpfabStore} from '../../../store/OpfabStore';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
+import {ConfigService} from '@ofServices/config/ConfigService';
 
 export class ActivityAreaView {
     private readonly activityAreaSubject = new ReplaySubject<ActivityAreaPage>(1);
@@ -36,6 +37,10 @@ export class ActivityAreaView {
     constructor() {
         this.currentUserLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
         this.activityAreaPage = new ActivityAreaPage();
+        this.activityAreaPage.isConnectedUsersVisible = !ConfigService.getConfigValue(
+            'activityArea.hideConnectedUsers',
+            false
+        );
         this.activityAreaClusters = new Map();
         this.activityAreaOrphanEntitiesCluster = new ActivityAreaEntityCluster('', ' ', []);
 
@@ -53,11 +58,16 @@ export class ActivityAreaView {
                     );
                 }
                 this.shouldClustersBeChecked();
-                this.getConnectedUsers().subscribe((connected) => {
+                if (this.activityAreaPage.isConnectedUsersVisible) {
+                    this.getConnectedUsers().subscribe((connected) => {
+                        this.activityAreaSubject.next(this.activityAreaPage);
+                        this.activityAreaSubject.complete();
+                    });
+                    this.updateRegularyConnectedUsers();
+                } else {
                     this.activityAreaSubject.next(this.activityAreaPage);
                     this.activityAreaSubject.complete();
-                });
-                this.updateRegularyConnectedUsers();
+                }
             }
         });
     }
