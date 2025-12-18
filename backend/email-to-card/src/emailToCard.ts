@@ -239,4 +239,4 @@ async function start(): Promise<void> {
     logger.info('Application started');
 }
 
-start().catch((err) => logger.error('Impossible to start' + err));
+start().catch((err) => logger.error('Impossible to start: ' + err));
