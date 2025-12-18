@@ -45,8 +45,13 @@ export default class Config {
 
     private save(): void {
         if (this.configFilePath != null) {
-            const data = JSON.stringify(this.emailToCardConfig);
-            fs.writeFileSync(this.configFilePath, data);
+            try {
+                const data = JSON.stringify(this.emailToCardConfig, null, 2);
+                fs.writeFileSync(this.configFilePath, data);
+            } catch (err) {
+                this.logger.error('Failed to save configuration to file: ' + err);
+                throw err;
+            }
         }
     }
 
@@ -57,7 +62,7 @@ export default class Config {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (Object.hasOwn(this.emailToCardConfig, key) && value != null && key !== 'entitiesToSupervise') {
+                if (Object.hasOwn(this.emailToCardConfig, key) && value != null) {
                     (this.emailToCardConfig as any)[key] = value;
                 }
             }
