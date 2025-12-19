@@ -12,6 +12,6 @@ package org.opfab.businessconfig.model;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public record Email(String bodyTemplate) {
+public record Email(String bodyTemplate, Boolean hideDefaultBodyPrefixAndPostfix) {
 
 }
