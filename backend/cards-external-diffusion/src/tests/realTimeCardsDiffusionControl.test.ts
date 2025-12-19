@@ -494,6 +494,168 @@ describe('Cards external diffusion', function () {
         );
     });
 
+    it('Body of email should not contain header and footer when hideDefaultBodyPrefixAndPostfix is set to true', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                sendCardsByEmail: true,
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail',
+                        hideDefaultBodyPrefixAndPostfix: true
+                    }
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(`Title1 &amp; &lt;br&gt; ` + '<br> Title1 &amp; &lt;br&gt;');
+    });
+
+    it('Body of email should contain header and footer when hideDefaultBodyPrefixAndPostfix is set to false', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                sendCardsByEmail: true,
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail',
+                        hideDefaultBodyPrefixAndPostfix: false
+                    }
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(
+            `Prefix Title1 &amp; &lt;br&gt; ` + '<br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
+        );
+    });
+
+    it('Body of email should contain header and footer when hideDefaultBodyPrefixAndPostfix is not in the config', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                sendCardsByEmail: true,
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(
+            `Prefix Title1 &amp; &lt;br&gt; ` + '<br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
+        );
+    });
+
     it('Should not send same card twice', async function () {
         const publishDate = Date.now();
         setup();

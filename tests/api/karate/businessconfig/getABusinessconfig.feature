@@ -31,6 +31,7 @@ Feature: Bundle
     And match response.states.questionState.showAcknowledgmentFooter == 'OnlyForUsersAllowedToEdit'
     And match response.states.messageState.type == 'CANCELED'
     And match response.states.messageState.email.bodyTemplate == 'email_template'
+    And match response.states.messageState.email.hideDefaultBodyPrefixAndPostfix == true
     And match response.states.messageState.editCardEnabledOnUserInterface == false
     And match response.states.messageState.copyCardEnabledOnUserInterface == false
     And match response.states.messageState.showAcknowledgmentFooter == 'OnlyForEmittingEntity'
@@ -48,9 +49,6 @@ Feature: Bundle
     And match response.states.incidentInProgressState.closeCardWhenUserAcknowledges == false
     And match response.states.incidentInProgressState.deleteCardEnabledOnUserInterface == false
     And match response.states.incidentInProgressState.showAcknowledgmentFooter == 'ForAllUsers'
-
-
-
 
 
   Scenario: check bundle without authentication

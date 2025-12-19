@@ -223,14 +223,16 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         const urlOfCard =
             '<a href=" ' + this.opfabUrlInMailContent + '/#/feed/cards/' + this.base64urlEncode(cardContent.id) + ' ">';
 
-        let cardBodyHtml =
-            this.bodyPrefix +
-            ' ' +
+        const stateName = cardContent.state;
+
+        let cardBodyHtml = cardConfig?.states?.[stateName]?.email?.hideDefaultBodyPrefixAndPostfix
+            ? ''
+            : this.bodyPrefix + ' ';
+        cardBodyHtml +=
             (this.showCardUrls ? urlOfCard : '') +
             (this.showCardTitleInBody ? this.escapeHtml(cardContent.titleTranslated) : '') +
             (this.showCardUrls ? '</a>' : '');
 
-        const stateName = cardContent.state;
         if (cardConfig?.states?.[stateName]?.email?.bodyTemplate != null) {
             const templateCompiler = await this.businessConfigOpfabServicesInterface.fetchTemplate(
                 cardContent.process,
@@ -251,7 +253,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
             const entity = await this.cardsExternalDiffusionOpfabServicesInterface.getEntityById(cardContent.publisher);
             cardBodyHtml = cardBodyHtml + ' <br><br>' + this.publisherEntityPrefix + entity.name + '.';
         }
-        if (this.bodyPostfix != null) {
+        if (this.bodyPostfix != null && !cardConfig?.states?.[stateName]?.email?.hideDefaultBodyPrefixAndPostfix) {
             cardBodyHtml = cardBodyHtml + ' <br><br>' + this.bodyPostfix;
         }
         return cardBodyHtml;

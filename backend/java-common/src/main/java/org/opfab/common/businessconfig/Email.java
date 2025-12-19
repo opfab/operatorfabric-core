@@ -16,6 +16,7 @@ import java.util.Objects;
 public class Email {
 
     private String bodyTemplate;
+    private Boolean hideDefaultBodyPrefixAndPostfix = false;
 
     public Email bodyTemplate(String bodyTemplate) {
         this.bodyTemplate = bodyTemplate;
@@ -30,6 +31,19 @@ public class Email {
         this.bodyTemplate = bodyTemplate;
     }
 
+    public Email hideDefaultBodyPrefixAndPostfix(Boolean hideDefaultBodyPrefixAndPostfix) {
+        this.hideDefaultBodyPrefixAndPostfix = hideDefaultBodyPrefixAndPostfix;
+        return this;
+    }
+
+    public Boolean getHideDefaultBodyPrefixAndPostfix() {
+        return hideDefaultBodyPrefixAndPostfix;
+    }
+
+    public void setHideDefaultBodyPrefixAndPostfix(Boolean hideDefaultBodyPrefixAndPostfix) {
+        this.hideDefaultBodyPrefixAndPostfix = hideDefaultBodyPrefixAndPostfix;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -39,12 +53,13 @@ public class Email {
             return false;
         }
         Email email = (Email) o;
-        return Objects.equals(this.bodyTemplate, email.bodyTemplate);
+        return Objects.equals(this.bodyTemplate, email.bodyTemplate) &&
+               Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bodyTemplate);
+        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix);
     }
 
     @Override
@@ -53,6 +68,7 @@ public class Email {
         sb.append("class Email {\n");
 
         sb.append("    bodyTemplate: ").append(toIndentedString(bodyTemplate)).append("\n");
+        sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix)).append("\n");
         sb.append("}");
         return sb.toString();
     }
