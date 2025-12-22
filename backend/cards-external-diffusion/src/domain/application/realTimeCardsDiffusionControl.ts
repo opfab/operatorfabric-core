@@ -179,11 +179,16 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
         let body = '';
         let attachment = [];
+
+        let cardConfig;
+        let stateName;
+
         try {
             const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
             if (cardContentResponse.isValid()) {
                 const cardContent = cardContentResponse.getData();
-                const cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
+                stateName = cardContent.state;
+                cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
                     card.process,
                     card.processVersion
                 );
@@ -199,7 +204,8 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         }
 
         try {
-            await this.mailService.sendMail(subject, body, attachment, this.from, to, emailToPlainText);
+            const from = cardConfig?.states?.[stateName]?.email?.sender ?? this.from;
+            await this.mailService.sendMail(subject, body, attachment, from, to, emailToPlainText);
             this.registerNewSending(to);
             await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {
