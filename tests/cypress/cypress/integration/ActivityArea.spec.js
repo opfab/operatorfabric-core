@@ -7,16 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
-import { ActivityAreaCommands } from '../support/activityAreaCommands';
-import { ScriptCommands } from '../support/scriptCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {ActivityAreaCommands} from '../support/activityAreaCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('ActivityAreaPage', () => {
     const opfab = new OpfabGeneralCommands();
     const activityArea = new ActivityAreaCommands();
     const script = new ScriptCommands();
 
-    before('Delete previous cards', function() {
+    before('Delete previous cards', function () {
         script.loadTestConf();
         script.deleteAllSettings();
         script.deleteAllCards();
@@ -115,8 +115,8 @@ describe('ActivityAreaPage', () => {
         activityArea.save();
     });
 
-    it('Choose activity area on login', function() {
-        script.setPropertyInConf('selectActivityAreaOnLogin ', true);
+    it('Choose activity area on login', function () {
+        script.setPropertyInConf('activityArea.selectActivityAreaOnLogin', true);
 
         cy.visit('');
 
@@ -215,10 +215,10 @@ describe('ActivityAreaPage', () => {
         cy.get('.opfab-checkbox').contains('Control Center FR North').click();
         activityArea.save();
 
-        script.setPropertyInConf('selectActivityAreaOnLogin ', false);
+        script.setPropertyInConf('activityArea.selectActivityAreaOnLogin', false);
     });
 
-    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function() {
+    it('Check spinner is displayed when request is delayed and that spinner disappears once the request arrived', function () {
         cy.delayRequestResponse('/users/users/*');
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
@@ -227,7 +227,7 @@ describe('ActivityAreaPage', () => {
         opfab.checkLoadingSpinnerIsNotDisplayed();
     });
 
-    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function() {
+    it('Check spinner is displayed for saving settings, when request is delayed and that spinner disappears once the request arrived', function () {
         opfab.loginWithUser('operator1_fr');
         opfab.navigateToActivityArea();
         cy.delayRequestResponse('/users/users/**');
@@ -247,7 +247,7 @@ describe('ActivityAreaPage', () => {
         cy.get('#opfab-btn-ok').should('exist').click(); // click yes on the confirmation popup
     });
 
-    it('Check message is displayed when user has no activity area', function() {
+    it('Check message is displayed when user has no activity area', function () {
         opfab.loginWithUser('opfab');
         opfab.navigateToActivityArea();
         cy.get('#opfab-no-activityarea').should('exist');

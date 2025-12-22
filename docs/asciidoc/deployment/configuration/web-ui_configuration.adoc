@@ -57,6 +57,7 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
   }
 ----
 |activityArea.hideConnectedUsers|false|no|If set to true, connected users are not displayed in the activity area screen
+|activityArea.selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login
 |alerts.doNotAlertForHiddenCardReceived|false|no|If set to true, alert messages are not shown when receiving cards not visible in the feed
 |alerts.alarmLevelAutoClose|false|no|If set to true, the ALARM (red) alert message will automatically close after a few seconds
 |alerts.messageOnBottomOfTheScreen|false|no|If set to true, the alert message is shown on the bottom of the page
@@ -176,7 +177,6 @@ a|authentication mode, available options:
 
 |security.implicit-mode-post-logout-url|null|no| The redirect URL after logout when using IMPLICIT flow 
 
-|selectActivityAreaOnLogin|false|no| if set to true the users belonging to multiple Entities will be required to configure activity area on login
 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : dd/MM/yyyy )
 |settings.dateTimeFormat|Value from the browser configuration|no|Format for date and time rendering (example : HH:mm dd/MM/yyyy )

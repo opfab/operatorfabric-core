@@ -28,7 +28,7 @@ export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingCom
     @ViewChild('activityArea') activityAreaPopupRef: TemplateRef<any>;
 
     public execute(): Promise<boolean> {
-        if (ConfigService.getConfigValue('selectActivityAreaOnLogin', false)) this.confirmActivityArea();
+        if (ConfigService.getConfigValue('activityArea.selectActivityAreaOnLogin', false)) this.confirmActivityArea();
         else {
             return Promise.resolve(true);
         }

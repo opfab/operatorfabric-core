@@ -74,3 +74,24 @@ For security reasons, the admin shall now set the email of a user via the user i
 by the JWT token.
 The user can no longer enter its email itself.
 
+
+== selectActivityAreaOnLogin configuration parameter
+
+
+The configuration parameter `selectActivityAreaOnLogin` has been moved in the activityArea section of the 'web-ui.json' file.
+
+
+Replace
+----
+    "selectActivityAreaOnLogin": true,
+----
+
+With
+
+
+----
+    "activityArea": {
+        "selectActivityAreaOnLogin": true
+    },
+----
+
