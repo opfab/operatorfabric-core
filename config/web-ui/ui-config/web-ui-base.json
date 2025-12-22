@@ -4,11 +4,11 @@
   "checkIfUrlIsLocked": false,
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
-  "selectActivityAreaOnLogin": false,
   "heartbeatSendingInterval": 30,
   "defaultEntryPage": "feed",
   "dateRangePickerConfig":"default",
   "activityArea" : {
+        "selectActivityAreaOnLogin": false,
         "hideConnectedUsers" : true
   },
   "alerts": {
