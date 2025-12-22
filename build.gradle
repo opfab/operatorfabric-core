@@ -225,6 +225,11 @@ asciidoctor {
         }
     }
     
+    // Declare inputs and outputs for Gradle build cache
+    inputs.dir 'docs/asciidoc'
+    inputs.files fileTree('docs/asciidoc') { include '*/index.adoc','docs/*','images/*','pdf/*' }
+    outputs.dir "${buildDir}/docs/asciidoc"
+
     // This is done to fetch the correct version for links that reference source files.
     // The reference is set to develop if on develop branch for snapshot
     // else it's set on latest release tag
