@@ -7,17 +7,15 @@ npmInstall {
     // Important: Use 'npm ci' instead of 'npm install' to ensure consistent dependencies.
     // 'npm ci' uses the exact versions from package-lock.json, preventing unexpected changes.
     npmCommand = ['ci'] 
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
 
-    outputs.dir('build')
+    outputs.dir('node_modules')
 
 }
 
 task runLint(type:NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     outputs.dir('build')
@@ -29,7 +27,6 @@ task runLint(type:NpmTask) {
 
 task runPrettier(type:NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('.prettierrc.json')
@@ -42,7 +39,6 @@ task runPrettier(type:NpmTask) {
 
 task runBuild(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
 
@@ -54,7 +50,6 @@ task runBuild(type: NpmTask) {
 
 task test(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('jest.config.js')
@@ -86,7 +81,6 @@ tasks.buildDocker.dependsOn build
 tasks.named("buildDocker") {
     inputs.files(fileTree('src'))
     inputs.files(fileTree('config'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('Dockerfile')
     inputs.file('package.json')
     inputs.file('package-lock.json')
