@@ -17,6 +17,7 @@ public class Email {
 
     private String bodyTemplate;
     private Boolean hideDefaultBodyPrefixAndPostfix = false;
+    private String sender;
 
     public Email bodyTemplate(String bodyTemplate) {
         this.bodyTemplate = bodyTemplate;
@@ -44,6 +45,19 @@ public class Email {
         this.hideDefaultBodyPrefixAndPostfix = hideDefaultBodyPrefixAndPostfix;
     }
 
+    public Email sender(String sender) {
+        this.sender = sender;
+        return this;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -54,12 +68,13 @@ public class Email {
         }
         Email email = (Email) o;
         return Objects.equals(this.bodyTemplate, email.bodyTemplate) &&
-               Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix);
+               Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix) &&
+               Objects.equals(this.sender, email.sender);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix);
+        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix, sender);
     }
 
     @Override
@@ -69,6 +84,7 @@ public class Email {
 
         sb.append("    bodyTemplate: ").append(toIndentedString(bodyTemplate)).append("\n");
         sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix)).append("\n");
+        sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
         sb.append("}");
         return sb.toString();
     }

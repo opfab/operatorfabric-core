@@ -5211,7 +5211,8 @@
               "properties":
                 {
                   "bodyTemplate": { "type": "string"},
-                  "hideDefaultBodyPrefixAndPostfix": { "type": "boolean"}
+                  "hideDefaultBodyPrefixAndPostfix": { "type": "boolean"},
+                  "sender": { "type": "string"},
                 },
             },
         },
