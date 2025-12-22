@@ -4,7 +4,6 @@ plugins {
 }
 
 npmInstall {
-    inputs.files(fileTree('node_modules'))
     // Important: Use 'npm ci' instead of 'npm install' to ensure consistent dependencies.
     // 'npm ci' uses the exact versions from package-lock.json, preventing unexpected changes.
     npmCommand = ['ci'] 
@@ -12,14 +11,13 @@ npmInstall {
     inputs.file('package-lock.json')
     inputs.file('angular.json')
 
-    outputs.dir('build')
+    outputs.dir('node_modules')
 
 }
 
 
 task runLint(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
@@ -31,7 +29,6 @@ task runLint(type: NpmTask) {
 
 task runPrettier(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
@@ -46,7 +43,6 @@ task runPrettier(type: NpmTask) {
 
 task runBuild(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
@@ -60,7 +56,6 @@ task runBuild(type: NpmTask) {
 
 task runHeadlessTests(type: NpmTask) {
     inputs.files(fileTree('src'))
-    inputs.files(fileTree('node_modules'))
     inputs.file('package.json')
     inputs.file('package-lock.json')
     inputs.file('angular.json')
