@@ -12,7 +12,9 @@
 			"type" : "CANCELED",
 			"email" : {
 				"bodyTemplate" : "email_template",
-				"hideDefaultBodyPrefixAndPostfix": true
+				"hideDefaultBodyPrefixAndPostfix" : true,
+				"sender" : "senderOfMail@opfab.com",
+				"cardFieldUsedForSubject" : "data.mailTitle"
 			},
 			"editCardEnabledOnUserInterface": false,
 			"copyCardEnabledOnUserInterface": false,

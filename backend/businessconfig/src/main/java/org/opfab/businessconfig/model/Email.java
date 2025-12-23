@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package org.opfab.businessconfig.model;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public record Email(String bodyTemplate, Boolean hideDefaultBodyPrefixAndPostfix, String sender) {
+public record Email(String bodyTemplate, Boolean hideDefaultBodyPrefixAndPostfix, String sender,
+                    String cardFieldUsedForSubject) {
 
 }

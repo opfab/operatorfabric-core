@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -104,7 +104,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -143,7 +144,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -180,7 +182,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             },
             {
                 uid: '1001',
@@ -193,7 +196,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -240,7 +244,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             },
             {
                 uid: '1001',
@@ -253,7 +258,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
         recapCardsDiffusionControl.setForceEmailsInPlainText(true);
@@ -303,7 +309,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             },
             {
                 uid: '1001',
@@ -316,7 +323,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -361,7 +369,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             },
             {
                 uid: '1001',
@@ -374,7 +383,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -431,7 +441,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -472,7 +483,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -516,7 +528,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -559,7 +572,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 
@@ -603,7 +617,8 @@ describe('Cards external diffusion', function () {
                 summaryTranslated: 'Summary1',
                 process: 'defaultProcess',
                 state: 'processState',
-                entityRecipients: ['ENTITY1']
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
             }
         ];
 

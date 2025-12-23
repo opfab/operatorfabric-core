@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,7 @@ import {Card} from './card';
 import {formatInTimeZone} from 'date-fns-tz';
 import {htmlToText} from 'html-to-text';
 import {HandlebarsHelper} from './handlebarsHelpers';
+import {LightCard} from './lightCard';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
     private windowInSecondsForCardSearch: number;
@@ -88,7 +89,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
         if (userLogins.length > 0) {
             const dateFrom = Date.now() - this.windowInSecondsForCardSearch * 1000;
-            const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as Card[];
+            const cards = (await this.cardsExternalDiffusionDatabaseService.getCards(dateFrom)) as LightCard[];
             if (cards.length > 0) {
                 this.logger.debug('Found cards: ' + cards.length);
                 userLogins.forEach((login) => {
@@ -101,7 +102,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         await this.cleanCardsAlreadySent();
     }
 
-    async sendCardsToUserIfNecessary(cards: Card[], login: string): Promise<void> {
+    async sendCardsToUserIfNecessary(lightCards: LightCard[], login: string): Promise<void> {
         this.logger.debug('Check user ' + login);
 
         const resp = await this.cardsExternalDiffusionOpfabServicesInterface.getUserWithPerimetersByLogin(login);
@@ -117,7 +118,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                         ' with mail ' +
                         userWithPerimeters.userData.email
                 );
-                const cardsForUser: Card[] = await this.getCardsForUser(cards, userWithPerimeters);
+                const cardsForUser: LightCard[] = await this.getCardsForUser(lightCards, userWithPerimeters);
                 for (const cardForUser of cardsForUser) {
                     await this.sendCardIfAllowed(
                         cardForUser,
@@ -131,20 +132,22 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     async sendCardIfAllowed(
-        card: Card,
+        lightCard: LightCard,
         userEmail: string | undefined,
         emailToPlainText: boolean,
         timezone: string
     ): Promise<void> {
         if (userEmail == null) return;
         try {
-            const alreadySent = await this.wasCardsAlreadySentToUser(card.uid, userEmail);
+            const alreadySent = await this.wasCardsAlreadySentToUser(lightCard.uid, userEmail);
             if (alreadySent == null || !alreadySent) {
                 if (this.isSendingAllowed(userEmail)) {
-                    await this.sendMail(card, userEmail, emailToPlainText, timezone);
+                    await this.sendMail(lightCard.id, userEmail, emailToPlainText, timezone);
                 } else {
-                    this.logger.warn(`Send rate limit reached for ${userEmail}, not sending mail for card ${card.uid}`);
-                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, userEmail);
+                    this.logger.warn(
+                        `Send rate limit reached for ${userEmail}, not sending mail for card ${lightCard.uid}`
+                    );
+                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(lightCard.uid, userEmail);
                 }
             }
         } catch (error) {
@@ -172,11 +175,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.userData.email;
     }
 
-    async sendMail(card: Card, to: string, emailToPlainText: boolean, timezone: string): Promise<void> {
-        this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
-
-        const subject = this.subjectPrefix + ' - ' + card.titleTranslated;
-
+    async sendMail(cardId: string, to: string, emailToPlainText: boolean, timezone: string): Promise<void> {
         let body = '';
         let attachment = [];
 
@@ -184,33 +183,50 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         let stateName;
 
         try {
-            const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(card.id);
+            const cardContentResponse = await this.cardsExternalDiffusionOpfabServicesInterface.getCard(cardId);
+
             if (cardContentResponse.isValid()) {
-                const cardContent = cardContentResponse.getData();
-                stateName = cardContent.state;
+                const card = cardContentResponse.getData();
+                this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
+
+                let subject = this.subjectPrefix + ' - ' + card.titleTranslated;
+                stateName = card.state;
                 cardConfig = await this.businessConfigOpfabServicesInterface.fetchProcessConfig(
                     card.process,
                     card.processVersion
                 );
-                body = await this.processEmailTemplate(cardContent, cardConfig, timezone);
-                attachment = await this.processAttachmentTemplate(cardContent, cardConfig);
+                body = await this.processEmailTemplate(card, cardConfig, timezone);
+                attachment = await this.processAttachmentTemplate(card, cardConfig);
+
+                if (cardConfig?.states?.[stateName]?.email?.cardFieldUsedForSubject) {
+                    subject = this.getValueByPath(
+                        card,
+                        cardConfig.states[stateName].email.cardFieldUsedForSubject
+                    ) as string;
+                }
+
+                if (emailToPlainText) {
+                    body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
+                }
+
+                try {
+                    const from = cardConfig?.states?.[stateName]?.email?.sender ?? this.from;
+
+                    await this.mailService.sendMail(subject, body, attachment, from, to, emailToPlainText);
+                    this.registerNewSending(to);
+                    await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
+                } catch (e) {
+                    this.logger.error('Error sending mail ', e);
+                }
             }
         } catch (e) {
-            this.logger.warn(`Couldn't parse email for : ${card.state}, `, e);
+            this.logger.warn(`Couldn't parse email for card id : ${cardId}, `, e);
+            return;
         }
+    }
 
-        if (emailToPlainText) {
-            body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
-        }
-
-        try {
-            const from = cardConfig?.states?.[stateName]?.email?.sender ?? this.from;
-            await this.mailService.sendMail(subject, body, attachment, from, to, emailToPlainText);
-            this.registerNewSending(to);
-            await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
-        } catch (e) {
-            this.logger.error('Error sending mail ', e);
-        }
+    private getValueByPath<T>(obj: T, path: string): unknown {
+        return path.split('.').reduce((acc: any, key) => acc?.[key], obj);
     }
 
     removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {
