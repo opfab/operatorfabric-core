@@ -13,12 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.opfab.users.configuration.users.UsersProperties;
-import org.opfab.users.model.*;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.Group;
+import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.UserSettings;
 import org.opfab.users.mongo.repositories.MongoEntityRepository;
 import org.opfab.users.mongo.repositories.MongoGroupRepository;
 import org.opfab.users.mongo.repositories.MongoUserSettingsRepository;
 import org.opfab.users.mongo.repositories.MongoUserRepository;
 import org.opfab.users.repositories.*;
+import org.opfab.common.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;

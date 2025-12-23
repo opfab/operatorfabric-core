@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.UserRepository;
 
 public class UserRepositoryImpl implements UserRepository {
@@ -67,7 +67,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(User user) {
-        if (user == null) return;
+        if (user == null)
+            return;
         mongoUserRepository.delete(user);
 
     }

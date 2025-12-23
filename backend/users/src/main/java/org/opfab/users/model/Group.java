@@ -18,6 +18,8 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 
+import org.opfab.common.users.PermissionEnum;
+
 @Document(collection = "group")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
@@ -133,9 +135,10 @@ public class Group {
 
     public List<String> getUsers() {
         if (users == null) {
-            // we need to return null in case 'users' field is not in the post query, to differentiate with an empty
+            // we need to return null in case 'users' field is not in the post query, to
+            // differentiate with an empty
             // array of users
-            return null;//NOSONAR
+            return null;// NOSONAR
         }
         return new ArrayList<>(users);
     }

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.UserRepository;
 
 public class UserRepositoryStub implements UserRepository {

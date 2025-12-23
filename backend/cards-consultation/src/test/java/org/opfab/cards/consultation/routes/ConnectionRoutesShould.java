@@ -141,9 +141,9 @@ class ConnectionRoutesShould {
             service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
 
             String[] expectedUsers = {
-                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}",
-                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":null,\"groups\":null}" };
+                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}" };
 
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
 
@@ -153,6 +153,7 @@ class ConnectionRoutesShould {
 
             int actualUsersCount = actualJson.split("\"login\":").length - 1;
             Assertions.assertEquals(3, actualUsersCount);
+            System.out.println("ActualJson" + actualJson);
             for (String currentUser : expectedUsers) {
                 Assertions.assertTrue(actualJson.contains(currentUser));
             }

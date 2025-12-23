@@ -10,7 +10,7 @@ package org.opfab.users.services;
 
 import java.util.List;
 
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.utilities.eventbus.EventBus;
 

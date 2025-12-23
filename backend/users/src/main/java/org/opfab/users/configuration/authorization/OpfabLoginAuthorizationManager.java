@@ -14,7 +14,7 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

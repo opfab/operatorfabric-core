@@ -18,10 +18,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 import org.opfab.test.EventBusSpy;
-import org.opfab.users.model.*;
+import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.Group;
+import org.opfab.users.model.OperationResult;
+import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.StateRight;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
+import org.opfab.common.users.RightEnum;
+import org.opfab.common.users.User;
+import org.opfab.common.users.PermissionEnum;
 
 @DisplayName("GroupsService")
 class GroupsServiceShould {
@@ -56,13 +63,13 @@ class GroupsServiceShould {
         groupRepositoryStub.save(groupAdmin);
         Set<String> groupForUser1 = new HashSet<>();
         groupForUser1.add("group1");
-        userRepositoryStub.insert(new User("user1", "test", null, null, null,null, groupForUser1));
+        userRepositoryStub.insert(new User("user1", "test", null, null, null, null, groupForUser1));
         Set<String> groupForUser2 = new HashSet<>();
         groupForUser2.add("group1");
-        userRepositoryStub.insert(new User("user2", "test", null, null, null,null, groupForUser2));
+        userRepositoryStub.insert(new User("user2", "test", null, null, null, null, groupForUser2));
         Set<String> groupForAdmin = new HashSet<>();
         groupForAdmin.add("ADMIN");
-        userRepositoryStub.insert(new User("admin", "admin", null, null, null,null, groupForAdmin));
+        userRepositoryStub.insert(new User("admin", "admin", null, null, null, null, groupForAdmin));
 
         groupsService = new GroupsService(groupRepositoryStub, userRepositoryStub,
                 perimeterRepositoryStub, notificationService);
@@ -125,7 +132,8 @@ class GroupsServiceShould {
             assertThat(result.getResult().getEntity().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
             assertThat(groupRepositoryStub.findById("newGroup").get().getName()).isEqualTo("newName");
             assertThat(groupRepositoryStub.findById("newGroup").get().getPerimeters().get(0)).isEqualTo("perimeter1");
-            assertThat(groupRepositoryStub.findById("newGroup").get().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
+            assertThat(groupRepositoryStub.findById("newGroup").get().getPermissions().get(0))
+                    .isEqualTo(PermissionEnum.READONLY);
         }
 
         @Test
@@ -144,7 +152,8 @@ class GroupsServiceShould {
             assertThat(result.getResult().getEntity().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
             assertThat(groupRepositoryStub.findById("group1").get().getName()).isEqualTo("newGroupName");
             assertThat(groupRepositoryStub.findById("group1").get().getPerimeters().get(0)).isEqualTo("perimeter1");
-            assertThat(groupRepositoryStub.findById("group1").get().getPermissions().get(0)).isEqualTo(PermissionEnum.READONLY);
+            assertThat(groupRepositoryStub.findById("group1").get().getPermissions().get(0))
+                    .isEqualTo(PermissionEnum.READONLY);
         }
 
         @Test
@@ -388,10 +397,11 @@ class GroupsServiceShould {
                 assertThat(result.isSuccess()).isTrue();
 
                 String[] expectedMessageSent1 = { "user", "user1" };
-                String[] expectedMessageSent2 = { "user", "user2" }; // Notification is send as user is deleted from groups
+                String[] expectedMessageSent2 = { "user", "user2" }; // Notification is send as user is deleted from
+                                                                     // groups
                 String[] expectedMessageSent3 = { "user", "admin" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
-                        expectedMessageSent2,expectedMessageSent3);
+                        expectedMessageSent2, expectedMessageSent3);
             }
 
             @Test
@@ -417,7 +427,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.updateGroupUsers("group1", users);
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
-                String[] expectedMessageSent2 = { "user", "user2" }; 
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
 
@@ -449,7 +459,7 @@ class GroupsServiceShould {
                 OperationResult<String> result = groupsService.deleteGroupUsers("group1");
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
-                String[] expectedMessageSent2 = { "user", "user2" }; 
+                String[] expectedMessageSent2 = { "user", "user2" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2);
             }
@@ -575,7 +585,6 @@ class GroupsServiceShould {
                 assertThat(groupUpdated.get().getPerimeters()).contains("perimeter2");
             }
 
-
             @Test
             void GIVEN_Existing_Group_WHEN_Updating_Perimeter_List_THEN__A_Notification_Containing_User_Updated_Is_Sent_To_Other_Services() {
                 ArrayList<String> perimeters = new ArrayList<>();
@@ -586,7 +595,8 @@ class GroupsServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
                 String[] expectedMessageSent2 = { "user", "user2" };
-                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
             }
 
             @Test
@@ -643,9 +653,9 @@ class GroupsServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
                 String[] expectedMessageSent2 = { "user", "user2" };
-                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
             }
-
 
             @Test
             void GIVEN_Existing_Group_WHEN_Adding_Two_Perimeter_THEN_Succeed_And_Two_Perimeter_Are_Added() {

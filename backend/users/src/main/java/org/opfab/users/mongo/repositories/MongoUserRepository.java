@@ -7,10 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.mongo.repositories;
 
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -23,10 +22,13 @@ import java.util.Optional;
  * Mongo {@link User} repository
  */
 @Repository
-public interface MongoUserRepository extends MongoRepository<User,String> {
+public interface MongoUserRepository extends MongoRepository<User, String> {
 
     Page<User> findAll(Pageable pageable);
+
     Optional<User> findByLogin(String login);
+
     List<User> findByGroupSetContaining(String groupContains);
+
     List<User> findByEntitiesContaining(String entityContains);
 }
