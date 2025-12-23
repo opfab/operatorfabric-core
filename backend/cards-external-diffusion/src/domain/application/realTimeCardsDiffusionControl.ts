@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -175,8 +175,6 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     async sendMail(card: Card, to: string, emailToPlainText: boolean, timezone: string): Promise<void> {
         this.logger.info('Send Mail to ' + to + ' for card ' + card.uid);
 
-        const subject = this.subjectPrefix + ' - ' + card.titleTranslated;
-
         let body = '';
         let attachment = [];
 
@@ -205,12 +203,25 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
 
         try {
             const from = cardConfig?.states?.[stateName]?.email?.sender ?? this.from;
+
+            let subject = this.subjectPrefix + ' - ' + card.titleTranslated;
+            if (cardConfig?.states?.[stateName]?.email?.cardFieldUsedForSubject) {
+                subject = this.getValueByPath(
+                    card,
+                    cardConfig.states[stateName].email.cardFieldUsedForSubject
+                ) as string;
+            }
+
             await this.mailService.sendMail(subject, body, attachment, from, to, emailToPlainText);
             this.registerNewSending(to);
             await this.cardsExternalDiffusionDatabaseService.persistSentMail(card.uid, to);
         } catch (e) {
             this.logger.error('Error sending mail ', e);
         }
+    }
+
+    private getValueByPath<T>(obj: T, path: string): unknown {
+        return path.split('.').reduce((acc: any, key) => acc?.[key], obj);
     }
 
     removeElementsFromArray(arrayToFilter: string[], arrayToDelete: string[]): string[] {

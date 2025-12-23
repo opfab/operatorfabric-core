@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -24,11 +24,22 @@ the "timezone for mails" field in the user settings screen.
 The email body contains a link to the card details in OpFab. In the config.json file containing the state definition,
 the `email.bodyTemplate` field allows defining a template specific to the email body content.
 This template can use handlebars helpers for formatting but can't run javascript. If no template is specified, the mail
-is sent with just the link to the card in the body.
+is sent with just the link to the card in the body. +
 In the state definition, you can also set `email.hideDefaultBodyPrefixAndPostfix` to true if you don't want to display the
-default body prefix and postfix.
-If you want to override the default mail sender, you can set `sender` in the state definition.
-
+default body prefix and postfix. +
+You can override the default mail sender using `email.sender` in the state definition. +
+You can override the mail subject using `email.cardFieldUsedForSubject`, which references a field in the card, for example:
+....
+email : {
+    cardFieldUsedForSubject:"data.mailTitle"
+}
+....
+or
+....
+email : {
+    cardFieldUsedForSubject:"titleTranslated"
+}
+....
 == Email templates
 In email handlebars templates it is possible to refer card fields by prefixing with "card" prefix. For example:
 

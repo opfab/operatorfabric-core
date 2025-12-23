@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -101,6 +101,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
+        expect(mailService.sent[0].subject).toEqual('Subject - Title1');
         expect(mailService.sent[0].body).toEqual(
             `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1` +
                 '</a> <br><br>Postfix'
@@ -708,6 +709,119 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].fromAddress).toEqual('senderForTheState@test.com');
+    });
+
+    it('Title of email should be the one of the state when cardFieldUsedForSubject is defined in the state', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                sendCardsByEmail: true,
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail',
+                        hideDefaultBodyPrefixAndPostfix: true,
+                        sender: 'senderForTheState@test.com',
+                        cardFieldUsedForSubject: 'titleTranslated'
+                    }
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1']
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].subject).toEqual('Title1 & <br>');
+    });
+
+    it('Title of email should be the one of the state when cardFieldUsedForSubject is defined in the state and reference a data field', async function () {
+        const publishDate = Date.now();
+        setup();
+        realTimeCardsDiffusionControl.setShowCardUrls(false);
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                sendCardsByEmail: true,
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail',
+                        hideDefaultBodyPrefixAndPostfix: true,
+                        sender: 'senderForTheState@test.com',
+                        cardFieldUsedForSubject: 'data.mailTitle'
+                    }
+                }
+            }
+        };
+
+        opfabServicesInterfaceStub.card = {
+            uid: '1001',
+            id: 'defaultProcess.process1',
+            publisher: 'publisher1',
+            publishDate,
+            startDate: publishDate,
+            titleTranslated: 'Title1 & <br>',
+            summaryTranslated: '" Summary1 <br>',
+            process: 'defaultProcess',
+            state: 'processState',
+            entityRecipients: ['ENTITY1'],
+            data: {
+                mailTitle: 'Mail title defined in the data field of the card'
+            }
+        };
+
+        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].subject).toEqual('Mail title defined in the data field of the card');
     });
 
     it('Should not send same card twice', async function () {
