@@ -9,7 +9,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {enableProdMode, importProvidersFrom} from '@angular/core';
+import {enableProdMode, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
 
 import {environment} from './environments/environment';
 
@@ -75,7 +75,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(
+        provideZoneChangeDetection(),importProvidersFrom(
             CommonModule,
             BrowserModule,
             FormsModule,
