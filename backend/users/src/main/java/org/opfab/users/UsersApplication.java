@@ -19,6 +19,7 @@ import org.opfab.users.mongo.repositories.UserRepositoryImpl;
 import org.opfab.users.mongo.repositories.UserSettingsRepositoryImpl;
 import org.opfab.utilities.eventbus.rabbit.RabbitEventBus;
 import org.opfab.configuration.mongo.MongoConfiguration;
+import org.opfab.configuration.InternalAccountSecurityConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -32,7 +33,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @Import({ UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class, EntityRepositoryImpl.class,
         CachedGroupRepositoryImpl.class,
         PerimeterRepositoryImpl.class, UserRepositoryImpl.class, UserSettingsRepositoryImpl.class, RabbitEventBus.class,
-        MongoConfiguration.class, LastUserActionRepositoryImpl.class })
+        MongoConfiguration.class, LastUserActionRepositoryImpl.class, InternalAccountSecurityConfiguration.class })
 public class UsersApplication {
 
     public static void main(String[] args) {

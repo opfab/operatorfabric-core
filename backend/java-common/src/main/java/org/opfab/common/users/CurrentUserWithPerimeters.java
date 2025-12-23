@@ -18,6 +18,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CurrentUserWithPerimeters {
+
+    private boolean isInternalServiceAccount = false;
+
     private User userData = null;
 
     private List<ComputedPerimeter> computedPerimeters = null;
@@ -45,6 +48,14 @@ public class CurrentUserWithPerimeters {
 
     public User getUserData() {
         return userData;
+    }
+
+    public boolean isInternalServiceAccount() {
+        return isInternalServiceAccount;
+    }
+
+    public void setIsInternalServiceAccount(boolean isInternalServiceAccount) {
+        this.isInternalServiceAccount = isInternalServiceAccount;
     }
 
     public void setUserData(User userData) {
@@ -213,6 +224,7 @@ public class CurrentUserWithPerimeters {
         }
         CurrentUserWithPerimeters currentUserWithPerimeters = (CurrentUserWithPerimeters) o;
         return Objects.equals(this.userData, currentUserWithPerimeters.userData) &&
+                this.isInternalServiceAccount == currentUserWithPerimeters.isInternalServiceAccount &&
                 Objects.equals(this.computedPerimeters, currentUserWithPerimeters.computedPerimeters) &&
                 Objects.equals(this.processesStatesNotNotified, currentUserWithPerimeters.processesStatesNotNotified) &&
                 Objects.equals(this.processesStatesNotifiedByEmail,
@@ -228,7 +240,8 @@ public class CurrentUserWithPerimeters {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userData, computedPerimeters, processesStatesNotNotified, processesStatesNotifiedByEmail,
+        return Objects.hash(userData, isInternalServiceAccount, computedPerimeters, processesStatesNotNotified,
+                processesStatesNotifiedByEmail,
                 sendCardsByEmail, emailToPlainText, sendDailyEmail, sendWeeklyEmail, timezoneForEmails, permissions);
     }
 
@@ -238,6 +251,7 @@ public class CurrentUserWithPerimeters {
         sb.append("class CurrentUserWithPerimeters {\n");
 
         sb.append("    userData: ").append(toIndentedString(userData)).append("\n");
+        sb.append("    isInternalServiceAccount: ").append(toIndentedString(isInternalServiceAccount)).append("\n");
         sb.append("    computedPerimeters: ").append(toIndentedString(computedPerimeters)).append("\n");
         sb.append("    processesStatesNotNotified: ").append(toIndentedString(processesStatesNotNotified)).append("\n");
         sb.append("    processesStatesNotifiedByEmail: ").append(toIndentedString(processesStatesNotifiedByEmail))

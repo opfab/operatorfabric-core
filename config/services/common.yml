@@ -1,9 +1,8 @@
-
 management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: "*"
 
 operatorfabric:
   rabbitmq:
@@ -11,12 +10,13 @@ operatorfabric:
     username: guest
     password: for_test_only # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   customscreen:
-    dataFields: ["keywords", "nested.field","comment","reason"]
+    dataFields: ["keywords", "nested.field", "comment", "reason"]
   mongodb:
     uri: mongodb://root:password@mongodb:27017/operator-fabric?authSource=admin # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   internalAccount:
     login: opfab
     password: test # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
+  internalServiceAccountPassword: to_be_changed # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   security:
     oauth2:
       resourceserver:
@@ -25,29 +25,29 @@ operatorfabric:
     jwt:
       login-claim: preferred_username
 
-### activate the following if you want the entities of the user to come from the token and not mongoDB
-### entitiesIdClaim is the name of the field in the token     
-#      entitiesIdClaim : entitiesId
-#      entitiesIdClaimSingleString : false
-#      gettingEntitiesFromToken: true
+      ### activate the following if you want the entities of the user to come from the token and not mongoDB
+      ### entitiesIdClaim is the name of the field in the token
+      #      entitiesIdClaim : entitiesId
+      #      entitiesIdClaimSingleString : false
+      #      gettingEntitiesFromToken: true
       gettingFirstAndLastNameFromToken: false
 ###
 
 ### activate the following if you want the groups of the user to come from the token and not mongoDB
-#      groups: 
+#      groups:
 #        mode: JWT
 #        rolesClaim:
 #          rolesClaimStandard:
 #            - path: "ATTR1"
-#            - path: "ATTR2"            
-#          rolesClaimStandardArray:  
+#            - path: "ATTR2"
+#          rolesClaimStandardArray:
 #            - path: "resource_access/opfab-client/roles"
-#          rolesClaimStandardList:  
-#            - path: "groups" 
-#              separator: ";"           
-#          rolesClaimCheckExistPath: 
-#            - path: "resource_access/AAA" 
-#              roleValue: "roleAAA"      
+#          rolesClaimStandardList:
+#            - path: "groups"
+#              separator: ";"
+#          rolesClaimCheckExistPath:
+#            - path: "resource_access/AAA"
+#              roleValue: "roleAAA"
 #            - path: "resource_access/BBB"
-#              roleValue: "roleBBB"  
-### 
+#              roleValue: "roleBBB"
+###

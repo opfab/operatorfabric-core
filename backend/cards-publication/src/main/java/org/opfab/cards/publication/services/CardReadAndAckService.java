@@ -38,14 +38,19 @@ public class CardReadAndAckService {
 
     public UserBasedOperationResult processUserAcknowledgement(String cardUid, CurrentUserWithPerimeters user,
             List<String> entitiesAcks) {
-        if (cardPermissionControlService.isCurrentUserReadOnly(user) && entitiesAcks != null && !entitiesAcks.isEmpty())
-            throw new ApiErrorException(
-                    new ApiError(HttpStatus.FORBIDDEN, "Acknowledgement impossible : User has READONLY opfab role"));
+        if (!user.isInternalServiceAccount()) {
 
-        if (!user.getUserData().getEntities().containsAll(entitiesAcks))
-            throw new ApiErrorException(
-                    new ApiError(HttpStatus.FORBIDDEN,
-                            "Acknowledgement impossible : User is not member of all the entities given in the request"));
+            if (cardPermissionControlService.isCurrentUserReadOnly(user) && entitiesAcks != null
+                    && !entitiesAcks.isEmpty())
+                throw new ApiErrorException(
+                        new ApiError(HttpStatus.FORBIDDEN,
+                                "Acknowledgement impossible : User has READONLY opfab role"));
+
+            if (!user.getUserData().getEntities().containsAll(entitiesAcks))
+                throw new ApiErrorException(
+                        new ApiError(HttpStatus.FORBIDDEN,
+                                "Acknowledgement impossible : User is not member of all the entities given in the request"));
+        }
 
         cardRepository.findByUid(cardUid).ifPresent(selectedCard -> cardNotificationService
                 .pushAckOfCardInEventBus(cardUid, selectedCard.id, entitiesAcks, CardOperationTypeEnum.ACK));

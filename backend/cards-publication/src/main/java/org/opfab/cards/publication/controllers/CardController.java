@@ -23,14 +23,19 @@ import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.controllers.OpfabController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.jwt.Jwt;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
 import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
@@ -40,7 +45,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/cards")
 
-public class CardController {
+public class CardController extends OpfabController {
 
     private CardDeletionService cardDeletionService;
     private CardProcessingService cardProcessingService;
@@ -197,8 +202,7 @@ public class CardController {
             @PathVariable("cardUid") String cardUid,
             HttpServletResponse response,
             @RequestBody List<String> entitiesAcks) {
-        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
-        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+        CurrentUserWithPerimeters user = getCurrentUserWithPerimeter(principal);
 
         UserBasedOperationResult result = cardReadAndAckService.processUserAcknowledgement(cardUid, user, entitiesAcks);
 

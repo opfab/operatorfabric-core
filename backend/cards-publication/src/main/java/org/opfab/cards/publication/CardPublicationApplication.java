@@ -22,11 +22,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.opfab.configuration.InternalAccountSecurityConfiguration;
 
 @SpringBootApplication
 @Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
         UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class,
-        LastUserActionRepositoryImpl.class})
+        LastUserActionRepositoryImpl.class, InternalAccountSecurityConfiguration.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {

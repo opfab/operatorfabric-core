@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -47,6 +48,7 @@ public class WebSecurityConfiguration {
             Converter<Jwt, Mono<AbstractAuthenticationToken>> opfabReactiveJwtConverter) {
         configureCommon(http);
         http
+                .httpBasic(Customizer.withDefaults()) // Authorize basic auth for internal service calls
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(opfabReactiveJwtConverter))
