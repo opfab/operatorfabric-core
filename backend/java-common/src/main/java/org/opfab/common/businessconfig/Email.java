@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,7 @@ public class Email {
     private String bodyTemplate;
     private Boolean hideDefaultBodyPrefixAndPostfix = false;
     private String sender;
+    private String cardFieldUsedForSubject;
 
     public Email bodyTemplate(String bodyTemplate) {
         this.bodyTemplate = bodyTemplate;
@@ -58,6 +59,19 @@ public class Email {
         this.sender = sender;
     }
 
+    public Email cardFieldUsedForSubject(String cardFieldUsedForSubject) {
+        this.cardFieldUsedForSubject = cardFieldUsedForSubject;
+        return this;
+    }
+
+    public String getCardFieldUsedForSubject() {
+        return cardFieldUsedForSubject;
+    }
+
+    public void setCardFieldUsedForSubject(String cardFieldUsedForSubject) {
+        this.cardFieldUsedForSubject = cardFieldUsedForSubject;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -69,12 +83,13 @@ public class Email {
         Email email = (Email) o;
         return Objects.equals(this.bodyTemplate, email.bodyTemplate) &&
                Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix) &&
-               Objects.equals(this.sender, email.sender);
+               Objects.equals(this.sender, email.sender) &&
+               Objects.equals(this.cardFieldUsedForSubject, email.cardFieldUsedForSubject);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix, sender);
+        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix, sender, cardFieldUsedForSubject);
     }
 
     @Override
@@ -85,6 +100,7 @@ public class Email {
         sb.append("    bodyTemplate: ").append(toIndentedString(bodyTemplate)).append("\n");
         sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix)).append("\n");
         sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
+        sb.append("    cardFieldUsedForSubject: ").append(toIndentedString(cardFieldUsedForSubject)).append("\n");
         sb.append("}");
         return sb.toString();
     }

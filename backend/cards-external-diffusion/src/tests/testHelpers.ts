@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ import CardsExternalDiffusionOpfabServicesInterface from '../domain/server-side/
 import CardsExternalDiffusionDatabaseService from '../domain/server-side/cardsExternaDiffusionDatabaseService';
 import BusinessConfigOpfabServicesInterface from '../domain/server-side/BusinessConfigOpfabServicesInterface';
 import {format} from 'date-fns';
+import {LightCard} from '../domain/application/lightCard';
 
 export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
     public isResponseValid = true;
@@ -76,10 +77,30 @@ export class SendMailServiceStub extends SendMailService {
 
 export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
     sent: any[] = [];
-    cards = new Array<any>();
+    cards = new Array<LightCard>();
 
-    public async getCards(publishDate: number): Promise<any[]> {
-        return this.cards.filter((card) => card.publishDate >= publishDate);
+    public async getCards(publishDate: number): Promise<LightCard[]> {
+        return this.cards
+            .filter((card) => card.publishDate >= publishDate)
+            .map((card) => ({
+                id: card.id,
+                uid: card.uid,
+                processVersion: card.processVersion,
+                process: card.process,
+                state: card.state,
+                titleTranslated: card.titleTranslated,
+                summaryTranslated: card.summaryTranslated,
+                publishDate: card.publishDate,
+                usersReads: card.usersReads,
+                startDate: card.startDate,
+                endDate: card.endDate,
+                userRecipients: card.userRecipients,
+                groupRecipients: card.groupRecipients,
+                entityRecipients: card.entityRecipients,
+                publisher: card.publisher,
+                publisherType: card.publisherType,
+                severity: card.severity
+            }));
     }
 
     public async getSentMail(cardUid: string, email: string): Promise<any> {
