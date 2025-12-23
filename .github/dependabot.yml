@@ -23,3 +23,9 @@ updates:
           - "*stylelint*"
     schedule:
       interval: "daily"
+    # Ignore major Angular version updates because they require manual intervention
+    # following the official Angular upgrade guide, which Dependabot cannot automate.
+    ignore:
+      - dependency-name: "@angular*"
+        update-types:
+          - "version-update:semver-major"
