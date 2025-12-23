@@ -1,5 +1,8 @@
 {
   "compileOnSave": false,
+  "angularCompilerOptions": {
+    "typeCheckHostBindings": false
+  },
   "compilerOptions": {
     "baseUrl": "./src",
     "importHelpers": true,
