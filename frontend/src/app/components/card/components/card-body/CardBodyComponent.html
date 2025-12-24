@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2026, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -61,14 +61,12 @@
                 <!-- padding is necessary to see box shadow-->
 
                 @if (showDetailCardHeader) {
-                <div class="opfab-card-response-header">
-                    <of-card-header
-                        [card]="this.card"
-                        [childCards]="this.childCards"
-                        [cardState]="this.cardState"
-                        [lttdExpiredIsTrue]="this.lttdExpiredIsTrue">
-                    </of-card-header>
-                </div>
+                <of-card-header
+                    [card]="this.card"
+                    [childCards]="this.childCards"
+                    [cardState]="this.cardState"
+                    [lttdExpiredIsTrue]="this.lttdExpiredIsTrue">
+                </of-card-header>
                 }
 
                 <of-template-rendering
