@@ -65,7 +65,7 @@ export class ProcessmonitoringTableComponent {
 
     @Output() pageChange = new EventEmitter<number>();
     @Output() filterChange = new EventEmitter<{filterModel: FilterModel; colId: string}>();
-    @Output() export = new EventEmitter<number>();
+    @Output() export = new EventEmitter<string[]>();
 
     modalRef: NgbModalRef;
 
@@ -279,7 +279,8 @@ export class ProcessmonitoringTableComponent {
     }
 
     exportToExcel() {
-        this.export.next(null);
+        const visibleColumns = this.columnDefs.filter((c) => c.hide === false).map((c) => c.headerName);
+        this.export.next(visibleColumns);
     }
 
     selectCard(info) {

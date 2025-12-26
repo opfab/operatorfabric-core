@@ -587,7 +587,7 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         return values ? values.join(',') : '';
     }
 
-    exportToExcel(): void {
+    exportToExcel(visibleColumns: string[]): void {
         const exportArchiveData = [];
 
         const modalOptions: NgbModalOptions = {
@@ -609,12 +609,18 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
                 const lineForExport = {};
                 lineForExport[severityColumnName] = card.severity;
                 this.processMonitoringFields.forEach((column) => {
-                    if (column.type === ProcessMonitoringFieldEnum.DATE) {
-                        lineForExport[column.colName] = this.displayTime(card[String(column.field).split('.').pop()]);
-                    } else if (column.type === ProcessMonitoringFieldEnum.ARRAY) {
-                        lineForExport[column.colName] = this.displayArray(card[String(column.field).split('.').pop()]);
-                    } else {
-                        lineForExport[column.colName] = card[String(column.field).split('.').pop()];
+                    if (visibleColumns?.includes(column.colName)) {
+                        if (column.type === ProcessMonitoringFieldEnum.DATE) {
+                            lineForExport[column.colName] = this.displayTime(
+                                card[String(column.field).split('.').pop()]
+                            );
+                        } else if (column.type === ProcessMonitoringFieldEnum.ARRAY) {
+                            lineForExport[column.colName] = this.displayArray(
+                                card[String(column.field).split('.').pop()]
+                            );
+                        } else {
+                            lineForExport[column.colName] = card[String(column.field).split('.').pop()];
+                        }
                     }
                 });
 
