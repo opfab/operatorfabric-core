@@ -218,7 +218,7 @@
             [selectedProcessIfOnlyOneIsSelected]="selectedProcessIfOnlyOneIsSelected"
             (filterChange)="onTableFilterChange($event)"
             (pageChange)="onPageChange($event)"
-            (export)="exportToExcel()">
+            (export)="exportToExcel($event)">
         </of-processmonitoring-table>
     </div>
     } @if (isMapViewActivated) {
