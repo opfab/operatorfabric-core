@@ -67,7 +67,7 @@ class UserSettingsServiceShould {
         userSettingsRepositoryStub.save(settings1);
         userSettingsRepositoryStub.save(settings2);
 
-        usersServiceStub = new UsersServiceStub(userRepositoryStub, null, null, null, null);
+        usersServiceStub = new UsersServiceStub(userRepositoryStub, null, null, null, null, null);
         eventBusSpy = new EventBusSpy();
         userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub,
                 new NotificationService(userRepositoryStub, eventBusSpy), null, false);

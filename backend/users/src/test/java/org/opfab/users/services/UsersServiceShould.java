@@ -20,18 +20,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.opfab.test.EventBusSpy;
-import org.opfab.users.model.EntityCreationReport;
-import org.opfab.users.model.Entity;
-import org.opfab.users.model.Group;
-import org.opfab.users.model.OperationResult;
-import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.*;
 import org.opfab.common.users.RightEnum;
 import org.opfab.users.model.StateRight;
 import org.opfab.common.users.User;
-import org.opfab.users.stubs.EntityRepositoryStub;
-import org.opfab.users.stubs.GroupRepositoryStub;
-import org.opfab.users.stubs.PerimeterRepositoryStub;
-import org.opfab.users.stubs.UserRepositoryStub;
+import org.opfab.users.stubs.*;
 
 @DisplayName("UsersService")
 class UsersServiceShould {
@@ -40,6 +33,7 @@ class UsersServiceShould {
     private PerimeterRepositoryStub perimeterRepositoryStub = new PerimeterRepositoryStub();
     private GroupRepositoryStub groupRepositoryStub = new GroupRepositoryStub();
     private EntityRepositoryStub entityRepositoryStub = new EntityRepositoryStub();
+    private UserSettingsRepositoryStub userSettingsRepositoryStub = new UserSettingsRepositoryStub();
     private UsersService usersService;
     private EventBusSpy eventBusSpy;
 
@@ -49,11 +43,13 @@ class UsersServiceShould {
     void clear() {
         eventBusSpy = new EventBusSpy();
         usersService = new UsersService(userRepositoryStub, groupRepositoryStub, entityRepositoryStub,
-                perimeterRepositoryStub, new NotificationService(userRepositoryStub, eventBusSpy));
+                perimeterRepositoryStub, userSettingsRepositoryStub,
+                new NotificationService(userRepositoryStub, eventBusSpy));
         initPerimeterRepository();
         initGroupRepository();
         initEntityRepository();
         initUserRepository();
+        initUserSettingsRepository();
     }
 
     private void initPerimeterRepository() {
@@ -113,6 +109,18 @@ class UsersServiceShould {
         entityRepositoryStub.insert(e1);
         entityRepositoryStub.insert(e2);
 
+    }
+
+    private void initUserSettingsRepository() {
+        userSettingsRepositoryStub.deleteAll();
+        UserSettings settings1;
+
+        settings1 = new UserSettings();
+        settings1.setLogin("user1");
+        settings1.setPlaySoundForAlarm(true);
+        settings1.setSendCardsByEmail(true);
+
+        userSettingsRepositoryStub.save(settings1);
     }
 
     private void initUserRepository() {
@@ -283,10 +291,11 @@ class UsersServiceShould {
         }
 
         @Test
-        void GIVEN_An_Existing_User_WHEN_Deleting_User_THEN_Sucess_And_User_Is_Deleted() {
+        void GIVEN_An_Existing_User_WHEN_Deleting_User_THEN_Success_And_User_Is_Deleted_And_User_Settings_Are_Deleted() {
             OperationResult<String> result = usersService.deleteUser("user1");
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("user1")).isEmpty();
+            assertThat(userSettingsRepositoryStub.findById("user1")).isEmpty();
         }
     }
 

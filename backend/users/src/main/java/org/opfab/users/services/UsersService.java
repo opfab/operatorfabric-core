@@ -15,15 +15,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.opfab.users.model.UserSettings;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
 import org.opfab.common.users.User;
-import org.opfab.users.repositories.EntityRepository;
-import org.opfab.users.repositories.GroupRepository;
-import org.opfab.users.repositories.PerimeterRepository;
-import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.repositories.*;
 
 public class UsersService {
 
@@ -37,16 +35,18 @@ public class UsersService {
     private GroupRepository groupRepository;
     private EntityRepository entityRepository;
     private PerimeterRepository perimeterRepository;
+    private UserSettingsRepository userSettingsRepository;
     private NotificationService notificationService;
 
     public UsersService(UserRepository userRepository, GroupRepository groupRepository,
-            EntityRepository entityRepository,
-            PerimeterRepository perimeterRepository, NotificationService notificationService) {
+                        EntityRepository entityRepository, PerimeterRepository perimeterRepository,
+                        UserSettingsRepository userSettingsRepository, NotificationService notificationService) {
 
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.entityRepository = entityRepository;
         this.perimeterRepository = perimeterRepository;
+        this.userSettingsRepository = userSettingsRepository;
         this.notificationService = notificationService;
 
     }
@@ -98,11 +98,18 @@ public class UsersService {
         return isAdminUserData && !hasAdminGroup;
     }
 
+    private void removeUserSettings(String login) {
+        Optional<UserSettings> foundUserSettings = userSettingsRepository.findById(login);
+        foundUserSettings.ifPresent(userSettings -> userSettingsRepository.delete(userSettings));
+    }
+
     public OperationResult<String> deleteUser(String login) {
         Optional<User> user = userRepository.findById(login);
         if (user.isEmpty())
             return new OperationResult<>(null, false, OperationResult.ErrorType.NOT_FOUND,
                     String.format(USER_NOT_FOUND_MSG, login));
+
+        removeUserSettings(login);
 
         userRepository.delete(user.get());
         notificationService.publishUpdatedUserMessage(user.get().getLogin());
