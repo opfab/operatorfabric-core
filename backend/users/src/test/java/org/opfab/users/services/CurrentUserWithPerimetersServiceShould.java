@@ -58,7 +58,7 @@ class CurrentUserWithPerimetersServiceShould {
     static void initData() {
         groupRepositoryStub = new GroupRepositoryStub();
         userRepositoryStub = new UserRepositoryStub();
-        usersServiceStub = new UsersServiceStub(userRepositoryStub, groupRepositoryStub, null, null, null);
+        usersServiceStub = new UsersServiceStub(userRepositoryStub, groupRepositoryStub, null, null, null, null);
         userSettingsService = new UserSettingsService(userSettingsRepositoryStub, usersServiceStub, null, null,
                 false);
 

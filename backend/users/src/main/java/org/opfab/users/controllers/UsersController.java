@@ -80,7 +80,7 @@ public class UsersController implements UserExtractor {
         this.groupsProperties = groupsProperties;
         this.notificationService = new NotificationService(userRepository, eventBus);
         this.usersService = new UsersService(userRepository, groupRepository, entityRepository, perimeterRepository,
-                notificationService);
+                userSettingsRepository, notificationService);
         this.userActionLogService = new UserActionLogService(userActionLogRepository, lastUserActionRepository);
         this.userSettingsService = new UserSettingsService(userSettingsRepository, usersService, notificationService,
                 this.userActionLogService, userActionLogActivated);

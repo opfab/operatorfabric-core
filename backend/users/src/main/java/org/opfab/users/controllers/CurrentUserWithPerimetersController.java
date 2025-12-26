@@ -49,7 +49,7 @@ public class CurrentUserWithPerimetersController implements UserExtractor {
 
         NotificationService notificationService = new NotificationService(userRepository, eventBus);
         UsersService usersService = new UsersService(userRepository, groupRepository, entityRepository,
-                perimeterRepository, notificationService);
+                perimeterRepository, userSettingsRepository, notificationService);
         UserActionLogService userActionLogService = new UserActionLogService(userActionLogRepository,
                 lastUserActionRepository);
         UserSettingsService userSettingsService = new UserSettingsService(userSettingsRepository, usersService,

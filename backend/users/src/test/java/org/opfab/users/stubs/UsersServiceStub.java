@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,10 +15,7 @@ import java.util.Map;
 
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.repositories.EntityRepository;
-import org.opfab.users.repositories.GroupRepository;
-import org.opfab.users.repositories.PerimeterRepository;
-import org.opfab.users.repositories.UserRepository;
+import org.opfab.users.repositories.*;
 import org.opfab.users.services.NotificationService;
 import org.opfab.users.services.UsersService;
 
@@ -27,9 +24,10 @@ public class UsersServiceStub extends UsersService {
     Map<String, List<Perimeter>> perimetersPerUser = new HashMap<>();
 
     public UsersServiceStub(UserRepository userRepository, GroupRepository groupRepository,
-            EntityRepository entityRepository, PerimeterRepository perimeterRepository,
-            NotificationService notificationService) {
-        super(userRepository, groupRepository, entityRepository, perimeterRepository, notificationService);
+                            EntityRepository entityRepository, PerimeterRepository perimeterRepository,
+                            UserSettingsRepository userSettingsRepository, NotificationService notificationService) {
+        super(userRepository, groupRepository, entityRepository, perimeterRepository, userSettingsRepository,
+                notificationService);
     }
 
     public void setPerimetersForUser(List<Perimeter> perimeters, String login) {
