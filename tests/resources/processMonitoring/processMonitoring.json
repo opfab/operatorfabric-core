@@ -4,8 +4,8 @@
       { "field": "titleTranslated", "colName": "Title", "size": 250},
       { "field": "entityRecipients", "type": "array", "colName": "Entity Recipients", "size": 400},
       { "field": "data.stateName", "colName": "My field", "size": 300, "type": "set", "possibleValues": ["CALCUL1","CALCUL2","CALCUL3"]},
-      { "field": "summaryTranslated", "colName": "Summary", "size": 250},
-      { "field": "data.error", "colName": "My second field", "size": 100, "defaultVisibility": false}
+      { "field": "summaryTranslated", "colName": "Summary", "size": 400},
+      { "field": "data.error", "colName": "My second field", "size": 200, "defaultVisibility": false}
     ],
     "fieldsForProcesses": [
       {

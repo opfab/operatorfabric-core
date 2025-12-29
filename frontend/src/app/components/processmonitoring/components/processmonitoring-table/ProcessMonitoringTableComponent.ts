@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,6 +87,7 @@ export class ProcessmonitoringTableComponent {
 
         this.gridOptions = <GridOptions>{
             ...AgGrid.getDefaultGridOptions(),
+            suppressHorizontalScroll: false,
             context: {
                 componentParent: this
             },
@@ -108,7 +109,6 @@ export class ProcessmonitoringTableComponent {
                     filter: true,
                     wrapText: false,
                     autoHeight: true,
-                    flex: 1,
                     resizable: false
                 },
                 severityColumn: {
@@ -163,8 +163,6 @@ export class ProcessmonitoringTableComponent {
         ];
 
         if (this.processMonitoringFields) {
-            const columnSizeAverage = this.computeColumnSizeAverage();
-
             const stored = UserPreferencesService.getPreference('opfab.processMonitoring.columnsVisibility');
             try {
                 this.columnsVisibilityPreference = stored ? JSON.parse(stored) : {};
@@ -192,7 +190,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: Number.isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
+                        width: column.size,
                         resizable: false,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
@@ -204,7 +202,7 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-right-padding',
                         cellClass: 'opfab-ag-cell-with-no-padding',
-                        flex: Number.isNaN(Number(column.size)) ? 1 : Number(column.size) / columnSizeAverage,
+                        width: column.size,
                         resizable: false,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
@@ -264,14 +262,6 @@ export class ProcessmonitoringTableComponent {
             });
         });
         return fields;
-    }
-
-    computeColumnSizeAverage(): number {
-        let columnSizeAverage = 0;
-        this.processMonitoringFields.forEach((column) => {
-            columnSizeAverage += Number.isNaN(Number(column.size)) ? 1 : Number(column.size);
-        });
-        return columnSizeAverage / this.processMonitoringFields.length;
     }
 
     updateResultPage(currentPage): void {
