@@ -105,6 +105,8 @@ const bundleCommand = {
 
     async deleteBundle(args) {
         let processId = args[0];
+        let version = args[1];
+
         if (!processId) {
             processId = (
                 await prompts({
@@ -119,13 +121,25 @@ const bundleCommand = {
             }
         }
 
+        let path = `businessconfig/processes/${processId}`;
+        let successMessage = `Bundle ${processId} deleted successfully`;
+        let errorMessage = `Failed to delete bundle ${processId}`;
+        let notFoundMessage = `Bundle ${processId} not found`;
+
+        if (version) {
+            path += `/versions/${version}`;
+            successMessage = `Bundle ${processId} version ${version} deleted successfully`;
+            errorMessage += ` version ${version}`;
+            notFoundMessage = `Bundle ${processId} version ${version} not found`;
+        }
+
         await utils.sendRequest(
-            `businessconfig/processes/${processId}`,
+            path,
             'DELETE',
             undefined,
-            `Bundle ${processId} deleted successfully`,
-            `Failed to delete bundle ${processId}`,
-            `Bundle ${processId} not found`
+            successMessage,
+            errorMessage,
+            notFoundMessage
         );
     },
 
@@ -145,7 +159,7 @@ const bundleCommand = {
  Commands list : 
 
             load        Load bundle from directory: opfab bundle load <bundleDirectory>... 
-            delete      Delete bundle by process : opfab bundle delete <processId>,
+            delete      Delete bundle by process : opfab bundle delete <processId> [version]
             delete-all  Delete all bundles : opfab bundle delete-all
         `);
     }
