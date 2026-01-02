@@ -109,7 +109,7 @@ export class ProcessmonitoringTableComponent {
                     filter: true,
                     wrapText: false,
                     autoHeight: true,
-                    resizable: false
+                    resizable: true
                 },
                 severityColumn: {
                     sortable: false,
@@ -188,10 +188,10 @@ export class ProcessmonitoringTableComponent {
                         headerName: column.colName,
                         cellRenderer: 'timeCellRenderer',
                         field: String(column.field).split('.').pop(),
-                        headerClass: 'opfab-ag-cheader-with-right-padding',
-                        cellClass: 'opfab-ag-cell-with-no-padding',
+                        headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
+                        cellClass: 'opfab-ag-cell-with-left-padding',
                         width: column.size,
-                        resizable: false,
+                        resizable: true,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
                     });
@@ -200,10 +200,10 @@ export class ProcessmonitoringTableComponent {
                         type: 'summaryColumn',
                         headerName: column.colName,
                         field: String(column.field).split('.').pop(),
-                        headerClass: 'opfab-ag-cheader-with-right-padding',
-                        cellClass: 'opfab-ag-cell-with-no-padding',
+                        headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
+                        cellClass: 'opfab-ag-cell-with-left-padding',
                         width: column.size,
-                        resizable: false,
+                        resizable: true,
                         colId: column.field,
                         hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
                     });
