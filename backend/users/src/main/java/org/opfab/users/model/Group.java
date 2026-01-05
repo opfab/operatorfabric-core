@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
+
+import org.opfab.common.users.PermissionEnum;
 
 @Document(collection = "group")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -133,9 +135,10 @@ public class Group {
 
     public List<String> getUsers() {
         if (users == null) {
-            // we need to return null in case 'users' field is not in the post query, to differentiate with an empty
+            // we need to return null in case 'users' field is not in the post query, to
+            // differentiate with an empty
             // array of users
-            return null;//NOSONAR
+            return null;// NOSONAR
         }
         return new ArrayList<>(users);
     }

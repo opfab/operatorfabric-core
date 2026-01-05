@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,31 +8,47 @@
  */
 package org.opfab.common.users;
 
-import java.util.Objects;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "user")
 public class User {
-    private String login = null;
 
-    private String firstName = null;
+    @Id
+    @NotNull
+    private String login;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String comment;
+    private Set<String> entities;
 
-    private String lastName = null;
+    @JsonIgnore
+    private Set<String> groupSet;
 
-    private String email = null;
+    public User() {
+    }
 
-    private String comment = null;
-
-    private List<String> groups = null;
-
-    private List<String> entities = null;
-
-    public User login(String login) {
+    public User(@NotNull String login, String firstName, String lastName, String email, String comment,
+            Set<String> entities,
+            Set<String> groupSet) {
         this.login = login;
-        return this;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.comment = comment;
+        this.entities = entities;
+        this.groupSet = groupSet;
     }
 
     public String getLogin() {
@@ -43,22 +59,12 @@ public class User {
         this.login = login;
     }
 
-    public User firstName(String firstName) {
-        this.firstName = firstName;
-        return this;
-    }
-
     public String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public User lastName(String lastName) {
-        this.lastName = lastName;
-        return this;
     }
 
     public String getLastName() {
@@ -69,22 +75,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User email(String email) {
-        this.email = email;
-        return this;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public User comment(String comment) {
-        this.comment = comment;
-        return this;
     }
 
     public String getComment() {
@@ -95,95 +91,117 @@ public class User {
         this.comment = comment;
     }
 
-    public User groups(List<String> groups) {
-        this.groups = groups;
-        return this;
+    public void addGroup(String group) {
+        if (null == groupSet) {
+            this.groupSet = new HashSet<>();
+        }
+        groupSet.add(group);
     }
 
-    public User addGroupsItem(String groupsItem) {
-        if (this.groups == null) {
-            this.groups = new ArrayList<>();
-        }
-        this.groups.add(groupsItem);
-        return this;
+    public Set<String> getGroupSet() {
+        if (this.groupSet == null)
+            return Collections.emptySet();
+        return groupSet;
     }
 
     public List<String> getGroups() {
-        return groups;
+        if (groupSet == null)
+            return Collections.emptyList();
+        return new ArrayList<>(groupSet);
     }
 
     public void setGroups(List<String> groups) {
-        this.groups = groups;
+        groupSet = new HashSet<>(groups);
     }
 
-    public User entities(List<String> entities) {
-        this.entities = entities;
-        return this;
-    }
-
-    public User addEntitiesItem(String entitiesItem) {
-        if (this.entities == null) {
-            this.entities = new ArrayList<>();
+    public void deleteGroup(String name) {
+        if (this.groupSet != null) {
+            this.groupSet.remove(name);
         }
-        this.entities.add(entitiesItem);
-        return this;
+    }
+
+    public void addEntity(String entity) {
+        if (null == entities) {
+            this.entities = new HashSet<>();
+        }
+        entities.add(entity);
     }
 
     public List<String> getEntities() {
-        return entities;
+        if (entities == null)
+            return Collections.emptyList();
+        return new ArrayList<>(entities);
     }
 
     public void setEntities(List<String> entities) {
-        this.entities = entities;
+        this.entities = new HashSet<>(entities);
     }
 
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
+    public void deleteEntity(String name) {
+        if (this.entities != null) {
+            entities.remove(name);
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return Objects.equals(this.login, user.login) &&
-                Objects.equals(this.firstName, user.firstName) &&
-                Objects.equals(this.lastName, user.lastName) &&
-                Objects.equals(this.email, user.email) &&
-                Objects.equals(this.comment, user.comment) &&
-                Objects.equals(this.groups, user.groups) &&
-                Objects.equals(this.entities, user.entities);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, firstName, lastName, email, comment, groups, entities);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((login == null) ? 0 : login.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+        result = prime * result + ((entities == null) ? 0 : entities.hashCode());
+        result = prime * result + ((groupSet == null) ? 0 : groupSet.hashCode());
+        return result;
     }
 
     @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class User {\n");
-
-        sb.append("    login: ").append(toIndentedString(login)).append("\n");
-        sb.append("    firstName: ").append(toIndentedString(firstName)).append("\n");
-        sb.append("    lastName: ").append(toIndentedString(lastName)).append("\n");
-        sb.append("    email: ").append(toIndentedString(email)).append("\n");
-        sb.append("    comment: ").append(toIndentedString(comment)).append("\n");
-        sb.append("    groups: ").append(toIndentedString(groups)).append("\n");
-        sb.append("    entities: ").append(toIndentedString(entities)).append("\n");
-        sb.append("}");
-        return sb.toString();
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (login == null) {
+            if (other.login != null)
+                return false;
+        } else if (!login.equals(other.login))
+            return false;
+        if (firstName == null) {
+            if (other.firstName != null)
+                return false;
+        } else if (!firstName.equals(other.firstName))
+            return false;
+        if (lastName == null) {
+            if (other.lastName != null)
+                return false;
+        } else if (!lastName.equals(other.lastName))
+            return false;
+        if (email == null) {
+            if (other.email != null)
+                return false;
+        } else if (!email.equals(other.email))
+            return false;
+        if (comment == null) {
+            if (other.comment != null)
+                return false;
+        } else if (!comment.equals(other.comment))
+            return false;
+        if (entities == null) {
+            if (other.entities != null)
+                return false;
+        } else if (!entities.equals(other.entities))
+            return false;
+        if (groupSet == null) {
+            if (other.groupSet != null)
+                return false;
+        } else if (!groupSet.equals(other.groupSet))
+            return false;
+        return true;
     }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
 }

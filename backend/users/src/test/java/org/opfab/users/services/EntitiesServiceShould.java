@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.RoleEnum;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.stubs.EntityRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
 
@@ -374,14 +374,14 @@ class EntitiesServiceShould {
                 assertThat(result.isSuccess()).isTrue();
 
                 String[] expectedMessageSent1 = { "user", "user1" };
-                // user1 is notified because he is in entity but he was already in entity so it is
+                // user1 is notified because he is in entity but he was already in entity so it
+                // is
                 // not necessary , code may be improved
                 String[] expectedMessageSent2 = { "user", "user2" };
                 String[] expectedMessageSent3 = { "user", "user3" };
                 assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
                         expectedMessageSent2, expectedMessageSent3);
             }
-
 
             @Test
             void GIVEN_Existing_Entity_WHEN_Update_Empty_User_List_THEN_A_Notification_Containing_Users_Updated_Is_Sent_To_Other_Services() {
@@ -407,7 +407,6 @@ class EntitiesServiceShould {
                 assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.NOT_FOUND);
                 assertThat(result.getErrorMessage()).isEqualTo("Entity dummyEntity not found");
             }
-
 
             @Test
             void GIVEN_A_Entity_With_User_WHEN_Try_To_Remove_Users_THEN_Success_And_Users_Removed() {

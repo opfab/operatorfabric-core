@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,9 +17,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.opfab.users.model.Group;
-import org.opfab.users.model.PermissionEnum;
-import org.opfab.users.model.User;
+import org.opfab.common.users.PermissionEnum;
+import org.opfab.common.users.User;
 import org.opfab.configuration.oauth.jwt.JwtProperties;
+import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

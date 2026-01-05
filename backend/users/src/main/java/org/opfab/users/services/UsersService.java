@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
@@ -172,8 +172,8 @@ public class UsersService {
 
             setEntitiesForUserUpdate(user, existingUser, updateEntities);
             if ((updateGroups) && (isRemovingAdminUserFromAdminGroup(user))) {
-                    return new OperationResult<>(null, false,
-                            OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
+                return new OperationResult<>(null, false,
+                        OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
             }
             setGroupsForUserUpdate(user, existingUser, updateGroups);
 
@@ -229,7 +229,7 @@ public class UsersService {
                 groups.removeAll(invalidGroups);
             user.setGroups(groups);
         }
-       
+
     }
 
 }

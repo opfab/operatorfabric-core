@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,15 @@ import org.opfab.useractiontracing.repositories.LastUserActionRepository;
 import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.configuration.authorization.UserExtractor;
-import org.opfab.users.model.*;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.OperationResult;
 import org.opfab.utilities.eventbus.EventBus;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.services.EntitiesService;
 import org.opfab.users.services.NotificationService;
+import org.opfab.common.users.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

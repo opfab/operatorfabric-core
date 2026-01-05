@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,8 +8,16 @@
  */
 package org.opfab.users.services;
 
-import org.opfab.users.model.*;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.User;
+import org.opfab.common.users.PermissionEnum;
+import org.opfab.users.model.Entity;
+import org.opfab.users.model.Group;
+import org.opfab.users.model.OperationResult;
+import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.UserSettings;
 import org.opfab.users.repositories.EntityRepository;
+import org.opfab.users.utils.PerimeterComputer;
 
 import java.util.*;
 import java.util.function.Function;
@@ -66,7 +74,7 @@ public class CurrentUserWithPerimetersService {
                                 perimetersData.addAll(list);
                             permissionsData.addAll(groupData.getPermissions());
                         });
-                userWithPerimeterData.computePerimeters(perimetersData);
+                (new PerimeterComputer(userWithPerimeterData)).computePerimeters(perimetersData);
                 userWithPerimeterData.setPermissions(new ArrayList<>(permissionsData));
             }
         }

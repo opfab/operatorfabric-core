@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,15 +17,15 @@ import java.util.Set;
 
 import org.opfab.useractiontracing.model.UserActionEnum;
 import org.opfab.useractiontracing.services.UserActionLogService;
-import org.opfab.users.model.ComputedPerimeter;
-import org.opfab.users.model.CurrentUserWithPerimeters;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.User;
 import org.opfab.users.model.UserSettings;
 import org.opfab.users.model.OperationResult.ErrorType;
 import org.opfab.users.repositories.UserSettingsRepository;
-
+import org.opfab.users.utils.PerimeterComputer;
+import org.opfab.common.users.User;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.common.users.ComputedPerimeter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +140,7 @@ public class UserSettingsService {
             userData.setLogin(login);
             CurrentUserWithPerimeters userWithPerimetersData = new CurrentUserWithPerimeters();
             userWithPerimetersData.setUserData(userData);
-            userWithPerimetersData.computePerimeters(perimeterAsSet);
+            (new PerimeterComputer(userWithPerimetersData)).computePerimeters(perimeterAsSet);
             Map<String, Integer> processStatesWithFilteringNotificationNotAllowed = computeProcessStatesWithFilteringNotificationNotAllowed(
                     userWithPerimetersData);
             if (!isFilteringNotificationAllowedForAllProcessesStates(processStatesWithFilteringNotificationNotAllowed,
