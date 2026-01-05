@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,12 +27,12 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.RightEnum;
 import org.opfab.users.model.StateRight;
-import org.opfab.users.model.User;
 import org.opfab.users.stubs.GroupRepositoryStub;
 import org.opfab.users.stubs.PerimeterRepositoryStub;
 import org.opfab.users.stubs.UserRepositoryStub;
+import org.opfab.common.users.User;
+import org.opfab.common.users.RightEnum;
 
 @DisplayName("PerimetersService")
 class PerimetersServiceShould {
@@ -47,7 +47,7 @@ class PerimetersServiceShould {
     @BeforeEach
     void clear() {
         eventBusSpy = new EventBusSpy();
-        notificationService = new NotificationService(userRepositoryStub,eventBusSpy);
+        notificationService = new NotificationService(userRepositoryStub, eventBusSpy);
         initPerimeterRepository();
         initGroupRepository();
         initUserRepository();
@@ -109,7 +109,7 @@ class PerimetersServiceShould {
         userRepositoryStub.insert(new User("user2", "test", null, null, null, null, groupForUser2));
 
     }
- 
+
     @Nested
     @DisplayName("Fetch")
     class Fetch {
@@ -145,7 +145,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
+            assertThat(result.getErrorMessage()).isEqualTo(
+                    "Id should only contain the following characters: letters, _, - or digits (id=invalid?id).");
         }
 
         @Test
@@ -200,7 +201,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
         }
 
         @Test
@@ -222,7 +224,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
         }
     }
 
@@ -292,7 +295,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : there is one or more duplicate state(s) in the perimeter");
             assertThat(perimeterRepositoryStub.findById("perimeter1").get().getProcess()).isEqualTo("processTest");
         }
 
@@ -313,7 +317,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
         }
 
         @Test
@@ -333,7 +338,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
         }
 
         @Test
@@ -352,7 +358,8 @@ class PerimetersServiceShould {
             OperationResult<EntityCreationReport<Perimeter>> result = perimetersService.savePerimeter(perimeter);
             assertThat(result.isSuccess()).isFalse();
             assertThat(result.getErrorType()).isEqualTo(OperationResult.ErrorType.BAD_REQUEST);
-            assertThat(result.getErrorMessage()).isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
+            assertThat(result.getErrorMessage())
+                    .isEqualTo("Bad stateRights list : state or right field is missing for perimeter INVALID");
         }
     }
 
@@ -388,7 +395,7 @@ class PerimetersServiceShould {
     @Nested
     @DisplayName("Groups")
     class Groups {
-         
+
         @Nested
         @DisplayName("Add")
         class Add {
@@ -436,7 +443,7 @@ class PerimetersServiceShould {
         @Nested
         @DisplayName("Update")
         class Update {
-            
+
             @Test
             void GIVEN_Perimeter_Does_Not_Exist_WHEN_Updating_Group_List_THEN_Return_NotFound() {
                 OperationResult<String> result = perimetersService.updatePerimeterGroups("dummyid", null);
@@ -474,10 +481,9 @@ class PerimetersServiceShould {
 
             }
 
-
             @Test
             void GIVEN_Existing_Perimeter_WHEN_Update_Group_List_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
-                
+
                 ArrayList<String> groups = new ArrayList<>();
                 groups.add("group1");
                 groups.add("group2");
@@ -486,9 +492,10 @@ class PerimetersServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
                 String[] expectedMessageSent2 = { "user", "user2" };
-                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
             }
- 
+
             @Test
             void GIVEN_Existing_Perimeter_WHEN_Update_With_Empty_Group_List_THEN_Succeed_And_Groups_Are_Updated() {
                 ArrayList<String> groups = new ArrayList<>();
@@ -502,9 +509,9 @@ class PerimetersServiceShould {
                 assertThat(group2Updated.get().getPerimeters()).isEmpty();
                 assertThat(group3Updated.get().getPerimeters()).containsExactly("perimeter2");
 
-            } 
+            }
         }
- 
+
         @Nested
         @DisplayName("Remove")
         class Remove {
@@ -536,7 +543,8 @@ class PerimetersServiceShould {
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
                 String[] expectedMessageSent2 = { "user", "user2" };
-                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
             }
 
             @Test
@@ -569,18 +577,17 @@ class PerimetersServiceShould {
                 assertThat(group3Updated.get().getPerimeters()).containsExactly("perimeter2");
             }
 
-
             @Test
             void GIVEN_A_Perimeter_WHEN_Remove_From_One_Group_THEN_A_Notification_Containing_Users_Impacted_Is_Sent_To_Other_Services() {
-                OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1","group1");
+                OperationResult<String> result = perimetersService.deletePerimeterGroup("perimeter1", "group1");
                 assertThat(result.isSuccess()).isTrue();
                 String[] expectedMessageSent1 = { "user", "user1" };
                 String[] expectedMessageSent2 = { "user", "user2" };
-                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,expectedMessageSent2);
+                assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                        expectedMessageSent2);
             }
 
         }
-        
 
     }
 

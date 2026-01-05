@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import java.util.Optional;
 import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Entity;
 import org.opfab.users.model.OperationResult;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.UserRepository;
 import org.opfab.users.utils.EntityCycleDetector;
@@ -32,7 +32,8 @@ public class EntitiesService {
     private EntityRepository entityRepository;
     private UserRepository userRepository;
 
-    public EntitiesService(EntityRepository entityRepository, UserRepository userRepository, NotificationService notificationService) {
+    public EntitiesService(EntityRepository entityRepository, UserRepository userRepository,
+            NotificationService notificationService) {
         this.notificationService = notificationService;
         this.entityRepository = entityRepository;
         this.userRepository = userRepository;

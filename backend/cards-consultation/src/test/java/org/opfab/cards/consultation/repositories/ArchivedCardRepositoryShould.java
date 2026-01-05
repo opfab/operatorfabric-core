@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -90,14 +90,14 @@ public class ArchivedCardRepositoryShould {
         perimeter.setRights(RightEnum.ReceiveAndWrite);
 
         user1.setLogin(LOGIN_1);
-        user1.addGroupsItem("someGroup");
-        user1.addGroupsItem("someOtherGroup");
+        user1.addGroup("someGroup");
+        user1.addGroup("someOtherGroup");
         currentUser1.setUserData(user1);
         currentUser1.setComputedPerimeters(Arrays.asList(perimeter));
         // Groups only
 
         user2.setLogin(LOGIN_2);
-        user2.addGroupsItem("rte");
+        user2.addGroup("rte");
         currentUser2.setUserData(user2);
         currentUser2.setComputedPerimeters(Arrays.asList(perimeter));
         // Group only
@@ -107,14 +107,14 @@ public class ArchivedCardRepositoryShould {
         // No group and no entity
 
         user4.setLogin(LOGIN_4);
-        user4.addEntitiesItem("someEntity");
-        user4.addEntitiesItem("someOtherEntity");
+        user4.addEntity("someEntity");
+        user4.addEntity("someOtherEntity");
         currentUser4.setUserData(user4);
         // Entities only
 
         user5.setLogin(LOGIN_5);
-        user5.addGroupsItem("group1");
-        user5.addEntitiesItem("entity1");
+        user5.addGroup("group1");
+        user5.addEntity("entity1");
         currentUser5.setUserData(user5);
         // Group and entity
     }

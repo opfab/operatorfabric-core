@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,110 +6,26 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+package org.opfab.users.utils;
 
-package org.opfab.users.model;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.opfab.common.users.ComputedPerimeter;
+import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.opfab.users.model.Perimeter;
+import org.opfab.common.users.RightEnum;
+import org.opfab.users.model.StateRight;
 
-import jakarta.validation.Valid;
+public class PerimeterComputer {
 
-import java.util.*;
+    private CurrentUserWithPerimeters currentUserWithPerimeters;
 
-import org.springframework.validation.annotation.Validated;
-
-@Validated
-public class CurrentUserWithPerimeters {
-
-    @Valid
-    private User userData;
-    @Valid
-    private Set<ComputedPerimeter> computedPerimeters;
-    @Valid
-    private Map<String, List<String>> processesStatesNotNotified;
-    @Valid
-    private Map<String, List<String>> processesStatesNotifiedByEmail;
-
-    private Boolean sendCardsByEmail;
-    private Boolean emailToPlainText;
-    private Boolean sendDailyEmail;
-    private Boolean sendWeeklyEmail;
-    private String timezoneForEmails;
-
-    @Valid
-    private Set<PermissionEnum> permissions;
-
-    public Map<String, List<String>> getProcessesStatesNotNotified() {
-        return processesStatesNotNotified;
-    }
-
-    public void setProcessesStatesNotNotified(Map<String, List<String>> processesStatesNotNotified) {
-        this.processesStatesNotNotified = processesStatesNotNotified;
-    }
-
-    public Map<String, List<String>> getProcessesStatesNotifiedByEmail() {
-        return processesStatesNotifiedByEmail;
-    }
-
-    public void setProcessesStatesNotifiedByEmail(Map<String, List<String>> processesStatesNotifiedByEmail) {
-        this.processesStatesNotifiedByEmail = processesStatesNotifiedByEmail;
-    }
-
-    public Boolean getSendCardsByEmail() {
-        return sendCardsByEmail;
-    }
-
-    public void setSendCardsByEmail(Boolean sendCardsByEmail) {
-        this.sendCardsByEmail = sendCardsByEmail;
-    }
-
-    public Boolean getEmailToPlainText() {
-        return emailToPlainText;
-    }
-
-    public void setEmailToPlainText(Boolean emailToPlainText) {
-        this.emailToPlainText = emailToPlainText;
-    }
-
-    public Boolean getSendDailyEmail() {
-        return sendDailyEmail;
-    }
-
-    public Boolean getSendWeeklyEmail() {
-        return sendWeeklyEmail;
-    }
-
-    public void setSendDailyEmail(Boolean sendDailyEmail) {
-        this.sendDailyEmail = sendDailyEmail;
-    }
-
-    public void setSendWeeklyEmail(Boolean sendWeeklyEmail) {
-        this.sendWeeklyEmail = sendWeeklyEmail;
-    }
-
-    public String getTimezoneForEmails() {
-        return timezoneForEmails;
-    }
-
-    public void setTimezoneForEmails(String timezoneForEmails) {
-        this.timezoneForEmails = timezoneForEmails;
-    }
-
-    public User getUserData() {
-        return userData;
-    }
-
-    public void setUserData(User userData) {
-        this.userData = userData;
-    }
-
-    public void setComputedPerimeters(List<ComputedPerimeter> computedPerimeters) {
-        this.computedPerimeters = new HashSet<>(computedPerimeters);
-    }
-
-    public List<ComputedPerimeter> getComputedPerimeters() {
-        if (computedPerimeters == null)
-            return Collections.emptyList();
-        return new ArrayList<>(computedPerimeters);
+    public PerimeterComputer(CurrentUserWithPerimeters currentUserWithPerimeters) {
+        this.currentUserWithPerimeters = currentUserWithPerimeters;
     }
 
     public void computePerimeters(Set<Perimeter> perimeters) {
@@ -201,16 +117,9 @@ public class CurrentUserWithPerimeters {
                 c.setState(processstate.getKey(1));
                 c.setRights(right.get(0));
                 c.setFilteringNotificationAllowed(multimapWithOneFilteringNotificationAllowed.get(processstate).get(0));
-                addComputedPerimeters(c);
+                this.currentUserWithPerimeters.addComputedPerimeters(c);
             });
         }
-    }
-
-    public void addComputedPerimeters(ComputedPerimeter c) {
-        if (null == computedPerimeters) {
-            this.computedPerimeters = new HashSet<>();
-        }
-        computedPerimeters.add(c);
     }
 
     public RightEnum mergeRights(List<RightEnum> rightsList) {
@@ -239,15 +148,5 @@ public class CurrentUserWithPerimeters {
                 return false;
         }
         return Boolean.TRUE;
-    }
-
-    public List<PermissionEnum> getPermissions() {
-        if (permissions == null)
-            return Collections.emptyList();
-        return new ArrayList<>(permissions);
-    }
-
-    public void setPermissions(List<PermissionEnum> permissions) {
-        this.permissions = new HashSet<>(permissions);
     }
 }

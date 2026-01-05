@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,8 @@
 
 package org.opfab.users.controllers;
 
+import org.opfab.common.users.User;
+
 import org.opfab.configuration.oauth.jwt.JwtProperties;
 import org.opfab.error.model.ApiError;
 import org.opfab.error.model.ApiErrorException;
@@ -18,8 +20,11 @@ import org.opfab.useractiontracing.repositories.UserActionLogRepository;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.users.configuration.jwt.groups.GroupsMode;
 import org.opfab.users.configuration.jwt.groups.GroupsProperties;
+import org.opfab.users.model.EntityCreationReport;
+import org.opfab.users.model.OperationResult;
+import org.opfab.users.model.Perimeter;
+import org.opfab.users.model.UserSettings;
 import org.opfab.users.configuration.authorization.UserExtractor;
-import org.opfab.users.model.*;
 import org.opfab.users.repositories.EntityRepository;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;

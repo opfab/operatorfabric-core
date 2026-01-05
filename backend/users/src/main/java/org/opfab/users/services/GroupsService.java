@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import org.opfab.users.model.EntityCreationReport;
 import org.opfab.users.model.Group;
 import org.opfab.users.model.OperationResult;
 import org.opfab.users.model.Perimeter;
-import org.opfab.users.model.User;
+import org.opfab.common.users.User;
 import org.opfab.users.repositories.GroupRepository;
 import org.opfab.users.repositories.PerimeterRepository;
 import org.opfab.users.repositories.UserRepository;
@@ -63,7 +63,8 @@ public class GroupsService {
             OperationResult<List<Perimeter>> foundPerimetersResult = getPerimeters(group.getPerimeters());
             synchronized (this) {
                 List<Group> groups = groupRepository.findAll();
-                if (groups.stream().filter(o -> !group.getId().equals(o.getId())).anyMatch(o -> group.getName().equals(o.getName()))){
+                if (groups.stream().filter(o -> !group.getId().equals(o.getId()))
+                        .anyMatch(o -> group.getName().equals(o.getName()))) {
                     return new OperationResult<>(null, false, OperationResult.ErrorType.BAD_REQUEST,
                             String.format(GROUP_ALREADY_EXISTS, group.getName()));
                 }
@@ -246,7 +247,7 @@ public class GroupsService {
             return new OperationResult<>(null, false, result.getErrorType(),
                     result.getErrorMessage());
         Group updatedGroup = group.get();
-        List<String> newPerimeters = new  ArrayList<>(updatedGroup.getPerimeters());
+        List<String> newPerimeters = new ArrayList<>(updatedGroup.getPerimeters());
         for (String perimeter : perimetersToAdd)
             newPerimeters.add(perimeter);
         updatedGroup.setPerimeters(newPerimeters);
