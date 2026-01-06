@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -417,4 +417,8 @@
     opfab.businessconfig.registerCustomScreen(customScreenExample);
     opfab.businessconfig.registerCustomScreen(customScreenExample2);
     opfab.businessconfig.registerCustomScreen(customScreenExample3);
+    opfab.businessconfig.businessData.registerFunctionToListenToBusinessDataUpdates(() => {
+        console.log(new Date().toISOString(), 'INFO Business data update received - custom screen example - test API businessconfig.businessData.registerFunctionToListenToBusinessDataUpdates');
+    })
+
 }
