@@ -1,4 +1,4 @@
-// Copyright (c) 2023-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -61,6 +61,45 @@ const entities = opfab.users.entities.getAllEntities();
 ```
 
 == BusinessConfig API
+
+=== BusinessData
+
+==== Function get
+
+It is possible to get business data json file content: 
+```
+const businessData = opfab.businessconfig.businessData.get('businessDataFileName');
+```
+
+The function take as input the name of the business data file (without the extension) and returns the content of the json file as a javascript object.
+
+
+==== Function registerFunctionToListenToBusinessDataUpdates
+
+It is possible to register at startup the function to be used to listen to business data updates:
+```
+opfab.businessconfig.businessData.registerFunctionToListenToBusinessDataUpdates( () => {
+// do some stuff
+});
+```
+
+The function given as parameter will be called by opfab when business data need to be refreshed (i.e a business data file has changed on server side , it is not possible to specify which file has changed).
+
+[WARNING]
+====
+It is not yet possible to unregister the function once registered so you should avoid registering function multiple times (it must be avoided in templates for example).
+====
+
+
+=== Function registerCustomScreen 
+
+It is possible to register at startup a custom screen definition: 
+
+```
+opfab.businessconfig.registerCustomScreen(screenDefinition);
+```
+
+See chapter <<card_list_custom_screen, custom screens>> for more details on the screen definition structure.
 
 === Function registerFunctionToGetTags
 
