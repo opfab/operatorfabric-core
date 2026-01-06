@@ -104,6 +104,7 @@ backend/**/logs
 # ignoring sonar generated reports
 .sonar
 .scannerwork
+reports/**
 
 # ignoring .env file needed by docker-compose
 config/**/.env
