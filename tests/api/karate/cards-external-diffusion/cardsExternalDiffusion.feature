@@ -199,6 +199,8 @@ Scenario: Check mail for operator 1 is sent
     # api_test.process1 is in urlbase64 : YXBpX3Rlc3QucHJvY2VzczE
     And match response[0].mimeMessage contains 'A MESSAGE'
     And match response[0].mimeMessage contains 'YXBpX3Rlc3QucHJvY2VzczE'
+    # Check custom handlebars helper is working 
+    And match response[0].mimeMessage contains 'Alarm Color : blue'
 
     # Delete sent email
     Given url 'http://localhost:8080/api/mail/purge'
