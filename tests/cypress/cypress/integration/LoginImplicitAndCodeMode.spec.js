@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-import { ScriptCommands } from '../support/scriptCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('Login with implicit or code flow ', () => {
     const script = new ScriptCommands();
 
-    before('Set up configuration', function() {
+    before('Set up configuration', function () {
         script.resetUIConfigurationFiles();
     });
 
@@ -38,10 +37,9 @@ describe('Login with implicit or code flow ', () => {
         cy.get('of-navbar').should('exist');
     });
 
-
     it('login with oauth2 code flow', () => {
         script.setPropertyInConf('security.oauth2.flow.mode', '\\"CODE\\"');
-        script.setPropertyInConf('security.oauth2.flow.delegate-url', '\\"http://localhost:2002/auth/realms/dev/protocol/openid-connect/auth?response_type=code\\&client_id=opfab-client\\"');
+        script.setPropertyInConf('security.oauth2.flow.delegate-url', '\\"http://localhost:2002/auth/realms/dev\\"');
         //go to login page
         cy.visit('/');
         cy.get('#username').type(username);
@@ -56,6 +54,4 @@ describe('Login with implicit or code flow ', () => {
         //Basic check that we got past the login page
         cy.get('of-navbar').should('exist');
     });
-
-
 });

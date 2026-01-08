@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -27,7 +27,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly oauthServiceForImplicitMode = inject(OAuthService);
+    private readonly oauthService = inject(OAuthService);
     private readonly httpClient = inject(HttpClient);
 
     private mode: AuthenticationMode = AuthenticationMode.NONE;
@@ -50,13 +50,13 @@ export class AuthService {
                 this.authHandler = new PasswordAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.CODE:
-                this.authHandler = new CodeAuthenticationHandler(this.httpClient);
+                this.authHandler = new CodeAuthenticationHandler(this.httpClient, this.oauthService);
                 break;
             case AuthenticationMode.NONE:
                 this.authHandler = new NoneAuthenticationHandler(this.httpClient);
                 break;
             case AuthenticationMode.IMPLICIT:
-                this.authHandler = new ImplicitAuthenticationHandler(this.httpClient, this.oauthServiceForImplicitMode);
+                this.authHandler = new ImplicitAuthenticationHandler(this.httpClient, this.oauthService);
                 break;
             default:
                 logger.error('No valid authentication mode');
@@ -117,8 +117,9 @@ export class AuthService {
         logger.info('Auth logout');
         this.removeUserFromStorage();
         this.authHandler.logout();
-        if (this.mode !== AuthenticationMode.IMPLICIT)
+        if (this.mode !== AuthenticationMode.IMPLICIT && this.mode !== AuthenticationMode.CODE) {
             globalThis.location.href = ConfigService.getConfigValue('security.logout-url', 'https://opfab.github.io');
+        }
     }
 
     private goBackToLoginPage() {

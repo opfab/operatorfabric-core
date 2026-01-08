@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -33,12 +33,12 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
             showDebugInformation: false,
             sessionChecksEnabled: false,
             clearHashAfterLogin: false,
-            requireHttps: false
+            requireHttps: false,
+            postLogoutRedirectUri: ConfigService.getConfigValue(
+                'security.post-logout-url',
+                `${location.origin}${location.pathname}`
+            )
         };
-        const postLogoutUrl = ConfigService.getConfigValue('security.implicit-mode-post-logout-url');
-        if (postLogoutUrl) {
-            authConfig.postLogoutRedirectUri = postLogoutUrl;
-        }
 
         this.oauthService.configure(authConfig);
         this.oauthService.setupAutomaticSilentRefresh();
@@ -61,7 +61,6 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
                 this.setUserAuthenticated();
                 this.updateAfterSilentRefresh();
             } else {
-                sessionStorage.setItem('flow', 'implicit');
                 this.oauthService.initImplicitFlow();
             }
         });
@@ -91,7 +90,7 @@ export class ImplicitAuthenticationHandler extends AuthHandler {
     private setUserAuthenticated() {
         const user = new AuthenticatedUser();
         const identityClaims = this.oauthService.getIdentityClaims();
-        user.login = identityClaims['sub'];
+        user.login = identityClaims[this.loginClaim];
         user.token = this.oauthService.getAccessToken();
         user.expirationDate = new Date(this.oauthService.getAccessTokenExpiration());
         this.userAuthenticated.next(user);

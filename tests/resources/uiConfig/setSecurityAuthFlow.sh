@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+# Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,6 +15,7 @@ display_usage() {
 	echo "Usage : setSecurityAuthFlow.sh flow"
 	echo "flow : (CODE, IMPLICIT, PASSWORD)"
 	echo "Example : setSecurityAuthFlow.sh CODE sets the authorization flow to CODE in the web-ui.json."
+    echo "The script has to be launched after the start of opfab"
 }
 
 flow=$1
@@ -25,7 +26,8 @@ else
 	(
 	  [[ $flow == 'CODE' || $flow == 'IMPLICIT' || $flow == 'PASSWORD' ]] || { echo "Unrecognized flow $flow. No changes made."; exit 1; }
 
-    pathToConfigFile="../../../../config/web-ui/ui-config/web-ui.json"
+    echo "WARNING : to work properly, this script has to be launched after the start of opfab "
+    pathToConfigFile="../../../config/web-ui/ui-config/web-ui.json"
     pathToSnippetFile="./security-$flow-flow.json"
     ./updatePropertyInJsonWithSnippet.sh $pathToConfigFile security $pathToSnippetFile
 
