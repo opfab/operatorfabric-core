@@ -24,7 +24,9 @@ import {
     AllCommunityModule,
     ModuleRegistry,
     provideGlobalGridOptions,
-    FilterModel
+    FilterModel,
+    ColumnResizedEvent,
+    ColumnMovedEvent
 } from 'ag-grid-community';
 import {Card} from 'app/model/Card';
 import {TimeCellRendererComponent} from '../cell-renderers/TimeCellRendererComponent';
@@ -77,8 +79,13 @@ export class ProcessmonitoringTableComponent {
 
     protected showColumnPanel = false;
     private columnsVisibilityPreference: {
-        fields?: {field: string; visible: boolean}[];
-        fieldsForProcesses?: {process: string; fields: {field: string; visible: boolean}[]}[];
+        fields?: {field: string; visible: boolean; width?: number}[];
+        columnOrder?: any;
+        fieldsForProcesses?: {
+            process: string;
+            columnOrder?: any;
+            fields: {field: string; visible: boolean; width?: number}[];
+        }[];
     } = {};
 
     constructor() {
@@ -129,6 +136,62 @@ export class ProcessmonitoringTableComponent {
         this.filterChange.next({filterModel: this.gridApi.getFilterModel(), colId: ev?.columns[0]?.colId});
     }
 
+    onColumnResized(event: ColumnResizedEvent) {
+        if (!event.finished || !event.column) {
+            return;
+        }
+
+        const colId = event.column.getColId();
+        const width = event.column.getActualWidth();
+
+        if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
+            const index = this.findProcessInColumnsVisibilityPreference(this.selectedProcessIfOnlyOneIsSelected);
+
+            if (index >= 0) {
+                const field = this.columnsVisibilityPreference.fieldsForProcesses[index].fields.find(
+                    (field) => field.field === colId
+                );
+                if (field) {
+                    field.width = width;
+                }
+            }
+        } else {
+            const field = this.columnsVisibilityPreference.fields?.find((field) => field.field === colId);
+            if (field) {
+                field.width = width;
+            }
+        }
+
+        UserPreferencesService.setPreference(
+            'opfab.processMonitoring.columnsVisibility',
+            JSON.stringify(this.columnsVisibilityPreference)
+        );
+    }
+
+    onColumnMoved(event: ColumnMovedEvent) {
+        if (!event.finished || !event.column) {
+            return;
+        }
+
+        const columnState = this.gridApi.getColumnState();
+        const orderOnly = columnState.map((col: any) => ({
+            colId: col.colId
+        }));
+        if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
+            const index = this.findProcessInColumnsVisibilityPreference(this.selectedProcessIfOnlyOneIsSelected);
+            if (index >= 0) {
+                this.columnsVisibilityPreference.fieldsForProcesses[index].columnOrder = JSON.stringify(orderOnly);
+            }
+        } else {
+            this.columnsVisibilityPreference.columnOrder = JSON.stringify(orderOnly);
+        }
+
+        UserPreferencesService.setPreference(
+            'opfab.processMonitoring.columnsVisibility',
+            JSON.stringify(this.columnsVisibilityPreference)
+        );
+    }
+
     onGridReady(params) {
         this.gridApi = params.api;
 
@@ -173,11 +236,13 @@ export class ProcessmonitoringTableComponent {
             this.fillColumnsVisibilityPreferenceIfNotExist();
 
             let columnsVisibility = this.columnsVisibilityPreference.fields;
+            let columnOrder = this.columnsVisibilityPreference.columnOrder;
 
             if (this.selectedProcessIfOnlyOneIsSelected?.length > 0) {
                 const index = this.findProcessInColumnsVisibilityPreference(this.selectedProcessIfOnlyOneIsSelected);
                 if (index >= 0) {
                     columnsVisibility = this.columnsVisibilityPreference.fieldsForProcesses[index].fields;
+                    columnOrder = this.columnsVisibilityPreference.fieldsForProcesses[index].columnOrder;
                 }
             }
 
@@ -190,10 +255,11 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
                         cellClass: 'opfab-ag-cell-with-left-padding',
-                        width: column.size,
                         resizable: true,
                         colId: column.field,
-                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
+                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false,
+                        width:
+                            columnsVisibility?.find((element) => element.field === column.field)?.width ?? column.size
                     });
                 } else {
                     this.columnDefs.push({
@@ -202,10 +268,11 @@ export class ProcessmonitoringTableComponent {
                         field: String(column.field).split('.').pop(),
                         headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
                         cellClass: 'opfab-ag-cell-with-left-padding',
-                        width: column.size,
                         resizable: true,
                         colId: column.field,
-                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false
+                        hide: columnsVisibility?.find((element) => element.field === column.field)?.visible === false,
+                        width:
+                            columnsVisibility?.find((element) => element.field === column.field)?.width ?? column.size
                     });
                 }
 
@@ -221,9 +288,21 @@ export class ProcessmonitoringTableComponent {
                     };
                 }
             });
-        }
 
-        this.gridApi.setGridOption('columnDefs', this.columnDefs);
+            this.gridApi.setGridOption('columnDefs', this.columnDefs);
+
+            if (columnOrder) {
+                try {
+                    const columnState = JSON.parse(columnOrder);
+                    this.gridApi.applyColumnState({
+                        state: columnState,
+                        applyOrder: true
+                    });
+                } catch (error) {
+                    logger.error('Failed to apply column order from user preferences: ' + error);
+                }
+            }
+        }
     }
 
     private findProcessInColumnsVisibilityPreference(processToFind: string): number {
