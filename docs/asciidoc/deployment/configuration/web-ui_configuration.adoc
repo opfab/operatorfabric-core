@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -163,11 +163,7 @@ a|The keycloak logout URL. Is a composition of:
 - The realm name (Ex: dev)
 - The redirect URL (_redirect_uri_): The redirect URL after success authentication
 |security.oauth2.flow.delegate-url|null|no
-a|Url to redirect the browser to for authentication. Mandatory with:
-
-- CODE flow: must be the url with protocol choice and version as query parameters;
-- IMPLICIT flow: must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's
-`http://localhost:89/auth/realms/dev`).
+a|Url to redirect the browser for authentication. Mandatory with CODE and IMPLICIT flows and must be the url part before `.well-known/openid-configuration` (for example in dev configuration it's `http://localhost:89/auth/realms/dev`).
 |security.oauth2.flow.mode|PASSWORD|no
 a|authentication mode, available options:
 
@@ -175,7 +171,8 @@ a|authentication mode, available options:
 - PASSWORD: Direct Password Flow (fallback);
 - IMPLICIT: Implicit Flow.
 
-|security.implicit-mode-post-logout-url|null|no| The redirect URL after logout when using IMPLICIT flow 
+|security.oauth2.useSilentRefresh|false|no| Set to true for using silent refresh with CODE flow (for IMPLICIT flow silent refresh is always enabled and not configurable) 
+|security.post-logout-url|the opfab url|no| The redirect URL after logout when using IMPLICIT and CODE flow 
 
 
 |settings.dateFormat|Value from the browser configuration|no|Format for date rendering (example : dd/MM/yyyy )

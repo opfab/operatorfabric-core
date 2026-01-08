@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -95,37 +95,37 @@ Nginx web server serves this file. OperatorFabric creates and uses a custom Dock
 For OAuth2 security concerns into this file, there are two ways to configure it, based on the Oauth2 chosen flow.
 There are several common properties:
 
-- `security.logout-url`: url used when a user is logged out of the UI;
+- `security.logout-url`: url used when a user is logged out of the UI (not used for CODE and IMPLICIT flows);
 - `security.oauth2.flow.delegate-url`: url used to connect to the Authentication provider;
 - `security.oauth2.flow.mode`: technical way to be authenticated by the Authentication provider.
 - `security.oauth2.client-id` : the OAuth2 client ID
 - `security.jwt.login-claim` : the field in the token that will be used to identify your account (default value : sub)
 
-=== OAuth2 PASSWORD or CODE Flows
+=== OAuth2 PASSWORD Flow
 
-These two modes share the same way of declaring the delegate URL. This has to be defined in web-ui.json by setting : 
+This has to be defined in web-ui.json by setting : 
 
-- `security.oauth2.flow.mode` to `PASSWORD` or `CODE`;
+- `security.oauth2.flow.mode` to `PASSWORD`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the protocol used for authentication.
 
-==== Example of Configuration For CODE Flow
+==== Example of Configuration For PASSWORD Flow
 
 
 [source,json]
 ----
 {
-    "security": {
-      "jwt": {
-        "login-claim": "preferred_username"
-      },
-      "oauth2": {
-        "client-id": "OAUTHCLIENTID",
-        "flow": {
-          "mode": "CODE",
-          "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client"
-        }
-      },
-      "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/"
+  "security": {
+    "jwt": {
+      "login-claim": "preferred_username"
+    },
+    "logout-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:2002/&client_id=opfab-client",
+    "oauth2": {
+      "client-id": "opfab-client",
+      "flow": {
+        "delegate-url": "http://localhost:89/auth/realms/dev/protocol/openid-connect/auth?response_type=code&client_id=opfab-client",
+        "mode": "PASSWORD"
+      }
+    }
   }
 }
 ----
@@ -134,16 +134,14 @@ Within the `delegate-url` property `dev` is the keycloak client realm of Operato
 For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registered.
 Here, the `client-id` value is `opfab-client` which is defined as client under the `realm` named `dev` on the dev keycloak instance.
 
-=== OAuth2 IMPLICIT Flow
+=== OAuth2 CODE and IMPLICIT Flows
 
+To enable IMPLICIT or CODE Flow authentication the following properties need to be set in web-ui.json:
 
-It had its own way of configuration.
-To enable IMPLICIT Flow authentication the following properties need to be set in web-ui.json:
-
-- `security.oauth2.flow.mode` to `IMPLICIT`;
+- `security.oauth2.flow.mode` to `IMPLICIT` or `CODE`;
 - `security.oauth2.flow.delegate-url` with the URL of the OAuth2 leading to the `.well-known/openid-configuration` end-point used for authentication configuration.
 
-It is possible to configure the URL to redirect the browser after logout by setting the `security.implicit-mode-post-logout-url` parameter in web-ui.json.
+It is possible to configure the URL to redirect the browser after logout by setting the `security.post-logout-url` parameter in web-ui.json.
 Be careful that the configured value should be one of the valid post logout redirect URIs configured on Keycloak realm.
 
 ==== Example of configuration for IMPLICIT Flow 
@@ -163,8 +161,7 @@ Be careful that the configured value should be one of the valid post logout redi
         "delegate-url": "http://localhost:89/auth/realms/dev"
       }
     },
-    "logout-url":"http://localhost:89/auth/realms/dev/protocol/openid-connect/logout?redirect_uri=http://localhost:2002/",
-    "implicit-mode-post-logout-url": "https://opfab.github.io"
+    "post-logout-url": "https://opfab.github.io"
   }
 }
 ----
@@ -172,6 +169,9 @@ Be careful that the configured value should be one of the valid post logout redi
 Within the `delegate-url` property `dev` is the keycloak client realm of OperatorFabric.
 For keycloak instance used for development purposes, this `delegate-url` correspond to the realm under which the client `opfab-client` is registered.
 The url look up by the implicit ui mechanism is `http://localhost:89/auth/realms/dev/.well-known/openid-configuration`.
+
+
+For CODE mode, it is possible to set a silent refresh by setting `security.oauth2.useSilentRefresh` to true. For IMPLICIT mode, silent refresh is always enabled and not configurable.
 
 ===  NONE Flow
 
