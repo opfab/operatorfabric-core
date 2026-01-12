@@ -348,7 +348,7 @@ export class ProcessmonitoringTableComponent {
     }
 
     exportToExcel() {
-        const visibleColumns = this.columnDefs.filter((c) => c.hide === false).map((c) => c.headerName);
+        const visibleColumns = this.gridApi.getAllDisplayedColumns().map((col) => col.getColDef().headerName);
         this.export.next(visibleColumns);
     }
 
