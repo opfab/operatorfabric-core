@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,6 +43,7 @@ public class UserSettings {
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
     private Boolean sendWeeklyEmail;
+    private String email;
     private String timezoneForEmails;
     private Map<String, List<String>> processesStatesNotNotified;
     private Map<String, List<String>> processesStatesNotifiedByEmail;
@@ -73,6 +74,7 @@ public class UserSettings {
         this.emailToPlainText = settings.getEmailToPlainText();
         this.sendDailyEmail = settings.getSendDailyEmail();
         this.sendWeeklyEmail = settings.getSendWeeklyEmail();
+        this.email = settings.getEmail();
         this.timezoneForEmails = settings.getTimezoneForEmails();
 
         if (settings.getProcessesStatesNotNotified() != null)
@@ -259,6 +261,14 @@ public class UserSettings {
         this.sendWeeklyEmail = sendWeeklyEmail;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getTimezoneForEmails() {
         return timezoneForEmails;
     }
@@ -361,6 +371,7 @@ public class UserSettings {
                 this.getSendDailyEmail());
         result.sendWeeklyEmail = ObjectUtils.getNotNullOrDefault(other.getSendWeeklyEmail(),
                 this.getSendWeeklyEmail());
+        result.email = ObjectUtils.getNotNullOrDefault(other.getEmail(), this.getEmail());
         result.timezoneForEmails = ObjectUtils.getNotNullOrDefault(other.getTimezoneForEmails(),
                 this.getTimezoneForEmails());
 

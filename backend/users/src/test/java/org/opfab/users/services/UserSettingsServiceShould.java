@@ -277,6 +277,34 @@ class UserSettingsServiceShould {
         }
 
         @Test
+        void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_Settings_Are_Updated() {
+            String email = "john.doe@test.com";
+            UserSettings newSettings = new UserSettings();
+            newSettings.setLogin("user1");
+            newSettings.setEmail(email);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings(user1, "user1",
+                    newSettings);
+            assertThat(settings.isSuccess()).isTrue();
+            assertThat(settings.getResult().getEmail()).isEqualTo("john.doe@test.com");
+            assertThat(userSettingsRepositoryStub.findById("user1").get()
+                    .getEmail())
+                    .isEqualTo("john.doe@test.com");
+        }
+
+        @Test
+        void GIVEN_Existing_Settings_WHEN_Patch_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
+            String email = "john.doe@test.com";
+            UserSettings newSettings = new UserSettings();
+            newSettings.setLogin("user1");
+            newSettings.setEmail(email);
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings(user1, "user1",
+                    newSettings);
+            assertThat(settings.isSuccess()).isTrue();
+            String[] expectedMessageSent1 = { "user", "user1" };
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+        }
+
+        @Test
         void GIVEN_Existing_Settings_WHEN_Patch_With_TimezoneForEmails_THEN_Settings_Are_Updated() {
             String timezoneForEmails = "Europe/London";
             UserSettings newSettings = new UserSettings();
@@ -460,6 +488,33 @@ class UserSettingsServiceShould {
             UserSettings newSettings = new UserSettings();
             newSettings.setLogin("user1");
             newSettings.setSendCardsByEmail(sendCardsByEmail);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                    newSettings);
+            assertThat(settings.isSuccess()).isTrue();
+            String[] expectedMessageSent1 = { "user", "user1" };
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+        }
+
+        @Test
+        void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_Settings_Are_Updated() {
+            String email = "john.doe@test.com";
+            UserSettings newSettings = new UserSettings();
+            newSettings.setLogin("user1");
+            newSettings.setEmail(email);
+            OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
+                    newSettings);
+            assertThat(settings.isSuccess()).isTrue();
+            assertThat(settings.getResult().getEmail()).isEqualTo("john.doe@test.com");
+            assertThat(userSettingsRepositoryStub.findById("user1").get().getEmail())
+                    .isEqualTo("john.doe@test.com");
+        }
+
+        @Test
+        void GIVEN_Existing_Settings_WHEN_Update_With_Email_THEN_A_Notification_Is_Sent_To_Other_Services() {
+            String email = "john.doe@test.com";
+            UserSettings newSettings = new UserSettings();
+            newSettings.setLogin("user1");
+            newSettings.setEmail(email);
             OperationResult<UserSettings> settings = userSettingsService.updateUserSettings("user1",
                     newSettings);
             assertThat(settings.isSuccess()).isTrue();

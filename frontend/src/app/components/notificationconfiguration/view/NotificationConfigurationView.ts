@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,7 +54,8 @@ export class NotificationConfigurationView {
             (ConfigService.getConfigValue('settings.sendDailyEmail', false) ||
                 ConfigService.getConfigValue('settings.sendWeeklyEmail', false) ||
                 ConfigService.getConfigValue('settings.sendCardsByEmail', false)) &&
-            this.isEmailNotEmpty();
+            (ConfigService.getConfigValue('settings.email')?.length > 0 ||
+                this.isEmailFromUserInsteadOfSettingsAndFieldIsNotEmpty());
 
         this.notificationConfigurationPage.isThereProcessStatesToDisplay =
             this.notificationConfigurationPage.processGroups.length > 0 ||
@@ -63,8 +64,11 @@ export class NotificationConfigurationView {
         this.lastProcessesStatesNotifiedByEmailSaved = this.getCheckedStatesForEmailNotificationPerProcesses();
     }
 
-    private isEmailNotEmpty(): boolean {
-        return UsersService.getCurrentUserWithPerimeters().userData?.email?.length > 0;
+    private isEmailFromUserInsteadOfSettingsAndFieldIsNotEmpty(): boolean {
+        return (
+            ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false) &&
+            UsersService.getCurrentUserWithPerimeters().emailForCardSending?.length > 0
+        );
     }
 
     private getProcessList(): ProcessForNotification[] {

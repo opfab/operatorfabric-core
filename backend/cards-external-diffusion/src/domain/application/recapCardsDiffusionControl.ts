@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -84,7 +84,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                         if (mode === 'daily' && userWithPerimeters.sendDailyEmail) {
                             await this.sendEmailRecap(
                                 visibleCards,
-                                userWithPerimeters.userData.email,
+                                userWithPerimeters.emailForCardSending,
                                 emailToPlainText,
                                 this.dailyEmailTitle,
                                 this.dailyEmailBodyPrefix,
@@ -94,7 +94,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
                         } else if (mode === 'weekly' && userWithPerimeters.sendWeeklyEmail) {
                             await this.sendEmailRecap(
                                 visibleCards,
-                                userWithPerimeters.userData.email,
+                                userWithPerimeters.emailForCardSending,
                                 emailToPlainText,
                                 this.weeklyEmailTitle,
                                 this.weeklyEmailBodyPrefix,

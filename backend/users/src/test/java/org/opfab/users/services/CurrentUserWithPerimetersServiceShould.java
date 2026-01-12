@@ -162,6 +162,7 @@ class CurrentUserWithPerimetersServiceShould {
         userSettings.setEmailToPlainText(false);
         userSettings.setSendDailyEmail(false);
         userSettings.setSendWeeklyEmail(false);
+        userSettings.setEmail("userSettingsEmail@mail.com");
         userSettings.setProcessesStatesNotNotified(processesStatesNotNotified);
         userSettings.setEntitiesDisconnected(entitiesDisconnected);
 
@@ -178,7 +179,7 @@ class CurrentUserWithPerimetersServiceShould {
         initUserSettings();
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getProcessesStatesNotNotified().get("myprocess")).contains("mystate");
@@ -193,7 +194,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addEntity(ENTITY_2);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getUserData().getEntities()).contains(ENTITY_1, ENTITY_2);
@@ -209,7 +210,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addEntity(ENTITY_NOT_CONNECTED);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getUserData().getEntities()).contains(ENTITY_1, ENTITY_2);
@@ -223,7 +224,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addEntity(ENTITY_1);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getUserData().getEntities()).contains(GRAND_CHILD_ENTITY, CHILD_ENTITY,
@@ -240,7 +241,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addEntity(ENTITY_1);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getUserData().getEntities()).contains(ROOT_ENTITY, ENTITY_1);
@@ -255,7 +256,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addGroup(GROUP_3);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getPermissions()).isEmpty();
@@ -271,7 +272,7 @@ class CurrentUserWithPerimetersServiceShould {
         user.addGroup(GROUP_4);
 
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchCurrentUserWithPerimeters(user);
         assertThat(currentUser.getPermissions()).containsExactlyInAnyOrder(PermissionEnum.READONLY,
@@ -283,11 +284,37 @@ class CurrentUserWithPerimetersServiceShould {
     void GIVEN_User_Login_WHEN_FetchingUserWithPerimeters_CurrentUserWithPerimetersShouldContainsUserEntitiesParents() {
         String login = "testLogin";
         CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
-                usersServiceStub, userSettingsService, entityRepositoryStub);
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
         CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
                 .fetchUserWithPerimeters(login);
         assertThat(currentUser.getUserData().getEntities()).contains(GRAND_CHILD_ENTITY, CHILD_ENTITY,
                 ROOT_ENTITY,
                 ENTITY_1);
+    }
+
+    @Test
+    void GIVEN_User_Setting_WHEN_getEmailFromUserInsteadOfSettings_is_false_CurrentUserWithPerimetersShouldGetEmailFromSettings() {
+        User user = new User();
+        user.setLogin("test");
+        user.setEmail("userEmail@mail.com");
+        initUserSettings();
+        CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                usersServiceStub, userSettingsService, entityRepositoryStub, false);
+        CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                .fetchCurrentUserWithPerimeters(user);
+        assertThat(currentUser.getEmailForCardSending()).contains("userSettingsEmail@mail.com");
+    }
+
+    @Test
+    void GIVEN_User_Setting_WHEN_getEmailFromUserInsteadOfSettings_is_true_CurrentUserWithPerimetersShouldGetEmailFromUser() {
+        User user = new User();
+        user.setLogin("test");
+        user.setEmail("userEmail@mail.com");
+        initUserSettings();
+        CurrentUserWithPerimetersService currentUserWithPerimetersService = new CurrentUserWithPerimetersService(
+                usersServiceStub, userSettingsService, entityRepositoryStub, true);
+        CurrentUserWithPerimeters currentUser = currentUserWithPerimetersService
+                .fetchCurrentUserWithPerimeters(user);
+        assertThat(currentUser.getEmailForCardSending()).contains("userEmail@mail.com");
     }
 }

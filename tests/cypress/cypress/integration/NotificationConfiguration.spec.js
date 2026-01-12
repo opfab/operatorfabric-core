@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -224,6 +224,7 @@ describe('Feed notification configuration tests', function () {
 
         // All cards minus the cards to check should be visible
         cy.get('of-light-card').should('have.length', totalCards - cardsToTestRegex.length);
+
     });
 
     it('Check envelop icon is present only if mail option is checked and mail address is filled', function () {
@@ -237,6 +238,7 @@ describe('Feed notification configuration tests', function () {
 
         opfab.navigateToFeed(); // necessary otherwise navigateToSettings() fails
         opfab.navigateToSettings();
+        settings.setEmailAddressAndSave('mail@test.com');
         settings.clickOnSendNotificationByEmailAndSave();
 
         // We go back to feed notification configuration screen, and we check envelope icons are displayed
@@ -250,6 +252,7 @@ describe('Feed notification configuration tests', function () {
         opfab.loginWithUser('operator1_fr');
 
         opfab.navigateToSettings();
+        settings.setEmailAddressAndSave('mail@test.com');
         settings.clickOnSendNotificationByEmailAndSave();
 
         opfab.navigateToNotificationConfiguration();

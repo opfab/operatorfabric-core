@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -355,7 +355,7 @@ describe('Notification configuration view ', () => {
                     new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
                     new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true)
                 ],
-                userData: new User('user', '', '', '', [], [], 'userEmail@mail.com'),
+                userData: null,
                 processesStatesNotifiedByEmail: new Map<string, Array<string>>([
                     ['process1', ['state1_1']],
                     ['process2', ['state2_1']]
@@ -365,19 +365,30 @@ describe('Notification configuration view ', () => {
 
         it('email configuration should be enabled if sendCardsByEmail and email set', () => {
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
+            ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
         });
 
         it('email configuration should be enabled if sendDailyEmail and email set', () => {
             ConfigService.setConfigValue('settings.sendDailyEmail', true);
+            ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(notificationConfigurationPage.isEmailEnabled).toBeTrue();
+        });
+
+        it('email configuration should not be enabled if email is not set', () => {
+            ConfigService.setConfigValue('settings.sendCardsByEmail', true);
+            ConfigService.setConfigValue('settings.sendDailyEmail', true);
+            ConfigService.setConfigValue('settings.email', '');
+            notificationConfigurationPage = getNotificationConfigurationPage();
+            expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
         });
 
         it('mail configuration should not be enabled if sendCardsByEmail and sendDailyEmail are false', () => {
             ConfigService.setConfigValue('settings.sendCardsByEmail', false);
             ConfigService.setConfigValue('settings.sendDailyEmail', false);
+            ConfigService.setConfigValue('settings.email', 'test@mail');
             notificationConfigurationPage = getNotificationConfigurationPage();
             expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
         });
@@ -403,56 +414,11 @@ describe('Notification configuration view ', () => {
         });
     });
 
-    describe('getNotificationConfigurationPage - email configuration should not be enabled if email is not set ', () => {
-        beforeAll(async () => {
-            await loadWebUIConf({});
-            await setProcessConfiguration([
-                {
-                    id: 'process1',
-                    version: 'v1',
-                    name: 'process name 1',
-                    states: new Map<string, State>([
-                        ['state1_1', {name: 'State 1_1'}],
-                        ['state1_2', {name: 'State 1_2'}]
-                    ])
-                },
-                {
-                    id: 'process2',
-                    version: 'v2',
-                    name: 'process name 2',
-                    states: new Map<string, State>([
-                        ['state2_1', {name: 'State 2_1'}],
-                        ['state2_2', {name: 'State 2_2'}]
-                    ])
-                }
-            ]);
-            await setUserPerimeter({
-                computedPerimeters: [
-                    new ComputedPerimeter('process1', 'state1_1', RightEnum.Receive, true),
-                    new ComputedPerimeter('process1', 'state1_2', RightEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_1', RightEnum.Receive, true),
-                    new ComputedPerimeter('process2', 'state2_2', RightEnum.Receive, true)
-                ],
-                userData: new User('user', '', '', '', [], [], ''),
-                processesStatesNotifiedByEmail: new Map<string, Array<string>>([
-                    ['process1', ['state1_1']],
-                    ['process2', ['state2_1']]
-                ])
-            });
-        });
-
-        it('email configuration should not be enabled if email is not set', () => {
-            ConfigService.setConfigValue('settings.sendCardsByEmail', true);
-            ConfigService.setConfigValue('settings.sendDailyEmail', true);
-            notificationConfigurationPage = getNotificationConfigurationPage();
-            expect(notificationConfigurationPage.isEmailEnabled).toBeFalse();
-        });
-    });
-
     describe('email user settings', () => {
-        it('email configuration should be enabled if email is set for the user ', async () => {
+        it('email configuration should be enabled if email is from user instead of settings', async () => {
             await loadWebUIConf({});
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
+            ConfigService.setConfigValue('settings.getEmailFromUserInsteadOfSettings', true);
 
             const userWithPerimeters = new UserWithPerimeters(
                 new User('user', '', '', '', [], [], 'userEmail@mail.com'),
@@ -463,7 +429,8 @@ describe('Notification configuration view ', () => {
                 false,
                 false,
                 false,
-                false
+                false,
+                'userWithPerimeterEmail@mail.com'
             );
             await setUserPerimeter(userWithPerimeters);
             notificationConfigurationPage = getNotificationConfigurationPage();

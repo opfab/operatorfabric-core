@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2018-2025, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2018-2026, RTE (http://www.rte-france.com)              -->
 <!-- Copyright (c) 2023, Alliander (http://www.alliander.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
@@ -120,16 +120,20 @@
                 [selectedOptions]="languageSelectedOption">
             </of-multi-select>
         </div>
-        } @if (settingsView.isEmailNotEmpty()) { @if (settingsView.isSettingVisible('sendCardsByEmail')) {
+        } @if (settingsView.isSettingVisible('sendCardsByEmail')) {
         <div class="opfab-settings-item">
             <div class="opfab-input">
                 <label for="opfab-setting-email" translate>settings.email</label>
+                @if (settingsView.isEmailFromUserInsteadOfSettings()) {
                 <input
                     id="opfab-setting-input-email"
                     type="email"
                     formControlName="email"
                     autocomplete="off"
                     readonly />
+                } @else {
+                <input id="opfab-setting-input-email" type="email" formControlName="email" autocomplete="off" />
+                }
             </div>
             @if (email.invalid) {
             <div class="opfab-input-invalid" style="margin-top: 0px">
@@ -189,7 +193,7 @@
             </div>
             }
         </div>
-        } }@if (settingsView.isSettingVisible('hallwayMode') ||
+        } @if (settingsView.isSettingVisible('hallwayMode') ||
         settingsView.isSettingVisible('openNextCardOnAcknowledgment')) {
         <div class="opfab-settings-item" style="margin-top: 30px">
             @if (settingsView.isSettingVisible('hallwayMode')) {

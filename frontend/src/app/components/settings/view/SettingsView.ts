@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,6 +24,10 @@ export class SettingsView {
         return !ConfigService.getConfigValue('settingsScreen.hiddenSettings', []).includes(setting);
     }
 
+    public isEmailFromUserInsteadOfSettings(): boolean {
+        return ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false);
+    }
+
     public getSetting(setting: string): string | boolean | number {
         switch (setting) {
             case 'replayInterval':
@@ -33,14 +37,14 @@ export class SettingsView {
                 return ConfigService.getConfigValue('settings.timezoneForEmails', 'Europe/Paris');
 
             case 'email':
-                return UsersService.getCurrentUserWithPerimeters().userData.email;
+                if (this.isEmailFromUserInsteadOfSettings()) {
+                    return UsersService.getCurrentUserWithPerimeters().emailForCardSending;
+                } else {
+                    return ConfigService.getConfigValue('settings.' + setting);
+                }
             default:
                 return ConfigService.getConfigValue('settings.' + setting);
         }
-    }
-
-    public isEmailNotEmpty(): boolean {
-        return UsersService.getCurrentUserWithPerimeters().userData.email?.length > 0;
     }
 
     public async isExternalDeviceSettingVisible(): Promise<boolean> {
@@ -74,6 +78,19 @@ export class SettingsView {
         );
 
         return emailToPlainText || sendDailyEmail || sendWeeklyEmail || sendCardsByEmail;
+    }
+
+    private isEmailFilled(): boolean {
+        return Boolean(this.newSettings?.email ?? this.getSetting('email'));
+    }
+
+    public areEmailAndEmailCheckboxesCoherent(): boolean {
+        if (this.areEmailCheckboxesTicked()) {
+            if (!this.isEmailFilled()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private isReplayIntervalInvalid(): boolean {

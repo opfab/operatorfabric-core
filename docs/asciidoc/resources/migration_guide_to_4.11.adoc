@@ -68,13 +68,6 @@ With
   }
 ----
 
-== Email feature
-
-For security reasons, the admin shall now set the email of a user via the user interface or the email shall be populated
-by the JWT token.
-The user can no longer enter its email itself.
-
-
 == selectActivityAreaOnLogin configuration parameter
 
 

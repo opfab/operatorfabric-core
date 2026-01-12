@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,7 +31,8 @@ async function setUserConf() {
         false,
         false,
         false,
-        false
+        false,
+        'userWithPerimeterEmail@mail.com'
     );
     await setUserPerimeter(userWithPerimeters);
 }
@@ -105,9 +106,19 @@ describe('Settings view ', () => {
             await loadWebUIConf({settings: {}});
             expect(settingsView.getSetting('replayInterval')).toBe(5);
         });
-        it('should return the email from user', async () => {
+        it('should return the email from user if getEmailFromUserInsteadOfSettings is true', async () => {
             await setUserConf();
-            expect(settingsView.getSetting('email')).toBe('userEmail@mail.com');
+            await loadWebUIConf({
+                settings: {getEmailFromUserInsteadOfSettings: true, email: 'emailFromSettings@mail.com'}
+            });
+            expect(settingsView.getSetting('email')).toBe('userWithPerimeterEmail@mail.com');
+        });
+        it('should return email from settings if getEmailFromUserInsteadOfSettings is false', async () => {
+            await setUserConf();
+            await loadWebUIConf({
+                settings: {getEmailFromUserInsteadOfSettings: false, email: 'emailFromSettings@mail.com'}
+            });
+            expect(settingsView.getSetting('email')).toBe('emailFromSettings@mail.com');
         });
     });
 
@@ -251,6 +262,28 @@ describe('Settings view ', () => {
             settingsView.setSetting('remoteLoggingEnabled', false);
             settingsView.setSetting('remoteLoggingEnabled', true);
             expect(settingsView.doesSettingsNeedToBeSaved()).toBe(false);
+        });
+    });
+    describe('areEmailSettingsCoherent', () => {
+        let settingsView: SettingsView;
+
+        beforeEach(async () => {
+            await loadWebUIConf({settings: {}});
+            settingsView = new SettingsView();
+        });
+
+        it('should detect if one email checkbox is ticked and no email address is given', async () => {
+            const alertSubject = new ReplaySubject<Message>();
+            AlertMessageService.getAlertMessage().subscribe((Message) => {
+                alertSubject.next(Message);
+            });
+            settingsView.setSetting('emailToPlainText', false);
+            settingsView.setSetting('sendDailyEmail', false);
+            settingsView.setSetting('sendCardsByEmail', true);
+            settingsView.setSetting('email', null);
+
+            const emailSettingsAreCoherent = settingsView.areEmailAndEmailCheckboxesCoherent();
+            expect(emailSettingsAreCoherent).toBeFalse();
         });
     });
 });
