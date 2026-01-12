@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -588,47 +588,70 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     exportToExcel(visibleColumns: string[]): void {
-        const exportArchiveData = [];
+        this.openExportModal();
 
+        const filter = this.getFilter(0, this.resultsNumber);
+
+        CardsService.fetchFilteredCards(filter).subscribe((page: Page<object>) => {
+            const exportArchiveData = this.buildExportData(page.content, visibleColumns);
+
+            ExcelExport.exportJsonToExcelFile(exportArchiveData, 'ProcessMonitoring');
+            this.modalRef.close();
+        });
+    }
+
+    private buildExportData(cards: any[], visibleColumns: string[]): object[] {
+        const severityColumnName = this.translateColumn('shared.result.severity');
+
+        return cards.map((card) => this.buildExportLine(card, visibleColumns, severityColumnName));
+    }
+
+    private buildExportLine(card: any, visibleColumns: string[], severityColumnName: string): object {
+        this.cardPostProcessing(card);
+
+        const lineForExport: any = {};
+
+        visibleColumns.forEach((column) => this.addColumnValue(lineForExport, card, column, severityColumnName));
+
+        return lineForExport;
+    }
+
+    private addColumnValue(lineForExport: any, card: any, column: string, severityColumnName: string): void {
+        if (column === '') {
+            lineForExport[severityColumnName] = card.severity;
+            return;
+        }
+
+        const fieldDef = this.processMonitoringFields?.find((f) => f.colName === column);
+        if (!fieldDef) return;
+
+        const fieldKey = fieldDef.field.split('.').pop();
+        if (!fieldKey) return;
+
+        lineForExport[fieldDef.colName] = this.formatValue(fieldDef.type, card[fieldKey]);
+    }
+
+    private formatValue(type: string, value: any): any {
+        switch (type) {
+            case ProcessMonitoringFieldEnum.DATE:
+                return this.displayTime(value);
+
+            case ProcessMonitoringFieldEnum.ARRAY:
+                return this.displayArray(value);
+
+            default:
+                return value;
+        }
+    }
+
+    private openExportModal(): void {
         const modalOptions: NgbModalOptions = {
             centered: true,
             backdrop: 'static', // Modal shouldn't close even if we click outside it
             size: 'sm'
         };
+
         this.modalRef = this.modalService.open(this.exportTemplate, modalOptions);
-
-        const filter = this.getFilter(0, this.resultsNumber);
-
-        CardsService.fetchFilteredCards(filter).subscribe((page: Page<Object>) => {
-            const lines = page.content;
-            const severityColumnName = this.translateColumn('shared.result.severity');
-
-            lines.forEach((card: any) => {
-                this.cardPostProcessing(card);
-
-                const lineForExport = {};
-                lineForExport[severityColumnName] = card.severity;
-                this.processMonitoringFields.forEach((column) => {
-                    if (visibleColumns?.includes(column.colName)) {
-                        if (column.type === ProcessMonitoringFieldEnum.DATE) {
-                            lineForExport[column.colName] = this.displayTime(
-                                card[String(column.field).split('.').pop()]
-                            );
-                        } else if (column.type === ProcessMonitoringFieldEnum.ARRAY) {
-                            lineForExport[column.colName] = this.displayArray(
-                                card[String(column.field).split('.').pop()]
-                            );
-                        } else {
-                            lineForExport[column.colName] = card[String(column.field).split('.').pop()];
-                        }
-                    }
-                });
-
-                exportArchiveData.push(lineForExport);
-            });
-            ExcelExport.exportJsonToExcelFile(exportArchiveData, 'ProcessMonitoring');
-            this.modalRef.close();
-        });
     }
 
     translateColumn(key: string, interpolateParams?: Map<string, string>): any {
