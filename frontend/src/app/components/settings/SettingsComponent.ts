@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -17,6 +17,8 @@ import {Subject, takeUntil} from 'rxjs';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
+import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
+import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 
 @Component({
@@ -149,6 +151,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     saveSettings() {
         if (this.saveSettingsInProgress) return; // avoid multiple clicks
+        if (!this.settingsView.areEmailAndEmailCheckboxesCoherent()) {
+            AlertMessageService.sendAlertMessage({
+                message: '',
+                i18n: {key: 'settings.input.errors.emailAddressMissing'},
+                level: MessageLevel.ERROR
+            });
+            return;
+        }
         this.saveSettingsInProgress = true;
         this.settingsView.saveSettings().then((result) => {
             this.saveSettingsInProgress = false;

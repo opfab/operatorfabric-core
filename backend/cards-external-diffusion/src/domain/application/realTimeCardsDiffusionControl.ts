@@ -116,13 +116,13 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                     'Email setting enabled for ' +
                         userWithPerimeters.userData.login +
                         ' with mail ' +
-                        userWithPerimeters.userData.email
+                        userWithPerimeters.emailForCardSending
                 );
                 const cardsForUser: LightCard[] = await this.getCardsForUser(lightCards, userWithPerimeters);
                 for (const cardForUser of cardsForUser) {
                     await this.sendCardIfAllowed(
                         cardForUser,
-                        userWithPerimeters.userData.email,
+                        userWithPerimeters.emailForCardSending,
                         emailToPlainText,
                         timezoneForEmails
                     );
@@ -172,7 +172,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
     }
 
     isEmailSettingEnabled(userWithPerimeters: any): boolean {
-        return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.userData.email;
+        return userWithPerimeters.sendCardsByEmail === true && userWithPerimeters.emailForCardSending;
     }
 
     async sendMail(cardId: string, to: string, emailToPlainText: boolean, timezone: string): Promise<void> {

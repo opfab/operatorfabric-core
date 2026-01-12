@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,6 +42,12 @@ export class SettingsCommands extends OpfabCommands {
 
     clickOnSendNotificationByEmailAndSave = function () {
         cy.get('input[formControlName="sendCardsByEmail"]').click({force: true});
+        this.save();
+    };
+
+    setEmailAddressAndSave = function (email) {
+        cy.get('#opfab-setting-input-email').clear();
+        cy.get('#opfab-setting-input-email').type(email);
         this.save();
     };
 

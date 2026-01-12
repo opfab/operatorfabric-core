@@ -39,6 +39,7 @@ public class CurrentUserWithPerimeters {
     private Boolean emailToPlainText;
     private Boolean sendDailyEmail;
     private Boolean sendWeeklyEmail;
+    private String emailForCardSending;
     private String timezoneForEmails;
 
     @Valid
@@ -90,6 +91,19 @@ public class CurrentUserWithPerimeters {
 
     public void setSendWeeklyEmail(Boolean sendWeeklyEmail) {
         this.sendWeeklyEmail = sendWeeklyEmail;
+    }
+
+    public CurrentUserWithPerimeters emailForCardSending(String emailForCardSending) {
+        this.emailForCardSending = emailForCardSending;
+        return this;
+    }
+
+    public String getEmailForCardSending() {
+        return emailForCardSending;
+    }
+
+    public void setEmailForCardSending(String emailForCardSending) {
+        this.emailForCardSending = emailForCardSending;
     }
 
     public String getTimezoneForEmails() {

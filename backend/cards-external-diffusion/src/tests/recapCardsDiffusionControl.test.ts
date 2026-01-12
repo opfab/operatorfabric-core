@@ -82,13 +82,15 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -122,13 +124,15 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendWeeklyEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendWeeklyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -162,9 +166,10 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -224,9 +229,10 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -289,9 +295,10 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -349,9 +356,10 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -416,14 +424,16 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: false,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -459,13 +469,15 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -501,16 +513,18 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendDailyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -548,13 +562,15 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }
@@ -590,16 +606,18 @@ describe('Cards external diffusion', function () {
 
         opfabServicesInterfaceStub.usersWithPerimeters = [
             {
-                userData: {login: 'operator_1', entities: ['ENTITY1'], email: 'operator_1@opfab.com'},
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
                 sendCardsByEmail: true,
                 sendWeeklyEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             },
             {
-                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2'], email: 'operator_2@opfab.com'},
+                userData: {login: 'operator_2', entities: ['ENTITY1', 'ENTITY2']},
                 sendCardsByEmail: true,
                 sendWeeklyEmail: true,
+                emailForCardSending: 'operator_2@opfab.com',
                 processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
                 computedPerimeters: perimeters
             }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 export class UserWithPerimeters {
     readonly sendDailyEmail?: true;
     readonly sendWeeklyEmail?: true;
+    readonly emailForCardSending?: string;
     readonly timezoneForEmails?: string;
     readonly userData: UserData;
     readonly processesStatesNotNotified?: any;
@@ -21,5 +22,4 @@ export class UserData {
     readonly login: string;
     readonly groups: string[];
     readonly entities: string[];
-    readonly email?: string;
 }
