@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -71,7 +71,7 @@ const reminder = {
             `Failed to get reminder status`,
             `Failed to get reminder status, not found error`
         );
-        if (response.ok) {
+        if (response?.ok) {
             const status = await response.text();
             console.log(`Started: ${status}`);
         }

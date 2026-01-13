@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -85,7 +85,7 @@ const connectedUserCommands = {
             'Failed to get all connected users, not found error'
         );
 
-        if (result.ok) {
+        if (result?.ok) {
             const connectedUsers = await result.json();
 
             console.info('Number of connected users : ' + connectedUsers.length);

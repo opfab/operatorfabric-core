@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,6 +35,7 @@ const userCommands = {
                         { title: 'Set activity area', value: 'set-activity-area' },
                         { title: 'Set notified', value: 'set-notified' },
                         { title: 'Set notified by mail', value: 'set-notified-mail' },
+                        { title: 'Get the settings for a user', value: 'settings' },
                         { title: 'Unset activity area', value: 'unset-activity-area' }
                     ]
                 })
@@ -81,6 +82,9 @@ const userCommands = {
                 break;
             case 'set-notified-mail':
                 await this.configureNotification(args[1], args[2], 'POST', 'processstatenotifiedbymail');
+                break;
+            case 'settings':
+                await this.settings(args[1]);
                 break;
             case 'unset-activity-area':
                 await this.activityAreaSetter(args[1], args[2], false);
@@ -143,9 +147,26 @@ const userCommands = {
             `Last user action not found for login: ${user}`
         );
 
-        if (result.ok) {
+        if (result?.ok) {
             const lastUserAction = await result.text();
             console.info('Last user action for user ' + user + ' : ' + lastUserAction);
+        }
+    },
+
+    async settings(user) {
+        user = await utils.missingTextPrompt('User', user);
+        const result = await utils.sendRequest(
+            `users/users/${user}/settings`,
+            'GET',
+            undefined,
+            ``,
+            `Failed to fetch settings for user ${user}`,
+            `Settings not found for login: ${user}`
+        );
+
+        if (result?.ok) {
+            const settings = await result.text();
+            console.info(settings);
         }
     },
 
@@ -182,7 +203,7 @@ const userCommands = {
             `Failed to fetch settings for user ${user}`,
             `Failed to find user ${user}`
         );
-        if (!entitiesDisconnectedResponse.ok) {
+        if (!entitiesDisconnectedResponse?.ok) {
             return;
         }
         let { entitiesDisconnected } = await entitiesDisconnectedResponse.json();
@@ -285,6 +306,7 @@ Commands list :
             set-activity-area       Set an <activity area> for a <user> : opfab user set-activity-area <activityAreaId> <user> 
             set-notified            Configure <process>/<state> as to be notified for all users : opfab user set-notified <process> <state>
             set-notified-mail       Configure <process>/<state> as to be notified by email for all users : opfab user set-notified-mail <process> <state>
+            settings                Get the settings for a <user> : opfab user settings <user>
             unset-activity-area     Unset an <activity area> for a <user> : opfab user unset-activity-area <activityAreaId> <user> 
         `);
     }
