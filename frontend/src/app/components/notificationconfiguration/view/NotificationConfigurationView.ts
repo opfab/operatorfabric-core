@@ -290,7 +290,7 @@ export class NotificationConfigurationView {
         const processesStatesNotifiedByEmail = this.getCheckedStatesForEmailNotificationPerProcesses();
 
         const {status} = await firstValueFrom(
-            UserSettingsService.patchUserSettings({
+            UserSettingsService.patchCurrentUserSettings({
                 processesStatesNotNotified,
                 processesStatesNotifiedByEmail
             })

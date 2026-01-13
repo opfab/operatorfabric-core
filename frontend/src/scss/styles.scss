@@ -178,6 +178,9 @@ ngb-pagination {
 }
 
 // ngbModal configuration
+
+// The style is used by the modal by passing the modal option size 
+// as 'lg' or 'xl' or 'fullscreen' or 'usercard' or 'settings-admin' 
 .modal-fullscreen {
     max-width: 100vw * 0.9;
     margin-left: 100vw * 0.05;
@@ -189,6 +192,18 @@ ngb-pagination {
 
 .modal-usercard {
     max-width: 1300px;
+}
+
+// it is identical to previous declaration modal-fullscreen but with different class name
+// to avoid to inherit styles from the internal modal-fullscreen css class
+// only solution found to avoid a blank line at the bottom of the modal in admin users settings
+.modal-settings-admin {
+    max-width: 100vw * 0.9;
+    margin-left: 100vw * 0.05;
+    max-height: calc(100% - 35px);
+    margin-top: 25px;
+    margin-bottom: 10px;
+    transition: 0s !important;
 }
 
 .modal-body {

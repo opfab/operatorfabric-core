@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ export class UserSettingsServerMock implements UserSettingsServer {
     public numberOfCallsToPatchUserSettings = 0;
 
     private patchUserSettings$: ReplaySubject<ServerResponse<any>>;
+    private getUserSettings$: ReplaySubject<ServerResponse<any>>;
 
     public setResponseForPatchUserSettings(response: ServerResponse<any>) {
         this.patchUserSettings$ = new ReplaySubject<ServerResponse<any>>();
@@ -24,11 +25,17 @@ export class UserSettingsServerMock implements UserSettingsServer {
         this.patchUserSettings$.complete();
     }
 
-    getUserSettings(userId: string): Observable<ServerResponse<any>> {
-        throw new Error('Method not implemented.');
+    public setResponseForGetUserSettings(response: ServerResponse<any>) {
+        this.getUserSettings$ = new ReplaySubject<ServerResponse<any>>();
+        this.getUserSettings$.next(response);
+        this.getUserSettings$.complete();
     }
 
-    patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>> {
+    public getUserSettings(userId: string): Observable<ServerResponse<any>> {
+        return this.getUserSettings$.asObservable();
+    }
+
+    public patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>> {
         this.userIdPatch = userId;
         this.settingsPatch = settings;
         this.numberOfCallsToPatchUserSettings++;

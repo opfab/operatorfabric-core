@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,23 +14,24 @@ import {
     UserConfiguration
 } from '@ofServices/notifications/model/ExternalDevices';
 import {ExternalDevicesServer} from '@ofServices/notifications/server/ExternalDevicesServer';
-import {ServerResponse} from 'app/server/ServerResponse';
-import {Observable, ReplaySubject} from 'rxjs';
+import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
+import {Observable, of} from 'rxjs';
 
 export class ExternalDevicesServerMock implements ExternalDevicesServer {
-    private fetchUserConfiguration$: ReplaySubject<ServerResponse<any>>;
+    private userConfiguration: any;
 
     public setResponseForFetchUserConfiguration(response: ServerResponse<any>) {
-        this.fetchUserConfiguration$ = new ReplaySubject<ServerResponse<any>>();
-        this.fetchUserConfiguration$.next(response);
-        this.fetchUserConfiguration$.complete();
+        this.userConfiguration = response;
     }
 
     sendNotification(notification: Notification): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');
     }
     fetchUserConfiguration(login: string): Observable<ServerResponse<any>> {
-        return this.fetchUserConfiguration$.asObservable();
+        if (this.userConfiguration.data.userLogin !== login) {
+            return of(new ServerResponse<any>({}, ServerResponseStatus.NOT_FOUND, 'not found'));
+        }
+        return of(this.userConfiguration);
     }
     queryAllUserConfigurations(): Observable<ServerResponse<any>> {
         throw new Error('Method not implemented.');

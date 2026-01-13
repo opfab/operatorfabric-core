@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -120,7 +120,7 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Control Center FR South');
 
         // Delete previously created user
-        agGrid.clickCell('ag-grid-angular', 8, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 8, 7, 'of-action-cell-renderer');
 
         cy.get('#opfab-btn-ok').click();
 
@@ -130,6 +130,26 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 18');
 
         agGrid.countTableRows('ag-grid-angular', 8);
+    });
+
+    it('Edit user settings', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
+
+        // Edit settings operator1_fr
+        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        cy.get('#opfab-setting-input-replayInterval').clear().type('50');
+        cy.get('#opfab-settings-btn-save').click();
+        cy.get('#opfab-btn-ok').click();
+
+        // Check settings are saved
+        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        cy.get('#opfab-setting-input-replayInterval').should('have.value', '50');
+
+        // Reset settings operator1_fr
+        cy.get('#opfab-setting-input-replayInterval').clear().type('10');
+        cy.get('#opfab-settings-btn-save').click();
+        cy.get('#opfab-btn-ok').click();
     });
 
     it('List, add, edit, delete entities', () => {

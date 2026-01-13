@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ export class OpfabEventStreamService {
     private static readonly reloadRequest = new Subject<void>();
     private static readonly businessConfigChange = new Subject<void>();
     private static readonly userConfigChange = new Subject<void>();
+    private static readonly userSettingsChange = new Subject<void>();
     private static readonly businessDataChange = new Subject<void>();
     private static readonly processMonitoringConfigChange = new Subject<void>();
 
@@ -73,6 +74,10 @@ export class OpfabEventStreamService {
                     case 'USER_CONFIG_CHANGE':
                         OpfabEventStreamService.userConfigChange.next();
                         logger.info(`EventStreamService - USER_CONFIG_CHANGE received`);
+                        break;
+                    case 'USER_SETTINGS_CHANGE':
+                        OpfabEventStreamService.userSettingsChange.next();
+                        logger.info(`EventStreamService - USER_SETTINGS_CHANGE received`);
                         break;
                     case 'DISCONNECT_USER_DUE_TO_NEW_CONNECTION':
                         logger.info(
@@ -204,6 +209,10 @@ export class OpfabEventStreamService {
 
     static getUserConfigChangeRequests(): Observable<void> {
         return OpfabEventStreamService.userConfigChange.asObservable();
+    }
+
+    static getUserSettingsChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.userSettingsChange.asObservable();
     }
 
     static getProcessMonitoringConfigChangeRequests(): Observable<void> {

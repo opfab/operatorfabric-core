@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import {ProcessMonitoringConfig} from './model/ProcessMonitoringConfig';
 export class ConfigService {
     private static configServer: ConfigServer;
     private static config;
+    private static configWithNoUserSettingsOverride;
     private static processMonitoringConfig: ProcessMonitoringConfig;
 
     private static menuConfig: UIMenuFile;
@@ -39,20 +40,27 @@ export class ConfigService {
         return this.configServer.getWebUiConfiguration().pipe(
             map((serverResponse) => {
                 this.config = serverResponse.data;
+                this.configWithNoUserSettingsOverride = structuredClone(this.config);
                 return this.config;
             })
         );
     }
 
     public static overrideConfigSettingsWithUserSettings(settings: any) {
-        const newConfig = {...this.config};
-        newConfig.settings = {...this.config.settings, ...settings};
+        const newConfig = {...this.configWithNoUserSettingsOverride};
+        newConfig.settings = {...this.configWithNoUserSettingsOverride.settings, ...settings};
         this.config = newConfig;
         this.settingsOverrideEvent.next(null);
     }
 
     public static getConfigValue(path: string, fallback: any = null): any {
         return _.get(this.config, path, fallback);
+    }
+
+    // On startup the conf from web-ui.json is loaded and then overridden with user settings.
+    // This method allows to get the original config value without user settings override.
+    public static getConfigValueWithNoUserSettingsOverride(path: string, fallback: any = null): any {
+        return _.get(this.configWithNoUserSettingsOverride, path, fallback);
     }
 
     public static setConfigValue(path: string, value: any) {

@@ -50,6 +50,9 @@ class UserSettingsServiceShould {
         user1 = new User();
         user1.setLogin("user1");
         userRepositoryStub.insert(user1);
+        User user2 = new User();
+        user2.setLogin("user2");
+        userRepositoryStub.insert(user2);
 
         User userWithNoSettings = new User();
         userWithNoSettings.setLogin("userWithNoSettings");
@@ -364,6 +367,22 @@ class UserSettingsServiceShould {
             assertThat(settings.isSuccess()).isTrue();
             String[] expectedMessageSent1 = { "user", "user1" };
             assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1);
+        }
+
+        @Test
+        void GIVEN_Existing_Settings_WHEN_Patch_With_UserToPatch_NotEquals_UserRequesting_THEN_A_Notification_Is_Sent_To_Other_Services() {
+            String timezoneForEmails = "Europe/Sofia";
+            UserSettings newSettings = new UserSettings();
+            newSettings.setLogin("user2");
+            newSettings.setTimezoneForEmails(timezoneForEmails);
+            newSettings.setProcessesStatesNotNotified(new HashMap<>());
+            OperationResult<UserSettings> settings = userSettingsService.patchUserSettings(user1, "user2",
+                    newSettings);
+            assertThat(settings.isSuccess()).isTrue();
+            String[] expectedMessageSent1 = { "user", "user2" };
+            String[] expectedMessageSent2 = { "userSettings", "user2" };
+            assertThat(eventBusSpy.getMessagesSent()).containsExactlyInAnyOrder(expectedMessageSent1,
+                    expectedMessageSent2);
         }
     }
 

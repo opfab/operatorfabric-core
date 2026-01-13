@@ -8,7 +8,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    inject
+} from '@angular/core';
 import {TranslateService, TranslateModule} from '@ngx-translate/core';
 import {SettingsView} from 'app/components/settings/view/SettingsView';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -20,6 +30,32 @@ import {I18n} from 'app/model/I18n';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
+import {User} from '@ofServices/users/model/User';
+
+const settingsList = [
+    'playSoundForAlarm',
+    'playSoundForAction',
+    'playSoundForCompliant',
+    'playSoundForInformation',
+    'replayEnabled',
+    'playSoundOnExternalDevice',
+    'replayInterval',
+    'systemNotificationAlarm',
+    'systemNotificationAction',
+    'systemNotificationCompliant',
+    'systemNotificationInformation',
+    'locale',
+    'sendCardsByEmail',
+    'emailToPlainText',
+    'sendDailyEmail',
+    'sendWeeklyEmail',
+    'email',
+    'timezoneForEmails',
+    'hallwayMode',
+    'showAcknowledgmentFooter',
+    'openNextCardOnAcknowledgment',
+    'remoteLoggingEnabled'
+];
 
 @Component({
     selector: 'of-settings',
@@ -33,7 +69,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private readonly changeDetector = inject(ChangeDetectorRef);
 
     settingsForm: FormGroup;
-    settingsView = new SettingsView();
     isExternalDeviceSettingVisible = false;
 
     languageOptionList: {value: string; label: string}[];
@@ -49,10 +84,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
     canDeactivateSubject = new Subject<boolean>();
     pendingModification: boolean;
 
-    ngOnInit(): void {
-        this.getExternalDeviceSettingVisibility();
-        this.initForm();
-        this.listenToFormChanges();
+    @Input()
+    user: User;
+
+    @Output() closeSettingsModal: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    settingsView: SettingsView;
+
+    ngOnInit() {
+        this.settingsView = new SettingsView(this.user);
+        this.createForm();
+        this.settingsView.loadUserSettings().then(() => {
+            this.getExternalDeviceSettingVisibility();
+            this.setFormValues();
+            this.listenToFormChanges();
+        });
     }
 
     private getExternalDeviceSettingVisibility() {
@@ -62,38 +108,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
         });
     }
 
-    private initForm() {
-        const settings = [
-            'playSoundForAlarm',
-            'playSoundForAction',
-            'playSoundForCompliant',
-            'playSoundForInformation',
-            'replayEnabled',
-            'playSoundOnExternalDevice',
-            'replayInterval',
-            'systemNotificationAlarm',
-            'systemNotificationAction',
-            'systemNotificationCompliant',
-            'systemNotificationInformation',
-            'locale',
-            'sendCardsByEmail',
-            'emailToPlainText',
-            'sendDailyEmail',
-            'sendWeeklyEmail',
-            'email',
-            'timezoneForEmails',
-            'hallwayMode',
-            'showAcknowledgmentFooter',
-            'openNextCardOnAcknowledgment',
-            'remoteLoggingEnabled'
-        ];
-
+    private createForm() {
         const formGroupConfig = {};
-        settings.forEach((setting) => {
+        settingsList.forEach((setting) => {
             if (setting === 'email') {
-                formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting), Validators.email);
+                formGroupConfig[setting] = new FormControl('', Validators.email);
             } else {
-                formGroupConfig[setting] = new FormControl(this.settingsView.getSetting(setting));
+                formGroupConfig[setting] = new FormControl(undefined);
             }
         });
         this.settingsForm = new FormGroup(formGroupConfig, {updateOn: 'change'});
@@ -108,10 +129,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
             search: false,
             sortOptions: true
         };
-
         const locales = this.translateService.getLangs();
         this.languageOptionList = locales.map((locale) => ({value: locale, label: locale}));
-        this.languageSelectedOption[0] = this.settingsView.getSetting('locale');
     }
 
     private initTimezoneForEmailsMultiselect() {
@@ -121,12 +140,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
             search: true,
             sortOptions: true
         };
-
         this.timezoneForEmailsOptionList = Intl.supportedValuesOf('timeZone').map((timezone) => ({
             value: timezone,
             label: timezone
         }));
-        this.timezoneForEmailsSelectedOption[0] = this.settingsView.getSetting('timezoneForEmails');
+    }
+
+    private setFormValues() {
+        settingsList.forEach((setting) => {
+            if (setting !== 'locale' && setting !== 'timezoneForEmails')
+                this.settingsForm.get(setting).setValue(this.settingsView.getSetting(setting));
+        });
+
+        this.languageSelectedOption = [this.settingsView.getSetting('locale')];
+        this.timezoneForEmailsSelectedOption = [this.settingsView.getSetting('timezoneForEmails')];
+        this.changeDetector.markForCheck();
     }
 
     private listenToFormChanges() {
@@ -165,6 +193,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             if (result.status === ServerResponseStatus.OK)
                 ModalService.openInformationModal(new I18n('settings.settingsSaved')).then(() => {
                     this.canDeactivateSubject.next(true);
+                    this.closeSettingsModal.emit(true); // send signal to parent component to close the modal
                 });
         });
     }

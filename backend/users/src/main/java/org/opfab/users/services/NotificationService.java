@@ -40,4 +40,8 @@ public class NotificationService {
         eventBus.sendEvent("user", userLogin);
     }
 
+    public void publishUpdatedUserSettingsMessage(String userLogin) {
+        eventBus.sendEvent("userSettings", userLogin);
+    }
+
 }
