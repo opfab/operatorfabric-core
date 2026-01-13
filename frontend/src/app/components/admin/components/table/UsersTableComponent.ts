@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,6 +17,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
+import {EditSettingsModalComponent} from '../editmodal/settings/EditSettingsModalComponent';
 
 @Component({
     templateUrl: 'AdminTableDirective.html',
@@ -35,8 +36,9 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         new Field('entities', 6, null, null, 'entitiesColumn')
     ];
     idField = 'login';
-    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.DELETE];
+    actionButtonsDisplayed = [ActionButton.EDIT, ActionButton.SETTINGS, ActionButton.DELETE];
     editModalComponent = EditUserModalComponent;
+    settingsModalComponent = EditSettingsModalComponent;
     ngOnInit() {
         this.gridOptions.columnTypes['groupsColumn'] = {
             sortable: true,

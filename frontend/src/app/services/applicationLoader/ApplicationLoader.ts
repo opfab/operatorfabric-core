@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,7 +35,6 @@ import {OpfabStore} from '../../store/OpfabStore';
 import {ApplicationUpdateService} from '../events/ApplicationUpdateService';
 import {SystemNotificationService} from '../notifications/SystemNotificationService';
 import {ApplicationLoadingComponent} from './ApplicationLoadingComponent';
-import {ServerResponseStatus} from '../../server/ServerResponse';
 import {Utilities} from '../../utils/Utilities';
 import {ModalService} from '../modal/ModalService';
 import {SessionManagerService} from '../sessionManager/SessionManagerService';
@@ -115,7 +114,7 @@ export class ApplicationLoader {
 
         if (await this.isLoadingToBeStoppedBecauseAppLoadedInAnotherTab()) return false;
         await this.authenticate();
-        await this.loadSettings();
+        await UserSettingsService.loadCurrentUserSettings();
         if (await this.isUserToBeDisconnectedBecauseLoginAlreadyInUse()) return false;
         await this.loadAllConfigurationData();
         if (await this.isUserToBeDisconnectedBecauseIsNotAssociatedToAnyGroups()) return false;
@@ -205,24 +204,6 @@ export class ApplicationLoader {
             next: () => logger.info('Synchronization of user token with user database done'),
             error: () => logger.warn('Impossible to synchronize user token with user database')
         });
-    }
-
-    private async loadSettings(): Promise<void> {
-        const {status, data} = await firstValueFrom(UserSettingsService.getUserSettings());
-        switch (status) {
-            case ServerResponseStatus.OK:
-                logger.info('Settings loaded ' + JSON.stringify(data));
-                ConfigService.overrideConfigSettingsWithUserSettings(data);
-                break;
-            case ServerResponseStatus.NOT_FOUND:
-                logger.info('No settings for user');
-                break;
-            case ServerResponseStatus.FORBIDDEN:
-                logger.error('Access forbidden when loading settings');
-                return;
-            default:
-                logger.error('Error when loading settings' + status);
-        }
     }
 
     private async isUserToBeDisconnectedBecauseLoginAlreadyInUse(): Promise<boolean> {

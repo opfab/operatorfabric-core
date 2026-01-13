@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -228,7 +228,7 @@ describe('User action logs page', () => {
     }
 
     function deleteUser() {
-        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 7, 'of-action-cell-renderer');
         cy.get('#opfab-btn-ok').click();
     }
 
@@ -255,7 +255,12 @@ describe('User action logs page', () => {
 
     function changeNotificationConfiguration() {
         opfab.navigateToNotificationConfiguration();
-        cy.get('.opfab-notificationconfiguration-processlist').eq(0).find('p').eq(1).find('input').uncheck({force: true});
+        cy.get('.opfab-notificationconfiguration-processlist')
+            .eq(0)
+            .find('p')
+            .eq(1)
+            .find('input')
+            .uncheck({force: true});
         cy.get('#opfab-notificationconfiguration-btn-confirm').click(); // Save settings
         cy.get('#opfab-btn-ok').click(); // and confirm
         cy.get('#opfab-btn-ok').should('not.exist'); // wait for dialog to go away

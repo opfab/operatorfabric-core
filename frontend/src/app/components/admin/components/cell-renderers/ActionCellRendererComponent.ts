@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,8 @@ export class ActionCellRendererComponent implements ICellRendererAngularComp {
         edit: 'fas fa-pen',
         delete: 'far fa-trash-alt',
         download: 'fas fa-download',
-        update: 'fas fa-file-pen'
+        update: 'fas fa-file-pen',
+        settings: 'fas fa-gear'
     };
 
     agInit(params: any): void {
@@ -65,5 +66,6 @@ export enum ActionButton {
     EDIT = 'edit',
     DELETE = 'delete',
     UPDATE = 'update',
-    DOWNLOAD = 'download'
+    DOWNLOAD = 'download',
+    SETTINGS = 'settings'
 }

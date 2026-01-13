@@ -101,7 +101,9 @@ public class UserSettingsService {
                 || (userSettingsPatch.getEmail() != null)
                 || (userSettingsPatch.getTimezoneForEmails() != null))
             notificationService.publishUpdatedUserMessage(userLoginToPatch);
-
+        if (!userRequestingPatch.getLogin().equals(userLoginToPatch)) {
+            notificationService.publishUpdatedUserSettingsMessage(userLoginToPatch);
+        }
         if (userActionLogActivated && userSettingsPatch.getProcessesStatesNotNotified() != null) {
             userActionLogService.insertUserActionLog(userRequestingPatch.getLogin(), UserActionEnum.NOTIFICATION_CONFIG,
                     userRequestingPatch.getEntities(), null,
@@ -131,7 +133,6 @@ public class UserSettingsService {
     private boolean checkFilteringNotificationIsAllowedForAllProcessesStates(String login, UserSettings userSettings) {
         if ((userSettings.getProcessesStatesNotNotified() != null)
                 && (!userSettings.getProcessesStatesNotNotified().isEmpty())) {
-
             List<Perimeter> perimeters = userService.fetchUserPerimeters(login).getResult();
             if (perimeters == null)
                 return true;

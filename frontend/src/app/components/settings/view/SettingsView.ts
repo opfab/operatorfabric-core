@@ -16,9 +16,30 @@ import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesS
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {firstValueFrom} from 'rxjs';
+import {LoggerService} from '@ofServices/logs/LoggerService';
+import * as _ from 'lodash-es';
+import {User} from '@ofServices/users/model/User';
+
+type SettingValue = string | boolean | number;
 
 export class SettingsView {
     private newSettings: any = {};
+    private readonly user: User;
+    private userSettings: any = {};
+
+    public constructor(user: User) {
+        this.user = user;
+    }
+
+    public async loadUserSettings(): Promise<void> {
+        if (this.user) {
+            try {
+                this.userSettings = (await firstValueFrom(UserSettingsService.getUserSettings(this.user.login))).data;
+            } catch (error) {
+                LoggerService.error('Error loading user settings for user ' + this.user.login, error);
+            }
+        }
+    }
 
     public isSettingVisible(setting: string): boolean {
         return !ConfigService.getConfigValue('settingsScreen.hiddenSettings', []).includes(setting);
@@ -28,7 +49,38 @@ export class SettingsView {
         return ConfigService.getConfigValue('settings.getEmailFromUserInsteadOfSettings', false);
     }
 
-    public getSetting(setting: string): string | boolean | number {
+    public getSetting(setting: string): SettingValue {
+        if (this.user) {
+            return this.getSettingsForUser(setting);
+        } else {
+            return this.getSettingsForCurrentUser(setting);
+        }
+    }
+
+    private getSettingsForUser(setting: any): SettingValue {
+        const userSettingsValue = _.get(this.userSettings, setting, undefined);
+        if (userSettingsValue === undefined) {
+            switch (setting) {
+                case 'replayInterval':
+                    return ConfigService.getConfigValueWithNoUserSettingsOverride('settings.replayInterval', 5);
+                case 'timezoneForEmails':
+                    return ConfigService.getConfigValueWithNoUserSettingsOverride(
+                        'settings.timezoneForEmails',
+                        'Europe/Paris'
+                    );
+                case 'email':
+                    if (this.isEmailFromUserInsteadOfSettings()) {
+                        return this.user.email;
+                    }
+                    break;
+                default:
+                    return ConfigService.getConfigValueWithNoUserSettingsOverride('settings.' + setting);
+            }
+        }
+        return userSettingsValue;
+    }
+
+    private getSettingsForCurrentUser(setting: string): SettingValue {
         switch (setting) {
             case 'replayInterval':
                 return ConfigService.getConfigValue('settings.replayInterval', 5);
@@ -48,7 +100,7 @@ export class SettingsView {
     }
 
     public async isExternalDeviceSettingVisible(): Promise<boolean> {
-        const userLogin = UsersService.getCurrentUserWithPerimeters().userData.login;
+        const userLogin = this.user?.login ?? UsersService.getCurrentUserWithPerimeters().userData.login;
         const userConfiguration: UserConfiguration = await firstValueFrom(
             ExternalDevicesService.fetchUserConfiguration(userLogin)
         );
@@ -56,7 +108,7 @@ export class SettingsView {
         return false;
     }
 
-    public setSetting(setting: string, value: string | boolean | number): void {
+    public setSetting(setting: string, value: SettingValue): void {
         const currentValue = this.getSetting(setting);
         if (currentValue !== value) {
             this.newSettings[setting] = value;
@@ -98,27 +150,50 @@ export class SettingsView {
     }
 
     public async saveSettings(): Promise<ServerResponse<any>> {
-        if (this.doesSettingsNeedToBeSaved()) {
-            if (this.isReplayIntervalInvalid()) {
-                this.newSettings.replayInterval = ConfigService.getConfigValue('settings.replayInterval', 5);
-            }
-
-            const serverResponse = await firstValueFrom(UserSettingsService.patchUserSettings(this.newSettings));
-            if (serverResponse.status === ServerResponseStatus.OK) {
-                for (const setting in this.newSettings) {
-                    if (this.newSettings.hasOwnProperty(setting)) {
-                        ConfigService.setConfigValue('settings.' + setting, this.newSettings[setting]);
-                    }
-                }
-
-                this.newSettings = {};
-            } else
-                AlertMessageService.sendAlertMessage(
-                    new Message(null, MessageLevel.ERROR, new I18n('shared.error.impossibleToSaveSettings'))
-                );
-            return serverResponse;
+        if (!this.doesSettingsNeedToBeSaved()) {
+            return new ServerResponse(null, ServerResponseStatus.OK, null);
         }
-        return new ServerResponse(null, ServerResponseStatus.OK, null);
+
+        if (this.isReplayIntervalInvalid()) {
+            this.newSettings.replayInterval = ConfigService.getConfigValue('settings.replayInterval', 5);
+        }
+
+        let serverResponse: ServerResponse<any>;
+        try {
+            if (this.user) {
+                serverResponse = await firstValueFrom(
+                    UserSettingsService.patchUserSettings(this.user.login, this.newSettings)
+                );
+            } else {
+                serverResponse = await firstValueFrom(UserSettingsService.patchCurrentUserSettings(this.newSettings));
+            }
+        } catch (error) {
+            LoggerService.error('Error saving settings' + error.toString());
+            AlertMessageService.sendAlertMessage(
+                new Message(null, MessageLevel.ERROR, new I18n('shared.error.impossibleToSaveSettings'))
+            );
+            return new ServerResponse(null, ServerResponseStatus.UNKNOWN_ERROR, null);
+        }
+
+        if (serverResponse.status === ServerResponseStatus.OK) {
+            this.updateAfterSuccessfulSave();
+        } else {
+            AlertMessageService.sendAlertMessage(
+                new Message(null, MessageLevel.ERROR, new I18n('shared.error.impossibleToSaveSettings'))
+            );
+        }
+        return serverResponse;
+    }
+
+    private updateAfterSuccessfulSave() {
+        if (!this.user || this.user.login === UsersService.getCurrentUserWithPerimeters().userData.login) {
+            // modify new user settings in memory
+            Object.entries(this.newSettings).forEach(([setting, value]) => {
+                ConfigService.setConfigValue('settings.' + setting, value);
+            });
+        }
+
+        this.newSettings = {};
     }
 
     public doesSettingsNeedToBeSaved(): boolean {

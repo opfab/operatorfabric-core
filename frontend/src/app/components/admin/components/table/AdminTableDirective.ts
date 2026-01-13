@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -78,6 +78,7 @@ export abstract class AdminTableDirective implements OnDestroy {
     // (e.g. EntitiesTableComponent) as they depend on the type of the table
     /** Modal component to open when editing an item from the table (e.g. `EditEntityGroupModal`) */
     public editModalComponent;
+    public settingsModalComponent;
 
     /** Type of data managed by the table (e.g. `AdminItemType.ENTITY`) */
     protected tableType: AdminItemType;
@@ -222,6 +223,7 @@ export abstract class AdminTableDirective implements OnDestroy {
         delete_col.cellClassRules = deleteActionCellClassRules;
         const update_col = new ActionColumn('update');
         const download_col = new ActionColumn('download');
+        const settings_col = new ActionColumn('settings');
 
         this.actionButtonsDisplayed.forEach((actionButton) => {
             switch (actionButton) {
@@ -237,6 +239,9 @@ export abstract class AdminTableDirective implements OnDestroy {
                     break;
                 case ActionButton.EDIT:
                     columnDefs.push(edit_col);
+                    break;
+                case ActionButton.SETTINGS:
+                    columnDefs.push(settings_col);
                     break;
                 default:
                     return;
@@ -285,6 +290,13 @@ export abstract class AdminTableDirective implements OnDestroy {
         if (columnId === 'update') {
             const fileName = params.data[this.idField];
             this.updateItem(fileName);
+        }
+        if (columnId === 'settings') {
+            const modalRef = this.modalService.open(this.settingsModalComponent, {
+                size: 'settings-admin',
+                backdrop: 'static' // Modal shouldn't close even if we click outside it
+            });
+            modalRef.componentInstance.row = params.data;
         }
     }
     openDeleteConfirmationDialog(row: any): any {

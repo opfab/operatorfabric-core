@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -61,6 +61,7 @@ public class CardSubscriptionService implements EventListener {
         eventBus.addListener("card", this);
         eventBus.addListener("process", this);
         eventBus.addListener("user", this);
+        eventBus.addListener("userSettings", this);
         eventBus.addListener("ack", this);
 
         this.heartbeatDelay = heartbeatDelay;
@@ -312,6 +313,7 @@ public class CardSubscriptionService implements EventListener {
     @Override
     public void onEvent(String eventKey, String message) {
         log.debug("receive event {} with message {}", eventKey, message);
+        // Do not forget to add listener in the constructor when adding new event type
         switch (eventKey) {
             case "process", "ack":
                 cache.values().forEach(subscription -> subscription.publishDataIntoSubscription(message));
@@ -323,10 +325,12 @@ public class CardSubscriptionService implements EventListener {
                     cache.values()
                             .forEach(subscription -> subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE"));
                 } else {
-                    cache.values().forEach(subscription -> {
-                        if (message.equals(subscription.getUserLogin()))
-                            subscription.publishDataIntoSubscription("USER_CONFIG_CHANGE");
-                    });
+                    publishEventToUser(message, "USER_CONFIG_CHANGE");
+                }
+                break;
+            case "userSettings":
+                if (message != null && !message.isEmpty()) {
+                    publishEventToUser(message, "USER_SETTINGS_CHANGE");
                 }
                 break;
             case "card":
@@ -335,6 +339,14 @@ public class CardSubscriptionService implements EventListener {
             default:
                 log.info("unrecognized event {}", eventKey);
         }
+    }
+
+    private void publishEventToUser(String userLogin, String event) {
+        cache.values().forEach(subscription -> {
+            if (userLogin.equals(subscription.getUserLogin())) {
+                subscription.publishDataIntoSubscription(event);
+            }
+        });
     }
 
 }
