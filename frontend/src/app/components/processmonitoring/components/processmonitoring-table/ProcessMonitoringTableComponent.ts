@@ -252,7 +252,7 @@ export class ProcessmonitoringTableComponent {
                         type: 'summaryColumn',
                         headerName: column.colName,
                         cellRenderer: 'timeCellRenderer',
-                        field: String(column.field).split('.').pop(),
+                        field: column.field,
                         headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
                         cellClass: 'opfab-ag-cell-with-left-padding',
                         resizable: true,
@@ -265,7 +265,7 @@ export class ProcessmonitoringTableComponent {
                     this.columnDefs.push({
                         type: 'summaryColumn',
                         headerName: column.colName,
-                        field: String(column.field).split('.').pop(),
+                        field: column.field,
                         headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
                         cellClass: 'opfab-ag-cell-with-left-padding',
                         resizable: true,

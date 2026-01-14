@@ -587,8 +587,8 @@ Scenario: fetch the first page
 		Then method post
 		Then status 200
 		And assert response.numberOfElements == 1
-		And match response.content[0].message1 == "new message (card 1)"
-		And match response.content[0].message2 == "another new message (card 1)"
+		And match response.content[0].data.message1 == "new message (card 1)"
+		And match response.content[0].data.message2 == "another new message (card 1)"
 
 	Scenario: filter by wrong process
   
