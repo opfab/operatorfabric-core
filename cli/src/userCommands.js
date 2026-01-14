@@ -28,6 +28,7 @@ const userCommands = {
                         { title: 'Load a list of users', value: 'load' },
                         { title: 'Delete a user', value: 'delete' },
                         { title: 'Get the last action date for a user', value: 'last-user-action' },
+                        { title: 'Patch the settings for a user', value: 'patch-settings' },
                         { title: 'Remove from entity', value: 'remove-from-entity' },
                         { title: 'Remove from group', value: 'remove-from-group' },
                         { title: 'Set not notified', value: 'set-not-notified' },
@@ -61,6 +62,9 @@ const userCommands = {
                 break;
             case 'load':
                 await this.loadUserList(args[1]);
+                break;
+            case 'patch-settings':
+                await this.patchSettings(args[1], args[2]);
                 break;
             case 'remove-from-entity':
                 await this.removeUserFrom('Entity', 'entities', args[1], args[2]);
@@ -149,7 +153,7 @@ const userCommands = {
 
         if (result?.ok) {
             const lastUserAction = await result.text();
-            console.info('Last user action for user ' + user + ' : ' + lastUserAction);
+            console.info(lastUserAction);
         }
     },
 
@@ -167,6 +171,34 @@ const userCommands = {
         if (result?.ok) {
             const settings = await result.text();
             console.info(settings);
+        }
+    },
+
+    async patchSettings(user, settingsData) {
+        user = await utils.missingTextPrompt('User', user);
+        settingsData = await utils.missingTextPrompt('Settings data', settingsData);
+
+        if (typeof settingsData === 'string') {
+            try {
+                settingsData = JSON.parse(settingsData);
+            } catch (e) {
+                console.error(`Settings data must be a valid JSON string : ${e.message}`);
+                return;
+            }
+        }
+
+        const result = await utils.sendRequest(
+            `users/users/${user}/settings`,
+            'PATCH',
+            JSON.stringify(settingsData),
+            ``,
+            `Failed to update settings for user ${user}`,
+            `Settings not updated for login: ${user}`
+        );
+
+        if (result?.ok) {
+            const updatedSettings = await result.text();
+            console.info(updatedSettings);
         }
     },
 
@@ -299,6 +331,10 @@ Commands list :
             delete                  Delete a <user> : opfab user delete <user>
             last-user-action        Get the last action date for a <user> : opfab user last-user-action <user>
             load                    Add or update a list of users : opfab user load <usersFilePath>
+            patch-settings          Patch the settings for a <user> : opfab user patch-settings <user> <settingsData>
+                                    settingsData must be a JSON string.
+                                    Example:
+                                        opfab user patch-settings operator1_fr '{"locale":"fr"}'
             remove-from-entity      Remove a <user> from an <entity> : opfab user remove-from-entity <entityId> <user>
             remove-from-group       Remove a <user> from a <group> : opfab user remove-from-group <groupId> <user>
             set-not-notified        Configure <process>/<state> as not to be notified for all users : opfab user set-not-notified <process> <state>

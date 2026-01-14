@@ -136,6 +136,7 @@ omelette('opfab')
             delete: ['#EMPTY_COMPLETION'],
             'last-user-action': ['#EMPTY_COMPLETION'],
             load: [],
+            'patch-settings': ['#EMPTY_COMPLETION'],
             'remove-from-entity': ['#EMPTY_COMPLETION'],
             'remove-from-group': ['#EMPTY_COMPLETION'],
             'set-not-notified': ['#EMPTY_COMPLETION'],
