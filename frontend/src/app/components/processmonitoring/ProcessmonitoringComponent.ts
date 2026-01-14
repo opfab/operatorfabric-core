@@ -625,10 +625,14 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         const fieldDef = this.processMonitoringFields?.find((f) => f.colName === column);
         if (!fieldDef) return;
 
-        const fieldKey = fieldDef.field.split('.').pop();
+        const fieldKey = fieldDef.field;
         if (!fieldKey) return;
+        const fieldValue = this.getNestedValue(card, fieldKey);
+        lineForExport[fieldDef.colName] = this.formatValue(fieldDef.type, fieldValue);
+    }
 
-        lineForExport[fieldDef.colName] = this.formatValue(fieldDef.type, card[fieldKey]);
+    private getNestedValue(obj: any, path: string): any {
+        return path.split('.').reduce((acc, part) => acc?.[part], obj);
     }
 
     private formatValue(type: string, value: any): any {

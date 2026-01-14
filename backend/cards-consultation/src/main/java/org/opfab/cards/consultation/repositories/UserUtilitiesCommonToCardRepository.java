@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -216,6 +216,13 @@ public interface UserUtilitiesCommonToCardRepository<T> {
 
         boolean latestUpdateOnly = filter.latestUpdateOnly();
 
+        // We use a specific projection operation to be able to project nested fields
+        // keeping their structure (otherwise, data.myData becomes myData for example)
+        ProjectionOperation projectWithNestedFields = project();
+        for (String f : fields) {
+            projectWithNestedFields = projectWithNestedFields.and(f).as(f);
+        }
+
         List<AggregationOperation> operations = new ArrayList<>(Arrays.asList(
                 match(new Criteria().andOperator(criteria.toArray(new Criteria[criteria.size()]))),
 
@@ -223,7 +230,7 @@ public interface UserUtilitiesCommonToCardRepository<T> {
                 // especially because we need to exclude the "data" field which can be big
                 // and cause OutOfMemory problems or exceed mongoDB limits
                 // with the group operation (see code lines after)
-                project(fields),
+                projectWithNestedFields,
                 sort(Sort.by(Sort.Order.desc(PUBLISH_DATE_FIELD)))));
 
         if (latestUpdateOnly) {
