@@ -139,7 +139,7 @@ a|card time display mode in the feed. Values :
 |feed.defaultAcknowledgmentFilter|"notack"|no|Default card acknowledgment filtering option in feed page, possible values are : "notack", "ack", "all".
 |feed.defaultSorting|"unread"|no|Default card sorting option in feed page, possible values are : "unread", "date", "severity", "startDate", "endDate".
 |feed.enableGroupedCards|false|no|: If true cards with the same tags are grouped together. Clicking on the grouped card will show the other cards with the same tags in the feed.
-|feed.showSearchFilter|false|no| If set to false, the search filter is hidden.
+|feed.showSearchFilter|false|no| If set to false, the search filter is hidden. The search filter applies to the title and summary of the cards.
 |feed.timeline.domains|["RT", "D", "7D", "W", "M", "Y"]|no| List of domains to show on the timeline, possible domains are : "RT", "D", "7D", "W", "M", "Y".
 
 |heartbeatSendingInterval|30|yes| Frequency in seconds at which the ui sends heartbeat to the server
