@@ -55,60 +55,46 @@ public class OpfabJwtTokenConverter implements Converter<Jwt, AbstractAuthentica
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
-        String principalId = jwt.getClaimAsString(jwtProperties.getLoginClaim()).toLowerCase();
 
-        Optional<User> optionalUser = userRepository.findById(principalId);
-
-        User user = optionalUser.orElseGet(() -> {
-            User virtualUser = createUserDataVirtualFromJwt(jwt);
-            log.warn("user virtual(nonexistent in opfab) : '{}'",
-                    virtualUser != null ? virtualUser.toString() : "null");
-            return virtualUser;
-        });
-        if (groupsProperties.getMode() == GroupsMode.JWT) {
-            // override the groups list from JWT mode, otherwise the default mode is
-            // OPERATOR_FABRIC
-            user.setGroups(getGroupsList(jwt));
+        String login = extractAndValidateLogin(jwt);
+        if (login == null) {
+            return null;
         }
 
-        if (jwtProperties.isGettingEntitiesFromToken() && user != null) {
-            user.setEntities(getEntitiesFromToken(jwt));
-        }
-        // User email is always taken from the JWT; it is not set via the Opfab user
-        // administration feature.
-        // This may evolve in the future to allow user administration to set the email
-        // via the UI.
-        String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
-        if (email != null && user != null) {
-            user.setEmail(email);
+        Optional<User> userInDatabase = userRepository.findById(login);
+
+        // It is possible the user is not present yet in Opfab database
+        // in this case we only use information from the token
+        // The process to create the user in Opfab is done elsewhere
+        User user;
+        if (userInDatabase.isEmpty()) {
+            log.info("user {} non existent in opfab, use info from jwt token ", login);
+            user = createUserFromJwt(login, jwt);
+        } else {
+            user = userInDatabase.get();
         }
 
-        if (jwtProperties.isGettingFirstAndLastNameFromToken() && user != null) {
-            user.setFirstName(extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim()));
-            user.setLastName(extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim()));
-        }
+        enrichUserFromJwt(jwt, user);
 
         List<GrantedAuthority> authorities = computeAuthorities(user);
 
-        log.debug("user [{}] has these roles {} through the {} mode", principalId, authorities,
+        log.debug("user [{}] has these roles {} through the {} mode", login, authorities,
                 groupsProperties.getMode());
 
         return new OpFabJwtAuthenticationToken(jwt, user, authorities);
     }
 
-    /**
-     * create a temporal User from the jwt information without any group
-     * 
-     * @param jwt jwt
-     * @return UserData
-     */
-    private User createUserDataVirtualFromJwt(Jwt jwt) {
-        String principalId = extractClaimAsStringOrNull(jwt, jwtProperties.getLoginClaim());
-
-        if (principalId == null)
+    private String extractAndValidateLogin(Jwt jwt) {
+        String login = jwt.getClaimAsString(jwtProperties.getLoginClaim());
+        if (login == null || login.trim().isEmpty()) {
+            log.error("Token does not contain valid claim {}", jwtProperties.getLoginClaim());
             return null;
+        }
+        // Normalize login to lowercase as stored in database
+        return login.toLowerCase().trim();
+    }
 
-        principalId = principalId.toLowerCase();
+    private User createUserFromJwt(String login, Jwt jwt) {
 
         String givenName = extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim());
         String familyName = extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim());
@@ -117,36 +103,11 @@ public class OpfabJwtTokenConverter implements Converter<Jwt, AbstractAuthentica
         if (givenName == null && familyName == null)
             familyName = name;
 
-        return new User(principalId, givenName, familyName, null, null, null, null);
+        return new User(login, givenName, familyName, null, null, null, null);
     }
 
     /**
-     * Creates Authority list from user's groups, taking into account only admin
-     * role (ROLE_ADMIN)
-     *
-     * @param user user model data
-     * @return list of authority
-     */
-    private List<GrantedAuthority> computeAuthorities(User user) {
-        Set<PermissionEnum> permissionsData = new HashSet<>();
-        user.getGroups().forEach(groupId -> {
-            Optional<Group> group = groupRepository.findById(groupId);
-            group.ifPresent(g -> permissionsData.addAll(g.getPermissions()));
-        });
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        if (permissionsData.contains(PermissionEnum.ADMIN))
-            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
-        if (permissionsData.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS))
-            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
-        if (permissionsData.contains(PermissionEnum.VIEW_USER_ACTION_LOGS))
-            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_VIEW_USER_ACTION_LOGS"));
-
-        return authorities;
-    }
-
-    /**
-     * needed otherwise raised geClaimAsString an NPE
+     * Needed to avoid null pointer exception in case claim is null
      */
     private String extractClaimAsStringOrNull(Jwt jwt, String claim) {
         if (claim == null)
@@ -154,14 +115,27 @@ public class OpfabJwtTokenConverter implements Converter<Jwt, AbstractAuthentica
         return jwt.getClaimAsString(claim);
     }
 
-    /**
-     * Creates group list from a jwt
-     *
-     * @param jwt user's token
-     * @return a group list
-     */
-    public List<String> getGroupsList(Jwt jwt) {
-        return groupsUtils.createGroupsList(jwt);
+    private void enrichUserFromJwt(Jwt jwt, User user) {
+        if (groupsProperties.getMode() == GroupsMode.JWT) {
+            user.setGroups(groupsUtils.createGroupsList(jwt));
+        }
+
+        if (jwtProperties.isGettingEntitiesFromToken()) {
+            user.setEntities(getEntitiesFromToken(jwt));
+        }
+        // User email is always taken from the JWT it is not set via the Opfab user
+        // administration feature.
+        // This may evolve in the future to allow user administration to set the email
+        // via the UI.
+        String email = extractClaimAsStringOrNull(jwt, jwtProperties.getEmailClaim());
+        if (email != null) {
+            user.setEmail(email);
+        }
+
+        if (jwtProperties.isGettingFirstAndLastNameFromToken()) {
+            user.setFirstName(extractClaimAsStringOrNull(jwt, jwtProperties.getGivenNameClaim()));
+            user.setLastName(extractClaimAsStringOrNull(jwt, jwtProperties.getFamilyNameClaim()));
+        }
     }
 
     private List<String> getEntitiesFromToken(Jwt jwt) {
@@ -181,4 +155,36 @@ public class OpfabJwtTokenConverter implements Converter<Jwt, AbstractAuthentica
         else
             return entitiesIdClaim;
     }
+
+    private List<GrantedAuthority> computeAuthorities(User user) {
+        Set<PermissionEnum> permissionsData = collectPermissionsFromGroups(user);
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if (permissionsData.contains(PermissionEnum.ADMIN)) {
+            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+        }
+        if (permissionsData.contains(PermissionEnum.ADMIN_BUSINESS_PROCESS)) {
+            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_ADMIN_BUSINESS_PROCESS"));
+        }
+        if (permissionsData.contains(PermissionEnum.VIEW_USER_ACTION_LOGS)) {
+            authorities.addAll(AuthorityUtils.createAuthorityList("ROLE_VIEW_USER_ACTION_LOGS"));
+        }
+        return authorities;
+    }
+
+    private Set<PermissionEnum> collectPermissionsFromGroups(User user) {
+        Set<PermissionEnum> permissionsData = new HashSet<>();
+        List<String> userGroups = user.getGroups();
+        if (userGroups == null || userGroups.isEmpty()) {
+            return permissionsData;
+        }
+        userGroups.forEach(groupId -> {
+            // No overhead here as groups are cached in CachedGroupRepositoryImpl
+            Optional<Group> group = groupRepository.findById(groupId);
+            group.ifPresent(g -> permissionsData.addAll(g.getPermissions()));
+        });
+        return permissionsData;
+    }
+
 }
