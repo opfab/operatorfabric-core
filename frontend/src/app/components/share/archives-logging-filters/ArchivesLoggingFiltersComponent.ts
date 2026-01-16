@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -220,6 +220,7 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
             this.processMultiSelectOptionsPerProcessGroups
         );
 
+        this.entitiesMultiSelectOptions = [];
         EntitiesService.getEntities().forEach((entity) => {
             this.entitiesMultiSelectOptions.push(new MultiSelectOption(entity.id, entity.name));
         });
