@@ -17,7 +17,7 @@ operatorfabric:
     activeOnStartup: true
     defaultConfig:
       secondsBetweenConnectionChecks: 10
-      host: 'localhost'
+      host: 'greenmail'
       port: 3143
       tls: false
       authTimeout: 5000
