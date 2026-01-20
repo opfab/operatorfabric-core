@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,20 +10,24 @@
 import Config from './config';
 import ConfigDTO from './../client-side/configDTO';
 import {EmailServerInterface} from '../server-side/emailServerInterface';
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
 export default class EmailToCardApplication {
     private readonly emailServer: EmailServerInterface;
     private active = false;
     private readonly config: Config;
+    private readonly opfabInterface: OpfabServicesInterface;
 
     constructor(
         defaultConfig: any,
         configFilePath: string | null,
         emailServer: EmailServerInterface,
+        opfabInterface: OpfabServicesInterface,
         private readonly logger: any
     ) {
         this.config = new Config(defaultConfig, configFilePath, logger);
         this.emailServer = emailServer;
+        this.opfabInterface = opfabInterface;
     }
 
     public patch(update: object): ConfigDTO {
@@ -62,9 +66,33 @@ export default class EmailToCardApplication {
             this.config.getEmailToCardConfig().mailboxes.forEach((mailbox) => {
                 this.emailServer
                     .fetchMailBox(mailbox.mailbox, mailbox.password)
-                    .then((emails) =>
-                        this.logger.info('emails for ' + mailbox.mailbox + ' = ' + JSON.stringify(emails, null, 2))
-                    )
+                    .then(async (emails) => {
+                        for (const email of emails) {
+                            const card = {
+                                publisher: 'opfab',
+                                process: 'api_test',
+                                state: 'messageState',
+                                processVersion: '1',
+                                processInstanceId: 'emailToCardTest',
+                                severity: 'INFORMATION',
+                                summary: {key: 'detail.title'},
+                                title: {key: 'detail.title'},
+                                startDate: 7200000,
+                                data: {
+                                    content: {
+                                        from: email.from,
+                                        to: email.to,
+                                        subject: email.subject,
+                                        body: email.body
+                                    }
+                                },
+                                entityRecipients: ['ENTITY_FR']
+                            };
+
+                            await this.opfabInterface.sendCard(card);
+                            this.logger.info(`Card sent for email ${email.subject}`);
+                        }
+                    })
                     .catch((error) => this.logger.error('error during periodic mailbox check' + error));
             });
         }
