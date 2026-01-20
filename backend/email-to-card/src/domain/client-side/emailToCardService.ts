@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 import ConfigDTO from './configDTO';
 import EmailToCardApplication from '../application/emailToCardApplication';
 import {EmailServerInterface} from '../server-side/emailServerInterface';
+import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
 export default class EmailToCardService {
     private readonly emailToCardApplication: EmailToCardApplication;
@@ -18,9 +19,16 @@ export default class EmailToCardService {
         defaultConfig: any,
         configFilePath: string | null,
         emailServer: EmailServerInterface,
+        opfabInterface: OpfabServicesInterface,
         private readonly logger: any
     ) {
-        this.emailToCardApplication = new EmailToCardApplication(defaultConfig, configFilePath, emailServer, logger);
+        this.emailToCardApplication = new EmailToCardApplication(
+            defaultConfig,
+            configFilePath,
+            emailServer,
+            opfabInterface,
+            logger
+        );
     }
 
     public patch(update: object): ConfigDTO {
