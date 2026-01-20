@@ -349,6 +349,7 @@ describe('Settings view ', () => {
         });
         describe('for another user (admin mode)', () => {
             beforeEach(async () => {
+                await setUserConf();
                 await loadWebUIConf({settings: {}});
                 settingsServerMock = new UserSettingsServerMock();
                 settingsServerMock.setResponseForPatchUserSettings(
@@ -391,8 +392,8 @@ describe('Settings view ', () => {
 
             it('should not save settings in the back end again if no settings have been modified', async () => {
                 await settingsView.saveSettings();
-                settingsView.saveSettings();
-                settingsView.saveSettings();
+                await settingsView.saveSettings();
+                await settingsView.saveSettings();
                 expect(settingsServerMock.numberOfCallsToPatchUserSettings).toBe(1);
             });
         });
