@@ -23,7 +23,7 @@ operatorfabric:
       secondsBetweenConnectionChecks: 10
       user: 'operator1@test.com'
       password: 'a'
-      host: 'localhost'
+      host: 'greenmail'
       port: 3143
       tls: false
       authTimeout: 5000
