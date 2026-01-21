@@ -1,5 +1,5 @@
 import {Card} from 'app/model/Card';
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {resetServices, getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {CardResponseService} from './CardResponseService';
 import {CardsService} from '@ofServices/cards/CardsService';
@@ -68,6 +68,7 @@ describe('Card response service', () => {
     let cardServerMock: CardsServerMock;
 
     beforeEach(async () => {
+        resetServices();
         await initEnitiesService();
         await initProcessService();
         await initUser();

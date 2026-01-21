@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
 
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getOneCard, setUserPerimeter, sendLightCard, setEntities, sendLightCards} from '@tests/helpers';
+import {getOneCard, setUserPerimeter, sendLightCard, setEntities, sendLightCards, resetServices} from '@tests/helpers';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
 import {Entity} from '@ofServices/entities/model/Entity';
@@ -23,6 +23,7 @@ import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
 describe('AcknowledgeService testing ', () => {
     let acknowledgeServerMock: AcknowledgeServerMock;
     beforeEach(async () => {
+        resetServices();
         acknowledgeServerMock = new AcknowledgeServerMock();
         AcknowledgeService.setAcknowledgeServer(acknowledgeServerMock);
 

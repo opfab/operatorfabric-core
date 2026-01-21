@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,23 +12,18 @@ import {ServerResponse, ServerResponseStatus} from 'app/server/ServerResponse';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {firstValueFrom} from 'rxjs';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
-import {NavbarMenu, NavbarMenuElement} from './NavbarPage';
 import {User} from '@ofServices/users/model/User';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {NavbarMenuView} from './NavbarMenuView';
 import {MenuEntryLinkType} from 'app/model/MenuEntryLinkType';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
-import {setUserPerimeter} from '@tests/helpers';
+import {resetServices, setUserPerimeter} from '@tests/helpers';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 
 declare const opfabStyle;
-
-function getNavbarNavigationBar(): NavbarMenuElement[] {
-    return new NavbarMenuView().getNavbarMenu().upperMenuElements;
-}
 
 async function stubMenuConfigLoading(menuConfig: any) {
     const configServerMock = new ConfigServerMock();
@@ -43,13 +38,18 @@ async function stubCurrentUserData(userGroups: string[], permissions: Permission
     await setUserPerimeter(userWithPerimeters);
 }
 
-function getNavbarMenu(): NavbarMenu {
-    return new NavbarMenuView().getNavbarMenu();
-}
-
 describe('NavbarMenuView', () => {
+    let navbarMenuView: NavbarMenuView;
+
     beforeEach(() => {
+        resetServices();
         TranslationService.setTranslationLib(new TranslationLibMock());
+    });
+
+    afterEach(() => {
+        if (navbarMenuView) {
+            navbarMenuView.destroy();
+        }
     });
 
     describe('get core navbar menus', () => {
@@ -57,7 +57,8 @@ describe('NavbarMenuView', () => {
             stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('feed');
             expect(navBarMenuElements[1].id).toEqual('archives');
@@ -67,7 +68,8 @@ describe('NavbarMenuView', () => {
             stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].label).toEqual('Translation (en) of menu.feed');
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of menu.archives');
         });
@@ -76,7 +78,8 @@ describe('NavbarMenuView', () => {
             stubMenuConfigLoading({
                 navigationBar: [{entries: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]}]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('feed');
             expect(navBarMenuElements[0].dropdownMenu[1].id).toEqual('archives');
@@ -88,7 +91,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feed', entries: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]}
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu[0].label).toEqual('Translation (en) of menu.feed');
             expect(navBarMenuElements[0].dropdownMenu[1].label).toEqual('Translation (en) of menu.archives');
         });
@@ -101,7 +105,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].id).toEqual('feed');
         });
@@ -114,7 +119,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('feed');
             expect(navBarMenuElements[1].id).toEqual('archives');
@@ -125,7 +131,8 @@ describe('NavbarMenuView', () => {
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives', showOnlyForGroups: []}]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('feed');
             expect(navBarMenuElements[1].id).toEqual('archives');
@@ -144,7 +151,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu.length).toEqual(1);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('archives');
         });
@@ -161,7 +169,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu.length).toEqual(2);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('feed');
             expect(navBarMenuElements[0].dropdownMenu[1].id).toEqual('archives');
@@ -186,7 +195,8 @@ describe('NavbarMenuView', () => {
                     }
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('customMenu1');
             expect(navBarMenuElements[0].url).toEqual('url1');
@@ -203,7 +213,8 @@ describe('NavbarMenuView', () => {
                     {customMenuId: 'customMenu2', label: 'customMenu2Label_translation_key'}
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].label).toEqual('Translation (en) of customMenu1Label_translation_key');
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of customMenu2Label_translation_key');
         });
@@ -219,7 +230,8 @@ describe('NavbarMenuView', () => {
                     }
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('customMenu1');
             expect(navBarMenuElements[0].dropdownMenu[1].id).toEqual('customMenu2');
@@ -236,7 +248,8 @@ describe('NavbarMenuView', () => {
                     }
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu[0].label).toEqual(
                 'Translation (en) of customMenu1Label_translation_key'
             );
@@ -253,7 +266,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].id).toEqual('customMenu1');
         });
@@ -266,7 +280,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('customMenu1');
             expect(navBarMenuElements[1].id).toEqual('customMenu2');
@@ -285,7 +300,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu.length).toEqual(1);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('customMenu2');
         });
@@ -305,7 +321,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].dropdownMenu.length).toEqual(2);
             expect(navBarMenuElements[0].dropdownMenu[0].id).toEqual('customMenu1');
             expect(navBarMenuElements[0].dropdownMenu[1].id).toEqual('customMenu2');
@@ -322,7 +339,8 @@ describe('NavbarMenuView', () => {
                     {customMenuId: 'customMenu2', label: 'customMenu2Label_translation_key', url: 'url2'}
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(4);
             expect(navBarMenuElements[0].id).toEqual('feed');
             expect(navBarMenuElements[1].id).toEqual('archives');
@@ -343,7 +361,8 @@ describe('NavbarMenuView', () => {
                     }
                 ]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements[0].label).toEqual('Translation (en) of dropdownMenu_translation_key');
         });
 
@@ -351,7 +370,8 @@ describe('NavbarMenuView', () => {
             stubMenuConfigLoading({
                 navigationBar: [{entries: []}, {opfabCoreMenuId: 'feed'}]
             });
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].id).toEqual('feed');
         });
@@ -368,7 +388,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(1);
             expect(navBarMenuElements[0].id).toEqual('feed');
         });
@@ -388,7 +409,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupUserIsMember']);
-            const navBarMenuElements = getNavbarNavigationBar();
+            navbarMenuView = new NavbarMenuView();
+            const navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
             expect(navBarMenuElements.length).toEqual(2);
             expect(navBarMenuElements[0].id).toEqual('archives');
             expect(navBarMenuElements[1].id).toEqual('feed');
@@ -398,7 +420,8 @@ describe('NavbarMenuView', () => {
     describe('Get right icons visibility', () => {
         it('Should have no icons visibility if not  configured in ui-menu config', async () => {
             await stubMenuConfigLoading({navigationBar: []});
-            const navbarPage = getNavbarMenu();
+            navbarMenuView = new NavbarMenuView();
+            const navbarPage = navbarMenuView.getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeFalsy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
@@ -410,7 +433,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'calendar', visible: true}
                 ]
             });
-            const navbarPage = getNavbarMenu();
+            navbarMenuView = new NavbarMenuView();
+            const navbarPage = navbarMenuView.getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeTruthy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeTruthy();
         });
@@ -423,7 +447,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'calendar', visible: false}
                 ]
             });
-            const navbarPage = getNavbarMenu();
+            navbarMenuView = new NavbarMenuView();
+            const navbarPage = navbarMenuView.getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeFalsy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
@@ -436,7 +461,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const navbarPage = getNavbarMenu();
+            navbarMenuView = new NavbarMenuView();
+            const navbarPage = navbarMenuView.getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeFalsy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeFalsy();
         });
@@ -449,7 +475,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const navbarPage = getNavbarMenu();
+            navbarMenuView = new NavbarMenuView();
+            const navbarPage = navbarMenuView.getNavbarMenu();
             expect(navbarPage.isCalendarIconVisible).toBeTruthy();
             expect(navbarPage.isCreateUserCardIconVisible).toBeTruthy();
         });
@@ -457,6 +484,7 @@ describe('NavbarMenuView', () => {
 
     describe('Right menu', () => {
         const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
+        let navbarMenuView: NavbarMenuView;
 
         beforeEach(async () => {
             opfabStyle.setOpfabTheme = () => {};
@@ -464,6 +492,9 @@ describe('NavbarMenuView', () => {
 
         afterEach(() => {
             opfabStyle.setOpfabTheme = originalOpfabStyle_setOpfabTheme;
+            if (navbarMenuView) {
+                navbarMenuView.destroy();
+            }
         });
 
         it('visible if configured in ui-menu config', async () => {
@@ -474,7 +505,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration', visible: true}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].id).toEqual('realtimeusers');
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
@@ -488,7 +520,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration', visible: true}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.realtimeusers');
             expect(rightMenuElements[1].label).toEqual('Translation (en) of menu.feedconfiguration');
@@ -501,7 +534,8 @@ describe('NavbarMenuView', () => {
             });
             GlobalStyleService.init();
             GlobalStyleService.setStyle(GlobalStyleService.NIGHT);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.switchToDayMode');
         });
@@ -513,7 +547,8 @@ describe('NavbarMenuView', () => {
             });
             GlobalStyleService.init();
             GlobalStyleService.setStyle(GlobalStyleService.DAY);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].label).toEqual('Translation (en) of menu.switchToNightMode');
         });
@@ -526,7 +561,8 @@ describe('NavbarMenuView', () => {
                     {opfabCoreMenuId: 'feedconfiguration'}
                 ]
             });
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -543,7 +579,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -560,7 +597,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData(['groupWhereUserIsMember']);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(2);
             expect(rightMenuElements[0].id).toEqual('realtimeusers');
             expect(rightMenuElements[1].id).toEqual('feedconfiguration');
@@ -574,7 +612,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([]);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -588,7 +627,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([], [PermissionEnum.ADMIN]);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(3);
             expect(rightMenuElements[0].id).toEqual('admin');
             expect(rightMenuElements[1].id).toEqual('externaldevicesconfiguration');
@@ -601,7 +641,8 @@ describe('NavbarMenuView', () => {
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
             await stubCurrentUserData([], [PermissionEnum.VIEW_USER_ACTION_LOGS]);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(1);
             expect(rightMenuElements[0].id).toEqual('useractionlogs');
         });
@@ -612,7 +653,8 @@ describe('NavbarMenuView', () => {
                 topRightMenus: [{opfabCoreMenuId: 'useractionlogs', visible: true}]
             });
             await stubCurrentUserData([], []);
-            const rightMenuElements = new NavbarMenuView().getNavbarMenu().rightMenuElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
             expect(rightMenuElements.length).toEqual(0);
         });
 
@@ -635,7 +677,8 @@ describe('NavbarMenuView', () => {
                 ]
             });
             await stubCurrentUserData([], [PermissionEnum.ADMIN]);
-            const rightMenuCollapsedElements = new NavbarMenuView().getNavbarMenu().rightMenuCollapsedElements;
+            navbarMenuView = new NavbarMenuView();
+            const rightMenuCollapsedElements = navbarMenuView.getNavbarMenu().rightMenuCollapsedElements;
             expect(rightMenuCollapsedElements.length).toEqual(4);
             expect(rightMenuCollapsedElements[0].id).toEqual('settings');
             expect(rightMenuCollapsedElements[0].label).toEqual('Translation (en) of menu.settings');

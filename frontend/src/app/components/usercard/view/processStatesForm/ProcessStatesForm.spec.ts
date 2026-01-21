@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {InputFieldName} from '../UserCardModel';
 import {State} from '@ofServices/processes/model/Processes';
-import {getOneCard, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {getOneCard, resetServices, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ProcessStatesForm} from './ProcessStatesForm';
@@ -66,6 +66,10 @@ describe('UserCard ProcessStateForm ', () => {
         processStateForm = new ProcessStatesForm(userCardUIControlMock);
         processStateForm.init(card);
     }
+
+    beforeEach(() => {
+        resetServices();
+    });
 
     describe('Set processes on init ', () => {
         it('Should set process list for multiselect', async () => {

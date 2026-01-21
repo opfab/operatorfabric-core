@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Group} from '@ofServices/groups/model/Group';
-import {takeUntil, tap, map} from 'rxjs/operators';
+import {tap, map} from 'rxjs/operators';
 import {GroupsServer} from './server/GroupsServer';
 import {ServerResponseStatus} from '../../server/ServerResponse';
 import {LoggerService} from 'app/services/logs/LoggerService';
@@ -20,10 +20,12 @@ export class GroupsService {
     private static _groups: Group[];
     private static groupsServer: GroupsServer;
 
-    private static readonly ngUnsubscribe$ = new Subject<void>();
-
     public static setGroupsServer(groupsServer: GroupsServer) {
         GroupsService.groupsServer = groupsServer;
+    }
+
+    public static reset() {
+        GroupsService._groups = [];
     }
 
     public static deleteById(id: string) {
@@ -73,15 +75,12 @@ export class GroupsService {
 
     public static loadAllGroupsData(): Observable<any> {
         return GroupsService.queryAllGroups().pipe(
-            takeUntil(GroupsService.ngUnsubscribe$),
-            tap({
-                next: (groups) => {
-                    if (groups) {
-                        GroupsService._groups = groups;
-                        LoggerService.info('List of groups loaded');
-                    }
-                },
-                error: (error) => LoggerService.error('an error occurred when loading groups' + error)
+            map((groups) => {
+                if (groups) {
+                    GroupsService._groups = groups;
+                    LoggerService.info('List of groups loaded');
+                }
+                return groups;
             })
         );
     }

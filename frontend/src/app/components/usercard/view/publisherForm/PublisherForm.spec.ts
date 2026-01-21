@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,14 @@ import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {PublisherForm} from './PublisherForm';
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {getOneCard, initOpfabAPI, setEntities, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {
+    getOneCard,
+    initOpfabAPI,
+    resetServices,
+    setEntities,
+    setProcessConfiguration,
+    setUserPerimeter
+} from '@tests/helpers';
 import {EditionMode, InputFieldName} from '../UserCardModel';
 import {State} from '@ofServices/processes/model/Processes';
 import {EntitiesTree} from '@ofServices/entities/model/EntitiesTree';
@@ -65,6 +72,7 @@ describe('UserCard PublisherForm', () => {
     let publisherForm: PublisherForm;
 
     beforeAll(async () => {
+        resetServices();
         await setEntitiesConfiguration();
     });
 

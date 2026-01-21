@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,14 @@
  */
 
 import {State} from '@ofServices/processes/model/Processes';
-import {getOneCard, initOpfabAPI, loadWebUIConf, setEntities, setProcessConfiguration} from '@tests/helpers';
+import {
+    getOneCard,
+    initOpfabAPI,
+    loadWebUIConf,
+    resetServices,
+    setEntities,
+    setProcessConfiguration
+} from '@tests/helpers';
 import {RecipientsForm} from './RecipientsForm';
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {Entity} from '@ofServices/entities/model/Entity';
@@ -49,6 +56,7 @@ describe('UserCard RecipientsForm', () => {
     let recipientsForm: RecipientsForm;
     let userCardUIControl: UserCardUIControlMock;
     beforeEach(async () => {
+        resetServices();
         initOpfabAPI();
         await loadWebUIConf({});
         userCardUIControl = new UserCardUIControlMock();

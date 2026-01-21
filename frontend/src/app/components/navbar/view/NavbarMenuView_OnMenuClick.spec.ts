@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025 RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026 RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,7 @@ import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {resetServices} from '@tests/helpers';
 
 declare const opfabStyle;
 
@@ -43,6 +44,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
     let applicationRouterMock: ApplicationRouterMock;
 
     const originalOpfabStyle_setOpfabTheme = opfabStyle.setOpfabTheme;
+    let navbarMenuView: NavbarMenuView;
 
     function clickOnMenu({
         menuId = 'MyMenuId',
@@ -51,9 +53,9 @@ describe('NavbarMenuView - OnMenuClick', () => {
         linkType = MenuEntryLinkType.IFRAME,
         url = '',
         openInNewTab = false
-    }): NavbarMenuView {
+    }) {
         TranslationService.setTranslationLib(translationLib);
-        const navbarMenuView = new NavbarMenuView();
+        navbarMenuView = new NavbarMenuView();
         const navbarMenuElement = new NavbarMenuElement();
         navbarMenuElement.id = menuId;
         navbarMenuElement.isCoreMenu = isCoreMenu;
@@ -61,7 +63,6 @@ describe('NavbarMenuView - OnMenuClick', () => {
         navbarMenuElement.linkType = linkType;
         navbarMenuElement.url = url;
         navbarMenuView.onMenuClick(navbarMenuElement, openInNewTab);
-        return navbarMenuView;
     }
 
     function mockRouter() {
@@ -70,6 +71,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
     }
 
     beforeEach(async () => {
+        resetServices();
         opfabStyle.setOpfabTheme = () => {};
         await stubUiMenuConfigLoading({});
         mockRouter();
@@ -77,6 +79,9 @@ describe('NavbarMenuView - OnMenuClick', () => {
 
     afterEach(() => {
         opfabStyle.setOpfabTheme = originalOpfabStyle_setOpfabTheme;
+        if (navbarMenuView) {
+            navbarMenuView.destroy();
+        }
     });
 
     describe('Click on menu to open inside the application', () => {
@@ -231,7 +236,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'nightdaymode', visible: true}]
             });
-            const navbarMenuView = clickOnMenu({
+            clickOnMenu({
                 menuId: 'nightdaymode',
                 isCoreMenu: true
             });
@@ -245,7 +250,7 @@ describe('NavbarMenuView - OnMenuClick', () => {
                 navigationBar: [],
                 topRightMenus: [{opfabCoreMenuId: 'nightdaymode', visible: true}]
             });
-            const navbarMenuView = clickOnMenu({
+            clickOnMenu({
                 menuId: 'nightdaymode',
                 isCoreMenu: true
             });

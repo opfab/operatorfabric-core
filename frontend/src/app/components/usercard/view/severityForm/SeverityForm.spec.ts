@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {SeverityForm} from './SeverityForm';
-import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, resetServices, setProcessConfiguration} from '@tests/helpers';
 import {State} from '@ofServices/processes/model/Processes';
 import {Severity} from 'app/model/Severity';
 
@@ -30,6 +30,7 @@ describe('UserCard SeverityForm', () => {
     let userCardSeverity: SeverityForm;
     let userCardUIControl: UserCardUIControlMock;
     beforeEach(() => {
+        resetServices();
         userCardUIControl = new UserCardUIControlMock();
         userCardSeverity = new SeverityForm(userCardUIControl);
         initOpfabAPI();

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {map, takeUntil, tap} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {Entity} from './model/Entity';
 import {EntitiesServer} from './server/EntitiesServer';
 import {ServerResponseStatus} from '../../server/ServerResponse';
@@ -21,11 +21,15 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 export class EntitiesService {
     private static _entities: Entity[];
     private static readonly _childEntities: Map<string, Entity[]> = new Map<string, Entity[]>();
-    private static readonly ngUnsubscribe$ = new Subject<void>();
     private static entitiesServer: EntitiesServer;
 
     public static setEntitiesServer(entitiesServer: EntitiesServer) {
         EntitiesService.entitiesServer = entitiesServer;
+    }
+
+    public static reset() {
+        EntitiesService._entities = [];
+        EntitiesService._childEntities.clear();
     }
 
     public static deleteById(id: string) {
@@ -113,16 +117,13 @@ export class EntitiesService {
 
     public static loadAllEntitiesData(): Observable<any> {
         return EntitiesService.queryAllEntities().pipe(
-            takeUntil(EntitiesService.ngUnsubscribe$),
-            tap({
-                next: (entities) => {
-                    if (entities) {
-                        EntitiesService._entities = entities;
-                        EntitiesService._childEntities.clear();
-                        logger.info('List of entities loaded');
-                    }
-                },
-                error: (error) => logger.error('An error occurred when loading entities' + error)
+            map((entities) => {
+                if (entities) {
+                    EntitiesService._entities = entities;
+                    EntitiesService._childEntities.clear();
+                    logger.info('List of entities loaded');
+                }
+                return entities;
             })
         );
     }
@@ -146,11 +147,6 @@ export class EntitiesService {
 
     public static getCachedChildEntities(): Map<string, Entity[]> {
         return EntitiesService._childEntities;
-    }
-
-    public static clearCachedValues() {
-        EntitiesService._entities = [];
-        EntitiesService._childEntities.clear();
     }
 
     public static getEntityName(idEntity: string): string {

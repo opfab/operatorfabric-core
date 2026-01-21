@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService'
 import {
     getModalComponentMock,
     getOneLightCard,
+    resetServices,
     setProcessConfiguration,
     setUserPerimeter,
     waitForAllPromises
@@ -70,6 +71,10 @@ describe('Notification configuration view - User interaction ', () => {
             emailEnabledActivated += 'p:' + processId + ',s:' + stateId + ',v:' + value + ';';
         });
     }
+
+    beforeEach(() => {
+        resetServices();
+    });
 
     describe('manageNotNotifiedStatesWithFilteringNotificationNotAllowed ', () => {
         beforeEach(async () => {

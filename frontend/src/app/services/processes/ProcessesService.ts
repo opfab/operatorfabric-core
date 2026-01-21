@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,14 @@ export class ProcessesService {
 
     public static setProcessServer(processesServer: ProcessesServer) {
         this.processesServer = processesServer;
+    }
+
+    public static reset() {
+        ProcessesService.processesWithLatestVersionOnly = [];
+        ProcessesService.processesWithAllVersions = [];
+        ProcessesService.processesWithAllVersionsCache.clear();
+        ProcessesService.processGroups.clear();
+        ProcessesService.typeOfStatesPerProcessAndState = null;
     }
 
     public static loadAllProcessesWithLatestVersion(): Observable<any> {

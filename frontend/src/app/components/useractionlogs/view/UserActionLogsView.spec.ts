@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,6 +31,7 @@ import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {UserActionLogsService} from '@ofServices/userActionLogs/UserActionLogsService';
+import {resetServices} from '@tests/helpers';
 
 describe('User action logs view ', () => {
     let userActionLogsView: UserActionLogsView;
@@ -42,6 +43,7 @@ describe('User action logs view ', () => {
     const user = new User('login', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
 
     beforeEach(async () => {
+        resetServices();
         ConfigService.setConfigServer(new ConfigServerMock());
         TranslationService.setTranslationLib(new TranslationLibMock());
         cardsServerMock = new CardsServerMock();

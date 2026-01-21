@@ -12,7 +12,7 @@ import {NotificationConfigurationView} from './NotificationConfigurationView';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {ConfigService} from 'app/services/config/ConfigService';
-import {loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {loadWebUIConf, resetServices, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {NotificationConfigurationPage} from './NotificationConfigurationPage';
 import {User} from '@ofServices/users/model/User';
 
@@ -73,6 +73,7 @@ describe('Notification configuration view ', () => {
 
     describe('getNotificationConfigurationPage with no processGroup ', () => {
         beforeAll(async () => {
+            resetServices();
             await setProcessConfiguration(defaultProcesses);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
@@ -136,6 +137,7 @@ describe('Notification configuration view ', () => {
         };
 
         beforeAll(async () => {
+            resetServices();
             await setProcessConfiguration(defaultProcesses, undefined, processGroups);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
@@ -192,6 +194,7 @@ describe('Notification configuration view ', () => {
         };
 
         beforeAll(async () => {
+            resetServices();
             await setProcessConfiguration(defaultProcesses, undefined, processGroups);
             await setDefaultUserPerimeter();
             notificationConfigurationPage = getNotificationConfigurationPage();
@@ -226,6 +229,7 @@ describe('Notification configuration view ', () => {
 
     describe('getNotificationConfigurationPage - process groups, processes and states checkbox status ', () => {
         beforeAll(async () => {
+            resetServices();
             await setProcessConfiguration(
                 [
                     {
@@ -327,6 +331,7 @@ describe('Notification configuration view ', () => {
 
     describe('getNotificationConfigurationPage - email notification enabled values ', () => {
         beforeAll(async () => {
+            resetServices();
             await loadWebUIConf({});
             await setProcessConfiguration([
                 {
@@ -416,6 +421,7 @@ describe('Notification configuration view ', () => {
 
     describe('email user settings', () => {
         it('email configuration should be enabled if email is from user instead of settings', async () => {
+            resetServices();
             await loadWebUIConf({});
             ConfigService.setConfigValue('settings.sendCardsByEmail', true);
             ConfigService.setConfigValue('settings.getEmailFromUserInsteadOfSettings', true);
@@ -440,6 +446,7 @@ describe('Notification configuration view ', () => {
 
     describe('getNotificationConfigurationPage - filtering notification allowed value', () => {
         beforeEach(async () => {
+            resetServices();
             await setProcessConfiguration([
                 {
                     id: 'process1',
@@ -499,6 +506,9 @@ describe('Notification configuration view ', () => {
     });
 
     describe('getNotificationConfigurationPage - isThereProcessStatesToDisplay ', () => {
+        beforeEach(() => {
+            resetServices();
+        });
         it('should return true if there is at least on state available for user ', async () => {
             await setProcessConfiguration(defaultProcesses);
             await setDefaultUserPerimeter();

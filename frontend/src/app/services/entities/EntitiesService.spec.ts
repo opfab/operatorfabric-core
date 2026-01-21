@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,12 +16,13 @@ import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {AngularEntitiesServer} from '@ofServices/entities/server/AngularEntitiesServer';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {resetServices} from '@tests/helpers';
 
 describe('EntitiesService', () => {
     let httpMock: HttpTestingController;
 
     beforeAll(() => {
-        EntitiesService.clearCachedValues();
+        resetServices();
     });
 
     beforeEach(() => {

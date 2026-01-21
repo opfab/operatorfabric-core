@@ -19,7 +19,7 @@ import {UserSettingsServerMock} from '@tests/mocks/UserSettingsServer.mock';
 import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
-import {loadWebUIConf, setUserPerimeter} from '@tests/helpers';
+import {loadWebUIConf, resetServices, setUserPerimeter} from '@tests/helpers';
 
 async function setUserConf() {
     const userWithPerimeters = new UserWithPerimeters(
@@ -38,6 +38,10 @@ async function setUserConf() {
 }
 
 describe('Settings view ', () => {
+    beforeEach(() => {
+        resetServices();
+    });
+
     describe('isSettingsVisible', () => {
         let settingsView: SettingsView;
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {getOneCard, sendLightCards, setEntities, setUserPerimeter} from '@tests/helpers';
+import {getOneCard, resetServices, sendLightCards, setEntities, setUserPerimeter} from '@tests/helpers';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
@@ -17,6 +17,7 @@ import {ButtonActions} from './ButtonActions';
 
 describe('CustomCardListView - Button actions', () => {
     beforeEach(async () => {
+        resetServices();
         CustomScreenService.clearCustomScreenDefinitions();
         await setEntities([
             {

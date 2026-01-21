@@ -27,6 +27,10 @@ export class UserSettingsService {
         });
     }
 
+    public static reset() {
+        UserSettingsService.userId = null;
+    }
+
     public static async loadCurrentUserSettings(): Promise<void> {
         const {status, data} = await firstValueFrom(UserSettingsService.getCurrentUserSettings());
         switch (status) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
-import {getOneLightCard, mockTranslation, setEntities, setProcessConfiguration} from '@tests/helpers';
+import {getOneLightCard, mockTranslation, resetServices, setEntities, setProcessConfiguration} from '@tests/helpers';
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
@@ -28,6 +28,7 @@ describe('CustomScreenView - ResultTable - Export', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();
 
     beforeAll(async () => {
+        resetServices();
         mockTranslation();
         await setEntities([
             {
