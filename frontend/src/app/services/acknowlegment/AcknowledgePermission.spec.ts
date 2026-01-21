@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {AcknowledgePermission} from './AcknowledgePermission';
 import {AcknowledgmentAllowedEnum, Process, Response, State} from '@ofServices/processes/model/Processes';
-import {getOneCard} from '@tests/helpers';
+import {resetServices, getOneCard} from '@tests/helpers';
 import {Card} from 'app/model/Card';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {User} from '@ofServices/users/model/User';
@@ -25,6 +25,7 @@ describe('AcknowledgePermission testing ', () => {
     let statesList: Map<string, State>;
 
     beforeEach(async () => {
+        resetServices();
         userMemberOfEntity1 = new User('userMemberOfEntity1', 'firstName', 'lastName', null, ['group1'], ['ENTITY1']);
         userMemberOfEntity2 = new User('userMemberOfEntity2', 'firstName', 'lastName', null, ['group1'], ['ENTITY2']);
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,6 +22,7 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
 import {TranslationLibMock} from '@tests/mocks/TranslationLib.mock';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
 import {ConfigService} from 'app/services/config/ConfigService';
+import {resetServices} from '@tests/helpers';
 
 describe('Process Monitoring view ', () => {
     let processesServerMock: ProcessesServerMock;
@@ -142,6 +143,10 @@ describe('Process Monitoring view ', () => {
         );
         await firstValueFrom(ProcessesService.loadProcessGroups());
     }
+
+    beforeEach(() => {
+        resetServices();
+    });
 
     describe('get processes', () => {
         it('should return the list of processes that have uiVisibility for monitoring process screen', async () => {

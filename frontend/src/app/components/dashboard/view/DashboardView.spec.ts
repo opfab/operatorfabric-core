@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/Use
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {getOneLightCard, loadWebUIConf, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {getOneLightCard, loadWebUIConf, resetServices, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from 'app/model/Severity';
 import {Utilities} from '../../../utils/Utilities';
@@ -54,6 +54,7 @@ describe('Dashboard', () => {
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
 
     beforeEach(async () => {
+        resetServices();
         opfabEventStreamServerMock = new OpfabEventStreamServerMock();
 
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);

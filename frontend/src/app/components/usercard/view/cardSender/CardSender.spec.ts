@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {getAlertMessageReceiver, getOneCard} from '@tests/helpers';
+import {getAlertMessageReceiver, getOneCard, resetServices} from '@tests/helpers';
 import {CardSender} from './CardSender';
 import {CardsServerMock} from '@tests/mocks/CardsServer.mock';
 import {CardsService} from '@ofServices/cards/CardsService';
@@ -26,6 +26,7 @@ describe('UserCard CardSender', () => {
     let cardSender: CardSender;
     const card = getOneCard();
     beforeEach(() => {
+        resetServices();
         cardsServerMock = new CardsServerMock();
         CardsService.setCardsServer(cardsServerMock);
         cardSender = new CardSender();

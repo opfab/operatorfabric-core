@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,13 +10,14 @@
 import {Entity} from '@ofServices/entities/model/Entity';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {setEntities, setUserPerimeter} from '@tests/helpers';
+import {resetServices, setEntities, setUserPerimeter} from '@tests/helpers';
 import {AcknowledgeUtils} from './AcknowledgeUtils';
 import {User} from '@ofServices/users/model/User';
 
 describe('AcknowledgeUtils testing ', () => {
     describe('getCurrentUserEntitiesAllowedToAcknowledge', () => {
         beforeAll(async () => {
+            resetServices();
             await setEntities([
                 new Entity('ENTITY1', 'ENTITY 1', '', [RoleEnum.CARD_SENDER], null, null),
                 new Entity('ENTITY2', 'ENTITY 2', '', [RoleEnum.CARD_SENDER], null, null),

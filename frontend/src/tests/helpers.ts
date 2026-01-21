@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -42,9 +42,22 @@ import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainSe
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {TranslationLibMock} from './mocks/TranslationLib.mock';
+import {GroupsService} from '@ofServices/groups/GroupsService';
+import {HandlebarsService} from '@ofServices/handlebars/HandlebarsService';
+import {UserSettingsService} from '@ofServices/userSettings/UserSettingsService';
 
 const NB_SECONDS_IN_ONE_MINUTE = 60;
 const NB_MILLIS_IN_ONE_SECOND = 1000;
+
+export function resetServices() {
+    ConfigService.reset();
+    EntitiesService.reset();
+    GroupsService.reset();
+    HandlebarsService.reset();
+    ProcessesService.reset();
+    UsersService.reset();
+    UserSettingsService.reset();
+}
 
 export function getOneLightCard(lightCardTemplate?: any): Card {
     lightCardTemplate = lightCardTemplate ?? {};

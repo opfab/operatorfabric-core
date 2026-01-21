@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {UserCardUIControlMock} from '@tests/userCardView/userCardUIControlMock';
 import {DatesForm} from './DatesForm';
 import {EditionMode, InputFieldName} from '../UserCardModel';
-import {getOneCard, initOpfabAPI, setProcessConfiguration} from '@tests/helpers';
+import {getOneCard, initOpfabAPI, resetServices, setProcessConfiguration} from '@tests/helpers';
 import {State} from '@ofServices/processes/model/Processes';
 import {UserCardTemplateGateway} from '@ofServices/templateGateway/UserCardTemplateGateway';
 
@@ -31,6 +31,7 @@ describe('UserCard DatesForm', () => {
     let userCardUIControlMock: UserCardUIControlMock;
     let datesForm: DatesForm;
     beforeEach(async () => {
+        resetServices();
         userCardUIControlMock = new UserCardUIControlMock();
         datesForm = new DatesForm(userCardUIControlMock);
         initOpfabAPI();

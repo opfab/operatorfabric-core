@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,6 +8,7 @@
  */
 
 import {waitForAsync} from '@angular/core/testing';
+import {resetServices} from '@tests/helpers';
 
 import {ConfigServerMock} from '@tests/mocks/configServer.mock';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -15,6 +16,7 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 
 describe('DateTimeFormatterService', () => {
     beforeEach(waitForAsync(() => {
+        resetServices();
         ConfigService.setConfigServer(new ConfigServerMock());
         DateTimeFormatterService.init();
     }));

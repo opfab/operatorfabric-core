@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable, Subject} from 'rxjs';
+import {Observable} from 'rxjs';
 import {User} from '@ofServices/users/model/User';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
-import {map, takeUntil, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {UsersServer} from './server/UsersServer';
 import {ServerResponse, ServerResponseStatus} from '../../server/ServerResponse';
@@ -21,7 +21,6 @@ import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 
 export class UsersService {
     private static _userWithPerimeters: UserWithPerimeters;
-    private static readonly ngUnsubscribe = new Subject<void>();
     private static _userRightsPerProcessAndState: Map<
         string,
         {rights: RightEnum; filteringNotificationAllowed: boolean}
@@ -31,6 +30,12 @@ export class UsersService {
 
     public static setUsersServer(usersServer: UsersServer) {
         UsersService.usersServer = usersServer;
+    }
+
+    public static reset() {
+        UsersService._userWithPerimeters = null;
+        UsersService._userRightsPerProcessAndState = new Map();
+        UsersService._receiveRightPerProcess.clear();
     }
 
     public static deleteById(login: string) {
@@ -140,17 +145,13 @@ export class UsersService {
 
     public static loadUserWithPerimetersData(): Observable<any> {
         return UsersService.currentUserWithPerimeters().pipe(
-            takeUntil(UsersService.ngUnsubscribe),
-            tap({
-                next: (userWithPerimeters) => {
-                    if (userWithPerimeters) {
-                        UsersService._userWithPerimeters = userWithPerimeters;
-                        logger.info('User perimeter loaded');
-                        UsersService.loadUserRightsPerProcessAndState();
-                    }
-                },
-                error: (error) =>
-                    logger.error(new Date().toISOString() + 'An error occurred when loading perimeter' + error)
+            map((userWithPerimeters) => {
+                if (userWithPerimeters) {
+                    UsersService._userWithPerimeters = userWithPerimeters;
+                    logger.info('User perimeter loaded');
+                    UsersService.loadUserRightsPerProcessAndState();
+                }
+                return userWithPerimeters;
             })
         );
     }
