@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+# Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,8 +13,8 @@ source ${BASH_SOURCE%/*}/load_variables.sh
 
 sdk install java 21.0.7-zulu
 sdk use java 21.0.7-zulu
-nvm install v24.11.1
-nvm use v24.11.1
+nvm install v24.13.0
+nvm use v24.13.0
 echo "Install opfab-cli"
 (
     cd $OF_HOME/cli/src
