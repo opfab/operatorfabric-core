@@ -30,8 +30,10 @@ operatorfabric:
       mailboxes:
         - mailbox: 'operator1@test.com'
           password: 'a'
+          emailToCardConverter: 'emailToCardConverter1'
         - mailbox: 'operator2@test.com'
           password: 'b'
+          emailToCardConverter: 'emailToCardConverter2'
     adminPort: 2109
     activeOnStartup: true
 
