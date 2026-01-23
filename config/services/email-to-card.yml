@@ -11,8 +11,10 @@ operatorfabric:
       mailboxes:
         - mailbox: 'operator1@test.com'
           password: 'a'
+          emailToCardConverter: 'emailToCardConverter1'
         - mailbox: 'operator2@test.com'
           password: 'b'
+          emailToCardConverter: 'emailToCardConverter2'
   logConfig:
     logFolder: /var/log/opfab/
     logFile: "opfab.%DATE%.log"
