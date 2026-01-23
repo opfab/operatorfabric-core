@@ -35,35 +35,48 @@ Feature: EmailToCard
     # Post file with non admin user should fail
     Given url 'http://localhost:2109/upload'
     And header Authorization = 'Bearer ' + authTokenAsTSO
-    And multipart file file = { read: 'resources/convertEmailToCard.js' }
+    And multipart file file = { read: 'resources/emailToCardConverter1.js' }
     When method post
     Then status 403
 
     # Post file with  admin user
     Given url 'http://localhost:2109/upload'
     And header Authorization = 'Bearer ' + authTokenAdmin
-    And multipart file file = { read: 'resources/convertEmailToCard.js' }
+    And multipart file file = { read: 'resources/emailToCardConverter1.js' }
+    When method post
+    Then status 200
+
+    # Post file with  admin user
+    Given url 'http://localhost:2109/upload'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    And multipart file file = { read: 'resources/emailToCardConverter2.js' }
     When method post
     Then status 200
 
 
-  Scenario: Check there is 1 file uploaded
+  Scenario: Check there is 2 files uploaded
     Given url 'http://localhost:2109/list'
     And header Authorization = 'Bearer ' + authTokenAdmin
     When method GET
     Then status 200
-    And assert response.files.length == 1
-    Then match response.files[0] == 'convertEmailToCard.js'
+    And assert response.files.length == 2
+    Then match response.files[0] == 'emailToCardConverter1.js'
+    Then match response.files[1] == 'emailToCardConverter2.js'
 
 
   Scenario: Delete file uploaded
     # Delete file with non admin user should fail
-    Given url 'http://localhost:2109/delete' + '?filename=convertEmailToCard.js'
+    Given url 'http://localhost:2109/delete' + '?filename=emailToCardConverter1.js'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
-    Given url 'http://localhost:2109/delete' + '?filename=convertEmailToCard.js'
+    Given url 'http://localhost:2109/delete' + '?filename=emailToCardConverter1.js'
+    And header Authorization = 'Bearer ' + authTokenAdmin
+    When method delete
+    Then status 200
+
+    Given url 'http://localhost:2109/delete' + '?filename=emailToCardConverter2.js'
     And header Authorization = 'Bearer ' + authTokenAdmin
     When method delete
     Then status 200
