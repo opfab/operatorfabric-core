@@ -11,6 +11,9 @@ import Config from './config';
 import ConfigDTO from './../client-side/configDTO';
 import {EmailServerInterface} from '../server-side/emailServerInterface';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import path from 'node:path';
 
 export default class EmailToCardApplication {
     private readonly emailServer: EmailServerInterface;
@@ -67,33 +70,19 @@ export default class EmailToCardApplication {
                 this.emailServer
                     .fetchMailBox(mailbox.mailbox, mailbox.password)
                     .then(async (emails) => {
-                        for (const email of emails) {
-                            const card = {
-                                publisher: 'opfab',
-                                process: 'api_test',
-                                state: 'messageState',
-                                processVersion: '1',
-                                processInstanceId: 'emailToCardTest',
-                                severity: 'INFORMATION',
-                                summary: {key: 'detail.title'},
-                                title: {key: 'detail.title'},
-                                startDate: 7200000,
-                                data: {
-                                    content: {
-                                        from: email.from,
-                                        to: email.to,
-                                        subject: email.subject,
-                                        body: email.body
-                                    }
-                                },
-                                entityRecipients: ['ENTITY_FR']
-                            };
+                        const filePath = 'config/js/' + mailbox.emailToCardConverter + '.js';
+                        const code = fs.readFileSync(filePath, 'utf8');
+                        const context = vm.createContext();
+                        vm.runInContext(code, context, {filename: path.basename(filePath)});
 
+                        for (const email of emails) {
+                            const card = context.convertEmailToCard(email);
+                            this.logger.info(`Card returned : ${JSON.stringify(card, null, 2)}`);
                             await this.opfabInterface.sendCard(card);
                             this.logger.info(`Card sent for email ${email.subject}`);
                         }
                     })
-                    .catch((error) => this.logger.error('error during periodic mailbox check' + error));
+                    .catch((error) => this.logger.error('error during periodic mailbox check. Error : ' + error));
             });
         }
         setTimeout(() => {
