@@ -91,6 +91,14 @@ Feature: Send card when an email is received
     And status 200
 
 
+  Scenario: Post file converter needed for operator1_fr
+    Given url 'http://localhost:2109/upload'
+    And header Authorization = 'Bearer ' + authTokenAsAdmin
+    And multipart file file = { read: 'resources/emailToCardConverter1.js' }
+    When method post
+    Then status 200
+
+
   Scenario: Sending an email should trigger the sending of a card
     * def mailContent = 'From: test@test.com\nTo: operator1@test.com\nSubject: Test\n\nHello\n'
 
@@ -134,6 +142,13 @@ Feature: Send card when an email is received
 
   Scenario: Delete groupKarateForEmailToCard created previously
     * callonce read('../common/deleteGroup.feature') { groupId: '#(groupKarateForEmailToCard.id)', token: '#(authTokenAsAdmin)'}
+
+
+  Scenario: Delete file converter previously uploaded
+    Given url 'http://localhost:2109/delete' + '?filename=emailToCardConverter1.js'
+    And header Authorization = 'Bearer ' + authTokenAsAdmin
+    When method delete
+    Then status 200
 
 
   Scenario: Purge all emails from GreenMail
