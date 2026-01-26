@@ -121,4 +121,40 @@ export default class CardsExternalDiffusionDatabaseService {
         }
         return cards;
     }
+
+    public async getCard(cardUid: string): Promise<any> {
+        let card: any = undefined;
+
+        try {
+            card = await this.mongoDB.collection('cards').findOne(
+                {uid: cardUid},
+                {
+                    projection: {
+                        id: '$_id',
+                        uid: 1,
+                        processVersion: 1,
+                        process: 1,
+                        state: 1,
+                        titleTranslated: 1,
+                        summaryTranslated: 1,
+                        publishDate: 1,
+                        usersReads: 1,
+                        startDate: 1,
+                        endDate: 1,
+                        userRecipients: 1,
+                        groupRecipients: 1,
+                        entityRecipients: 1,
+                        publisher: 1,
+                        publisherType: 1,
+                        severity: 1,
+                        data: 1,
+                        _id: 0
+                    }
+                }
+            );
+        } catch (error) {
+            this.logger.error('Mongo error finding card' + JSON.stringify(error));
+        }
+        return card;
+    }
 }

@@ -16,6 +16,7 @@ import CardsExternalDiffusionDatabaseService from '../domain/server-side/cardsEx
 import BusinessConfigOpfabServicesInterface from '../domain/server-side/BusinessConfigOpfabServicesInterface';
 import {format} from 'date-fns';
 import {LightCard} from '../domain/application/lightCard';
+import {Card} from '../domain/application/card';
 
 export class OpfabServicesInterfaceStub extends CardsExternalDiffusionOpfabServicesInterface {
     public isResponseValid = true;
@@ -77,7 +78,7 @@ export class SendMailServiceStub extends SendMailService {
 
 export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
     sent: any[] = [];
-    cards = new Array<LightCard>();
+    cards = new Array<Card>();
 
     public async getCards(publishDate: number): Promise<LightCard[]> {
         return this.cards
@@ -101,6 +102,35 @@ export class DatabaseServiceStub extends CardsExternalDiffusionDatabaseService {
                 publisherType: card.publisherType,
                 severity: card.severity
             }));
+    }
+
+    public async getCard(cardUid: string): Promise<any> {
+        const card = this.cards.find((c) => c.uid === cardUid);
+
+        if (!card) {
+            return null;
+        }
+
+        return {
+            id: card.id,
+            uid: card.uid,
+            processVersion: card.processVersion,
+            process: card.process,
+            state: card.state,
+            titleTranslated: card.titleTranslated,
+            summaryTranslated: card.summaryTranslated,
+            publishDate: card.publishDate,
+            usersReads: card.usersReads,
+            startDate: card.startDate,
+            endDate: card.endDate,
+            userRecipients: card.userRecipients,
+            groupRecipients: card.groupRecipients,
+            entityRecipients: card.entityRecipients,
+            publisher: card.publisher,
+            publisherType: card.publisherType,
+            severity: card.severity,
+            data: card.data
+        };
     }
 
     public async getSentMail(cardUid: string, email: string): Promise<any> {
