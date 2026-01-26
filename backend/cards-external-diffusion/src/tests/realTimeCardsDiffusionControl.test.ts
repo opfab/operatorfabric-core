@@ -81,21 +81,21 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));
@@ -138,21 +138,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}} {{config.customParam1}}';
 
@@ -196,21 +196,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}} {{config.customParam1}}';
 
@@ -256,22 +256,22 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '8101',
-            id: 'defaultProcess.process1',
-            publisher: 'ENTITY2',
-            publisherType: 'ENTITY',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '8101',
+                id: 'defaultProcess.process1',
+                publisher: 'ENTITY2',
+                publisherType: 'ENTITY',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -313,21 +313,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -340,6 +340,7 @@ describe('Cards external diffusion', function () {
                 '</a> <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
         );
     });
+
     it('Body of email should take into account timezone for formated date', async function () {
         const publishDate = Date.now();
         setup();
@@ -369,24 +370,24 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            data: {
-                myDate: 1760554800000 // 2025-10-15 19:00 GMT --> 15:00 in New York
-            },
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                data: {
+                    myDate: 1760554800000 // 2025-10-15 19:00 GMT --> 15:00 in New York
+                },
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template =
             'mydate={{ dateFormat card.data.myDate format="yyyy-MM-dd HH:mm" }}';
@@ -427,21 +428,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -483,21 +484,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = 'card template';
 
@@ -541,21 +542,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -596,21 +597,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -652,21 +653,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -710,21 +711,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -767,21 +768,21 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -824,24 +825,24 @@ describe('Cards external diffusion', function () {
             }
         };
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1 & <br>',
-            summaryTranslated: '" Summary1 <br>',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            data: {
-                mailTitle: 'Mail title defined in the data field of the card'
-            },
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1 & <br>',
+                summaryTranslated: '" Summary1 <br>',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                data: {
+                    mailTitle: 'Mail title defined in the data field of the card'
+                },
+                processVersion: '1'
+            }
+        ];
 
         opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}}';
 
@@ -867,21 +868,21 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1002',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1002',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));
@@ -1061,21 +1062,21 @@ describe('Cards external diffusion', function () {
                 computedPerimeters: perimeters
             }
         ];
-        opfabServicesInterfaceStub.card = {
-            uid: '1007',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1007',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));
@@ -1158,21 +1159,21 @@ describe('Cards external diffusion', function () {
                 computedPerimeters: perimeters
             }
         ];
-        opfabServicesInterfaceStub.card = {
-            uid: '2007',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '2007',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter().setLimitPeriodInSec(30).setSendRateLimit(1);
         realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
