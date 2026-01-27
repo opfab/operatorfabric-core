@@ -81,21 +81,21 @@ describe('Cards external diffusion', function () {
             }
         ];
 
-        opfabServicesInterfaceStub.card = {
-            uid: '1001',
-            id: 'defaultProcess.process1',
-            publisher: 'publisher1',
-            publishDate,
-            startDate: publishDate,
-            titleTranslated: 'Title1',
-            summaryTranslated: 'Summary1',
-            process: 'defaultProcess',
-            state: 'processState',
-            entityRecipients: ['ENTITY1'],
-            processVersion: '1'
-        };
-
-        databaseServiceStub.cards = [opfabServicesInterfaceStub.card];
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
 
         await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
         await new Promise((resolve) => setTimeout(resolve, 1));
