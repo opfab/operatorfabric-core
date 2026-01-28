@@ -83,7 +83,11 @@ export default class EmailToCardApplication {
                                         from: email.from,
                                         to: email.to,
                                         subject: email.subject,
-                                        body: email.body
+                                        body: email.body,
+                                        attachments: email.attachments.map((att) => ({
+                                            filename: att.filename,
+                                            content: att.content
+                                        }))
                                     }
                                 },
                                 entityRecipients: ['ENTITY_FR']

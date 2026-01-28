@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,11 @@
 
 import {EmailServerInterface} from './emailServerInterface';
 import {Email} from '../application/email';
-import imaps from 'imap-simple';
-import {simpleParser} from 'mailparser';
+import imaps, {ImapSimpleOptions} from 'imap-simple';
+import {AddressObject, simpleParser} from 'mailparser';
 import {EmailServerConfig} from './emailServerConfig';
+
+const MAX_ATTACHMENT_TEXT_SIZE_BYTES = 100_000; // 100 KB
 
 export default class EmailServer implements EmailServerInterface {
     private logger: any;
@@ -30,7 +32,7 @@ export default class EmailServer implements EmailServerInterface {
     public async fetchMailBox(login: string, password: string): Promise<Email[]> {
         this.logger.info('Checking mailbox...');
 
-        const options = {
+        const options: ImapSimpleOptions = {
             imap: {
                 user: login,
                 password: password,
@@ -40,6 +42,7 @@ export default class EmailServer implements EmailServerInterface {
                 authTimeout: this.emailServerConfig.authTimeout ?? 5000
             }
         };
+
         const emails: Email[] = [];
         let connection;
 
@@ -49,26 +52,38 @@ export default class EmailServer implements EmailServerInterface {
 
             const searchCriteria = ['UNSEEN'];
             const fetchOptions = {
-                bodies: ['HEADER', 'TEXT'],
+                bodies: [''],
                 markSeen: true
             };
 
             const messages = await connection.search(searchCriteria, fetchOptions);
 
             for (const msg of messages) {
-                const headerPart = msg.parts.find((p: any) => p.which === 'HEADER');
-                const bodyPart = msg.parts.find((p: any) => p.which === 'TEXT');
+                const rawPart = msg.parts.find((p: any) => p.which === '');
+                if (!rawPart) continue;
 
-                if (!bodyPart) continue;
+                const parsed = await simpleParser(rawPart.body);
 
-                const fullEmail = headerPart?.body + '\r\n' + bodyPart.body;
-                const parsed = await simpleParser(fullEmail);
+                const attachments: {filename: string; content: string}[] = [];
+                if (parsed.attachments?.length) {
+                    for (const att of parsed.attachments) {
+                        if (att.contentType === 'text/plain' && att.content.length <= MAX_ATTACHMENT_TEXT_SIZE_BYTES) {
+                            attachments.push({
+                                filename: att.filename ?? 'attachment.txt',
+                                content: att.content.toString('utf-8')
+                            });
+                        } else if (att.content.length > MAX_ATTACHMENT_TEXT_SIZE_BYTES) {
+                            this.logger.warn(`Attachment ${att.filename} ignored (size=${att.content.length} bytes)`);
+                        }
+                    }
+                }
 
                 const email = new Email(
-                    headerPart?.body.from[0],
-                    headerPart?.body.to ?? [],
-                    headerPart?.body.subject[0],
-                    parsed.text?.trim() || '<empty>'
+                    this.formatAddress(parsed.from),
+                    [this.formatAddress(parsed.to)],
+                    parsed.subject ?? '<no subject>',
+                    parsed.text?.trim() || '<empty>',
+                    attachments
                 );
 
                 emails.push(email);
@@ -85,6 +100,17 @@ export default class EmailServer implements EmailServerInterface {
                 }
             }
         }
+
         return emails;
+    }
+
+    private formatAddress(addr: AddressObject | AddressObject[] | undefined): string {
+        if (!addr) return '<unknown>';
+
+        if (Array.isArray(addr)) {
+            return addr.flatMap((a) => a.value.map((v) => v.address)).join(', ');
+        }
+
+        return addr.value.map((v) => v.address).join(', ');
     }
 }

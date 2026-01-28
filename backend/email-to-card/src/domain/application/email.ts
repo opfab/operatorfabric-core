@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,25 @@ export class Email {
     to: string[];
     subject: string | undefined;
     body: string;
+    attachments: {
+        filename: string;
+        content: string;
+    }[];
 
-    constructor(from: string | undefined, to: string[], subject: string | undefined, body: string) {
+    constructor(
+        from: string | undefined,
+        to: string[],
+        subject: string | undefined,
+        body: string,
+        attachments: {
+            filename: string;
+            content: string;
+        }[] = []
+    ) {
         this.from = from;
         this.to = to;
         this.subject = subject;
         this.body = body;
+        this.attachments = attachments;
     }
 }
