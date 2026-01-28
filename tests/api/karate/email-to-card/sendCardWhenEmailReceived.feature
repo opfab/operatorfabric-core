@@ -100,7 +100,36 @@ Feature: Send card when an email is received
 
 
   Scenario: Sending an email should trigger the sending of a card
-    * def mailContent = 'From: test@test.com\nTo: operator1@test.com\nSubject: Test\n\nHello\n'
+    * def mailContent =
+      """
+'From: test@test.com\n' +
+'To: operator1@test.com\n' +
+'Subject: Test\n' +
+'MIME-Version: 1.0\n' +
+'Content-Type: multipart/mixed; boundary="boundary123"\n\n' +
+
+'--boundary123\n' +
+'Content-Type: text/plain; charset="utf-8"\n\n' +
+
+'Hello,\n' +
+'please find attachment.\n\n' +
+
+'--boundary123\n' +
+'Content-Type: text/plain; charset="utf-8"\n' +
+'Content-Disposition: attachment; filename="first-attachment.txt"\n\n' +
+
+'This is the content of the first attachment.\n' +
+'Line 2 of first attachment.\n\n' +
+
+'--boundary123\n' +
+'Content-Type: text/plain; charset="utf-8"\n' +
+'Content-Disposition: attachment; filename="second-attachment.txt"\n\n' +
+
+'This is the content of the second attachment.\n' +
+'Line 2 of second attachment.\n\n' +
+
+'--boundary123--\n'
+      """
 
     # Write the email to a file and get the absolute path
     * def emailFile = karate.write(mailContent, 'tempEmail.txt')
@@ -110,16 +139,24 @@ Feature: Send card when an email is received
     # Delete the temporary email file
     * karate.exec('rm -f ' + emailFile)
 
+
     * configure retry = { count: 20, interval: 1000 }
-    Given url opfabUrl + 'cards-consultation/cards'
+    Given url opfabUrl + 'cards-consultation/cards/api_test.emailToCardTest'
     And header Authorization = 'Bearer ' + authToken
-    And request filter
-    And retry until responseStatus == 200  && response.numberOfElements == 1
-    Then method post
-    And match response.content[0].processInstanceId == "emailToCardTest"
-    And match response.content[0].process == "api_test"
-    And match response.content[0].state == "messageState"
-    And def publishedCard = response.content[0]
+    And retry until responseStatus == 200
+    When method get
+    Then status 200
+    And match response.card.processInstanceId == 'emailToCardTest'
+    And match response.card.process == 'api_test'
+    And match response.card.state == 'messageState'
+    And match response.card.data.content.from == 'test@test.com'
+    And match response.card.data.content.to[0] == 'operator1@test.com'
+    And match response.card.data.content.subject == 'Test'
+    And match response.card.data.content.body == 'Hello,\nplease find attachment.'
+    And match response.card.data.content.attachments[0].filename == 'first-attachment.txt'
+    And match response.card.data.content.attachments[0].content == 'This is the content of the first attachment.\nLine 2 of first attachment.\n'
+    And match response.card.data.content.attachments[1].filename == 'second-attachment.txt'
+    And match response.card.data.content.attachments[1].content == 'This is the content of the second attachment.\nLine 2 of second attachment.\n'
 
 
   Scenario: Delete card
