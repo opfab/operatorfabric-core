@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  *  See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ import {ArchivedCardDetailComponent} from '../archives/components/archived-card-
 import {OpfabTitleCasePipe} from '../share/pipes/OpfabTitleCasePipe';
 import {MultiSelectConfig, MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
+import {DateRangePicker} from '../../utils/DateRangePicker';
 
 @Component({
     selector: 'of-useractionlogs',
@@ -84,8 +84,8 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
     selectedCard: Card;
     selectedChildCards: Card[];
 
-    readonly locale = DateRangePickerConfig.getLocale();
-    readonly ranges = DateRangePickerConfig.getCustomRanges();
+    readonly locale = DateRangePicker.getLocale();
+    readonly ranges = DateRangePicker.getCustomRanges();
 
     constructor() {
         this.userActionLogsView = new UserActionLogsView();
@@ -114,10 +114,13 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
 
         const startOfDay = new Date(initDate);
         startOfDay.setHours(0, 0, 0, 0);
+        const endOfDay = new Date(initDate);
+        endOfDay.setDate(endOfDay.getDate() + 10);
+        endOfDay.setHours(23, 59, 59, 999);
 
         this.userActionLogsForm.controls.dateRange?.setValue({
             startDate: startOfDay,
-            endDate: null
+            endDate: endOfDay
         });
     }
 
@@ -173,8 +176,9 @@ export class UserActionLogsComponent implements OnInit, OnDestroy {
         const actions = this.userActionLogsForm.get('action').value;
 
         const dates = this.userActionLogsForm.get('dateRange').value as {startDate: string; endDate: string};
-        const startDate = Date.parse(dates.startDate);
-        const endDate = Date.parse(dates.endDate);
+
+        const startDate = DateRangePicker.convertNgxDateRangePickerDateToEpochDate(dates.startDate);
+        const endDate = DateRangePicker.convertNgxDateRangePickerDateToEpochDate(dates.endDate);
 
         this.userActionLogsView.setSelectedLogins(logins);
         this.userActionLogsView.setSelectedActions(actions);

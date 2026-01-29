@@ -50,7 +50,7 @@ import {
 import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {DateRangePickerConfig} from '../../utils/DateRangePickerConfig';
+import {DateRangePicker} from '../../utils/DateRangePicker';
 
 @Component({
     selector: 'of-processmonitoring',
@@ -217,8 +217,8 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             }
         });
 
-        this.locale = DateRangePickerConfig.getLocale();
-        this.ranges = DateRangePickerConfig.getCustomRanges();
+        this.locale = DateRangePicker.getLocale();
+        this.ranges = DateRangePicker.getCustomRanges();
     }
 
     isThereProcessStateToDisplay(): boolean {
@@ -484,8 +484,12 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
             if (key !== 'processGroup' && element) {
                 if (key === 'activeDateRange') {
                     if (element?.startDate && element?.endDate) {
-                        this.filters.set('activeFrom', [Date.parse(element.startDate)]);
-                        this.filters.set('activeTo', [Date.parse(element.endDate)]);
+                        this.filters.set('activeFrom', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.startDate)
+                        ]);
+                        this.filters.set('activeTo', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.endDate)
+                        ]);
                     }
                 } else if (key === 'process') {
                     this.processFilterToMap(element);

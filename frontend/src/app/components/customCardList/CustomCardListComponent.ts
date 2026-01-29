@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import {
     provideGlobalGridOptions,
     RowSelectionOptions
 } from 'ag-grid-community';
-import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
+import {DateRangePicker} from 'app/utils/DateRangePicker';
 import {ExcelExport} from 'app/utils/ExcelExport';
 import {CustomCardListView} from 'app/components/customCardList/view/CustomCardListView';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
@@ -172,8 +172,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
         provideGlobalGridOptions({theme: 'legacy'});
-        this.dateRangePickerLocale = DateRangePickerConfig.getLocale();
-        this.dateRangePickerCustomRanges = DateRangePickerConfig.getCustomRanges();
+        this.dateRangePickerLocale = DateRangePicker.getLocale();
+        this.dateRangePickerCustomRanges = DateRangePicker.getCustomRanges();
     }
 
     ngOnInit(): void {
@@ -360,8 +360,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     sendQuery() {
         const businessDates = this.headerForm.get('businessDateRanges').value as {startDate: Date; endDate: Date};
-        const startDate = Date.parse(businessDates.startDate?.toISOString());
-        const endDate = Date.parse(businessDates.endDate?.toISOString());
+        const startDate = DateRangePicker.convertNgxDateRangePickerDateToEpochDate(businessDates.startDate);
+        const endDate = DateRangePicker.convertNgxDateRangePickerDateToEpochDate(businessDates.endDate);
         const filterValues = new FilterValues();
         filterValues.startDate = startDate;
         filterValues.endDate = endDate;
