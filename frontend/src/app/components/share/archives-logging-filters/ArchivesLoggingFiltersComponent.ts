@@ -36,7 +36,7 @@ import {TranslateModule} from '@ngx-translate/core';
 
 import {MultiSelectComponent} from '../multi-select/MultiSelectComponent';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
-import {DateRangePickerConfig} from 'app/utils/DateRangePickerConfig';
+import {DateRangePicker} from 'app/utils/DateRangePicker';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 
 @Component({
@@ -150,8 +150,8 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
                 this.hasCurrentUserRightsToViewAllArchivedCardsInHisPerimeters) &&
             seeOnlyCardsForWhichUserIsRecipientInStorage === 'false';
 
-        this.locale = DateRangePickerConfig.getLocale();
-        this.ranges = DateRangePickerConfig.getCustomRanges();
+        this.locale = DateRangePicker.getLocale();
+        this.ranges = DateRangePicker.getCustomRanges();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -269,14 +269,22 @@ export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDes
                     break;
                 case 'publishDateRange':
                     if (element?.startDate && element?.endDate) {
-                        this.filters.set('publishDateFrom', [Date.parse(element.startDate.toISOString())]);
-                        this.filters.set('publishDateTo', [Date.parse(element.endDate.toISOString())]);
+                        this.filters.set('publishDateFrom', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.startDate)
+                        ]);
+                        this.filters.set('publishDateTo', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.endDate)
+                        ]);
                     }
                     break;
                 case 'activeDateRange':
                     if (element?.startDate && element?.endDate) {
-                        this.filters.set('activeFrom', [Date.parse(element.startDate.toISOString())]);
-                        this.filters.set('activeTo', [Date.parse(element.endDate.toISOString())]);
+                        this.filters.set('activeFrom', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.startDate)
+                        ]);
+                        this.filters.set('activeTo', [
+                            DateRangePicker.convertNgxDateRangePickerDateToEpochDate(element.endDate)
+                        ]);
                     }
                     break;
                 default:

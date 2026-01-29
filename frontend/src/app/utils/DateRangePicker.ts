@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {startOfWeek, sub} from 'date-fns';
 
 type DateRanges = {[key: string]: [Date | number, Date | number]};
 
-export class DateRangePickerConfig {
+export class DateRangePicker {
     public static getLocale() {
         return {
             format: 'YYYY-MM-DD HH:mm',
@@ -26,8 +26,8 @@ export class DateRangePickerConfig {
 
     public static getCustomRanges(): DateRanges {
         if (ConfigService.getConfigValue('dateRangePickerConfig', 'default') === 'ahead')
-            return DateRangePickerConfig.getAheadRanges();
-        return DateRangePickerConfig.getDefaultCustomRanges();
+            return DateRangePicker.getAheadRanges();
+        return DateRangePicker.getDefaultCustomRanges();
     }
 
     private static getDefaultCustomRanges(): DateRanges {
@@ -110,5 +110,33 @@ export class DateRangePickerConfig {
             ['M-1']: [startNextMonth, endCurrentYearForNextMonth],
             ['Y-1']: [startNextYear, endNextYear]
         };
+    }
+
+    /**
+     * Workaround for ngx-daterangepicker-material timezone issue.
+     * See https://github.com/fetrarij/ngx-daterangepicker-material/issues/547
+     *
+     * When the user selects a date in the date range picker component, it is considered that the user is selecting a date in UTC
+     * but in practice the user is selecting a date in their local time zone.
+     **/
+    public static convertNgxDateRangePickerDateToEpochDate(ngxDate: any): number | null {
+        if (!ngxDate) {
+            return null;
+        }
+
+        // If the method isUTC is not defined, it means that the component has not modified the date
+        // and the date object is the initial JS Date object with correct timezone and not an ngx date object
+        if (ngxDate.isUTC === undefined) {
+            return Date.parse(ngxDate);
+        }
+
+        const ngxDateString = ngxDate.toISOString();
+        const year = ngxDateString.substring(0, 4);
+        const month = ngxDateString.substring(5, 7);
+        const day = ngxDateString.substring(8, 10);
+        const hours = ngxDateString.substring(11, 13);
+        const minutes = ngxDateString.substring(14, 16);
+        const dateInCurrentLocal = new Date(year, month - 1, day, hours, minutes);
+        return dateInCurrentLocal.valueOf();
     }
 }
