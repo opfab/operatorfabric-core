@@ -91,7 +91,7 @@
             "businessData": {
                 "deleteBusinessData": "Het is niet mogelijk om de zakelijke gegevens te verwijderen",
                 "gettingBusinessData" : "Het is niet mogelijk om zakelijke gegevens op te halen",
-                "updateBusinessData": "Het is niet mogelijk om de zakelijke gegevens bij te werken"
+                "updateBusinessData": "Het is niet mogelijk om de zakelijke gegevens bij te werken : {{reason}}"
             },
             "entity": {
                 "deleteEntity": "Het is niet mogelijk om de entiteit te verwijderen",
