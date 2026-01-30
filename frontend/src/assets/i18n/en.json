@@ -91,7 +91,7 @@
             "businessData": {
                 "deleteBusinessData": "Impossible to delete business data",
                 "gettingBusinessData" : "Impossible to get business data",
-                "updateBusinessData": "Impossible to update business data"
+                "updateBusinessData": "Impossible to update business data : {{reason}}"
             },
             "entity": {
                 "deleteEntity": "Impossible to delete entity",

@@ -91,7 +91,7 @@
             "businessData": {
                 "deleteBusinessData": "Impossible de supprimer les données métier",
                 "gettingBusinessData" : "Impossible de récupérer les données métier",
-                "updateBusinessData": "Impossible de mettre à jour les données métier"
+                "updateBusinessData": "Impossible de mettre à jour les données métier : {{reason}}"
             },
             "entity": {
                 "deleteEntity": "Impossible de supprimer l'entité",
