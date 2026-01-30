@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ const groupCommands = {
                     'users/groups',
                     'POST',
                     JSON.stringify(group),
-                    `group ${group.id} created or udpated successfully`,
+                    `group ${group.id} created or updated successfully`,
                     `Failed to create or update group ${group.id}`,
                     `Failed to create or update group ${group.id} , not found error`
                 );

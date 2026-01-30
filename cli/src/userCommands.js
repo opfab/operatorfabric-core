@@ -216,8 +216,8 @@ const userCommands = {
                 'users/users',
                 'POST',
                 JSON.stringify(user),
-                `User ${user.login} created or udpated successfully`,
-                `Failed to create or udpate user ${user.login}`,
+                `User ${user.login} created or updated successfully`,
+                `Failed to create or update user ${user.login}`,
                 `Failed to create or update user ${user.login} , not found error`
             );
         }
@@ -247,7 +247,7 @@ const userCommands = {
             if (index !== -1) {
                 entitiesDisconnected.splice(index, 1);
             }
-        } else if (index == -1) {
+        } else if (index === -1) {
             entitiesDisconnected.push(entity);
         }
         await utils.sendRequest(

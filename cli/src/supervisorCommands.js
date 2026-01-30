@@ -83,7 +83,7 @@ const supervisorCommands = {
 
         if (entityToSupervise) {
             const index = entityToSupervise.supervisors?.indexOf(supervisingEntity);
-            if (index == -1) {
+            if (index === -1) {
                 entityToSupervise.supervisors.push(supervisingEntity);
             }
         } else {
