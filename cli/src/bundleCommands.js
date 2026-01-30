@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -75,14 +75,15 @@ const bundleCommand = {
                         await utils.sendFile('businessconfig/processes', gzippedBundle, false);
                         console.log(`Bundle ${bundleDirectory} loaded`);
                     } catch (error) {
-                        console.log(`Bundle ${bundleDirectory} not loaded: ${error}`);
+                        console.error(`Bundle ${bundleDirectory} not loaded: ${error.message}`);
+                        process.exitCode = 1;
                     }
                 } else {
-                    console.log(`Error: ${bundleDirectory} is not a directory`);
+                    console.error(`Error: ${bundleDirectory} is not a directory`);
+                    process.exitCode = 1;
                 }
             } catch (error) {
-                console.log(`Error reading directory ${bundleDirectory}: ${error}`);
-                return;
+                utils.logError(`Error reading directory ${bundleDirectory}`, error, true);
             } finally {
                 if (gzippedBundle) await fs.unlink(gzippedBundle);
             }

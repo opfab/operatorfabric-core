@@ -11,6 +11,7 @@ const config = require('./configCommands.js');
 const prompts = require('prompts');
 const fs = require('node:fs').promises;
 const JSON5 = require('json5');
+const utils = require('./utils');
 
 const cardCommands = {
 
@@ -74,10 +75,8 @@ const cardCommands = {
         let fileContent;
         try {
             fileContent = await fs.readFile(cardFile, 'utf8');
-        }
-        catch (error) {
-            console.error('Failed to read card file', cardFile);
-            console.error('Error:', error);
+        } catch (error) {
+            utils.logError(`Failed to read card file ${cardFile}`, error, true);
             return;
         }
         let card = this.prepareCard(fileContent, cardCustomization);
@@ -93,23 +92,21 @@ const cardCommands = {
             }
         };
 
-        let response;
         try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to send card');
-            console.error('Error:', error);
-            return;
-        }
+            const response = await fetch(url, options);
 
-        if (response.ok) {
-            console.log('\x1b[32m%s\x1b[0m', 'Card sent successfully');
-            const result = await response.json();
-            console.error(result);
-        }
-        else {
-            console.error('Failed to send card');
-            console.error(`Server response : ${await response.text()} \n`);
+            if (response.ok) {
+                console.log('\x1b[32m%s\x1b[0m', 'Card sent successfully');
+                const result = await response.json();
+                console.log(result);
+            } else {
+                const errorMsg = await utils.handleApiError(response);
+                console.error('Failed to send card');
+                console.error(`Server response: ${errorMsg}`);
+                process.exitCode = 1;
+            }
+        } catch (error) {
+            utils.logError('Failed to send card', error, true);
         }
     },
 
@@ -138,26 +135,22 @@ const cardCommands = {
             }
         };
 
-        let response;
         try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to delete card');
-            console.error('Error:', error);
-            return;
-        }
+            const response = await fetch(url, options);
 
-        switch (response.status) {
-            case 200:
+            if (response.ok) {
                 console.info(`Card with id ${cardId} deleted successfully`);
-                return;
-            case 404:
+            } else if (response.status === 404) {
                 console.error(`Card with id ${cardId} not found`);
-                return;
-            default:
+                process.exitCode = 1;
+            } else {
+                const errorMsg = await utils.handleApiError(response);
                 console.error('Failed to delete card');
-                console.error('Response:', response);
-                return;
+                console.error(`Server response: ${errorMsg}`);
+                process.exitCode = 1;
+            }
+        } catch (error) {
+            utils.logError('Failed to delete card', error, true);
         }
     },
 
@@ -172,21 +165,19 @@ const cardCommands = {
             }
         };
 
-        let response;
         try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to reset rate limiter');
-            console.error('Error:', error);
-            return;
-        }
+            const response = await fetch(url, options);
 
-        if (response.ok) {
-            console.error('Rate limiter reset');
-        }
-        else {
-            console.error('Failed to reset rate limiter');
-            console.error('Response:', response);
+            if (response.ok) {
+                console.log('Rate limiter reset successfully');
+            } else {
+                const errorMsg = await utils.handleApiError(response);
+                console.error('Failed to reset rate limiter');
+                console.error(`Server response: ${errorMsg}`);
+                process.exitCode = 1;
+            }
+        } catch (error) {
+            utils.logError('Failed to reset rate limiter', error, true);
         }
     },
 

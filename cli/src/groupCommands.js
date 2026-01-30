@@ -75,8 +75,7 @@ const groupCommands = {
                 );
             }
         } catch (error) {
-            console.log(`Error reading groups file ${groupsFile}: ${error}`);
-            return;
+            utils.logError(`Error reading groups file ${groupsFile}`, error, true);
         }
 
     },
