@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -73,7 +73,7 @@ We find here the business component seen before:
 	** internationalization information
  
  
-Business components are based on https://spring.io/projects/spring-boot[SpringBoot] or https://nodejs.or[Node.js] and are packaged via https://www.docker.com/[Docker]. 
+Business components are based on https://spring.io/projects/spring-boot[SpringBoot] or https://nodejs.org[Node.js] and are packaged via https://www.docker.com/[Docker]. 
 
 https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux] is used to provide the card in a fluid way.
 

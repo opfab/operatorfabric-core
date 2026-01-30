@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -57,7 +57,7 @@ Start date of the active period of the card (process business time).
 
 ==== Severity (`severity`)
 
-The severity is a core principe of the OperatorFabric Card system. There are 4 severities available.
+The severity is a core principle of the OperatorFabric Card system. There are 4 severities available.
 A color is associated in the GUI to each severity. Here the details about severity and their meaning for OperatorFabric:
 
 1. ALARM: represents a critical state of the associated process, need an action from the operator. In the UI, the card is red;
@@ -68,7 +68,7 @@ A color is associated in the GUI to each severity. Here the details about severi
 [[card_title]]
 ==== Title (`title`)
 
-This attribute is display as header of a card in the feed of the GUI. It's the main User destined Information of a card. The value refer to an `i18n` value used to localize this information.
+This attribute is display as header of a card in the feed of the GUI. It's the main User intended Information of a card. The value refer to an `i18n` value used to localize this information.
 
 [[card_summary]]
 ==== Summary (`summary`)
@@ -194,9 +194,9 @@ State id of the associated process, determined by `OperatorFabric` can be set ar
 
 Indicates when the card has been registered in `OperatorFabric` system. This is technical information exclusively managed by `OperatorFabric`.
 
-== User destined Information of the card
+== User intended Information of the card
 
-There are two kind of User destined information in a card. Some are restricted to the card format, others are defined by the publisher as long as there are encoded in `json` format. 
+There are two kind of User intended information in a card. Some are restricted to the card format, others are defined by the publisher as long as there are encoded in `json` format.
 
 === in Card Format
 
