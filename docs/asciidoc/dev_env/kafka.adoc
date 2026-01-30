@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2024 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -42,7 +42,7 @@ To disable Kafka support you need to comment the `kafka.*` properties in the `ca
 == Configuration
 
 The default topic from which the messages are consumed is called `opfab`. This setting can be modified by setting `opfab.kafka.card.topics.topicname`. Messages are encoded in the `CardCommand.card` field.
-The default topic to which messages are produced is called `opfab-response`. This setting can be modified by setting the `opfab.kafka.topics.response-card`, see below. Messages produced by Operator Fabric are encoded in the `CardCommand.responseCard` field
+The default topic to which messages are produced is called `opfab-response`. This setting can be modified by setting the `opfab.kafka.topics.response-card`, see below. Messages produced by OperatorFabric are encoded in the `CardCommand.responseCard` field.
 
 By default Opfab use the provided `KafkaAvroWithoutRegistrySerializer` and
 `KafkaAvroWithoutRegistryDeserializer`, so no schema registry setting is needed.
@@ -103,8 +103,8 @@ present in a REST operation but not in Kafka. For example the http method (POST,
 By default, OperatorFabric uses the provided `org.opfab.cards.publication.kafka.consumer.KafkaAvroWithoutRegistryDeserializer` from link:{confluent}[Confluent]. However, you can use a standard deserializer `io.confluent.kafka.serializers.KafkaAvroSerializer` from link:{confluent}[Confluent] or write your own deserializer. To use your own deserializer, make sure `spring.deserializer.value.delegate.class` points to your deserializer.
 
 === Configuring a broker
-When you have a broker running on localhost port 9092, you do not need to set the bootstrap severs. If this is not the case, you need tell
-Operator Fabric where the broker can be found. You can do so by setting the bootstrap-servers property in the `cards-publication.yml` file:
+When you have a broker running on localhost port 9092, you do not need to set the bootstrap severs. If this is not the case, you need to tell
+OperatorFabric where the broker can be found. You can do so by setting the bootstrap-servers property in the `cards-publication.yml` file:
 [source, yaml]
 ----
 spring:

@@ -37,7 +37,7 @@ See link:{mongo_doc}connection-string/[mongo connection string] for the complete
 
 This configuration is mandatory (no default configuration is provided).
 
-Operator Fabric is supporting mongo version 5.0.0 and above.
+OperatorFabric is supporting mongo version 5.0.0 and above.
 
 ==== RabbitMQ
 
@@ -168,7 +168,7 @@ See link:{spring_kafka_doc}[Spring for Apache Kafka] for more information on the
 
 With the default settings, the Kafka consumer expects a broker running on http//127.0.0.1:9092 and a schema registry on http://127.0.0.1:8081.
 
-Operator Fabric is also able to publish response cards to a Kafka topic. The default topic name  `opfab-response`. You can specify which response cards
+OperatorFabric is also able to publish response cards to a Kafka topic. The default topic name  `opfab-response`. You can specify which response cards
 are to be returned via Kafka by setting the `external-recipients` in the `cards-publication` yaml file. Instead of setting `http://` URL you should set it to `kafka:`
 
 [source, yaml]

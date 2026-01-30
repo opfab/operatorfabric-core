@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -66,7 +66,7 @@ To launch the Docker CLI using the config file, execute `opfabDockerCli.sh` with
 
 == Monitoring
 
-Operator Fabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :
+OperatorFabric provides end points for monitoring via link:https://prometheus.io/[prometheus]. The monitoring is available for the five following services: user, businessconfig, cards-consultation, cards-publication and external-devices.  To enable the monitoring , you need to open the endpoint by adding in the common yml configuration file :
 
 ```
 management:
@@ -100,7 +100,7 @@ For the web-ui service's logs are in the /var/log/nginx directory. You can map t
 === Runtime configuration 
 
 
-Operator Fabric includes the ability to view and configure the log levels at runtime through APIs for most of the business services. It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. 
+OperatorFabric includes the ability to view and configure the log levels at runtime through APIs for most of the business services. It is possible to configure and view an individual logger configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework. 
 
 
 Querying and setting logging levels is restricted to administrators.

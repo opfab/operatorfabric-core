@@ -1,4 +1,4 @@
-// Copyright (c) 2022 RTE (http://www.rte-france.com)
+// Copyright (c) 2022-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -16,8 +16,8 @@ The feature to manage timeline inside opfab has been removed. In consequence, yo
 
 == Kafka card format changes
 
-The Kafka message schema has been changed. The single card used to send messages to and receive from Operator Fabric
-has been split into two cards; one for sending to OpFab and one for receiving messages from OpFab. The CardCommand structure now contains a `card`  (to OpFab) and a `responseCard` (from OpFab).
+The Kafka message schema has been changed. The single card used to send messages to and receive from OperatorFabric
+has been split into two cards; one for sending to OpFab and one for receiving messages from OpFab. The CardCommand structure now contains a `card` (to OpFab) and a `responseCard` (from OpFab).
 You will need to change the Kafka listener to get the response card.
 
 For example change
