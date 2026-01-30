@@ -28,6 +28,7 @@ const entity = require('./entityCommands');
 const group = require('./groupCommands');
 const externalDevice = require('./externalDeviceCommands.js');
 const reminder = require('./reminderCommands');
+const utils = require('./utils.js');
 
 const commands = {
     async processCommand(args) {
@@ -137,8 +138,7 @@ const commands = {
             await fs.promises.access(commandsFile, fs.promises.constants.F_OK);
             this.executeCommands(commandsFile);
         } catch (error) {
-            console.log(`Error reading commands file ${commandsFile}: ${error}`);
-            return;
+            utils.logError(`Error reading commands file ${commandsFile}`, error, true);
         }
     },
 

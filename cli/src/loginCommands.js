@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,6 +10,7 @@
 const config = require('./configCommands.js');
 const prompts = require('prompts');
 const JSON5 = require('json5');
+const utils = require('./utils.js');
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -140,43 +141,45 @@ const loginCommands = {
             }
         };
 
-        let response;
         try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to log in');
-            console.error('Error:', error);
-            return;
-        }
+            const response = await fetch(url, options);
 
-        if (!response.ok) {
-            if (response.status === 401) {
-                console.error('Invalid username or password');
+            if (!response.ok) {
+                if (response.status === 401) {
+                    console.error('Invalid username or password');
+                } else {
+                    const errorMsg = await utils.handleApiError(response);
+                    console.error('Failed to log in');
+                    console.error(`Server response: ${errorMsg}`);
+                }
+                process.exitCode = 1;
                 return;
             }
-            console.error('Failed to log in');
-            console.error('Response:', response);
-            return;
-        }
-        const responseData = await response.json(); // Parse the response body as JSON
 
-        if (!responseData.access_token) {
-            console.error('Failed to log in');
-            console.error('Response data:', responseData);
-            return;
+            const responseData = await response.json();
+
+            if (!responseData.access_token) {
+                console.error('Failed to log in: No access token in response');
+                process.exitCode = 1;
+                return;
+            }
+
+            config.setConfig('access_token', responseData.access_token);
+            config.setConfig('token_expiration', this.getExpirationDate(responseData.access_token));
+            config.setConfig('login', this.login);
+            config.setConfig('url', this.url);
+            config.setConfig('port', this.port);
+            console.log(`Logged in with user ${this.login} on ${this.url}:${this.port}`);
+
+        } catch (error) {
+            utils.logError('Failed to log in', error, true);
         }
-        config.setConfig('access_token', responseData.access_token);
-        config.setConfig('token_expiration', this.getExpirationDate(responseData.access_token));
-        config.setConfig('login', this.login);
-        config.setConfig('url', this.url);
-        config.setConfig('port', this.port);
-        console.log(`Logged in with user ${this.login} on ${this.url}:${this.port}`);
     },
 
     getExpirationDate(token) {
         const payload = token.split('.')[1];
         const decodedPayload = Buffer.from(payload, 'base64').toString('utf8');
-        const {exp} = JSON5.parse(decodedPayload);
+        const { exp } = JSON5.parse(decodedPayload);
         return exp * 1000; // to have it in ms since epoch
     },
 

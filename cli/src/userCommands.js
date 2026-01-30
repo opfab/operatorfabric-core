@@ -305,20 +305,19 @@ const userCommands = {
             }
         };
 
-        let response;
         try {
-            response = await fetch(url, options);
-        } catch (error) {
-            console.error('Failed to configure process/state notification for ' + process + ' / ' + state);
-            console.error('Error:', error);
-            return;
-        }
+            const response = await fetch(url, options);
 
-        if (response.ok) {
-            console.error('Success');
-        } else {
-            console.error('Failed to configure process/state notification for ' + process + '/' + state);
-            console.error('Response:', response);
+            if (response.ok) {
+                console.log('Process/state notification configured successfully');
+            } else {
+                const errorMsg = await utils.handleApiError(response);
+                console.error(`Failed to configure process/state notification for ${process}/${state}`);
+                console.error(`Server response: ${errorMsg}`);
+                process.exitCode = 1;
+            }
+        } catch (error) {
+            utils.logError(`Failed to configure process/state notification for ${process}/${state}`, error, true);
         }
     },
 
