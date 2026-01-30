@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,7 +69,7 @@ const entityCommands = {
                 'POST',
                 JSON.stringify(entity),
                 `Entity ${entity.id} created successfully`,
-                `Failed to create or udpate entity ${entity.id}`,
+                `Failed to create or update entity ${entity.id}`,
                 `Failed to create or update entity ${entity.id} , not found error`
             );
         }
