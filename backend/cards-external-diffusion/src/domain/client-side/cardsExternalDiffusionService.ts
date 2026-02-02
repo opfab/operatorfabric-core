@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -79,7 +79,14 @@ export default class CardsExternalDiffusionService {
             .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false)
             .setShowCardTitleInBody(serviceConfig.showCardTitleInBody ?? true);
 
-        if (serviceConfig.activateCardsDiffusionRateLimiter != null) {
+        if (serviceConfig.activateCardsDiffusionRateLimiter) {
+            this.logger.info(
+                'Activating cards diffusion rate limiter with send rate limit of ' +
+                    serviceConfig.sendRateLimit +
+                    ' mails per recipients per ' +
+                    serviceConfig.sendRateLimitPeriodInSec +
+                    ' seconds'
+            );
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
                 .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec as number)
                 .setSendRateLimit(serviceConfig.sendRateLimit as number);
