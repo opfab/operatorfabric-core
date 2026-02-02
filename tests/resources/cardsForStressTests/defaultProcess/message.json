@@ -18,7 +18,8 @@
 	"endDate" : 28800000 ,
 	"summary" : {"key" : "message.summary"},
 	"title" : {"key" : "message.title"},
-	"data" : {"richMessage":" Information card number 1"},
+	"data" : {
+        "richMessage": "{\"ops\":[{\"insert\":\"France-England's interconnection is 100% operational / Result of the maintenance is <OK>\\n\"}]}"},
 	"timeSpans" : [
 		{"start" :7200000},
 		{"start" : 28800000}
