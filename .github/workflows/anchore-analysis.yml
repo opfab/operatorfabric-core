@@ -1,10 +1,9 @@
-
 name: Anchore Container Scan
 
 on:
   schedule:
     # launch analysis every day on develop (shall be launch after snapshot build)
-    - cron:  '0 1 * * *'
+    - cron: "0 1 * * *"
   workflow_dispatch:
 
 permissions:
@@ -13,119 +12,119 @@ permissions:
 jobs:
   Anchore-Build-Scan:
     permissions:
-      contents: read  # for actions/checkout to fetch code
-      security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-    - name: Pull docker images 
-      run: | 
-        docker pull lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-cards-publication-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-users-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-businessconfig-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-external-devices-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT
-        docker pull lfeoperatorfabric/of-cards-reminder:SNAPSHOT
-        docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
-        docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
-    - name: Analyse card consultation
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-cards-consultation
-      with:
-        image: "lfeoperatorfabric/of-cards-consultation-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for cards-consultation
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-cards-consultation.outputs.sarif }}
-        category: consultation
-    - name: Analyse card publication 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-cards-publication
-      with:
-        image: "lfeoperatorfabric/of-cards-publication-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for cards-publication
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-cards-publication.outputs.sarif }}
-        category: publication
-    - name: Analyse users 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-users
-      with:
-        image: "lfeoperatorfabric/of-users-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for users
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-users.outputs.sarif }}
-        category: users
-    - name: Analyse businessConfig 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-businessconfig
-      with:
-        image: "lfeoperatorfabric/of-businessconfig-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for businessConfig
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-businessconfig.outputs.sarif }}
-        category: businessconfig
-    - name: Analyse external-devices 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-external-devices
-      with:
-        image: "lfeoperatorfabric/of-external-devices-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for external devices
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-external-devices.outputs.sarif }}
-        category: external-devices
-    - name: Analyse web-ui
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-web-ui
-      with:
-        image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for web-ui
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
-        category: web-ui
-    - name: Analyse external-diffusion
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-cards-external-diffusion
-      with:
-        image: "lfeoperatorfabric/of-cards-external-diffusion-service:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for external-diffusion
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-cards-external-diffusion.outputs.sarif }}
-        category: external-diffusion
-    - name: Analyse cards reminder 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-cards-reminder
-      with:
-        image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for cards-reminder
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-cards-reminder.outputs.sarif }}
-        category: cards-reminder
-    - name: Analyse supervisor 
-      uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
-      id: scan-supervisor
-      with:
-        image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
-        fail-build: false
-    - name: Upload Anchore Scan Report for supervisor
-      uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
-      with:
-        sarif_file: ${{ steps.scan-supervisor.outputs.sarif }}
-        category: supervisor
+      - name: Checkout the code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Pull docker images
+        run: |
+          docker pull lfeoperatorfabric/of-cards-consultation:SNAPSHOT
+          docker pull lfeoperatorfabric/of-cards-publication:SNAPSHOT
+          docker pull lfeoperatorfabric/of-users:SNAPSHOT
+          docker pull lfeoperatorfabric/of-businessconfig:SNAPSHOT
+          docker pull lfeoperatorfabric/of-external-devices:SNAPSHOT
+          docker pull lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT
+          docker pull lfeoperatorfabric/of-cards-reminder:SNAPSHOT
+          docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
+          docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
+      - name: Analyse card consultation
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-cards-consultation
+        with:
+          image: "lfeoperatorfabric/of-cards-consultation:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for cards-consultation
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-cards-consultation.outputs.sarif }}
+          category: consultation
+      - name: Analyse card publication
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-cards-publication
+        with:
+          image: "lfeoperatorfabric/of-cards-publication:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for cards-publication
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-cards-publication.outputs.sarif }}
+          category: publication
+      - name: Analyse users
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-users
+        with:
+          image: "lfeoperatorfabric/of-users:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for users
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-users.outputs.sarif }}
+          category: users
+      - name: Analyse businessConfig
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-businessconfig
+        with:
+          image: "lfeoperatorfabric/of-businessconfig:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for businessConfig
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-businessconfig.outputs.sarif }}
+          category: businessconfig
+      - name: Analyse external-devices
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-external-devices
+        with:
+          image: "lfeoperatorfabric/of-external-devices:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for external devices
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-external-devices.outputs.sarif }}
+          category: external-devices
+      - name: Analyse web-ui
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-web-ui
+        with:
+          image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for web-ui
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
+          category: web-ui
+      - name: Analyse external-diffusion
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-cards-external-diffusion
+        with:
+          image: "lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for external-diffusion
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-cards-external-diffusion.outputs.sarif }}
+          category: external-diffusion
+      - name: Analyse cards reminder
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-cards-reminder
+        with:
+          image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for cards-reminder
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-cards-reminder.outputs.sarif }}
+          category: cards-reminder
+      - name: Analyse supervisor
+        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175 # v7.3.1
+        id: scan-supervisor
+        with:
+          image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
+          fail-build: false
+      - name: Upload Anchore Scan Report for supervisor
+        uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
+        with:
+          sarif_file: ${{ steps.scan-supervisor.outputs.sarif }}
+          category: supervisor
