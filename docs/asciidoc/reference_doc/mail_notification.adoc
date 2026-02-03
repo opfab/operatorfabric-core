@@ -63,10 +63,10 @@ Ensure to encapsulate the expression within three curly braces to prevent HTML e
 
 
 It is also possible to configure custom parameters to be used in handlebars email templates.
-The custom parameter can be added in cards-external-diffusion configuration under the "defaultConfig.customConfig" section:
+The custom parameter can be added in email-gateway configuration under the "defaultConfig.customConfig" section:
 
 ```
-cardsExternalDiffusion:
+emailGateway:
     adminPort: 2106
     activeOnStartup: true
     defaultConfig:
@@ -147,10 +147,10 @@ helpers = [example_severityColor];
 ```
 Each helper will be registered with the same name as the helper function. To avoid conflicts with existing helpers, it is recommended to prefix your helper names (for example: `myapp_xxx`).
 
-Reference this file in the YAML configuration of the `cards-external-diffusion` service using the `customHandlebarsHelpersFile` parameter:
+Reference this file in the YAML configuration of the `email-gateway` service using the `customHandlebarsHelpersFile` parameter:
 
 ```
-cardsExternalDiffusion:
+emailGateway:
     adminPort: 2106
     customHandlebarsHelpersFile: /path/to/the/file/containing/helpers.js
 ```

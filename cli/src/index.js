@@ -90,7 +90,7 @@ omelette('opfab')
                 'cards-publication': ['#EMPTY_COMPLETION'],
                 'external-devices': ['#EMPTY_COMPLETION'],
                 supervisor: ['#EMPTY_COMPLETION'],
-                'cards-external-diffusion': ['#EMPTY_COMPLETION'],
+                'email-gateway': ['#EMPTY_COMPLETION'],
                 'cards-reminder': ['#EMPTY_COMPLETION']
             },
             'set-level': {
@@ -100,7 +100,7 @@ omelette('opfab')
                 'cards-publication': levels,
                 'external-devices': levels,
                 supervisor: levels,
-                'cards-external-diffusion': levels,
+                'email-gateway': levels,
                 'cards-reminder': levels
             }
         },

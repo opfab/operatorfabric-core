@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -21,7 +21,7 @@
 |2103 |users |Users management service http (REST)
 |2104 |cards-consultation |Cards consultation service http (REST)
 |2105 |external-devices |External devices management service http (REST)
-|2106 |cards-external-diffusion|Mail notification service http (REST)
+|2106 |email-gateway|Mail gateway service http (REST)
 |2107 |cards-reminder|Cards reminder service http (REST)
 |2108 |supervisor |Supervisor service http (REST)
 |27017 |mongo |Mongo api port

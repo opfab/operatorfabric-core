@@ -157,9 +157,9 @@ services:
       - "./web-ui/externalJs:/usr/share/nginx/html/externalJs"
       - "./web-ui/externalCss:/usr/share/nginx/html/externalCss"
       - "../tests/externalWebAppExample:/usr/share/nginx/html/external/appExample"
-  cards-external-diffusion:
-    container_name: cards-external-diffusion
-    image: "lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT"
+  email-gateway:
+    container_name: email-gateway
+    image: "lfeoperatorfabric/of-email-gateway:SNAPSHOT"
     user: ${USER_ID}:${USER_GID}
     ports:
       - "2106:2106"
@@ -167,7 +167,7 @@ services:
       - TZ=Europe/Paris
       - NODE_ENV=base,common,docker
     volumes:
-      - "./services/cards-external-diffusion.yml:/usr/app/config/docker.yml"
+      - "./services/email-gateway.yml:/usr/app/config/docker.yml"
       - "./services/common.yml:/usr/app/config/common.yml"
       - "./services/customHandlebarsHelpersExample.js:/usr/app/config/customHandlebarsHelpersExample.js"
   cards-reminder:

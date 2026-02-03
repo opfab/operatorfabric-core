@@ -1,0 +1,119 @@
+// Copyright (c) 2025-2026 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.11.X to release 4.12.0
+
+== Service renamed: cards-external-diffusion to email-gateway
+
+The `cards-external-diffusion` service has been renamed to `email-gateway` to better reflect its purpose as an email gateway for card notifications. This change affects multiple aspects of your deployment.
+
+=== Docker image name
+
+The Docker image name has changed:
+
+* `of-cards-external-diffusion` is now `of-email-gateway`
+
+Update your docker-compose.yml file accordingly
+
+
+=== Configuration file name
+
+The service configuration file has been renamed:
+
+* `cards-external-diffusion.yml` is now `email-gateway.yml`
+
+Update your volume mount in docker-compose.yml:
+
+Replace
+----
+    volumes:
+      - "./services/cards-external-diffusion.yml:/usr/app/config/docker.yml"
+----
+
+With
+
+----
+    volumes:
+      - "./services/email-gateway.yml:/usr/app/config/docker.yml"
+----
+
+=== Configuration parameters
+
+All configuration parameters have been renamed from `cardsExternalDiffusion` to `emailGateway`:
+
+Replace
+----
+operatorfabric:
+  cardsExternalDiffusion:
+    adminPort: 2106
+    activeOnStartup: true
+    customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      # ... other config
+----
+
+With
+
+----
+operatorfabric:
+  emailGateway:
+    adminPort: 2106
+    activeOnStartup: true
+    customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      # ... other config
+----
+
+=== MongoDB collection name
+
+The MongoDB collection name has changed:
+
+* `cardsExternalDiffusion-mailsAlreadySent` is now `emailGateway-emailsAlreadySent`. This collection stores records of emails that have already been sent to prevent duplicate notifications. To avoid sending duplicate emails, you should rename the collection in your MongoDB database after stopping Opfab and before starting the new version:
+
+----
+db["cardsExternalDiffusion-mailsAlreadySent"].renameCollection("emailGateway-emailsAlreadySent")
+----
+
+Alternatively, you can delete the existing collection after migration (the new collection will be created automatically):
+
+----
+db["cardsExternalDiffusion-mailsAlreadySent"].drop()
+----
+
+=== Nginx proxy configuration
+
+If you have custom nginx proxy configuration referencing the service, update the location path:
+
+Replace
+----
+  location /cards-external-diffusion/ {
+    proxy_set_header Host $http_host;
+    proxy_pass http://cards-external-diffusion:2106/;
+  }
+----
+
+With
+
+----
+  location /email-gateway/ {
+    proxy_set_header Host $http_host;
+    proxy_pass http://email-gateway:2106/;
+  }
+----
+
+=== CLI and scripts
+
+If you use the OperatorFabric CLI to manage logs or other operations, the service name has changed:
+
+* Use `email-gateway` instead of `cards-external-diffusion` in CLI commands
+
+For example:
+----
+./opfab logs email-gateway
+----
