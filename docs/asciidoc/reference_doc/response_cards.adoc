@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -111,9 +111,20 @@ that have already responded or not, and a countdown indicating the time remainin
 is displayed neither in the feed notification configuration screen nor in archives screen filters.
 
 
-
 NOTE: The state to be used for the response can also be set dynamically based on the contents of the card or the
 response by returning it in the method registered by `opfab.currentCard.registerFunctionToGetUserResponse` (see below for details).
+
+
+[NOTE]
+====
+There is also the possibility to replace the "validate answer" and  "modify answer" default button labels in the config.json of the process: 
+....
+  "questionState": {
+    "validateAnswerButtonLabel": "Submit your answer",
+    "modifyAnswerButtonLabel": "Change your answer"
+....
+====
+
 
 === Design the question form in the template
 
