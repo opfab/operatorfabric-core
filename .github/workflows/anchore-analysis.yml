@@ -25,7 +25,7 @@ jobs:
           docker pull lfeoperatorfabric/of-users:SNAPSHOT
           docker pull lfeoperatorfabric/of-businessconfig:SNAPSHOT
           docker pull lfeoperatorfabric/of-external-devices:SNAPSHOT
-          docker pull lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT
+          docker pull lfeoperatorfabric/of-email-gateway:SNAPSHOT
           docker pull lfeoperatorfabric/of-cards-reminder:SNAPSHOT
           docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
           docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
@@ -95,17 +95,17 @@ jobs:
         with:
           sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
           category: web-ui
-      - name: Analyse external-diffusion
+      - name: Analyse email-gateway
         uses: anchore/scan-action@7037fa011853d5a11690026fb85feee79f4c946c # v7.3.2
-        id: scan-cards-external-diffusion
+        id: scan-email-gateway
         with:
-          image: "lfeoperatorfabric/of-cards-external-diffusion:SNAPSHOT"
+          image: "lfeoperatorfabric/of-email-gateway:SNAPSHOT"
           fail-build: false
-      - name: Upload Anchore Scan Report for external-diffusion
+      - name: Upload Anchore Scan Report for email-gateway
         uses: github/codeql-action/upload-sarif@6bc82e05fd0ea64601dd4b465378bbcf57de0314 # v4.32.1
         with:
-          sarif_file: ${{ steps.scan-cards-external-diffusion.outputs.sarif }}
-          category: external-diffusion
+          sarif_file: ${{ steps.scan-email-gateway.outputs.sarif }}
+          category: email-gateway
       - name: Analyse cards reminder
         uses: anchore/scan-action@7037fa011853d5a11690026fb85feee79f4c946c # v7.3.2
         id: scan-cards-reminder

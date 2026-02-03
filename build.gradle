@@ -90,7 +90,7 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization" , "opfab"
         property "sonar.projectKey" , "org.lfenergy.operatorfabric:operatorfabric-core"
-        property 'sonar.sources', 'frontend,backend/cards-external-diffusion,backend/cards-reminder,backend/supervisor,backend/common,cli'
+        property 'sonar.sources', 'frontend,backend/email-gateway,backend/cards-reminder,backend/supervisor,backend/common,cli'
         property 'sonar.junit.reportPaths','build/test-results/test'
         property 'sonar.coverage.jacoco.xmlReportPaths','build/reports/jacoco/xml/report.xml'
         property 'sonar.javascript.lcov.reportPaths','frontend/reports/coverage/lcov.info,backend/**/coverage/lcov.info'
@@ -197,7 +197,7 @@ sonar {
 // All builds should be done before sonar analysis
 tasks.named('sonar') {
     dependsOn 'frontend:runBuild'
-    dependsOn 'backend:cards-external-diffusion:test'
+    dependsOn 'backend:email-gateway:test'
     dependsOn 'backend:cards-reminder:test'
     dependsOn 'backend:supervisor:test'
     dependsOn 'backend:node-common:test'
