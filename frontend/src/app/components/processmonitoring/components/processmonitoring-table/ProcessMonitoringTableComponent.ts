@@ -265,7 +265,7 @@ export class ProcessmonitoringTableComponent {
                     this.columnDefs.push({
                         type: 'summaryColumn',
                         headerName: column.colName,
-                        field: column.field,
+                        field: column.field === 'entityRecipients' ? 'entityRecipientsNames' : column.field,
                         headerClass: 'opfab-ag-cheader-with-left-and-right-padding',
                         cellClass: 'opfab-ag-cell-with-left-padding',
                         resizable: true,
