@@ -545,6 +545,19 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
         card.processName = this.processNames.get(card.process);
         card.stateColor = this.stateColors.get(card.process + '.' + card.state);
         card.severityNumber = this.mapSeverity.get(card.severity.toLocaleLowerCase());
+        card.entityRecipientsNames = this.getEntityRecipientsNames(card.entityRecipients);
+    }
+
+    private getEntityRecipientsNames(entityRecipients: string[]): string[] {
+        if (entityRecipients) {
+            const entityRecipientsNames = [];
+
+            entityRecipients.forEach((entityId) => {
+                entityRecipientsNames.push(EntitiesService.getEntityName(entityId));
+            });
+            return entityRecipientsNames;
+        }
+        return [];
     }
 
     search() {
@@ -631,7 +644,12 @@ export class ProcessMonitoringComponent implements OnDestroy, OnInit, AfterViewI
 
         const fieldKey = fieldDef.field;
         if (!fieldKey) return;
-        const fieldValue = this.getNestedValue(card, fieldKey);
+
+        const fieldValue =
+            fieldKey === 'entityRecipients'
+                ? this.getNestedValue(card, 'entityRecipientsNames')
+                : this.getNestedValue(card, fieldKey);
+
         lineForExport[fieldDef.colName] = this.formatValue(fieldDef.type, fieldValue);
     }
 

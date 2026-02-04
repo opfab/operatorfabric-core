@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -65,7 +65,7 @@ describe('Monitoring processus screen tests', function () {
             2,
             3,
             'have.text',
-            'ENTITY1_FR, ENTITY2_FR, ENTITY3_FR'
+            'Control Center FR North,Control Center FR South,Control Center FR East'
         );
 
         // No card detail is displayed
@@ -149,7 +149,7 @@ describe('Monitoring processus screen tests', function () {
             2,
             3,
             'have.text',
-            'ENTITY1_FR, ENTITY2_FR, ENTITY3_FR'
+            'Control Center FR North,Control Center FR South,Control Center FR East'
         );
 
         // The user selects only "Conference and IT incident" process, so we should see 4 columns and only 1 card
@@ -159,7 +159,7 @@ describe('Monitoring processus screen tests', function () {
         agGrid.countTableRows('#opfab-processmonitoring-table-grid', 1);
 
         agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 2, 'have.text', 'Conference Call ☏');
-        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 3, 'have.text', 'IT_SUPERVISOR_ENTITY');
+        agGrid.cellShould('#opfab-processmonitoring-table-grid', 0, 3, 'have.text', 'IT SUPERVISION CENTER');
 
         // The user selects only "Message or question" process, so we should see 4 columns and only 1 card (the last
         // column is not displayed in default conf)
@@ -186,7 +186,7 @@ describe('Monitoring processus screen tests', function () {
             0,
             4,
             'have.text',
-            'ENTITY1_FR,ENTITY2_FR,ENTITY4_FR,ENTITY1_IT,ENTITY1_NL'
+            'Control Center FR North,Control Center FR South,Control Center FR West,Control Center IT North,Control Center NL North'
         );
 
         // The user selects all the processes, so we should see 6 columns (default conf.) and 5 cards
@@ -228,7 +228,7 @@ describe('Monitoring processus screen tests', function () {
 
                 expect(rows[0]['SEVERITY']).to.equal('ALARM');
                 checkStartDateForExportRow(rows[0]);
-                expect(rows[0]['Entity Recipients']).to.equal('IT_SUPERVISOR_ENTITY');
+                expect(rows[0]['Entity Recipients']).to.equal('IT SUPERVISION CENTER');
                 expect(rows[0]['Title']).to.equal('Conference Call ☏');
                 expect(rows[0]['My field']).to.equal(undefined);
                 expect(rows[0]['Summary']).to.equal('You are invited to a conference');
@@ -258,7 +258,7 @@ describe('Monitoring processus screen tests', function () {
 
                 expect(rows[0]['SEVERITY']).to.equal('ALARM');
                 checkStartDateForExportRow(rows[0]);
-                expect(rows[0]['Entity Recipients']).to.equal('IT_SUPERVISOR_ENTITY');
+                expect(rows[0]['Entity Recipients']).to.equal('IT SUPERVISION CENTER');
                 expect(rows[0]['Title']).to.equal('Conference Call ☏');
                 expect(rows[0]['Summary']).to.equal(undefined); // The summary must not be displayed
             });
