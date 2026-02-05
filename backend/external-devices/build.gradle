@@ -10,7 +10,7 @@ dependencies {
     implementation boot.starterValidation
     implementation boot.starterMongo
     implementation misc.jlibmodbus
-    implementation boot.starterWeb, boot.starterUndertow
+    implementation boot.starterWeb
     implementation boot.actuator
     implementation misc.micrometer
 
@@ -21,11 +21,6 @@ dependencies {
    
 }
 
-
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude module: "spring-boot-starter-tomcat"
-}
 
 tasks.named("processResources") {
     duplicatesStrategy = 'include'

@@ -12,7 +12,7 @@ dependencies {
     implementation misc.collections4
     implementation boot.actuator
     implementation misc.micrometer
-    implementation boot.starterWeb, boot.starterUndertow
+    implementation boot.starterWeb
     implementation project(':backend:java-common')
 
     compileOnly boot.annotationConfiguration
@@ -23,10 +23,6 @@ dependencies {
     testImplementation project(':backend:test-utilities')
 }
 
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude module: "spring-boot-starter-tomcat"
-}
 
 tasks.named("processResources") {
     duplicatesStrategy = 'include'

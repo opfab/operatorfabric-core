@@ -20,7 +20,6 @@ ext {
             starterWeb              : "org.springframework.boot:spring-boot-starter-web:$springBoot",
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
-            starterUndertow         : "org.springframework.boot:spring-boot-starter-undertow:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
             starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
             starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
