@@ -16,7 +16,7 @@ dependencies {
     implementation boot.actuator
     implementation misc.micrometer
     implementation spring.securityOauthResource, spring.securityOauthJose
-    implementation boot.starterWeb, boot.starterUndertow
+    implementation boot.starterWeb
     implementation boot.starterSecurity
     implementation boot.starterValidation
     implementation boot.starterMongo
@@ -37,10 +37,6 @@ dependencies {
 
 }
 
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude module: "spring-boot-starter-tomcat"
-}
 
 tasks.named("processResources") {
     duplicatesStrategy = 'include'

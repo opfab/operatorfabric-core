@@ -16,7 +16,7 @@ dependencies {
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 
-    implementation boot.starterWeb, boot.starterUndertow
+    implementation boot.starterWeb
     implementation project(':backend:java-common')
 
     testImplementation spring.securityTest
@@ -24,11 +24,6 @@ dependencies {
     testImplementation project(':backend:java-common')
     testImplementation project(':backend:test-utilities')
 }
-
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude module: "spring-boot-starter-tomcat"
-} 
 
 tasks.named("processResources") {
     duplicatesStrategy = 'include'

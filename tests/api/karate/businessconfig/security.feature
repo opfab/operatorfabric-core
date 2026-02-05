@@ -49,11 +49,11 @@ Given url opfabUrl + '/businessconfig/processes/'+ process +'/templates/..%2F..%
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method GET
 Then status 404
-#Directly via service, actual spring implementation returns a code 401 with no content
+#Directly via service, actual spring implementation returns a code 400
 Given url opfabBusinessConfigUrl + 'processes/'+ process +'/templates/..%2F..%2F/1/templates/template?version=2'
 And header Authorization = 'Bearer ' + authTokenAsTSO
 When method GET
-Then status 401
+Then status 400
 
 
 # Try to access unexisting template

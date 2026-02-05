@@ -24,6 +24,8 @@ dependencies {
     testImplementation project(':backend:test-utilities')
 }
 
+// Exclude Tomcat dependencies since we are using WebFlux with Netty as the server (included in spring-boot-starter-webflux) 
+// and to avoid potential conflicts with transitive dependencies that may include Tomcat.
 configurations {
     implementation.exclude module: "spring-boot-starter-tomcat"
     testImplementation.exclude module: "spring-boot-starter-tomcat"
