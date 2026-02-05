@@ -26,13 +26,13 @@ operatorfabric:
     logFolder: logs/
     logFile: "%DATE%.log"
     logLevel: info
-  mail:
-    host: localhost
-    port: 1025
-    auth:
-      user: guest
-      pass: guest # use for test environment only
   emailGateway:
+    smtpServer:
+      host: localhost
+      port: 1025
+      auth:
+        user: guest
+        pass: guest # use for test environment only
     adminPort: 2106
     activeOnStartup: true
     customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js

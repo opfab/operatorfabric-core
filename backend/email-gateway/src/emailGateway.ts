@@ -67,7 +67,7 @@ if (customHandlebarsHelpersFile && (customHandlebarsHelpersFile as string).lengt
     }
 }
 
-const mailService = new SendMailService(config.get('operatorfabric.mail'));
+const mailService = new SendMailService(config.get('operatorfabric.emailGateway.smtpServer'));
 
 const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
     .setLogin(config.get('operatorfabric.internalAccount.login'))
