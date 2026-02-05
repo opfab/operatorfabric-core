@@ -1,11 +1,11 @@
 operatorfabric:
-  mail:
-    host: greenmail
-    port: 3025
-    auth:
-      user: guest
-      pass: guest # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
   emailGateway:
+    smtpServer:
+      host: greenmail
+      port: 3025
+      auth:
+        user: guest
+        pass: guest # !!! TO BE CHANGED THIS IS ONLY FOR TEST AND DEMONSTRATION !!!
     customHandlebarsHelpersFile: config/customHandlebarsHelpersExample.js
     defaultConfig:
       mailFrom: opfab@localhost.it

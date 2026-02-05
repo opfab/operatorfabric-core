@@ -58,7 +58,7 @@ A rabbitMQ component (docker image) is provided in opfab, it has a default confi
 ==== Internal account 
 
 
-The back service cards-reminder ,cards-diffusion and supervision need an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it
+The backend services cards-reminder, email-gateway, and supervision need an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it
 |===
 |Name|Default|Mandatory|Description
 |operatorfabric.internalAccount.login|opfab|no|user account used to call Opfab services. 
@@ -387,10 +387,10 @@ The email gateway service can be configured with the following properties:
 |operatorfabric.logConfig.logFolder|logs|no|Log file folder (inside docker container)
 |operatorfabric.logConfig.logFile|"opfab.%DATE%.log"|no|Log file name
 |operatorfabric.logConfig.logLevel|info|no|Default log level
-|operatorfabric.mail.host||yes|Mail server host
-|operatorfabric.mail.port||yes|Mail server port
-|operatorfabric.mail.auth.user||yes|Mail server authentication user
-|operatorfabric.mail.auth.pass||yes|Mail server authentication password
+|operatorfabric.emailGateway.smtpServer.host||yes|Mail server host
+|operatorfabric.emailGateway.smtpServer.port||yes|Mail server port
+|operatorfabric.emailGateway.smtpServer.auth.user||yes|Mail server authentication user
+|operatorfabric.emailGateway.smtpServer.auth.pass||yes|Mail server authentication password
 |operatorfabric.emailGateway.adminPort|2106|no|Listen port
 |operatorfabric.emailGateway.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.emailGateway.customHandlebarsHelpersFile||no|Path to a javascript file containing custom Handlebars helpers to be used in email templates
@@ -418,7 +418,7 @@ The email gateway service can be configured with the following properties:
 |operatorfabric.emailGateway.defaultConfig.showCardTitleInBody|true|no|Flag to set whether the body of the emails must include the card title or not. This only concerns real time email sending and not the recapitulatory emails
 |===
 
-The parameters in "operatorfabric.emailGateway.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of cards external diffusion service with a JSON payload containing the config parameters to be changed.
+The parameters in "operatorfabric.emailGateway.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of email gateway service with a JSON payload containing the config parameters to be changed.
 
 [[cards-reminder-conf]]
 ==== Cards reminder service

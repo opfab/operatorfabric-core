@@ -70,6 +70,32 @@ operatorfabric:
       # ... other config
 ----
 
+Additionally, mail server configuration parameters have been moved under the `emailGateway` section:
+
+Replace
+----
+operatorfabric:
+  mail:
+    host: localhost
+    port: 1025
+    auth:
+      user: guest
+      pass: guest
+----
+
+With
+
+----
+operatorfabric:
+  emailGateway:
+    smtpServer:
+      host: localhost
+      port: 1025
+      auth:
+        user: guest
+        pass: guest
+----
+
 === MongoDB collection name
 
 The MongoDB collection name has changed:
