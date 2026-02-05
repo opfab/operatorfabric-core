@@ -8,6 +8,7 @@
  */
 
 import ConfigDTO from './configDTO';
+import OutgoingEmailsConfigDTO from './outgoingEmailsConfigDTO';
 
 import fs from 'node:fs';
 
@@ -25,29 +26,33 @@ export default class ConfigService {
                 this.loadFromFile();
             } else {
                 this.config = new ConfigDTO();
+                this.config.outgoingEmails = new OutgoingEmailsConfigDTO();
 
-                this.config.mailFrom = defaultConfig.mailFrom;
-                this.config.hourToSendRecapEmail = defaultConfig.hourToSendRecapEmail;
-                this.config.minuteToSendRecapEmail = defaultConfig.minuteToSendRecapEmail;
-                this.config.dayOfWeekToSendWeeklyRecapEmail = defaultConfig.dayOfWeekToSendWeeklyRecapEmail;
-                this.config.dailyEmailTitle = defaultConfig.dailyEmailTitle;
-                this.config.weeklyEmailTitle = defaultConfig.weeklyEmailTitle;
-                this.config.dailyEmailBodyPrefix = defaultConfig.dailyEmailBodyPrefix;
-                this.config.weeklyEmailBodyPrefix = defaultConfig.weeklyEmailBodyPrefix;
-                this.config.subjectPrefix = defaultConfig.subjectPrefix;
-                this.config.bodyPrefix = defaultConfig.bodyPrefix;
-                this.config.bodyPostfix = defaultConfig.bodyPostfix;
-                this.config.publisherEntityPrefix = defaultConfig.publisherEntityPrefix;
-                this.config.opfabUrlInMailContent = defaultConfig.opfabUrlInMailContent;
-                this.config.windowInSecondsForCardSearch = defaultConfig.windowInSecondsForCardSearch;
-                this.config.checkPeriodInSeconds = defaultConfig.checkPeriodInSeconds;
-                this.config.activateCardsDiffusionRateLimiter = defaultConfig.activateCardsDiffusionRateLimiter;
-                this.config.sendRateLimit = defaultConfig.sendRateLimit;
-                this.config.sendRateLimitPeriodInSec = defaultConfig.sendRateLimitPeriodInSec;
-                this.config.customConfig = defaultConfig.customConfig;
-                this.config.showCardUrls = defaultConfig.showCardUrls;
-                this.config.forceEmailsInPlainText = defaultConfig.forceEmailsInPlainText;
-                this.config.showCardTitleInBody = defaultConfig.showCardTitleInBody;
+                this.config.outgoingEmails.mailFrom = defaultConfig?.mailFrom;
+                this.config.outgoingEmails.hourToSendRecapEmail = defaultConfig?.hourToSendRecapEmail;
+                this.config.outgoingEmails.minuteToSendRecapEmail = defaultConfig?.minuteToSendRecapEmail;
+                this.config.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail =
+                    defaultConfig?.dayOfWeekToSendWeeklyRecapEmail;
+                this.config.outgoingEmails.dailyEmailTitle = defaultConfig?.dailyEmailTitle;
+                this.config.outgoingEmails.weeklyEmailTitle = defaultConfig?.weeklyEmailTitle;
+                this.config.outgoingEmails.dailyEmailBodyPrefix = defaultConfig?.dailyEmailBodyPrefix;
+                this.config.outgoingEmails.weeklyEmailBodyPrefix = defaultConfig?.weeklyEmailBodyPrefix;
+                this.config.outgoingEmails.subjectPrefix = defaultConfig?.subjectPrefix;
+                this.config.outgoingEmails.bodyPrefix = defaultConfig?.bodyPrefix;
+                this.config.outgoingEmails.bodyPostfix = defaultConfig?.bodyPostfix;
+                this.config.outgoingEmails.publisherEntityPrefix = defaultConfig?.publisherEntityPrefix;
+                this.config.outgoingEmails.opfabUrlInMailContent = defaultConfig?.opfabUrlInMailContent;
+                this.config.outgoingEmails.windowInSecondsForCardSearch = defaultConfig?.windowInSecondsForCardSearch;
+                this.config.outgoingEmails.checkPeriodInSeconds = defaultConfig?.checkPeriodInSeconds;
+                this.config.outgoingEmails.activateCardsDiffusionRateLimiter =
+                    defaultConfig?.activateCardsDiffusionRateLimiter;
+                this.config.outgoingEmails.sendRateLimit = defaultConfig?.sendRateLimit;
+                this.config.outgoingEmails.sendRateLimitPeriodInSec = defaultConfig?.sendRateLimitPeriodInSec;
+                this.config.outgoingEmails.customConfig = defaultConfig?.customConfig;
+                this.config.outgoingEmails.showCardUrls = defaultConfig?.showCardUrls;
+                this.config.outgoingEmails.forceEmailsInPlainText = defaultConfig?.forceEmailsInPlainText;
+                this.config.outgoingEmails.showCardTitleInBody = defaultConfig?.showCardTitleInBody;
+                this.config.outgoingEmails.defaultTimeZone = defaultConfig?.defaultTimeZone;
                 this.save();
             }
         } catch (err) {
@@ -76,8 +81,8 @@ export default class ConfigService {
     public patch(update: object): ConfigDTO {
         try {
             for (const [key, value] of Object.entries(update)) {
-                if (Object.hasOwn(this.config, key) && value != null) {
-                    (this.config as any)[key] = value;
+                if (Object.hasOwn(this.config.outgoingEmails, key) && value != null) {
+                    (this.config.outgoingEmails as any)[key] = value;
                 }
             }
             this.save();

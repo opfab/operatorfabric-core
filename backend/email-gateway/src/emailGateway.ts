@@ -51,7 +51,7 @@ const logger = getLogger();
 const activeOnStartUp = config.get('operatorfabric.emailGateway.activeOnStartup');
 
 const configService = new ConfigService(
-    config.get('operatorfabric.emailGateway.defaultConfig'),
+    config.get('operatorfabric.emailGateway.defaultConfig.outgoingEmails'),
     'config/serviceConfig.json',
     logger
 );

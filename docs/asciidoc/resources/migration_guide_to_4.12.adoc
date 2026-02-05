@@ -96,6 +96,32 @@ operatorfabric:
         pass: guest
 ----
 
+Furthermore, email configuration parameters under `defaultConfig` have been reorganized under an `outgoingEmails` section:
+
+Replace
+----
+operatorfabric:
+  emailGateway:
+    defaultConfig:
+      mailFrom: opfab@localhost.it
+      subjectPrefix: 'Opfab card received '
+      bodyPrefix: 'You received a card in opfab : '
+      # ... other email config
+----
+
+With
+
+----
+operatorfabric:
+  emailGateway:
+    defaultConfig:
+      outgoingEmails:
+        mailFrom: opfab@localhost.it
+        subjectPrefix: 'Opfab card received '
+        bodyPrefix: 'You received a card in opfab : '
+        # ... other email config
+----
+
 === MongoDB collection name
 
 The MongoDB collection name has changed:
