@@ -8,7 +8,7 @@
  */
 
 import CardsRoutingUtilities from './cardRoutingUtilities';
-import ConfigDTO from '../client-side/configDTO';
+import OutgoingEmailsConfigDTO from '../client-side/outgoingEmailsConfigDTO';
 import CardsDiffusionControl from './cardsDiffusionControl';
 import {UserWithPerimeters} from './userWithPerimeter';
 import {Card} from './card';
@@ -51,7 +51,7 @@ export default class RecapCardsDiffusionControl extends CardsDiffusionControl {
         return this;
     }
 
-    public setConfiguration(updated: ConfigDTO): void {
+    public setConfiguration(updated: OutgoingEmailsConfigDTO): void {
         this.from = updated.mailFrom;
         this.dailyEmailTitle = updated.dailyEmailTitle;
         this.weeklyEmailTitle = updated.weeklyEmailTitle;

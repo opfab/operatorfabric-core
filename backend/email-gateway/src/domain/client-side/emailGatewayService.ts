@@ -38,58 +38,58 @@ export default class EmailGatewayService {
         logger: any
     ) {
         this.logger = logger;
-        this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
-        this.hourToSendRecapEmail = serviceConfig.hourToSendRecapEmail;
-        this.minuteToSendRecapEmail = serviceConfig.minuteToSendRecapEmail;
-        this.dayOfWeekToSendWeeklyRecapEmail = serviceConfig.dayOfWeekToSendWeeklyRecapEmail;
+        this.checkPeriodInSeconds = serviceConfig.outgoingEmails.checkPeriodInSeconds;
+        this.hourToSendRecapEmail = serviceConfig.outgoingEmails.hourToSendRecapEmail;
+        this.minuteToSendRecapEmail = serviceConfig.outgoingEmails.minuteToSendRecapEmail;
+        this.dayOfWeekToSendWeeklyRecapEmail = serviceConfig.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail;
 
         this.recapCardsDiffusionControl = new RecapCardsDiffusionControl()
             .setLogger(logger)
-            .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
+            .setOpfabUrlInMailContent(serviceConfig.outgoingEmails.opfabUrlInMailContent)
             .setOpfabServicesInterface(opfabServicesInterface)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
             .setEmailGatewayDatabaseService(emailGatewayDatabaseService)
             .setMailService(mailService)
-            .setDailyEmailTitle(serviceConfig.dailyEmailTitle as string)
-            .setWeeklyEmailTitle(serviceConfig.weeklyEmailTitle as string)
-            .setDailyEmailBodyPrefix(serviceConfig.dailyEmailBodyPrefix as string)
-            .setWeeklyEmailBodyPrefix(serviceConfig.weeklyEmailBodyPrefix as string)
-            .setBodyPostfix(serviceConfig.bodyPostfix as string)
-            .setFrom(serviceConfig.mailFrom as string)
-            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
-            .setShowCardUrls(serviceConfig.showCardUrls ?? true)
-            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false);
+            .setDailyEmailTitle(serviceConfig.outgoingEmails.dailyEmailTitle as string)
+            .setWeeklyEmailTitle(serviceConfig.outgoingEmails.weeklyEmailTitle as string)
+            .setDailyEmailBodyPrefix(serviceConfig.outgoingEmails.dailyEmailBodyPrefix as string)
+            .setWeeklyEmailBodyPrefix(serviceConfig.outgoingEmails.weeklyEmailBodyPrefix as string)
+            .setBodyPostfix(serviceConfig.outgoingEmails.bodyPostfix as string)
+            .setFrom(serviceConfig.outgoingEmails.mailFrom as string)
+            .setDefaultTimeZone((serviceConfig.outgoingEmails.defaultTimeZone as string) ?? 'Europe/Paris')
+            .setShowCardUrls(serviceConfig.outgoingEmails.showCardUrls ?? true)
+            .setForceEmailsInPlainText(serviceConfig.outgoingEmails.forceEmailsInPlainText ?? false);
 
         this.realTimeCardsDiffusionControl = new RealTimeCardsDiffusionControl()
             .setLogger(logger)
-            .setOpfabUrlInMailContent(serviceConfig.opfabUrlInMailContent)
+            .setOpfabUrlInMailContent(serviceConfig.outgoingEmails.opfabUrlInMailContent)
             .setOpfabServicesInterface(opfabServicesInterface)
             .setOpfabBusinessConfigServicesInterface(opfabBusinessConfigServicesInterface)
             .setEmailGatewayDatabaseService(emailGatewayDatabaseService)
             .setMailService(mailService)
-            .setFrom(serviceConfig.mailFrom as string)
-            .setSubjectPrefix(serviceConfig.subjectPrefix as string)
-            .setBodyPrefix(serviceConfig.bodyPrefix as string)
-            .setBodyPostfix(serviceConfig.bodyPostfix as string)
-            .setPublisherEntityPrefix(serviceConfig.publisherEntityPrefix as string)
-            .setWindowInSecondsForCardSearch(serviceConfig.windowInSecondsForCardSearch as number)
-            .setDefaultTimeZone((serviceConfig.defaultTimeZone as string) ?? 'Europe/Paris')
-            .setCustomConfig(serviceConfig.customConfig)
-            .setShowCardUrls(serviceConfig.showCardUrls ?? true)
-            .setForceEmailsInPlainText(serviceConfig.forceEmailsInPlainText ?? false)
-            .setShowCardTitleInBody(serviceConfig.showCardTitleInBody ?? true);
+            .setFrom(serviceConfig.outgoingEmails.mailFrom as string)
+            .setSubjectPrefix(serviceConfig.outgoingEmails.subjectPrefix as string)
+            .setBodyPrefix(serviceConfig.outgoingEmails.bodyPrefix as string)
+            .setBodyPostfix(serviceConfig.outgoingEmails.bodyPostfix as string)
+            .setPublisherEntityPrefix(serviceConfig.outgoingEmails.publisherEntityPrefix as string)
+            .setWindowInSecondsForCardSearch(serviceConfig.outgoingEmails.windowInSecondsForCardSearch as number)
+            .setDefaultTimeZone((serviceConfig.outgoingEmails.defaultTimeZone as string) ?? 'Europe/Paris')
+            .setCustomConfig(serviceConfig.outgoingEmails.customConfig)
+            .setShowCardUrls(serviceConfig.outgoingEmails.showCardUrls ?? true)
+            .setForceEmailsInPlainText(serviceConfig.outgoingEmails.forceEmailsInPlainText ?? false)
+            .setShowCardTitleInBody(serviceConfig.outgoingEmails.showCardTitleInBody ?? true);
 
-        if (serviceConfig.activateCardsDiffusionRateLimiter) {
+        if (serviceConfig.outgoingEmails.activateCardsDiffusionRateLimiter) {
             this.logger.info(
                 'Activating cards diffusion rate limiter with send rate limit of ' +
-                    serviceConfig.sendRateLimit +
+                    serviceConfig.outgoingEmails.sendRateLimit +
                     ' mails per recipients per ' +
-                    serviceConfig.sendRateLimitPeriodInSec +
+                    serviceConfig.outgoingEmails.sendRateLimitPeriodInSec +
                     ' seconds'
             );
             const cardsDiffusionRateLimiter = new CardsDiffusionRateLimiter()
-                .setLimitPeriodInSec(serviceConfig.sendRateLimitPeriodInSec as number)
-                .setSendRateLimit(serviceConfig.sendRateLimit as number);
+                .setLimitPeriodInSec(serviceConfig.outgoingEmails.sendRateLimitPeriodInSec as number)
+                .setSendRateLimit(serviceConfig.outgoingEmails.sendRateLimit as number);
             this.realTimeCardsDiffusionControl.setCardsDiffusionRateLimiter(cardsDiffusionRateLimiter);
             this.realTimeCardsDiffusionControl.setActivateCardsDiffusionRateLimiter(true);
         }
@@ -100,10 +100,11 @@ export default class EmailGatewayService {
     }
 
     setConfiguration(serviceConfig: ConfigDTO): this {
-        if (serviceConfig.checkPeriodInSeconds != null) this.checkPeriodInSeconds = serviceConfig.checkPeriodInSeconds;
+        if (serviceConfig.outgoingEmails.checkPeriodInSeconds != null)
+            this.checkPeriodInSeconds = serviceConfig.outgoingEmails.checkPeriodInSeconds;
 
-        this.realTimeCardsDiffusionControl.setConfiguration(serviceConfig);
-        this.recapCardsDiffusionControl.setConfiguration(serviceConfig);
+        this.realTimeCardsDiffusionControl.setConfiguration(serviceConfig.outgoingEmails);
+        this.recapCardsDiffusionControl.setConfiguration(serviceConfig.outgoingEmails);
         return this;
     }
 

@@ -8,7 +8,7 @@
  */
 
 import CardsRoutingUtilities from './cardRoutingUtilities';
-import ConfigDTO from '../client-side/configDTO';
+import OutgoingEmailsConfigDTO from '../client-side/outgoingEmailsConfigDTO';
 import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
 import CardsDiffusionControl from './cardsDiffusionControl';
 import {UserWithPerimeters} from './userWithPerimeter';
@@ -67,7 +67,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         return this;
     }
 
-    public setConfiguration(updated: ConfigDTO): void {
+    public setConfiguration(updated: OutgoingEmailsConfigDTO): void {
         this.from = updated.mailFrom;
         this.subjectPrefix = updated.subjectPrefix;
         this.bodyPrefix = updated.bodyPrefix;

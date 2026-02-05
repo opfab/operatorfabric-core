@@ -57,7 +57,6 @@ A rabbitMQ component (docker image) is provided in opfab, it has a default confi
 
 ==== Internal account 
 
-
 The backend services cards-reminder, email-gateway, and supervision need an internal account to communicate between opfab back services. Therefore, if you intend to utilize any of these services, it is necessary to create an Opfab technical account with ADMIN permissions and configure it
 |===
 |Name|Default|Mandatory|Description
@@ -394,28 +393,28 @@ The email gateway service can be configured with the following properties:
 |operatorfabric.emailGateway.adminPort|2106|no|Listen port
 |operatorfabric.emailGateway.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.emailGateway.customHandlebarsHelpersFile||no|Path to a javascript file containing custom Handlebars helpers to be used in email templates
-|operatorfabric.emailGateway.defaultConfig.mailFrom||yes|Mail from address
-|operatorfabric.emailGateway.defaultConfig.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject title
-|operatorfabric.emailGateway.defaultConfig.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject title
-|operatorfabric.emailGateway.defaultConfig.dailyEmailBodyPrefix|'You received the following cards during the past 24 hours : '|no|Daily email body prefix
-|operatorfabric.emailGateway.defaultConfig.weeklyEmailBodyPrefix|'You received the following cards during the past 7 days : '|no|Weekly email body prefix
-|operatorfabric.emailGateway.defaultConfig.dayOfWeekToSendWeeklyRecapEmail|1|no|Day of the week to send the weekly recap emails (0 is Sunday, 6 is Saturday)
-|operatorfabric.emailGateway.defaultConfig.hourToSendRecapEmail|7|no|Hour at which to send the recap emails
-|operatorfabric.emailGateway.defaultConfig.minuteToSendRecapEmail|30|no|Minute at which to send the recap emails
-|operatorfabric.emailGateway.defaultConfig.subjectPrefix|'Opfab card received'|no|Mail subject prefix
-|operatorfabric.emailGateway.defaultConfig.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
-|operatorfabric.emailGateway.defaultConfig.bodyPostfix|'This email has been sent by Opfab, there is no need to reply.'|no|Mail body postfix
-|operatorfabric.emailGateway.defaultConfig.publisherEntityPrefix|'The card has been sent by '|no|Publisher entity text prefix
-|operatorfabric.emailGateway.defaultConfig.opfabUrlInMailContent||yes|Url to write in mail to access the opfab server (example : https://opfab_url/)
-|operatorfabric.emailGateway.defaultConfig.windowInSecondsForCardSearch|360|no|Max time interval used to query new cards (in seconds)
-|operatorfabric.emailGateway.defaultConfig.checkPeriodInSeconds|10|no|Time interval between consecutive checks
-|operatorfabric.emailGateway.defaultConfig.activateCardsDiffusionRateLimiter|true|no|Flag to activate mail sending rate limiting
-|operatorfabric.emailGateway.defaultConfig.sendRateLimit|100|no|Max number of mail sent allowed for a single destination in the configured period
-|operatorfabric.emailGateway.defaultConfig.sendRateLimitPeriodInSec|3600|no|Time period for rate limiting control
-|operatorfabric.emailGateway.defaultConfig.defaultTimeZone|Europe/Paris|no|Default timezone used to display dates and times for email notifications if user has not set the timezone for mail in his settings
-|operatorfabric.emailGateway.defaultConfig.showCardUrls|true|no|Flag to set whether the URL of the card should be displayed in email notifications
-|operatorfabric.emailGateway.defaultConfig.forceEmailsInPlainText|false|no|Flag to set whether the emails must be sent in plain text (regardless of user configuration in settings)
-|operatorfabric.emailGateway.defaultConfig.showCardTitleInBody|true|no|Flag to set whether the body of the emails must include the card title or not. This only concerns real time email sending and not the recapitulatory emails
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.mailFrom||yes|Mail from address
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject title
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject title
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.dailyEmailBodyPrefix|'You received the following cards during the past 24 hours : '|no|Daily email body prefix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.weeklyEmailBodyPrefix|'You received the following cards during the past 7 days : '|no|Weekly email body prefix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail|1|no|Day of the week to send the weekly recap emails (0 is Sunday, 6 is Saturday)
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.hourToSendRecapEmail|7|no|Hour at which to send the recap emails
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.minuteToSendRecapEmail|30|no|Minute at which to send the recap emails
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.subjectPrefix|'Opfab card received'|no|Mail subject prefix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.bodyPrefix|'You received a card in opfab : '|no|Mail body prefix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.bodyPostfix|'This email has been sent by Opfab, there is no need to reply.'|no|Mail body postfix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.publisherEntityPrefix|'The card has been sent by '|no|Publisher entity text prefix
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.opfabUrlInMailContent||yes|Url to write in mail to access the opfab server (example : https://opfab_url/)
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.windowInSecondsForCardSearch|360|no|Max time interval used to query new cards (in seconds)
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.checkPeriodInSeconds|10|no|Time interval between consecutive checks
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.activateCardsDiffusionRateLimiter|true|no|Flag to activate mail sending rate limiting
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.sendRateLimit|100|no|Max number of mail sent allowed for a single destination in the configured period
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.sendRateLimitPeriodInSec|3600|no|Time period for rate limiting control
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.defaultTimeZone|Europe/Paris|no|Default timezone used to display dates and times for email notifications if user has not set the timezone for mail in his settings
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.showCardUrls|true|no|Flag to set whether the URL of the card should be displayed in email notifications
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.forceEmailsInPlainText|false|no|Flag to set whether the emails must be sent in plain text (regardless of user configuration in settings)
+|operatorfabric.emailGateway.defaultConfig.outgoingEmails.showCardTitleInBody|true|no|Flag to set whether the body of the emails must include the card title or not. This only concerns real time email sending and not the recapitulatory emails
 |===
 
 The parameters in "operatorfabric.emailGateway.defaultConfig" section can be modified at runtime by sending an http POST request to the `/config` API of email gateway service with a JSON payload containing the config parameters to be changed.
