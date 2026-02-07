@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,15 +9,13 @@
 
 package org.opfab.businessconfig.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
 public record ProcessGroup(
-    String id,
-    String name,
-    List<String> processes) {
+        String id,
+        String name,
+        List<String> processes) {
 }

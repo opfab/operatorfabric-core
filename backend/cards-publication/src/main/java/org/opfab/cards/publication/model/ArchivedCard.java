@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,10 +9,15 @@
 
 package org.opfab.cards.publication.model;
 
+import org.opfab.json.InstantDeserializer;
+import org.opfab.json.InstantSerializer;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
+
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import java.time.Instant;
 import java.util.List;
@@ -25,14 +30,14 @@ public record ArchivedCard(
         String initialParentCardUid,
         String publisher,
         String processVersion,
-        @Indexed Instant publishDate,
+        @Indexed @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant publishDate,
         @Indexed String process,
         @Indexed String processInstanceId,
         @Indexed String state,
-        @Indexed Instant startDate,
-        @Indexed Instant endDate,
-        @Indexed Instant expirationDate,
-        Instant lttd,
+        @Indexed @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant startDate,
+        @Indexed @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant endDate,
+        @Indexed @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant expirationDate,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant lttd,
         I18n title,
         I18n summary,
         @Indexed String titleTranslated,
@@ -58,7 +63,7 @@ public record ArchivedCard(
         RRule rRule,
         List<CardActionEnum> actions,
         List<TimeSpan> timeSpans,
-        @Indexed Instant deletionDate) {
+        @Indexed @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant deletionDate) {
 
     public ArchivedCard(Card card) {
         this(

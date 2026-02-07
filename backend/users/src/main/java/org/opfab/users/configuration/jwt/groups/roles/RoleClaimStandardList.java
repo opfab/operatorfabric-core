@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,7 +15,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Define the structure of the RoleClaimStandardList, an extension of
@@ -56,7 +56,7 @@ public class RoleClaimStandardList extends RoleClaimStandard {
     @Override
     public List<String> computeNodeElementRole(JsonNode jsonNodeElement) {
         List<String> listGroupsResult = new ArrayList<>();
-        listGroupsResult.addAll(Arrays.asList((jsonNodeElement.asText()).split(separator)));
+        listGroupsResult.addAll(Arrays.asList((jsonNodeElement.asString()).split(separator)));
         return listGroupsResult;
     }
 

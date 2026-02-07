@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,8 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class ExternalAppService {
@@ -135,8 +135,8 @@ public class ExternalAppService {
             restTemplate.postForObject(externalRecipientUrl, requestBody, Void.class);
             log.debug("End to Send card {} \n", card);
 
-        } catch (JsonProcessingException ex) {
-            log.error("Error converting card to Json string", ex);
+        } catch (JacksonException ex) {
+            log.error("Error converting card or calling external application ", ex);
             throwException(ex);
         } catch (Exception ex) {
             log.error("Error calling external application ", ex);

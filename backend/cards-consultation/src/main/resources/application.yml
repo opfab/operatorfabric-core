@@ -3,10 +3,11 @@ server:
 spring:
   application:
     name: cards-consultation
-  data:
-    mongodb:
-      database: operator-fabric
-      uri: ${operatorfabric.mongodb.uri} # To be set outside of docker
+  mongodb:
+    database: operator-fabric
+    uri: ${operatorfabric.mongodb.uri} # To be set outside of docker
+  jackson:
+    default-property-inclusion: non_null #to avoid overhead of sending null values
   security:
     oauth2:
       resourceserver:
@@ -18,13 +19,11 @@ spring:
 # each special character is replaced by a new line + spaces + three dots
 logging.pattern.console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %replace(%msg){'\n|\r|\b|\v|\f', '\n                 ... '}%n%wex"
 
-
-# default values for docker mode 
+# default values for docker mode
 operatorfabric:
   servicesUrls:
     businessconfig: "businessconfig:2100"
     users: "http://users:2103"
-# default values for docker mode 
   rabbitmq:
     host: rabbitmq
     port: 5672

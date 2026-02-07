@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,15 +13,12 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 /**
  * Object containing the id of the entity and an optional list of connection
  * levels with 0 meaning the entity itself, 1 for first level children, 2 for
  * 2nd level connections, etc.
  */
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EntitiesTree {
     private String id = null;
 

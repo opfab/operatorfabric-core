@@ -1,4 +1,5 @@
 /* Copyright (c) 2023, Alliander N.V. (https://www.alliander.com)
+ * Copyright (c) RTE 2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +8,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.cards.publication.kafka.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerTokenCallback;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.AfterEach;
@@ -50,102 +50,109 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AADWorkloadIdentityLoginCallbackHandlerShould {
 
-	private AADWorkloadIdentityLoginCallbackHandler aadWorkloadIdentityLoginCallbackHandler;
+    private AADWorkloadIdentityLoginCallbackHandler aadWorkloadIdentityLoginCallbackHandler;
 
-	@Mock
-	private TokenRequestBuilderFactory tokenRequestBuilderFactory;
+    @Mock
+    private TokenRequestBuilderFactory tokenRequestBuilderFactory;
 
-	@Mock
-	private HttpClient httpClient;
+    @Mock
+    private HttpClient httpClient;
 
-	private final BeanUtil beanUtil = new BeanUtil();
+    private final BeanUtil beanUtil = new BeanUtil();
 
-	@BeforeEach
-	void setUp() {
-		beanUtil.setApplicationContext(null);
-		Mockito.reset(tokenRequestBuilderFactory, httpClient);
-		aadWorkloadIdentityLoginCallbackHandler = new AADWorkloadIdentityLoginCallbackHandler(tokenRequestBuilderFactory, httpClient, new ObjectMapper());
-	}
+    @BeforeEach
+    void setUp() {
+        beanUtil.setApplicationContext(null);
+        Mockito.reset(tokenRequestBuilderFactory, httpClient);
+        aadWorkloadIdentityLoginCallbackHandler = new AADWorkloadIdentityLoginCallbackHandler(
+                tokenRequestBuilderFactory, httpClient, JsonMapper.builder().build());
+    }
 
-	@AfterEach
-	void tearDown() {
-		aadWorkloadIdentityLoginCallbackHandler.close();
-	}
+    @AfterEach
+    void tearDown() {
+        aadWorkloadIdentityLoginCallbackHandler.close();
+    }
 
-	@Test
-	void constructor_without_springContext() {
-		final var handler = new AADWorkloadIdentityLoginCallbackHandler();
-		assertThat(handler).isNotNull();
-	}
+    @Test
+    void constructor_without_springContext() {
+        final var handler = new AADWorkloadIdentityLoginCallbackHandler();
+        assertThat(handler).isNotNull();
+    }
 
-	@Test
-	void constructor_with_springContext() {
-		final var applicationContext = mock(ApplicationContext.class);
-		beanUtil.setApplicationContext(applicationContext);
-		when(applicationContext.getBean(Environment.class)).thenReturn(Mockito.mock(Environment.class));
-		final var handler = new AADWorkloadIdentityLoginCallbackHandler();
-		assertThat(handler).isNotNull();
-	}
+    @Test
+    void constructor_with_springContext() {
+        final var applicationContext = mock(ApplicationContext.class);
+        beanUtil.setApplicationContext(applicationContext);
+        when(applicationContext.getBean(Environment.class)).thenReturn(Mockito.mock(Environment.class));
+        final var handler = new AADWorkloadIdentityLoginCallbackHandler();
+        assertThat(handler).isNotNull();
+    }
 
-	@Test
-	void configure_validConfig() {
-		final var properties = Map.of("a", "b");
-		final var tokenRequestBuilderMock = mock(TokenRequestBuilder.class);
-		when(tokenRequestBuilderFactory.createTokenRequestBuilder(properties)).thenReturn(tokenRequestBuilderMock);
-		aadWorkloadIdentityLoginCallbackHandler.configure(properties, "OAUTHBEARER", EMPTY_LIST);
-		assertThat(aadWorkloadIdentityLoginCallbackHandler.getTokenRequestBuilder()).isEqualTo(tokenRequestBuilderMock);
-	}
+    @Test
+    void configure_validConfig() {
+        final var properties = Map.of("a", "b");
+        final var tokenRequestBuilderMock = mock(TokenRequestBuilder.class);
+        when(tokenRequestBuilderFactory.createTokenRequestBuilder(properties)).thenReturn(tokenRequestBuilderMock);
+        aadWorkloadIdentityLoginCallbackHandler.configure(properties, "OAUTHBEARER", EMPTY_LIST);
+        assertThat(aadWorkloadIdentityLoginCallbackHandler.getTokenRequestBuilder()).isEqualTo(tokenRequestBuilderMock);
+    }
 
-	@Test
-	void configure_saslMechanism_wrong() {
-		final var exception = assertThrows(IllegalArgumentException.class, () -> aadWorkloadIdentityLoginCallbackHandler.configure(EMPTY_MAP, "TLS", EMPTY_LIST));
-		assertThat(exception.getMessage()).isEqualTo("SASL mechanism MUST be OAUTHBEARER but found: TLS");
-	}
+    @Test
+    void configure_saslMechanism_wrong() {
+        final var exception = assertThrows(IllegalArgumentException.class,
+                () -> aadWorkloadIdentityLoginCallbackHandler.configure(EMPTY_MAP, "TLS", EMPTY_LIST));
+        assertThat(exception.getMessage()).isEqualTo("SASL mechanism MUST be OAUTHBEARER but found: TLS");
+    }
 
+    @Test
+    void handle_properCallbackType() throws IOException, UnsupportedCallbackException, InterruptedException {
+        final var oAuthBearerTokenCallback = new OAuthBearerTokenCallback();
+        final var httpResponse = mock(HttpResponse.class);
+        final var tokenRequestBuilder = mock(TokenRequestBuilder.class);
 
-	@Test
-	void handle_properCallbackType() throws IOException, UnsupportedCallbackException, InterruptedException {
-		final var oAuthBearerTokenCallback = new OAuthBearerTokenCallback();
-		final var httpResponse = mock(HttpResponse.class);
-		final var tokenRequestBuilder = mock(TokenRequestBuilder.class);
+        when(tokenRequestBuilderFactory.createTokenRequestBuilder(any())).thenReturn(tokenRequestBuilder);
+        when(httpClient.send(any(), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
+        when(httpResponse.body())
+                .thenReturn("{\"access_token\":\"mocked-token\",\"expires_in\": 1234}".getBytes(UTF_8));
+        when(tokenRequestBuilder.getClientId()).thenReturn("12345");
+        aadWorkloadIdentityLoginCallbackHandler.configure(EMPTY_MAP, "OAUTHBEARER", EMPTY_LIST);
 
-		when(tokenRequestBuilderFactory.createTokenRequestBuilder(any())).thenReturn(tokenRequestBuilder);
-		when(httpClient.send(any(), any(HttpResponse.BodyHandler.class))).thenReturn(httpResponse);
-		when(httpResponse.body()).thenReturn("{\"access_token\":\"mocked-token\",\"expires_in\": 1234}".getBytes(UTF_8));
-		when(tokenRequestBuilder.getClientId()).thenReturn("12345");
-		aadWorkloadIdentityLoginCallbackHandler.configure(EMPTY_MAP, "OAUTHBEARER", EMPTY_LIST);
+        aadWorkloadIdentityLoginCallbackHandler.handle(new Callback[] { oAuthBearerTokenCallback });
 
-		aadWorkloadIdentityLoginCallbackHandler.handle(new Callback[]{oAuthBearerTokenCallback});
+        final var token = oAuthBearerTokenCallback.token();
 
-		final var token = oAuthBearerTokenCallback.token();
+        assertThat(token).isNotNull();
+        assertThat(token.principalName()).isEqualTo("12345");
+        assertThat(token.value()).isEqualTo("mocked-token");
+        assertThat(token.lifetimeMs()).isCloseTo(System.currentTimeMillis() + 1234 * 1000, Offset.offset(5000L));
+        assertThat(token.scope()).isNotNull();
+    }
 
-		assertThat(token).isNotNull();
-		assertThat(token.principalName()).isEqualTo("12345");
-		assertThat(token.value()).isEqualTo("mocked-token");
-		assertThat(token.lifetimeMs()).isCloseTo(System.currentTimeMillis() + 1234 * 1000, Offset.offset(5000L));
-		assertThat(token.scope()).isNotNull();
-	}
+    @Test
+    void handle_wrongCallbackType() {
+        final var passwordCallback = new PasswordCallback("pw", false);
+        final var exception = assertThrows(UnsupportedCallbackException.class,
+                () -> aadWorkloadIdentityLoginCallbackHandler.handle(new Callback[] { passwordCallback }));
 
-	@Test
-	void handle_wrongCallbackType() {
-		final var passwordCallback = new PasswordCallback("pw", false);
-		final var exception = assertThrows(UnsupportedCallbackException.class, () -> aadWorkloadIdentityLoginCallbackHandler.handle(new Callback[]{passwordCallback}));
+        assertThat(exception.getMessage())
+                .isEqualTo("wrong callback type: javax.security.auth.callback.PasswordCallback");
+    }
 
-		assertThat(exception.getMessage()).isEqualTo("wrong callback type: javax.security.auth.callback.PasswordCallback");
-	}
+    @Test
+    void handle_interrupt() throws IOException, InterruptedException {
+        configure_validConfig();
 
-	@Test
-	void handle_interrupt() throws IOException, InterruptedException {
-		configure_validConfig();
+        final var httpResponse = mock(HttpResponse.class);
+        when(httpClient.send(any(), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new InterruptedException("interrupted"));
+        when(httpResponse.body())
+                .thenReturn("{\"access_token\":\"mocked-token\",\"expires_in\": 1234}".getBytes(UTF_8));
 
-		final var httpResponse = mock(HttpResponse.class);
-		when(httpClient.send(any(), any(HttpResponse.BodyHandler.class))).thenThrow(new InterruptedException("interrupted"));
-		when(httpResponse.body()).thenReturn("{\"access_token\":\"mocked-token\",\"expires_in\": 1234}".getBytes(UTF_8));
+        final var exception = assertThrows(InterruptedIOException.class, () -> aadWorkloadIdentityLoginCallbackHandler
+                .handle(new Callback[] { new OAuthBearerTokenCallback() }));
 
-		final var exception = assertThrows(InterruptedIOException.class, () -> aadWorkloadIdentityLoginCallbackHandler.handle(new Callback[]{new OAuthBearerTokenCallback()}));
-
-		assertThat(exception.getMessage()).isEqualTo("interrupted");
-		assertThat(Thread.interrupted()).isTrue();
-		assertThat(Thread.interrupted()).isFalse();
-	}
+        assertThat(exception.getMessage()).isEqualTo("interrupted");
+        assertThat(Thread.interrupted()).isTrue();
+        assertThat(Thread.interrupted()).isFalse();
+    }
 }

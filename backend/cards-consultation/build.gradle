@@ -21,6 +21,8 @@ dependencies {
 
     testImplementation testing_deps.reactor
     testImplementation boot.starterTest, testing_deps.assertJ
+    testImplementation boot.starterWebClientTest
+    testImplementation boot.starterWebFluxTest
     testImplementation project(':backend:test-utilities')
 }
 

@@ -10,12 +10,9 @@
 package org.opfab.users.model;
 
 import org.springframework.validation.annotation.Validated;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import org.opfab.common.users.RightEnum;
 
 @Validated
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class StateRight {
     private String state;
     private RightEnum right;

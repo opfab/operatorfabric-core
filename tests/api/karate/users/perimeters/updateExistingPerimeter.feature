@@ -100,5 +100,5 @@ Feature: Update existing perimeter (endpoint tested : PUT /perimeters/{id})
     And request perimeterUpdated
     When method put
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Payload Perimeter id does not match URL Perimeter id'

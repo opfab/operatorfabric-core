@@ -24,12 +24,12 @@ public class OpfabLoginAuthorizationManager implements AuthorizationManager<Requ
     private static final Logger log = LoggerFactory.getLogger(OpfabLoginAuthorizationManager.class);
 
     @Override
-    public AuthorizationDecision check(Supplier<Authentication> supplier, RequestAuthorizationContext context) {
-
+    public AuthorizationDecision authorize(Supplier<? extends Authentication> supplier,
+            RequestAuthorizationContext context) {
         return new AuthorizationDecision(checkUserLogin(supplier.get(), context));
     }
 
-    boolean checkUserLogin(Authentication authentication, RequestAuthorizationContext context) {
+    protected boolean checkUserLogin(Authentication authentication, RequestAuthorizationContext context) {
 
         String login = context.getVariables().get("login");
         String user;

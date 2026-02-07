@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,18 +21,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @SpringBootApplication
 @Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
         UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class,
-        LastUserActionRepositoryImpl.class})
+        LastUserActionRepositoryImpl.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = SpringApplication.run(CardPublicationApplication.class, args);
         assert (ctx != null);
-        ctx.getBeanProvider(Jackson2ObjectMapperBuilder.class);
     }
 
 }

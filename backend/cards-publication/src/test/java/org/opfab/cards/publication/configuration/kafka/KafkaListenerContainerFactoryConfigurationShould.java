@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,7 +17,7 @@ import org.opfab.cards.publication.kafka.consumer.CardCommandConsumerListener;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
@@ -47,40 +47,45 @@ class KafkaListenerContainerFactoryConfigurationShould {
     @Test
     void kafkaListenerContainerFactory() {
         Integer concurrency = 123;
-        Duration pollTimeout= Duration.ofMillis(123123);
-        KafkaProperties.Listener listenerMock = mock (KafkaProperties.Listener.class);
+        Duration pollTimeout = Duration.ofMillis(123123);
+        KafkaProperties.Listener listenerMock = mock(KafkaProperties.Listener.class);
         when(listenerMock.getPollTimeout()).thenReturn(pollTimeout);
-        when (listenerMock.getConcurrency()).thenReturn(concurrency);
+        when(listenerMock.getConcurrency()).thenReturn(concurrency);
 
-        when (kafkaProperties.getListener()).thenReturn(listenerMock);
-        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory = cut.kafkaListenerContainerFactory();
+        when(kafkaProperties.getListener()).thenReturn(listenerMock);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory = cut
+                .kafkaListenerContainerFactory();
 
         assertNotNull(kafkaListenerContainerFactory);
 
-        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory.createContainer("dummyTopic");
-        assertThat (container.getConcurrency()).isEqualTo(concurrency);
-        assertThat (container.getContainerProperties().getPollTimeout()).isEqualTo(pollTimeout.toMillis());
+        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory
+                .createContainer("dummyTopic");
+        assertThat(container.getConcurrency()).isEqualTo(concurrency);
+        assertThat(container.getContainerProperties().getPollTimeout()).isEqualTo(pollTimeout.toMillis());
     }
 
     @Test
     void kafkaListenerContainerFactoryWithDefaults() {
-        KafkaProperties.Listener listenerMock = mock (KafkaProperties.Listener.class);
-        when (listenerMock.getConcurrency()).thenReturn(null);
-        when (listenerMock.getPollTimeout()).thenReturn(null);
-        when (kafkaProperties.getListener()).thenReturn(listenerMock);
-        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory = cut.kafkaListenerContainerFactory();
+        KafkaProperties.Listener listenerMock = mock(KafkaProperties.Listener.class);
+        when(listenerMock.getConcurrency()).thenReturn(null);
+        when(listenerMock.getPollTimeout()).thenReturn(null);
+        when(kafkaProperties.getListener()).thenReturn(listenerMock);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CardCommand>> kafkaListenerContainerFactory = cut
+                .kafkaListenerContainerFactory();
 
         assertNotNull(kafkaListenerContainerFactory);
 
-        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory.createContainer("dummyTopic");
+        ConcurrentMessageListenerContainer<String, CardCommand> container = kafkaListenerContainerFactory
+                .createContainer("dummyTopic");
 
-        assertThat (container.getConcurrency()).isPositive();
-        assertThat(container.getContainerProperties().getPollTimeout()).isEqualTo(ConsumerProperties.DEFAULT_POLL_TIMEOUT);
+        assertThat(container.getConcurrency()).isPositive();
+        assertThat(container.getContainerProperties().getPollTimeout())
+                .isEqualTo(ConsumerProperties.DEFAULT_POLL_TIMEOUT);
     }
 
     @Test
     void createCardCommandConsumerListener() {
-        List<CommandHandler> handlersMock = mock (List.class);
+        List<CommandHandler> handlersMock = mock(List.class);
         CardCommandConsumerListener cardCommandConsumerListener = cut.createCardCommandConsumerListener(handlersMock);
         assertNotNull(cardCommandConsumerListener);
     }

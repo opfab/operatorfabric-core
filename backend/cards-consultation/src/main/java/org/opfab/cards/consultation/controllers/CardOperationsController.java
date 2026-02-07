@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,7 @@
 
 package org.opfab.cards.consultation.controllers;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardSubscriptionDto;
@@ -53,7 +51,6 @@ public class CardOperationsController {
             CardRepository cardRepository, CustomScreenDataFields customScreenDataFields) {
         this.cardSubscriptionService = cardSubscriptionService;
         this.mapper = mapper;
-        this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         this.cardRepository = cardRepository;
         this.customScreenDataFields = customScreenDataFields;
     }
@@ -171,7 +168,7 @@ public class CardOperationsController {
     private String writeValueAsString(CardOperation cardOperation) {
         try {
             return mapper.writeValueAsString(cardOperation);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error(String.format("Unable to linearize %s to Json", cardOperation.getClass().getSimpleName()), e);
             return null;
         }
@@ -187,7 +184,7 @@ public class CardOperationsController {
     private String objectToJsonString(Object o) {
         try {
             return mapper.writeValueAsString(o);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error("Unable to convert object to Json string", e);
             return "null";
         }

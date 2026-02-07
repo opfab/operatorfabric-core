@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
  */
 package org.opfab.cards.publication.kafka.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -57,7 +57,7 @@ class DeleteCardCommandHandlerShould {
     }
 
     @Test
-    void executeCommand() throws JsonProcessingException {
+    void executeCommand() throws JacksonException {
         CardCommand cardCommandMock = mock(CardCommand.class);
         org.opfab.cards.publication.model.Card cardPublicationDataMock = mock(
                 org.opfab.cards.publication.model.Card.class);

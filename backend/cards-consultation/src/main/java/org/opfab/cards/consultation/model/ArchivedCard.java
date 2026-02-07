@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,13 @@
 
 package org.opfab.cards.consultation.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+
+import org.opfab.json.InstantDeserializer;
+import org.opfab.json.InstantSerializer;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -45,32 +49,36 @@ public class ArchivedCard {
     public String summaryTranslated;
 
     @CreatedDate
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant publishDate;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant lttd;
+
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant startDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant endDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant expirationDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String media;
 
     public SeverityEnum severity;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> tags;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Object data;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> userRecipients;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> groupRecipients;
 
     public List<String> entityRecipients;
@@ -85,7 +93,6 @@ public class ArchivedCard {
 
     public List<String> externalRecipients;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<TimeSpan> timeSpans;
 
     public PublisherTypeEnum publisherType;
@@ -100,7 +107,6 @@ public class ArchivedCard {
     public Instant deletionDate;
 
     @JsonProperty("rRule")
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public RRule rRule;
 
     public List<CardActionEnum> actions;

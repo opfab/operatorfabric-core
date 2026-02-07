@@ -1,4 +1,3 @@
-
 # comment kafka.consumer.group-id to disable Kafka
 spring:
   kafka:

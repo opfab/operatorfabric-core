@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,15 +10,13 @@
 
 package org.opfab.cards.publication.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.MapperConfig;
+import tools.jackson.databind.introspect.AnnotatedMember;
+import tools.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import tools.jackson.databind.json.JsonMapper;
 import org.opfab.avro.ResponseCard;
 import org.opfab.cards.publication.model.Card;
 import org.opfab.json.InstantModule;
@@ -34,35 +32,34 @@ public class CardObjectMapper {
     private static final List<String> exclusions = Arrays.asList("getSchema", "getSpecificData");
 
     public CardObjectMapper() {
-        this.objectMapper = JsonMapper.builder().build();
+        this.objectMapper = JsonMapper.builder()
+                .addModule(new InstantModule())
+                .annotationIntrospector(new JacksonAnnotationIntrospector() {
+                    /* Exclude specific avro fields to avoid Json mapping exceptions */
+                    @Override
+                    public boolean hasIgnoreMarker(MapperConfig<?> config, final AnnotatedMember m) {
+                        return exclusions.contains(m.getName()) || super.hasIgnoreMarker(config, m);
+                    }
+                })
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .build();
 
-        /* Exclude specific avro fields to avoid Json mapping exceptions */
-        objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
-            @Override
-            public boolean hasIgnoreMarker(final AnnotatedMember m) {
-                return exclusions.contains(m.getName()) || super.hasIgnoreMarker(m);
-            }
-        });
- 
-        objectMapper.registerModule(new Jdk8Module());
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new InstantModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public String writeValueAsString(Object value) throws JsonProcessingException {
+    public String writeValueAsString(Object value) {
         return objectMapper.writeValueAsString(value);
     }
 
-    public ResponseCard readResponseCardValue(String writeValueAsString) throws JsonProcessingException {
+    public ResponseCard readResponseCardValue(String writeValueAsString) {
         return objectMapper.readValue(writeValueAsString, ResponseCard.class);
     }
-    public Card readCardPublicationDataValue(String writeValueAsString) throws JsonProcessingException {
+
+    public Card readCardPublicationDataValue(String writeValueAsString) {
         return objectMapper.readValue(writeValueAsString, Card.class);
     }
 
-    public Map<String,Object> readJSONValue(String writeValueAsString) throws JsonProcessingException {
-        return objectMapper.readValue(writeValueAsString,new TypeReference<Map<String, Object>>() {
+    public Map<String, Object> readJSONValue(String writeValueAsString) {
+        return objectMapper.readValue(writeValueAsString, new TypeReference<Map<String, Object>>() {
         });
     }
 }

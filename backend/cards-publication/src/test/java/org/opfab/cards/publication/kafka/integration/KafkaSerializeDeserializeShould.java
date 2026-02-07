@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -48,6 +48,7 @@ class KafkaSerializeDeserializeShould {
     }
 
     private Card createCardPublicationData() {
+        Instant now = Instant.now().truncatedTo(ChronoUnit.MILLIS); // Truncate to millis precision
         Card card = new Card();
         card.publisher = "PUBLISHER_1";
         card.processVersion = "O";
@@ -55,13 +56,13 @@ class KafkaSerializeDeserializeShould {
         card.uid = "uid293454";
         card.parentCardId = "myParent1234";
         card.timeSpans = List.of(new TimeSpan(
-                Instant.now(),
-                Instant.now().plus(2, ChronoUnit.HOURS)));
+                now,
+                now.plus(2, ChronoUnit.HOURS)));
         card.processInstanceId = "PROCESS_1";
         card.severity = SeverityEnum.INFORMATION;
         card.title = new I18n("title", null);
         card.summary = new I18n("summary", null);
-        card.startDate = Instant.now();
+        card.startDate = now;
         card.process = "process5";
         card.state = "state5";
 

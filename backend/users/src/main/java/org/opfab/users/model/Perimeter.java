@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.users.model;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
@@ -20,10 +17,9 @@ import org.springframework.validation.annotation.Validated;
 import java.util.*;
 
 @Document(collection = "perimeter")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
-public class Perimeter{
-    
+public class Perimeter {
+
     @Id
     @NotNull
     private String id;
@@ -32,18 +28,20 @@ public class Perimeter{
 
     public Perimeter() {
     }
-    
+
     public Perimeter(@NotNull String id, String process, List<StateRight> stateRights) {
         this.id = id;
         this.process = process;
         this.stateRights = stateRights;
     }
 
-    public Perimeter (Perimeter perimeterData) {
+    public Perimeter(Perimeter perimeterData) {
         this.id = perimeterData.id;
         this.process = perimeterData.process;
-        if (perimeterData.stateRights!=null)  this.stateRights = new ArrayList<>(perimeterData.stateRights);
-        else this.stateRights = new ArrayList<>();
+        if (perimeterData.stateRights != null)
+            this.stateRights = new ArrayList<>(perimeterData.stateRights);
+        else
+            this.stateRights = new ArrayList<>();
     }
 
     public void setStateRights(List<StateRight> stateRights) {
@@ -51,7 +49,7 @@ public class Perimeter{
     }
 
     public List<StateRight> getStateRights() {
-        if(stateRights == null)
+        if (stateRights == null)
             return Collections.emptyList();
         return stateRights;
     }
@@ -114,5 +112,4 @@ public class Perimeter{
         return true;
     }
 
-    
 }

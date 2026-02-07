@@ -11,14 +11,12 @@ package org.opfab.users.model;
 
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import org.opfab.utilities.ObjectUtils;
 
 @Document(collection = "user_settings")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserSettings {
 
     @Id

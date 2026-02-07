@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,11 +9,10 @@
 
 package org.opfab.externalapp.config;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.ser.std.StdSerializer;
+import tools.jackson.databind.SerializationContext;
 
-import java.io.IOException;
 import java.time.Instant;
 
 /**
@@ -33,7 +32,7 @@ public class InstantSerializer extends StdSerializer<Instant> {
     }
 
     @Override
-    public void serialize(Instant value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(Instant value, JsonGenerator gen, SerializationContext ctxt) {
         gen.writeNumber(value.toEpochMilli());
     }
 }

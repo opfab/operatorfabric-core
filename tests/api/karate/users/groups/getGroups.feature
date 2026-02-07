@@ -29,7 +29,7 @@ Feature: Get Groups
     And match response.id == groupId
     And match response.name == groupName
     And match response.description == groupDescription
-    And match response.perimeters == '#notpresent'
+    And match response.perimeters == []
     And match response.permissions == groupPermissions
 
   Scenario: get groups without authentication

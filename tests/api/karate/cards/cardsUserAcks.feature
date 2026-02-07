@@ -92,7 +92,7 @@ Scenario: CardsUserAcknowledgement
     When method get
     Then status 200
     And match response.card.hasBeenAcknowledged == false
-    And match response.card.entitiesAcks == '#notpresent'
+    And match response.card.entitiesAcks == []
     And def uid = response.card.uid
 
 #make an acknowledgement to the card with operator1_fr with entities for which the user is not a member

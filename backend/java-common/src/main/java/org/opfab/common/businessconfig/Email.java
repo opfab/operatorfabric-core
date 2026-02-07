@@ -8,11 +8,8 @@
  */
 package org.opfab.common.businessconfig;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.Objects;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Email {
 
     private String bodyTemplate;
@@ -82,9 +79,9 @@ public class Email {
         }
         Email email = (Email) o;
         return Objects.equals(this.bodyTemplate, email.bodyTemplate) &&
-               Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix) &&
-               Objects.equals(this.sender, email.sender) &&
-               Objects.equals(this.cardFieldUsedForSubject, email.cardFieldUsedForSubject);
+                Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix) &&
+                Objects.equals(this.sender, email.sender) &&
+                Objects.equals(this.cardFieldUsedForSubject, email.cardFieldUsedForSubject);
     }
 
     @Override
@@ -98,7 +95,8 @@ public class Email {
         sb.append("class Email {\n");
 
         sb.append("    bodyTemplate: ").append(toIndentedString(bodyTemplate)).append("\n");
-        sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix)).append("\n");
+        sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix))
+                .append("\n");
         sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
         sb.append("    cardFieldUsedForSubject: ").append(toIndentedString(cardFieldUsedForSubject)).append("\n");
         sb.append("}");

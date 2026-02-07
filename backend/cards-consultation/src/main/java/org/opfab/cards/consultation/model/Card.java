@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,13 @@
 package org.opfab.cards.consultation.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+
+import org.opfab.json.InstantDeserializer;
+import org.opfab.json.InstantSerializer;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -43,34 +47,39 @@ public class Card {
     public String titleTranslated;
     public String summaryTranslated;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant publishDate;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant lastUpdate;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant lttd;
+
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant startDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant endDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant expirationDate;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String media;
 
     public SeverityEnum severity;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> tags;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Object data;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> userRecipients;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> groupRecipients;
 
     public List<String> entityRecipients;
@@ -83,7 +92,6 @@ public class Card {
 
     public List<String> entitiesAllowedToEdit;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> externalRecipients;
 
     public List<TimeSpan> timeSpans;
@@ -112,10 +120,8 @@ public class Card {
     public String processStateKey;
 
     @JsonProperty("rRule") // if we don't use this annotation, the field will be serialized as "rrule"
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public RRule rRule;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<CardActionEnum> actions;
 
 }

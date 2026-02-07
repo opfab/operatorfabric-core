@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,9 +12,6 @@ import java.util.Objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProcessStates {
     private Response response = null;
 
@@ -431,7 +428,8 @@ public class ProcessStates {
         return Objects.hash(response, acknowledgmentAllowed, consideredAcknowledgedForUserWhen,
                 cancelAcknowledgmentAllowed, showAcknowledgmentFooter, closeCardWhenUserAcknowledges,
                 editCardEnabledOnUserInterface, copyCardEnabledOnUserInterface, deleteCardEnabledOnUserInterface, name,
-                description, showDetailCardHeader, color, userCard, templateName, email, emailAttachmentTemplate, emailAttachmentFileName, styles, type,
+                description, showDetailCardHeader, color, userCard, templateName, email, emailAttachmentTemplate,
+                emailAttachmentFileName, styles, type,
                 isOnlyAChildState, validateAnswerButtonLabel, modifyAnswerButtonLabel, automaticPinWhenAcknowledged);
     }
 

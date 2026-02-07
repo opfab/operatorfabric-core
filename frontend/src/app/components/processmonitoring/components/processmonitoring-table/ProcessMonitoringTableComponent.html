@@ -26,7 +26,7 @@
                 [enableFilterHandlers]="true"
                 [rowData]="result"
                 (filterChanged)="onFilterChanged($event)"
-                (rowClicked)="selectCard($event.data._id)"
+                (rowClicked)="selectCard($event.data.id)"
                 (columnResized)="onColumnResized($event)"
                 (columnMoved)="onColumnMoved($event)"
                 class="ag-theme-opfab">

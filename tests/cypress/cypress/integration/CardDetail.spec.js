@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,18 +10,18 @@
 /* This test file focuses on some state-type specific behaviour in card details header. As the Cypress test suite grows,
 it might make sense to merge it with other tests.
 * */
-import { OpfabGeneralCommands } from '../support/opfabGeneralCommands';
-import { FeedCommands } from '../support/feedCommands';
-import { ScriptCommands } from '../support/scriptCommands';
-import { CardCommands } from '../support/cardCommands';
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {FeedCommands} from '../support/feedCommands';
+import {ScriptCommands} from '../support/scriptCommands';
+import {CardCommands} from '../support/cardCommands';
 
-describe('Card detail', function() {
+describe('Card detail', function () {
     const opfab = new OpfabGeneralCommands();
     const feed = new FeedCommands();
     const script = new ScriptCommands();
     const card = new CardCommands();
 
-    before('Set up configuration', function() {
+    before('Set up configuration', function () {
         // This can stay in a `before` block rather than `beforeEach` as long as the test does not change configuration
         script.resetUIConfigurationFiles();
         script.deleteAllSettings();
@@ -31,8 +31,8 @@ describe('Card detail', function() {
         script.sendCard('cypress/cardDetail/cardDetail.json');
     });
 
-    describe('Check card detail', function() {
-        it(`Check card detail`, function() {
+    describe('Check card detail', function () {
+        it(`Check card detail`, function () {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
 
@@ -55,19 +55,19 @@ describe('Card detail', function() {
                 'entity[0]:id=ENTITY1_FR,name=Control Center FR North,description=Control Center FR North,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=FR1 label'
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
+                'entity[1]:id=ENTITY2_FR,name=Control Center FR South,description=Control Center FR South,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels='
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
+                'entity[2]:id=ENTITY3_FR,name=Control Center FR East,description=Control Center FR East,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels='
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels=undefined'
+                'entity[3]:id=ENTITY4_FR,name=Control Center FR West,description=Control Center FR West,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=ENTITY_FR,labels='
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,roles=ACTIVITY_AREA_GROUP,CARD_RECEIVER,parents=undefined,labels=undefined'
+                'entity[4]:id=ENTITY_FR,name=French Control Centers,description=French Control Centers,roles=ACTIVITY_AREA_GROUP,CARD_RECEIVER,parents=,labels='
             );
             cy.get('#opfab-users-entities-getAllEntities').contains(
-                'entity[6]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=EUROPEAN_SUPERVISION_CENTERS,labels=undefined'
+                'entity[6]:id=IT_SUPERVISOR_ENTITY,name=IT SUPERVISION CENTER,description=IT SUPERVISION CENTER,roles=ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,parents=EUROPEAN_SUPERVISION_CENTERS,labels='
             );
             cy.get('#opfab-users-entities-getEntity-ENTITY1_FR').contains(
                 /^ENTITY1_FR,Control Center FR North,Control Center FR North,ACTIVITY_AREA,CARD_RECEIVER,CARD_SENDER,ENTITY_FR,FR1 label$/
@@ -98,7 +98,7 @@ describe('Card detail', function() {
             cy.get('#severityColor').contains('#1074ad');
         });
 
-        it(`Check card footer for operator4_fr (member of several entities)`, function() {
+        it(`Check card footer for operator4_fr (member of several entities)`, function () {
             opfab.loginWithUser('operator4_fr');
             feed.openFirstCard();
 
@@ -110,7 +110,7 @@ describe('Card detail', function() {
             cy.get('#opfab-card-details-address-to').contains('Control Center FR South');
         });
 
-        it(`Check card detail spinner when simulating card processed `, function() {
+        it(`Check card detail spinner when simulating card processed `, function () {
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
             cy.get('#opfabAPI-display-spinner-button').click();
@@ -118,7 +118,7 @@ describe('Card detail', function() {
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
 
-        it(`Check card detail in archives`, function() {
+        it(`Check card detail in archives`, function () {
             opfab.loginWithUser('operator1_fr');
             opfab.navigateToArchives();
             // We click the search button
@@ -169,7 +169,7 @@ describe('Card detail', function() {
             cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
-        it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function() {
+        it(`Check card detail footer for archives for operator4_fr (member of several entities)`, function () {
             opfab.loginWithUser('operator4_fr');
             opfab.navigateToArchives();
 
@@ -192,7 +192,7 @@ describe('Card detail', function() {
             cy.get('#opfab-card-details-address-to').should('not.exist');
         });
 
-        it(`Check opfab API when response not required `, function() {
+        it(`Check opfab API when response not required `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotRequired.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -200,7 +200,7 @@ describe('Card detail', function() {
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
-        it(`Check opfab API when response is not possible `, function() {
+        it(`Check opfab API when response is not possible `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -208,7 +208,7 @@ describe('Card detail', function() {
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('false');
         });
 
-        it(`Check that a spinner is displayed when the card takes time to load `, function() {
+        it(`Check that a spinner is displayed when the card takes time to load `, function () {
             script.sendCard('cypress/cardDetail/cardDetailResponseNotPossible.json');
             cy.delayRequestResponse('/cards-consultation/cards/**');
             opfab.loginWithUser('operator1_fr');
@@ -217,7 +217,7 @@ describe('Card detail', function() {
             opfab.checkLoadingSpinnerIsNotDisplayed();
         });
 
-        it(`Check deleted card detail footer in archives`, function() {
+        it(`Check deleted card detail footer in archives`, function () {
             script.sendCard('cypress/userCard/message.json');
             opfab.loginWithUser('operator1_fr');
             feed.openFirstCard();
@@ -242,7 +242,7 @@ describe('Card detail', function() {
             );
         });
 
-        it(`Check showCard link`, function() {
+        it(`Check showCard link`, function () {
             script.sendCard('cypress/userCard/message.json');
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
@@ -256,7 +256,7 @@ describe('Card detail', function() {
             card.checkContainsText('Hello operator1_fr, you received the following message');
         });
 
-        it(`Check show alert message links`, function() {
+        it(`Check show alert message links`, function () {
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
             opfab.loginWithUser('operator1_fr');
@@ -284,7 +284,7 @@ describe('Card detail', function() {
             cy.get('.opfab-alert-close').click();
         });
 
-        it(`Check getCards API call`, function() {
+        it(`Check getCards API call`, function () {
             script.sendCard('cypress/userCard/message.json');
             script.sendCard('cypress/cardDetail/cardDetail.json');
 
@@ -293,11 +293,11 @@ describe('Card detail', function() {
             feed.openFirstCard();
 
             cy.get('#opfabGetCardsResult').contains('"numberOfElements":1');
-            cy.get('#opfabGetCardsResult').contains('"_id":"defaultProcess.process1"');
+            cy.get('#opfabGetCardsResult').contains('"id":"defaultProcess.process1"');
             cy.get('#opfabGetCardsResult').contains('"titleTranslated":"Message"');
         });
 
-        it(`Check isUserAllowedToEdit and editCard API call`, function() {
+        it(`Check isUserAllowedToEdit and editCard API call`, function () {
             script.sendCard('defaultProcess/message.json');
             opfab.loginWithUser('operator1_fr');
 

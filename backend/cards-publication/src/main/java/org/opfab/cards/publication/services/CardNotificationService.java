@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,7 @@
 
 package org.opfab.cards.publication.services;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.opfab.cards.publication.DataExtractor;
 import org.opfab.cards.publication.configuration.CustomScreenDataFields;
 import org.opfab.cards.publication.model.CardOperation;
@@ -34,7 +32,7 @@ public class CardNotificationService {
             CustomScreenDataFields customScreenDataFields) {
         this.eventBus = eventBus;
         this.mapper = mapper;
-        this.mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
         this.dataFields = customScreenDataFields;
         if (this.dataFields == null) {
             log.info("CardNotificationService initialized without custom fields");
@@ -71,7 +69,7 @@ public class CardNotificationService {
                     (card != null && card.userRecipients() != null) ? card.userRecipients().toString() : "",
                     (card != null && card.usersReads() != null) ? card.usersReads().toString() : "",
                     (card != null && card.usersAcks() != null) ? card.usersAcks().toString() : "");
-        } catch (JsonProcessingException e) {
+        } catch (tools.jackson.core.JacksonException e) {
             log.error("Unable to linearize card to json on event bus");
         }
     }
@@ -85,7 +83,7 @@ public class CardNotificationService {
             log.debug("{} for cardUid={} and cardId={} with entitiesAcks={} sent to event bus",
                     operationType == CardOperationTypeEnum.ACK ? "Acknowlegement" : "Cancel acknowledgement",
                     cardUid, cardId, entitiesAcks);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error("Unable to linearize card operation for acknowledgement to json on event bus");
         }
     }

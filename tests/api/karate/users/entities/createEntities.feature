@@ -166,7 +166,7 @@ Feature: CreateEntities
     And request <entityToTestBadRequest>
     When method post
     Then status 400
-    And match response.status == "BAD_REQUEST"
+    And match response.status == "400 BAD_REQUEST"
     And match response.message == <expectedMessage>
 
     Examples:

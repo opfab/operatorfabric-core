@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.businessconfig.configuration.oauth2;
 
@@ -34,17 +32,16 @@ import static org.opfab.configuration.oauth.OpfabAuthorizationManager.authentica
 @Configuration
 public class WebSecurityConfiguration {
 
-    public static final String PROMETHEUS_PATH ="/actuator/prometheus**";
-    public static final String LOGGERS_PATH ="/actuator/loggers/**";
+    public static final String PROMETHEUS_PATH = "/actuator/prometheus**";
+    public static final String LOGGERS_PATH = "/actuator/loggers/**";
     public static final String ADMIN_ROLE = "ADMIN";
     public static final String ADMIN_BUSINESS_PROCESS_ROLE = "ADMIN_BUSINESS_PROCESS";
     public static final String GLOBAL_PATH = "/**";
-    public static final String PROCESS_PATH  = "/processes/**";
-
+    public static final String PROCESS_PATH = "/processes/**";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) throws Exception {
+            Converter<Jwt, AbstractAuthenticationToken> opfabJwtConverter) {
         configureCommon(http);
 
         http
@@ -55,18 +52,22 @@ public class WebSecurityConfiguration {
         return http.build();
     }
 
-    /* We remove authentication for GET on PROCESS because :
-    1) style is called via <style>, so no token is provided (Static resource)
-    2) it is called by CardPublication when checkAuthenticationForCardSending is set to false
-    3) it is called for publishing card, for checking if process/state exists in the bundles */
-    public static void configureCommon(final HttpSecurity http) throws Exception {
+    /*
+     * We remove authentication for GET on PROCESS because :
+     * 1) style is called via <style>, so no token is provided (Static resource)
+     * 2) it is called by CardPublication when checkAuthenticationForCardSending is
+     * set to false
+     * 3) it is called for publishing card, for checking if process/state exists in
+     * the bundles
+     */
+    public static void configureCommon(final HttpSecurity http) {
         http
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(new CustomAccessDeniedHandler())
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
-                        .requestMatchers(HttpMethod.GET, PROCESS_PATH).permitAll()  
+                        .requestMatchers(HttpMethod.GET, PROCESS_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, GLOBAL_PATH)
                         .access(hasAnyRole(ADMIN_ROLE, ADMIN_BUSINESS_PROCESS_ROLE))
                         .requestMatchers(HttpMethod.PUT, GLOBAL_PATH)

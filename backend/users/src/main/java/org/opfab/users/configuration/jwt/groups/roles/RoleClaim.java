@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,8 @@
 
 package org.opfab.users.configuration.jwt.groups.roles;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import jakarta.validation.constraints.NotBlank;
@@ -67,7 +67,7 @@ public abstract class RoleClaim {
         try {
             JsonNode jsonNodeRoot = getJsonNodeRoot(payload);
             return getListRoles(jsonNodeRoot);
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Unexpected Error arose", e);
         }
 
@@ -98,7 +98,7 @@ public abstract class RoleClaim {
      * @return the payload jsonNodeRoot
      * @throws IOException
      */
-    private JsonNode getJsonNodeRoot(String jwtBodyValue) throws IOException {
+    private JsonNode getJsonNodeRoot(String jwtBodyValue) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readTree(jwtBodyValue);
     }

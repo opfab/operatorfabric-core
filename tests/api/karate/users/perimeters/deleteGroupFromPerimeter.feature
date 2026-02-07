@@ -94,7 +94,7 @@ Feature: delete group from a perimeter (endpoint tested : DELETE /perimeters/{id
     And header Authorization = 'Bearer ' + authToken
     When method delete
     Then status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'Perimeter perimeterNonExistent not found'
 
 

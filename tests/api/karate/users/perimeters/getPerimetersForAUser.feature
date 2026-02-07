@@ -179,7 +179,7 @@ Feature: Get perimeters for a user (endpoint tested : GET /users/{login}/perimet
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'User unknownuser not found'
 
 

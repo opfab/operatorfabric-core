@@ -32,7 +32,7 @@ Scenario: Post card with unexisting i18n file
 # use retry to avoid flaky test when previous test ask for perimeter delete
 # but the processing is not finished when we create the perimeter
 # resulting in a bad response : 
-#  {"status":"BAD_REQUEST","message":"Resource creation failed because a resource with the same key already exists.","errors":["Duplicate key : perimeter"]}
+#  {"status":"400 BAD_REQUEST","message":"Resource creation failed because a resource with the same key already exists.","errors":["Duplicate key : perimeter"]}
     Given url opfabUrl + 'users/perimeters'
     And header Authorization = 'Bearer ' + authToken
     And request perimeter
@@ -79,7 +79,7 @@ Scenario: Post card with unexisting i18n file
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card : no i18n file for process=api_test, processVersion=1 (processInstanceId=cardWithUnexistingI18nFile)'
 
 
@@ -116,7 +116,7 @@ Scenario: Post card with unexisting i18n file
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card : no i18n translation for key=message.unexistingI18nKeyForSummary (process=api_test, processVersion=1, processInstanceId=cardWithExistingI18nFileButUnexistingI18nKey)'
 
     * def card =
@@ -142,7 +142,7 @@ Scenario: Post card with unexisting i18n file
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card : no i18n translation for key=message.unexistingI18nKeyForTitle (process=api_test, processVersion=1, processInstanceId=cardWithExistingI18nFileButUnexistingI18nKey)'
 
 

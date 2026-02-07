@@ -1,4 +1,5 @@
-/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
+
+/* Copyright (c) 2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,11 +7,16 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+package org.opfab.cards.consultation.model;
 
-package org.opfab.cards.publication.model;
+import java.util.List;
 
-import org.springframework.validation.annotation.Validated;
-
-@Validated
-public record CardCreationReport(String id, String uid) {
-}
+public record CardPage(
+    List<Card> content,
+    boolean first,
+    boolean last,
+    long totalPages,
+    long totalElements,
+    long numberOfElements,
+    long size
+) {}
