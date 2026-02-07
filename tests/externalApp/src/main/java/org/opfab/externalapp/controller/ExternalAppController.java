@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,13 +10,12 @@
 
 package org.opfab.externalapp.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.opfab.externalapp.service.ExternalAppServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-
 
 @RestController
 public class ExternalAppController {
@@ -29,7 +28,7 @@ public class ExternalAppController {
 
     @PostMapping("/test")
     @ResponseStatus(HttpStatus.OK)
-    public void externalAppResponse(@RequestBody Optional<JsonNode> requestBody)  {
+    public void externalAppResponse(@RequestBody Optional<JsonNode> requestBody) {
         if (requestBody.isEmpty())
             throw new IllegalArgumentException("No Request Body");
 
@@ -38,12 +37,12 @@ public class ExternalAppController {
 
     @DeleteMapping("/test/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void onCardSuppression(@PathVariable String id)  {
+    public void onCardSuppression(@PathVariable String id) {
         externalAppServiceImpl.deleteCard(id);
     }
 
     @GetMapping("/")
     public String home() {
-        return   externalAppServiceImpl.welcomeMessage();
+        return externalAppServiceImpl.welcomeMessage();
     }
 }

@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
  */
 package org.opfab.cards.publication.kafka.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class BaseCommandHandlerShould {
     private Card card;
 
     @BeforeAll
-    void setUp() throws JsonProcessingException {
+    void setUp() throws JacksonException {
         objectMapper = mock(CardObjectMapper.class);
         cut = new BaseCommandHandler(objectMapper);
         org.opfab.cards.publication.model.Card cardPublicationData = new org.opfab.cards.publication.model.Card();
@@ -65,7 +65,7 @@ class BaseCommandHandlerShould {
     }
 
     @Test
-    void testBuildCardPublicationData_withDataProperty() throws JsonProcessingException {
+    void testBuildCardPublicationData_withDataProperty() throws JacksonException {
         String cardDataAsString = "justAString";
         Map<String, Object> cardData = Collections.singletonMap(DATA_KEY, DATA_VALUE);
         when(card.getData()).thenReturn(cardDataAsString);

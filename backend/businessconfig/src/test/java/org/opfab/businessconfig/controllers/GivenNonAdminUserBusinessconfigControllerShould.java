@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-
-
 
 package org.opfab.businessconfig.controllers;
 
@@ -42,12 +40,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {IntegrationTestApplication.class})
+@SpringBootTest(classes = { IntegrationTestApplication.class })
 @WebAppConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@WithMockOpFabUser(login="nonAdminUser")
+@WithMockOpFabUser(login = "nonAdminUser")
 class GivenNonAdminUserBusinessconfigControllerShould {
 
     private static Path testDataDir = Paths.get("./build/test-data/businessconfig-storage");
@@ -80,8 +77,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         mockMvc.perform(get("/processes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)))
-        ;
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
@@ -89,8 +85,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         mockMvc.perform(get("/processgroups"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.groups", hasSize(0)))
-        ;
+                .andExpect(jsonPath("$.groups", hasSize(0)));
     }
 
     @Test
@@ -98,8 +93,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         mockMvc.perform(get("/realtimescreens"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.realTimeScreens", hasSize(0)))
-        ;
+                .andExpect(jsonPath("$.realTimeScreens", hasSize(0)));
     }
 
     @Test
@@ -108,8 +102,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.version", is("v1")))
-        ;
+                .andExpect(jsonPath("$.version", is("v1")));
     }
 
     @Test
@@ -138,8 +131,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("""
                         .bold {
                             font-weight: bold;
-                        }""")))
-        ;
+                        }""")));
         result = mockMvc.perform(
                 get("/processes/first/css/style1?version=0.1")
                         .accept("text/css"));
@@ -149,68 +141,57 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                 .andExpect(content().string(is("""
                         .bold {
                             font-weight: bolder;
-                        }""")))
-        ;
+                        }""")));
     }
 
     @Test
     void fetchTemplateResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/processes/first/templates/template1")
-                        .accept("application/handlebars")
-        );
+                        .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}}")))
-        ;
+                .andExpect(content().string(is("{{service}}")));
         result = mockMvc.perform(
                 get("/processes/first/templates/template?version=0.1")
                         .accept("application/handlebars"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/handlebars"))
-                .andExpect(content().string(is("{{service}} 0.1")))
-        ;
+                .andExpect(content().string(is("{{service}} 0.1")));
         result = mockMvc.perform(
                 get("/processes/first/templates/templateIO?version=0.1")
                         .accept("application/json", "application/handlebars"));
         result
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        ;
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     void fetchTranslationResource() throws Exception {
         ResultActions result = mockMvc.perform(
                 get("/processes/first/i18n")
-                        .accept("text/plain")
-        );
+                        .accept("text/plain"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Title $1\"")))
-        ;
+                .andExpect(content().string(is("card.title=\"Title $1\"")));
         result = mockMvc.perform(
                 get("/processes/first/i18n?version=0.1")
-                        .accept("text/plain")
-        );
+                        .accept("text/plain"));
         result
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/plain"))
-                .andExpect(content().string(is("card.title=\"Title $1 0.1\"")))
-        ;
+                .andExpect(content().string(is("card.title=\"Title $1 0.1\"")));
 
-        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() ->
-                mockMvc.perform(
-                        get("/processes/first/i18n?version=2.1")
-                                .accept("text/plain")
-                ));
+        assertThatExceptionOfType(FileNotFoundException.class).isThrownBy(() -> mockMvc.perform(
+                get("/processes/first/i18n?version=2.1")
+                        .accept("text/plain")));
     }
 
     @Nested
-    @WithMockOpFabUser(login="nonAdminUser")
+    @WithMockOpFabUser(login = "nonAdminUser")
     class CreateContent {
         @Test
         void notAllowBundleToBePost() throws Exception {
@@ -218,8 +199,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
             MockMultipartFile bundle = new MockMultipartFile("file", "second-2.1.tar.gz", "application/gzip", Files
                     .readAllBytes(pathToBundle));
             mockMvc.perform(multipart("/processes/second").file(bundle))
-                    .andExpect(status().isForbidden())
-            ;
+                    .andExpect(status().isForbidden());
 
             mockMvc.perform(get("/processes"))
                     .andExpect(status().isOk())
@@ -231,12 +211,12 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         void notAllowProcessGroupsToBePost() throws Exception {
             Path pathToProcessGroupsFile = Paths.get("./build/test-data/processgroups.json");
 
-            MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json", MediaType.TEXT_PLAIN_VALUE, Files
-                    .readAllBytes(pathToProcessGroupsFile));
+            MockMultipartFile processGroupsFile = new MockMultipartFile("file", "processgroups.json",
+                    MediaType.TEXT_PLAIN_VALUE, Files
+                            .readAllBytes(pathToProcessGroupsFile));
 
             mockMvc.perform(multipart("/processgroups").file(processGroupsFile))
-                    .andExpect(status().isForbidden())
-            ;
+                    .andExpect(status().isForbidden());
 
             mockMvc.perform(get("/processgroups"))
                     .andExpect(status().isOk())
@@ -248,12 +228,12 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         void notAllowRealTimeScreensToBePost() throws Exception {
             Path pathToRealTimeScreensFile = Paths.get("./build/test-data/realtimescreens.json");
 
-            MockMultipartFile realTimeScreensFile = new MockMultipartFile("file", "realtimescreens.json", MediaType.TEXT_PLAIN_VALUE, Files
-                    .readAllBytes(pathToRealTimeScreensFile));
+            MockMultipartFile realTimeScreensFile = new MockMultipartFile("file", "realtimescreens.json",
+                    MediaType.TEXT_PLAIN_VALUE, Files
+                            .readAllBytes(pathToRealTimeScreensFile));
 
             mockMvc.perform(multipart("/realtimescreens").file(realTimeScreensFile))
-                    .andExpect(status().isForbidden())
-            ;
+                    .andExpect(status().isForbidden());
 
             mockMvc.perform(get("/realtimescreens"))
                     .andExpect(status().isOk())
@@ -262,43 +242,46 @@ class GivenNonAdminUserBusinessconfigControllerShould {
         }
 
         @Nested
-        @WithMockOpFabUser(login="nonAdminUser")
+        @WithMockOpFabUser(login = "nonAdminUser")
         class DeleteOnlyOneProcess {
-        	
-        	static final String BUNDLE_NAME = "first";
-        	
-        	@BeforeEach
+
+            static final String BUNDLE_NAME = "first";
+
+            @BeforeEach
             void setup() throws Exception {
-                // This will also delete the businessconfig-storage root folder, but in this case it's needed as
+                // This will also delete the businessconfig-storage root folder, but in this
+                // case it's needed as
                 // the following copy would fail if the folder already existed.
-        		if (Files.exists(testDataDir)) Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
-  			    copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
-  			    service.loadCache();
+                if (Files.exists(testDataDir))
+                    Files.walk(testDataDir, 1).forEach(PathUtils::silentDelete);
+                copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
+                service.loadCache();
             }
-        	
-        	@Test
+
+            @Test
             void deleteBundleByNameAndVersionWhichNotBeingDeafult() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/processes/"+ BUNDLE_NAME +"/versions/0.1"));
+                ResultActions result = mockMvc.perform(delete("/processes/" + BUNDLE_NAME + "/versions/0.1"));
                 result
                         .andExpect(status().isForbidden());
             }
-        	
-        	@Test
+
+            @Test
             void deleteGivenBundle() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/processes/"+ BUNDLE_NAME));
+                ResultActions result = mockMvc.perform(delete("/processes/" + BUNDLE_NAME));
                 result
                         .andExpect(status().isForbidden());
             }
-        	
-        	@Test
+
+            @Test
             void deleteGivenBundleNotFoundError() throws Exception {
-        		ResultActions result = mockMvc.perform(delete("/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
+                ResultActions result = mockMvc
+                        .perform(delete("/processes/impossible_a_businessconfig_with_this_exact_name_exists"));
                 result
                         .andExpect(status().isForbidden());
             }
-        	
-        	@Nested
-            @WithMockOpFabUser(login="nonAdminUser")
+
+            @Nested
+            @WithMockOpFabUser(login = "nonAdminUser")
             class DeleteContent {
                 @Test
                 void clean() throws Exception {
@@ -310,9 +293,9 @@ class GivenNonAdminUserBusinessconfigControllerShould {
                             .andExpect(jsonPath("$", hasSize(2)));
                 }
             }
-        	
+
         }
-        
+
     }
 
 }

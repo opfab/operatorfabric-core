@@ -131,10 +131,10 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     Then match result.response.id == perimeter.id
     And match result.response.process == perimeter.process
     And match result.response.stateRights[0] == perimeter.stateRights[0]
+    And match result.response.stateRights[0].filteringNotificationAllowed == true
     And match result.response.stateRights[1] == perimeter.stateRights[1]
     And match result.response.stateRights[2].state == perimeter.stateRights[2].state
     And match result.response.stateRights[2].right == perimeter.stateRights[2].right
-    And match result.response.stateRights[2].filteringNotificationAllowed == true
 
 
   Scenario: Update existing perimeter sending a POST request
@@ -182,7 +182,7 @@ Feature: CreatePerimeters (endpoint tested : POST /perimeters)
     And request <perimeterToTestBadRequest>
     When method post
     Then status 400
-    And match response.status == "BAD_REQUEST"
+    And match response.status == "400 BAD_REQUEST"
     And match response.message == <expectedMessage>
 
     Examples:

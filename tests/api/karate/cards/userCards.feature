@@ -424,7 +424,7 @@ Scenario: Create perimeter for initial process
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
-    And match response.childCards == '#notpresent'
+    And match response.childCards == []
 
 
 

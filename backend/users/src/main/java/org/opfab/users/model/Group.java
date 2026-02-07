@@ -9,7 +9,6 @@
 
 package org.opfab.users.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -21,7 +20,6 @@ import java.util.*;
 import org.opfab.common.users.PermissionEnum;
 
 @Document(collection = "group")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Validated
 public class Group {
     @Id

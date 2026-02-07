@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander N.V. (https://www.alliander.com)
- * Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,15 +8,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-
 package org.opfab.cards.publication.kafka.auth;
 
 import org.opfab.cards.publication.kafka.auth.builder.TokenRequestBuilder;
 import org.opfab.cards.publication.kafka.auth.builder.TokenRequestBuilderFactory;
 import org.opfab.cards.publication.kafka.auth.dto.OAuthBearerTokenImpl;
 import org.opfab.cards.publication.kafka.util.BeanUtil;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+
 import org.apache.kafka.common.security.auth.AuthenticateCallbackHandler;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerToken;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerTokenCallback;
@@ -41,21 +42,28 @@ import static java.util.Optional.ofNullable;
 import static org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule.OAUTHBEARER_MECHANISM;
 
 /**
- * This class can be configured as Login callback for Kafka Client's JAAS based OAuth support
- * to use the Azure AD Workload Identity injected environment variables and token on the filesystem
+ * This class can be configured as Login callback for Kafka Client's JAAS based
+ * OAuth support
+ * to use the Azure AD Workload Identity injected environment variables and
+ * token on the filesystem
  * to properly authenticate towards Kafka clusters
- * <br><br>
+ * <br>
+ * <br>
  * The following configuration must be set:
  * <ul>
- *     <li><code>bootstrap.servers</code>: kafka-tst-cluster-kafka-...</li>
- *     <li><code>sasl.mechanism</code>: OAUTHBEARER</li>
- *     <li><code>sasl.jaas.config</code>: org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;</li>
- *     <li><code>sasl.login.callback.handler.class</code>: org.opfab.cards.publication.kafka.auth.AADWorkloadIdentityLoginCallbackHandler</li>
+ * <li><code>bootstrap.servers</code>: kafka-tst-cluster-kafka-...</li>
+ * <li><code>sasl.mechanism</code>: OAUTHBEARER</li>
+ * <li><code>sasl.jaas.config</code>:
+ * org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
+ * ;</li>
+ * <li><code>sasl.login.callback.handler.class</code>:
+ * org.opfab.cards.publication.kafka.auth.AADWorkloadIdentityLoginCallbackHandler</li>
  * </ul>
  * <br>
  * A typical way would be to use Spring Kafka's environment variables.
  * <br>
- * Apart from the required configuration above the rest is automatically picked up based on the injected AZURE_... environment variables
+ * Apart from the required configuration above the rest is automatically picked
+ * up based on the injected AZURE_... environment variables
  */
 
 public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCallbackHandler {
@@ -69,19 +77,24 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
     private TokenRequestBuilder tokenRequestBuilder;
 
     public AADWorkloadIdentityLoginCallbackHandler() {
-        this(new TokenRequestBuilderFactory(BeanUtil.isContextSet() ? BeanUtil.getBean(Environment.class) : new StandardEnvironment()), HttpClient.newHttpClient(), new ObjectMapper());
+        this(new TokenRequestBuilderFactory(
+                BeanUtil.isContextSet() ? BeanUtil.getBean(Environment.class) : new StandardEnvironment()),
+                HttpClient.newHttpClient(), JsonMapper.builder().build());
     }
 
-    protected AADWorkloadIdentityLoginCallbackHandler(final TokenRequestBuilderFactory tokenRequestBuilderFactory, final HttpClient httpClient, final ObjectMapper objectMapper) {
+    protected AADWorkloadIdentityLoginCallbackHandler(final TokenRequestBuilderFactory tokenRequestBuilderFactory,
+            final HttpClient httpClient, final ObjectMapper objectMapper) {
         this.tokenRequestBuilderFactory = tokenRequestBuilderFactory;
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public void configure(final Map<String, ?> properties, final String saslMechanism, final List<AppConfigurationEntry> list) {
+    public void configure(final Map<String, ?> properties, final String saslMechanism,
+            final List<AppConfigurationEntry> list) {
         if (!OAUTHBEARER_MECHANISM.equals(saslMechanism)) {
-            throw new IllegalArgumentException(String.format("SASL mechanism MUST be %s but found: %s", OAUTHBEARER_MECHANISM, saslMechanism));
+            throw new IllegalArgumentException(
+                    String.format("SASL mechanism MUST be %s but found: %s", OAUTHBEARER_MECHANISM, saslMechanism));
         }
         tokenRequestBuilder = tokenRequestBuilderFactory.createTokenRequestBuilder(properties);
     }
@@ -102,7 +115,8 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
                     throw new InterruptedIOException(e.getMessage());
                 }
             } else {
-                throw new UnsupportedCallbackException(callback, "wrong callback type: " + callback.getClass().getName());
+                throw new UnsupportedCallbackException(callback,
+                        "wrong callback type: " + callback.getClass().getName());
             }
         }
     }
@@ -111,7 +125,8 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
         return tokenRequestBuilder;
     }
 
-    private void handleOAuthBearerTokenCallback(final OAuthBearerTokenCallback callback) throws IOException, InterruptedException {
+    private void handleOAuthBearerTokenCallback(final OAuthBearerTokenCallback callback)
+            throws IOException, InterruptedException {
         final var token = acquireTokenFromIdp();
         callback.token(token);
     }
@@ -120,22 +135,26 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
         final var request = tokenRequestBuilder.buildAuthTokenRequest();
         final var response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
         final var result = objectMapper.readValue(response.body(), JsonNode.class);
-        if (result==null) throw new IOException("Impossible to parse response body from token request , body = " + response.body());
+        if (result == null)
+            throw new IOException("Impossible to parse response body from token request , body = "
+                    + new String(response.body(), java.nio.charset.StandardCharsets.UTF_8));
         return toOAuthBearerToken(result);
     }
 
     private OAuthBearerTokenImpl toOAuthBearerToken(final JsonNode result) {
         final var now = System.currentTimeMillis();
         final var token = ofNullable(result.get("access_token"))
-                .map(JsonNode::asText)
-                .orElseThrow(() -> new IllegalStateException("Invalid response from authorization server: no access_token"));
+                .map(JsonNode::asString)
+                .orElseThrow(
+                        () -> new IllegalStateException("Invalid response from authorization server: no access_token"));
 
         final var expiresIn = ofNullable(result.get("expires_in"))
                 .map(JsonNode::asLong)
-                .orElseThrow(() -> new IllegalStateException("Invalid response from authorization server: no expires_in"));
+                .orElseThrow(
+                        () -> new IllegalStateException("Invalid response from authorization server: no expires_in"));
 
         final var scopes = ofNullable(result.get("scope"))
-                .map(JsonNode::asText)
+                .map(JsonNode::asString)
                 .map(scopeText -> scopeText.split(" "))
                 .map(Arrays::asList)
                 .map(HashSet::new)
@@ -145,4 +164,3 @@ public class AADWorkloadIdentityLoginCallbackHandler implements AuthenticateCall
         return new OAuthBearerTokenImpl(tokenRequestBuilder.getClientId(), token, now, now + expiresIn * 1000, scopes);
     }
 }
-

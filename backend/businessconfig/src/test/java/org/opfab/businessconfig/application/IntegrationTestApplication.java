@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,11 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.businessconfig.application;
 
-import org.opfab.businessconfig.configuration.json.JacksonConfig;
 import org.opfab.businessconfig.controllers.BusinessconfigController;
 import org.opfab.businessconfig.controllers.CustomExceptionHandler;
 import org.opfab.businessconfig.services.ProcessesService;
@@ -27,10 +24,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import({ProcessesService.class, CustomExceptionHandler.class, JacksonConfig.class,
+@Import({ ProcessesService.class, CustomExceptionHandler.class,
         BusinessconfigController.class, EventBusSpy.class, UserActionLogsConfiguration.class,
         UserActionLogRepositoryImpl.class, UserActionLogService.class, LastUserActionService.class,
-        LastUserActionRepositoryImpl.class})
+        LastUserActionRepositoryImpl.class })
 
 public class IntegrationTestApplication {
 

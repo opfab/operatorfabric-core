@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,23 +7,21 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.json;
 
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.module.SimpleModule;
 
 import java.time.Instant;
 
 /**
- * Jackson (JSON) Module configuration to handle {@link Instant} as number of milliseconds since Epoch
+ * Jackson (JSON) Module configuration to handle {@link Instant} as number of
+ * milliseconds since Epoch
  *
  *
  */
 public class InstantModule extends SimpleModule {
 
     public InstantModule() {
-
         addSerializer(Instant.class, new InstantSerializer());
         addDeserializer(Instant.class, new InstantDeserializer());
     }

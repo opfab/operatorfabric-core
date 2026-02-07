@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 package org.opfab.externalapp.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.opfab.externalapp.model.*;
 import org.opfab.externalapp.cards.CardClient;
 import org.opfab.externalapp.security.AuthClient;
@@ -49,8 +49,8 @@ public class ExternalAppServiceImpl implements ExternalAppService {
         ArrayList<String> groupRecipients = new ArrayList<>();
         ArrayList<String> userRecipients = new ArrayList<>();
         requestBody.ifPresent(card -> sendBackCard("api_test", "messageState",
-                card.path("processInstanceId").textValue() + "_created", entitiesRecipients, groupRecipients,
-                userRecipients, card.path("id").textValue(),
+                card.path("processInstanceId").asString() + "_created", entitiesRecipients, groupRecipients,
+                userRecipients, card.path("id").asString(),
                 card.hasNonNull("startDate") ? card.path("startDate").asLong() : null,
                 card.hasNonNull("endDate") ? card.path("endDate").asLong() : null));
     }

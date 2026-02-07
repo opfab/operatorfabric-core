@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,9 +18,8 @@ import org.opfab.common.users.UserSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class SettingsRepositoryImpl implements SettingsRepository {
@@ -39,7 +38,7 @@ public class SettingsRepositoryImpl implements SettingsRepository {
         String settingsJson;
         try {
             settingsJson = objectMapper.writeValueAsString(settings);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("Error converting settings to JSON", e);
             return;
         }

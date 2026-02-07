@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,8 @@
 
 package org.opfab.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -32,13 +31,10 @@ class InstantSerializerShould {
     private static final Logger log = LoggerFactory.getLogger(InstantSerializer.class);
 
     private static ObjectMapper objectMapper;
-    private static InstantSerializer instantSerializer;
 
     @BeforeAll
     static void setup() {
-        objectMapper = new ObjectMapper();
-        instantSerializer = new InstantSerializer();
-        objectMapper.registerModule(new SimpleModule().addSerializer(Instant.class, instantSerializer));
+        objectMapper = JsonMapper.builder().addModule(new InstantModule()).build();
     }
 
     @Test
@@ -69,7 +65,7 @@ class InstantSerializerShould {
         try {
             String actualSerialization = objectMapper.writeValueAsString(instant);
             assertThat(actualSerialization).isEqualTo(expectedSerialization);
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             log.error(String.format("Unable to serialize %s", Instant.class.getSimpleName()), e);
         }
 

@@ -54,7 +54,7 @@ Feature: Add groups to a perimeter (endpoint tested : PATCH /perimeters/{id}/gro
     And request groupsArray
     When method patch
     And status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'Perimeter perimeterNotExisting not found'
 
 
@@ -64,7 +64,7 @@ Feature: Add groups to a perimeter (endpoint tested : PATCH /perimeters/{id}/gro
     And request wrongGroupsArray
     When method patch
     And status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Bad group list : group groupKarateNotExisting not found'
 
 

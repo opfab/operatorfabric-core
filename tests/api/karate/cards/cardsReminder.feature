@@ -184,7 +184,7 @@ Scenario: ResetCardsReadsAndAcks
     Then status 200
     And match response.card.hasBeenRead == false
     And match response.card.hasBeenAcknowledged == false
-    And match response.card.entitiesAcks == '#notpresent'
+    And match response.card.entitiesAcks == []
     And match response.card.uid == uid
     
     #get card with user operator2_fr and check hasBeenRead and hasBeenAcknowledged is set to false
@@ -226,8 +226,8 @@ Scenario: ResetCardsReadsAndAcks
     Then status 200
     And match response.card.hasBeenRead == false
     And match response.card.hasBeenAcknowledged == false
-    And match response.card.entitiesAcks == '#notpresent'
-    And match response.card.actions == '#notpresent'
+    And match response.card.entitiesAcks == []
+    And match response.card.actions == []
     And match response.card.uid == uid
 
   Scenario: Delete the test card

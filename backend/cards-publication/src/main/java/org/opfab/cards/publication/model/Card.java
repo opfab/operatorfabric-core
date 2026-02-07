@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,9 +10,13 @@
 package org.opfab.cards.publication.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+
+import org.opfab.json.InstantDeserializer;
+import org.opfab.json.InstantSerializer;
 import org.opfab.utilities.ObjectUtils;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -57,41 +61,46 @@ public class Card {
 
     @CreatedDate
     @Indexed
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant publishDate;
 
     @CreatedDate
     @Indexed
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant lastUpdate;
 
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant lttd;
 
     @Indexed
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant startDate;
 
     @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant endDate;
 
     @Indexed
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonDeserialize(using = InstantDeserializer.class)
+    @JsonSerialize(using = InstantSerializer.class)
     public Instant expirationDate;
 
     public SeverityEnum severity;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<String> tags;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<TimeSpan> timeSpans;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Object data;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
     public List<String> userRecipients;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Indexed
     public List<String> groupRecipients;
 
@@ -130,7 +139,6 @@ public class Card {
 
     public Integer secondsBeforeTimeSpanForReminder;
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty("rRule")
     public RRule rRule;
 

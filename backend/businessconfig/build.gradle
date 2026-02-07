@@ -12,7 +12,8 @@ dependencies {
     implementation misc.commonsIO
     implementation boot.actuator
     implementation misc.micrometer
-    
+
+
     compileOnly boot.annotationConfiguration
     annotationProcessor boot.annotationConfiguration
 

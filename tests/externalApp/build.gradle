@@ -34,7 +34,9 @@ task buildDocker(type: Exec) {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-restclient'
+
 	implementation boot.starterSecurity
     implementation spring.securityOauthResource, spring.securityOauthJose
 

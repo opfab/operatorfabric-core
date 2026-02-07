@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,22 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-
 package org.opfab.json;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonTokenId;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonTokenId;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.deser.std.StdDeserializer;
 
-import java.io.IOException;
 import java.time.Instant;
 
+import tools.jackson.core.JacksonException;
+
 /**
- * Custom deserializer to turn number of milliseconds from Epoch into corresponding {@link Instant}
+ * Custom deserializer to turn number of milliseconds from Epoch into
+ * corresponding {@link Instant}
  *
  *
  */
@@ -33,23 +31,27 @@ public class InstantDeserializer extends StdDeserializer<Instant> {
     }
 
     public InstantDeserializer() {
-        this(null);
+        this(Instant.class);
     }
 
     @Override
-    public Instant deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    public Instant deserialize(JsonParser parser, DeserializationContext ctxt) throws JacksonException {
 
         switch (parser.currentTokenId()) {
-            case JsonTokenId.ID_START_OBJECT:
-                final ObjectNode node = new ObjectMapper().readValue(parser, ObjectNode.class);
-                if (node==null) throw new IOException("Impossible to deserialize Instant object");
-                return Instant.ofEpochSecond(Long.parseLong(node.get("epochSecond").toString()),Long.parseLong(node.get("nano").toString()));
-
             case JsonTokenId.ID_NUMBER_INT:
                 return Instant.ofEpochMilli(parser.getLongValue());
 
-            default :
-                throw new IOException("Expected VALUE_NUMBER_INT or START_OBJECT token.");
+            case JsonTokenId.ID_STRING:
+                // Handle ISO-8601 string format
+                String text = parser.getString();
+                if (text == null || text.isEmpty()) {
+                    return null;
+                }
+                return Instant.parse(text);
+
+            default:
+                throw new IllegalArgumentException(
+                        "Unexpected token type for Instant deserialization: " + parser.currentToken());
         }
 
     }

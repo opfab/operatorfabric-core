@@ -66,7 +66,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card because process and/or state does not exist (process=unexistingProcess, state=messageState, processVersion=1, processInstanceId=cardWithUnexistingProcess)'
 
 
@@ -95,7 +95,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card because process and/or state does not exist (process=api_test, state=unexistingState, processVersion=1, processInstanceId=cardWithUnexistingState)'
 
 
@@ -124,7 +124,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card because process and/or state does not exist (process=api_test, state=messageState, processVersion=99, processInstanceId=cardWithUnexistingProcessVersion)'
 
 
@@ -183,7 +183,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And request card
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card because process and/or state does not exist (process=api_test, state=newState, processVersion=1, processInstanceId=cardWithNewState)'
 
 
@@ -241,7 +241,7 @@ Feature: Posting card with a process and/or a state that doesn't exist in bundle
     And retry until responseStatus == 400
     When method post
     Then status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Impossible to publish card because process and/or state does not exist (process=api_test, state=newState, processVersion=1, processInstanceId=cardWithNewStateButBundleDeleted)'
 
 

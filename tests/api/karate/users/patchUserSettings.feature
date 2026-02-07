@@ -195,5 +195,5 @@ Feature: patch user settings
     When method patch
     Then status 200
     And match response.login == userSettingsDispatcherForCleaningProcessesStatesNotNotified.login
-    And match response.processesStatesNotNotified == '#notpresent'
+    And match response.processesStatesNotNotified == {}
 

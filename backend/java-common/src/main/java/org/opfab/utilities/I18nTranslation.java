@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,14 +11,13 @@ package org.opfab.utilities;
 
 import java.io.IOException;
 import java.util.Map;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import org.apache.commons.text.StringEscapeUtils;
 
-
 public class I18nTranslation {
-    
+
     private JsonNode i18n;
 
     public I18nTranslation(JsonNode i18n) {
@@ -48,8 +47,8 @@ public class I18nTranslation {
         if (node == null) {
             return key;
         }
-        
-        String nodeText = node.asText();
+
+        String nodeText = node.asString();
 
         if (parameters == null || parameters.isEmpty()) {
             return nodeText;
@@ -57,7 +56,7 @@ public class I18nTranslation {
 
         Handlebars handlebars = new Handlebars();
         Template template = handlebars.compileInline(nodeText);
-    
+
         return StringEscapeUtils.unescapeHtml4(template.apply(parameters));
     }
 

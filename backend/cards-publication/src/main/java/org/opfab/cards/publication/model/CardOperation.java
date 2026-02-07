@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,16 +9,14 @@
 
 package org.opfab.cards.publication.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Validated
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record CardOperation(CardOperationTypeEnum type,
-                            String cardId,
-                            String cardUid,
-                            LightCard card,
-                            List<String> entitiesAcks) {
+        String cardId,
+        String cardUid,
+        LightCard card,
+        List<String> entitiesAcks) {
 }

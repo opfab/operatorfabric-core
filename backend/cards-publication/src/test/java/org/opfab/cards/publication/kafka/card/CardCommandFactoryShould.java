@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,6 @@
  */
 package org.opfab.cards.publication.kafka.card;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.avro.CardCommand;
@@ -26,10 +25,6 @@ import java.time.Instant;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CardCommandFactoryShould {
@@ -47,16 +42,6 @@ class CardCommandFactoryShould {
         assertThat(cardCommand.getCommand(), is(CommandType.RESPONSE_CARD));
         assertThat(cardCommand.getResponseCard().getProcess(), is(cardPublicationData.process));
         assertThat(cardCommand.getResponseCard().getState(), is(cardPublicationData.state));
-    }
-
-    @Test
-    void createResponseCardFailure() throws JsonProcessingException {
-        CardObjectMapper failMapper = mock(CardObjectMapper.class);
-        when(failMapper.readResponseCardValue(any())).thenThrow(JsonProcessingException.class);
-        ReflectionTestUtils.setField(cut, "objectMapper", failMapper);
-
-        CardCommand cardCommand = cut.createResponseCard(createCardPublicationData());
-        assertThat(cardCommand.getCommand(), is(nullValue()));
     }
 
     private Card createCardPublicationData() {

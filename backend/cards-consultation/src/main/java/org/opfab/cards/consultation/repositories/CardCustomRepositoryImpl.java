@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,11 +13,11 @@ import org.opfab.cards.consultation.configuration.CustomScreenDataFields;
 import org.opfab.cards.consultation.model.Card;
 import org.opfab.cards.consultation.model.CardOperation;
 import org.opfab.cards.consultation.model.CardOperationTypeEnum;
+import org.opfab.cards.consultation.model.CardPage;
 import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.configuration.mongo.PaginationUtils;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.PermissionEnum;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -185,7 +185,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         return Criteria.where(LAST_UPDATE_FIELD).gte(updatedFrom);
     }
 
-    public Mono<Page<Object>> findWithUserAndFilter(
+    public Mono<CardPage> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
         CardsFilter queryFilter = filter.getT2();
 
@@ -223,20 +223,22 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
         if (pageableRequest.isPaged()) {
             return template.aggregate(agg, CARDS_COLLECTION, Card.class)
-                    .cast(Object.class).collectList()
+                    .collectList()
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
-                            PaginationUtils.getCountFromJson(tuple.getT2())));
+                            PaginationUtils.getCountFromJson(tuple.getT2())))
+                    .map(this::getCardPageFromSpringPageImpl);
         } else {
             return template.aggregate(agg, CARDS_COLLECTION, Card.class)
-                    .cast(Object.class).collectList()
-                    .map(PageImpl::new);
+                    .cast(Card.class).collectList()
+                    .map(this::getCardPageFromCards);
+
         }
     }
 
-    public Mono<Page<Object>> findWithUserAndFilterAndSelectedFields(
+    public Mono<CardPage> findWithUserAndFilterAndSelectedFields(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
         CardsFilter queryFilter = filter.getT2();
 
@@ -256,17 +258,18 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         Aggregation countAgg = newAggregation(this.getFilterOperationsForCount(filter));
 
         if (pageableRequest.isPaged()) {
-            return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+            return template.aggregate(agg, CARDS_COLLECTION, Card.class)
                     .collectList()
                     .zipWith(template.aggregate(countAgg, CARDS_COLLECTION, String.class)
                             .defaultIfEmpty("{\"count\":0}")
                             .single())
                     .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
-                            PaginationUtils.getCountFromJson(tuple.getT2())));
+                            PaginationUtils.getCountFromJson(tuple.getT2())))
+                    .map(this::getCardPageFromSpringPageImpl);
         } else {
-            return template.aggregate(agg, CARDS_COLLECTION, Object.class)
+            return template.aggregate(agg, CARDS_COLLECTION, Card.class)
                     .collectList()
-                    .map(PageImpl::new);
+                    .map(this::getCardPageFromCards);
         }
     }
 
@@ -285,6 +288,28 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
             return (hasCurrentUserAdminPermission) && adminMode;
         }
         return false;
+    }
+
+    private CardPage getCardPageFromSpringPageImpl(PageImpl<Card> page) {
+        return new CardPage(
+                page.getContent(),
+                page.isFirst(),
+                page.isLast(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getNumberOfElements(),
+                page.getSize());
+    }
+
+    private CardPage getCardPageFromCards(List<Card> cards) {
+        return new CardPage(
+                cards,
+                true,
+                true,
+                1,
+                cards.size(),
+                cards.size(),
+                cards.size());
     }
 
 }

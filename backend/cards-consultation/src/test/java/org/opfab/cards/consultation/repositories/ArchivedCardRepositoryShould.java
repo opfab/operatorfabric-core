@@ -276,12 +276,12 @@ public class ArchivedCardRepositoryShould {
                 // The card from businessconfigPublisher is returned first because it has the
                 // latest publication date
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(2);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent().get(0).publisher).isEqualTo(businessconfigPublisher);
-                    assertThat(page.getContent().get(0).processInstanceId).isEqualTo("PROCESS1");
-                    assertThat(page.getContent().get(1).publisher).isEqualTo(secondPublisher);
-                    assertThat(page.getContent().get(1).processInstanceId).isEqualTo("PROCESS1");
+                    assertThat(page.totalElements()).isEqualTo(2);
+                    assertThat(page.totalPages()).isEqualTo(1);
+                    assertThat(page.content().get(0).publisher).isEqualTo(businessconfigPublisher);
+                    assertThat(page.content().get(0).processInstanceId).isEqualTo("PROCESS1");
+                    assertThat(page.content().get(1).publisher).isEqualTo(secondPublisher);
+                    assertThat(page.content().get(1).processInstanceId).isEqualTo("PROCESS1");
                 })
                 .expectComplete()
                 .verify();
@@ -300,9 +300,9 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isZero();
-                    assertThat(page.getTotalPages()).isEqualTo(1);
-                    assertThat(page.getContent()).isEmpty();
+                    assertThat(page.totalElements()).isZero();
+                    assertThat(page.totalPages()).isEqualTo(1);
+                    assertThat(page.content()).isEmpty();
                 })
                 .expectComplete()
                 .verify();
@@ -326,8 +326,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(3);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(3);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> (card.publishDate.compareTo(start) >= 0)
@@ -354,8 +354,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(4);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(4);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> (card.publishDate.compareTo(start) >= 0)));
@@ -380,8 +380,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(9);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(9);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> (card.publishDate.compareTo(end) <= 0)));
@@ -411,8 +411,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(4);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(4);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, end)));
@@ -437,8 +437,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(5);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(5);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null)));
@@ -468,11 +468,11 @@ public class ArchivedCardRepositoryShould {
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    assertThat(page.totalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
+                    assertThat(page.totalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheFirstPage = 2;
-                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheFirstPage);
+                    assertThat(page.content()).hasSize(expectedNbOfElementsForTheFirstPage);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null)));
@@ -489,11 +489,11 @@ public class ArchivedCardRepositoryShould {
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    assertThat(page.totalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
+                    assertThat(page.totalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheSecondPage = 2;
-                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheSecondPage);
+                    assertThat(page.content()).hasSize(expectedNbOfElementsForTheSecondPage);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null)));
@@ -512,11 +512,11 @@ public class ArchivedCardRepositoryShould {
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
                     int expectedNbOfElements = 5;
-                    assertThat(page.getTotalElements()).isEqualTo(expectedNbOfElements);
+                    assertThat(page.totalElements()).isEqualTo(expectedNbOfElements);
                     int expectedNbOfPages = 3;
-                    assertThat(page.getTotalPages()).isEqualTo(expectedNbOfPages);
+                    assertThat(page.totalPages()).isEqualTo(expectedNbOfPages);
                     int expectedNbOfElementsForTheBusinessconfigPage = 1;
-                    assertThat(page.getContent()).hasSize(expectedNbOfElementsForTheBusinessconfigPage);
+                    assertThat(page.content()).hasSize(expectedNbOfElementsForTheBusinessconfigPage);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, start, null)));
@@ -542,8 +542,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(6);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(6);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> checkIfCardActiveInRange(card, null, end)));
@@ -566,8 +566,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(3);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(3);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> card.publishDate.isAfter(now)));
@@ -590,8 +590,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(9);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(9);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> card.publishDate.isBefore(now)));
@@ -614,8 +614,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(6);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(6);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> card.processInstanceId.compareTo("PROCESS3") < 0));
@@ -637,8 +637,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(7);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(7);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> card.processInstanceId.compareTo("PROCESS2") > 0));
@@ -671,8 +671,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(3);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(3);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check criteria are matched
                     assertTrue(checkIfCardsFromPageMeetCriteria(page,
                             card -> (card.publisher.equals(firstPublisher)
@@ -696,8 +696,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(13);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(13);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })
@@ -716,8 +716,8 @@ public class ArchivedCardRepositoryShould {
 
         StepVerifier.create(repository.findWithUserAndFilter(filterParams))
                 .assertNext(page -> {
-                    assertThat(page.getTotalElements()).isEqualTo(7);
-                    assertThat(page.getTotalPages()).isEqualTo(1);
+                    assertThat(page.totalElements()).isEqualTo(7);
+                    assertThat(page.totalPages()).isEqualTo(1);
                     // Check sort order
                     assertTrue(checkIfPageIsSorted(page));
                 })

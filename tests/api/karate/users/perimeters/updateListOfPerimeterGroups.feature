@@ -146,7 +146,7 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
     And request group7group8List
     When method put
     Then status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'Perimeter fake not found'
 
 
@@ -156,7 +156,7 @@ Feature: Update list of perimeter groups (endpoint tested : PUT /perimeters/{id}
     And request wrongGroupsArray
     When method put
     And status 400
-    And match response.status == 'BAD_REQUEST'
+    And match response.status == '400 BAD_REQUEST'
     And match response.message == 'Bad group list : group groupKarateNotExisting not found'
 
 

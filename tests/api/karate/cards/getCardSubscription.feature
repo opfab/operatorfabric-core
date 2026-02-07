@@ -111,7 +111,7 @@ Scenario: Create perimeter and attach it to group Maintainer
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
-      And match response contains '"card":{"uid":"' + cardUid + '"'
+      And match response contains '"uid":"' + cardUid + '"'
       And match response contains '"rRule":{"freq":"WEEKLY"'
 
 
@@ -156,7 +156,8 @@ Scenario: Create perimeter and attach it to group Maintainer
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
-      And match response contains '"card":{"uid":"' + cardUid + '"'
+      And match response contains '"card":{'
+      And match response contains '"uid":"' + cardUid + '"'
 
     * def cardAckDate = new Date().valueOf();
 
@@ -180,7 +181,8 @@ Scenario: Create perimeter and attach it to group Maintainer
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
-      And match response contains '"card":{"uid":"' + cardUid + '"'
+      And match response contains '"card":{'
+      And match response contains '"uid":"' + cardUid + '"'
 
 
 

@@ -107,7 +107,7 @@ Feature: Get perimeters for a group (endpoint tested : GET /groups/{id}/perimete
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'Group unknownGroup not found'
 
 

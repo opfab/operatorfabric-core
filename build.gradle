@@ -21,25 +21,25 @@ ext {
             starterWebflux          : "org.springframework.boot:spring-boot-starter-webflux:$springBoot",
             actuator                : "org.springframework.boot:spring-boot-starter-actuator:$springBoot",
             starterSecurity         : "org.springframework.boot:spring-boot-starter-security:$springBoot",
-            starterMongo            : "org.springframework.boot:spring-boot-starter-data-mongodb:$springBoot",
-            starterMongoR           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
+            starterMongo           : "org.springframework.boot:spring-boot-starter-data-mongodb-reactive:$springBoot",
             starterTest             : "org.springframework.boot:spring-boot-starter-test:$springBoot",
+            starterWebClientTest    : "org.springframework.boot:spring-boot-starter-webclient-test:$springBoot",
+            starterWebFluxTest      : "org.springframework.boot:spring-boot-starter-webflux-test:$springBoot",
             starterValidation       : "org.springframework.boot:spring-boot-starter-validation:$springBoot",
             annotationConfiguration : "org.springframework.boot:spring-boot-configuration-processor:$springBoot"
     ]
 
 
     spring = [
-            securityOauthResource   : "org.springframework.security:spring-security-oauth2-resource-server:$springSecurity",
+            securityOauthResource   : "org.springframework.boot:spring-boot-starter-oauth2-resource-server:$springBoot",
             securityOauthJose       : "org.springframework.security:spring-security-oauth2-jose:$springSecurity",
             securityTest            : "org.springframework.security:spring-security-test:$springSecurity",
-            webflux                 : "org.springframework:spring-webflux:$springWebflux"
     ]
 
     cloud = [
             kafkaAvroSchemaRegistryClient    : "io.confluent:kafka-schema-registry-client:$kavroSchemaRegistryClient",
             kafkaAvroSerializer              : "io.confluent:kafka-avro-serializer:$kavroAvroSerializer",
-            springKafka           : "org.springframework.kafka:spring-kafka:$springKafka",
+            starterKafka            : "org.springframework.boot:spring-boot-starter-kafka:$springBoot",
 
             // For testing purposes (karate kafka client)
             avro                  : "org.apache.avro:avro:$avro",
@@ -57,7 +57,6 @@ ext {
 
 
     misc = [
-            slf4j          : "org.slf4j:slf4j-api:$slf4j",
             compress       : "org.apache.commons:commons-compress:$apacheCommonsCompress",
             guava          : "com.google.guava:guava:33.5.0-jre",
             jacksonAnnotations   : "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotations",
@@ -66,7 +65,6 @@ ext {
             micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
             jsonSmart      : "net.minidev:json-smart:2.6.0",
             handlebars     : "com.github.jknack:handlebars:4.5.0",
-            jacksonDatabind   : "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:$jlibmodbus",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
             commonsLang    : "org.apache.commons:commons-lang3:$apacheCommonsLang",

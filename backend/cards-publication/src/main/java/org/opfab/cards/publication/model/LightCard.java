@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,11 +9,16 @@
 
 package org.opfab.cards.publication.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 import java.time.Instant;
 import java.util.List;
+
+import org.opfab.json.InstantDeserializer;
+import org.opfab.json.InstantSerializer;
 
 public record LightCard(
         String uid,
@@ -23,13 +28,13 @@ public record LightCard(
         String process,
         String processInstanceId,
         String state,
-        Instant lttd,
-        Instant publishDate,
-        Instant startDate,
-        Instant endDate,
-        Instant expirationDate,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant lttd,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant publishDate,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant startDate,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant endDate,
+        @JsonDeserialize(using = InstantDeserializer.class) @JsonSerialize(using = InstantSerializer.class) Instant expirationDate,
         SeverityEnum severity,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<String> tags,
+        List<String> tags,
         I18n title,
         I18n summary,
         String titleTranslated,
@@ -53,10 +58,10 @@ public record LightCard(
         String wktGeometry,
         String wktProjection,
         Integer secondsBeforeTimeSpanForReminder,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) @JsonProperty("rRule") // if we don't use this annotation, the field
-                                                                           // will be serialized as "rrule"
+        @JsonProperty("rRule") // if we don't use this annotation, the field
+                               // will be serialized as "rrule"
         RRule rRule,
-        @JsonInclude(JsonInclude.Include.NON_EMPTY) List<CardActionEnum> actions,
+        List<CardActionEnum> actions,
         Object data) {
 
     public LightCard(Card card) {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,11 +9,9 @@
 
 package org.opfab.cards.consultation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.opfab.cards.consultation.model.*;
-import org.springframework.data.domain.Page;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -185,7 +183,7 @@ public class TestUtilities {
     public static CardOperation readCardOperation(ObjectMapper mapper, String s) {
         try {
             return mapper.readValue(s, CardOperation.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(String.format("Unable to delinearize %s", CardOperation.class.getSimpleName()), e);
             return null;
         }
@@ -283,15 +281,15 @@ public class TestUtilities {
         return result;
     }
 
-    public static boolean checkIfPageIsSorted(Page<Card> page) {
+    public static boolean checkIfPageIsSorted(CardPage page) {
 
-        if (page.getContent() == null || page.getContent().isEmpty()) {
+        if (page.content() == null || page.content().isEmpty()) {
             return true;
-        } else if (page.getContent().size() == 1) {
+        } else if (page.content().size() == 1) {
             return true;
         } else {
-            for (int i = 1; i < page.getContent().size(); i++) {
-                if (page.getContent().get(i - 1).publishDate.isBefore(page.getContent().get(i).publishDate)) {
+            for (int i = 1; i < page.content().size(); i++) {
+                if (page.content().get(i - 1).publishDate.isBefore(page.content().get(i).publishDate)) {
                     return false;
                 }
             }
@@ -299,13 +297,13 @@ public class TestUtilities {
         }
     }
 
-    public static boolean checkIfCardsFromPageMeetCriteria(Page<Card> page, Predicate<Card> criteria) {
+    public static boolean checkIfCardsFromPageMeetCriteria(CardPage page, Predicate<Card> criteria) {
 
-        if (page.getContent() == null || page.getContent().isEmpty()) {
+        if (page.content() == null || page.content().isEmpty()) {
             return true;
         } else {
-            for (int i = 0; i < page.getContent().size(); i++) {
-                if (criteria.negate().test(page.getContent().get(i))) {
+            for (int i = 0; i < page.content().size(); i++) {
+                if (criteria.negate().test(page.content().get(i))) {
                     return false;
                 }
             }

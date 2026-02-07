@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,8 @@ import reactor.util.function.Tuple2;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +77,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
     }
 
     @Override
-    public Mono<Page<Card>> findWithUserAndFilter(Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
+    public Mono<CardPage> findWithUserAndFilter(
+            Tuple2<CurrentUserWithPerimeters, CardsFilter> filter) {
         CardsFilter queryFilter = filter.getT2();
         log.debug("findWithUserAndFilter {}", queryFilter);
 
@@ -110,7 +113,8 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                                 .defaultIfEmpty("{\"count\":0}")
                                 .single())
                         .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
-                                PaginationUtils.getCountFromJson(tuple.getT2())));
+                                PaginationUtils.getCountFromJson(tuple.getT2())))
+                        .map(this::getCardPageFromSpringPageImpl);
 
             } else
                 return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, Card.class)
@@ -119,17 +123,18 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
                                 .defaultIfEmpty("{\"count\":0}")
                                 .single())
                         .map(tuple -> new PageImpl<>(tuple.getT1(), pageableRequest,
-                                PaginationUtils.getCountFromJson(tuple.getT2())));
+                                PaginationUtils.getCountFromJson(tuple.getT2())))
+                        .map(this::getCardPageFromSpringPageImpl);
         } else {
             if (Boolean.TRUE.equals(queryFilter.latestUpdateOnly())) {
                 return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, LatestUpdateOnlyArchivedLightCard.class)
                         .map(LatestUpdateOnlyArchivedLightCard::latestUpdateOnly)
                         .collectList()
-                        .map(PageImpl::new);
+                        .map(this::getCardPageFromCards);
             } else
                 return template.aggregate(agg, ARCHIVED_CARDS_COLLECTION, Card.class)
                         .collectList()
-                        .map(PageImpl::new);
+                        .map(this::getCardPageFromCards);
         }
     }
 
@@ -172,6 +177,28 @@ public class ArchivedCardCustomRepositoryImpl implements ArchivedCardCustomRepos
             return (hasCurrentUserAdminPermission) && adminMode;
         }
         return false;
+    }
+
+    private CardPage getCardPageFromSpringPageImpl(PageImpl<Card> page) {
+        return new CardPage(
+                page.getContent(),
+                page.isFirst(),
+                page.isLast(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.getNumberOfElements(),
+                page.getSize());
+    }
+
+    private CardPage getCardPageFromCards(List<Card> cards) {
+        return new CardPage(
+                cards,
+                true,
+                true,
+                1,
+                cards.size(),
+                cards.size(),
+                cards.size());
     }
 
 }

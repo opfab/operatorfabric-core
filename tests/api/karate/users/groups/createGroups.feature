@@ -121,7 +121,7 @@ Feature: CreateGroups
     Then match result.response.description == group.description
     And match result.response.name == group.name
     And match result.response.id == group.id
-    And match result.response.permissions == '#notpresent'
+    And match result.response.permissions == []
 
   Scenario: Update my group
 
@@ -177,7 +177,7 @@ Feature: CreateGroups
     And request <groupToTestBadRequest>
     When method post
     Then status 400
-    And match response.status == "BAD_REQUEST"
+    And match response.status == "400 BAD_REQUEST"
     And match response.message == <expectedMessage>
 
     Examples:

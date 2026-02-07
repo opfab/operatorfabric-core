@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,8 @@
 
 package org.opfab.businessconfig.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.apache.commons.io.FileUtils;
@@ -131,7 +132,7 @@ public class ProcessesService implements ResourceLoaderAware {
                 log.info("loading processGroups.json file from {}", new File(storagePath).getAbsolutePath());
                 this.processGroupsCache = objectMapper.readValue(f, ProcessGroups.class);
             }
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.warn("Unreadable processGroups.json file at  {}", storagePath);
         }
     }
@@ -152,7 +153,7 @@ public class ProcessesService implements ResourceLoaderAware {
                 log.info("loading realtimescreens.json file from {}", new File(storagePath).getAbsolutePath());
                 this.realTimeScreensCache = objectMapper.readValue(f, RealTimeScreens.class);
             }
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.warn("Unreadable realtimescreens.json file at  {}", storagePath);
         }
     }
@@ -173,7 +174,7 @@ public class ProcessesService implements ResourceLoaderAware {
                 log.info("loading processmonitoring.json file from {}", new File(storagePath).getAbsolutePath());
                 this.processMonitoringCache = objectMapper.readValue(f, ProcessMonitoring.class);
             }
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             log.warn("Unreadable processmonitoring.json file at  {}", storagePath);
         }
     }
@@ -237,7 +238,7 @@ public class ProcessesService implements ResourceLoaderAware {
                 return null;
             }
             return process;
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.warn("Unreadable config.json file " + configFile.getAbsolutePath(), e);
             return null;
         }

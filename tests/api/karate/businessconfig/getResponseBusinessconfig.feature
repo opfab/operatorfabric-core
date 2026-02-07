@@ -25,7 +25,7 @@ Feature: getResponseBusinessconfig
       And header Authorization = 'Bearer ' + authToken
       When method get
       Then status 200
-      And match response == {"lock":null,"state":"questionState","externalRecipients":[],"emittingEntityAllowedToRespond":true,"showConfirmationPopup":true}
+      And match response == {"state":"questionState","externalRecipients":[],"emittingEntityAllowedToRespond":true,"showConfirmationPopup":true}
 
 
 

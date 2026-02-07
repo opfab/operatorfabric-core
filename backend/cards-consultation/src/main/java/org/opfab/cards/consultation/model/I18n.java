@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,5 @@ package org.opfab.cards.consultation.model;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-public record I18n(String key, @JsonInclude(JsonInclude.Include.NON_EMPTY) Map<String, String> parameters) {
+public record I18n(String key, Map<String, String> parameters) {
 }

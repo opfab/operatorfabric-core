@@ -2,15 +2,14 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 
 dependencies {
-    implementation misc.jacksonAnnotations
-    implementation misc.jacksonDatabind
-    implementation boot.starterMongo
+
     implementation misc.jsonSmart
-    implementation boot.starterMongoR
+    implementation boot.starterMongo
     implementation boot.starterValidation
     implementation boot.starterSecurity
     implementation boot.starterWeb
-    implementation spring.securityOauthResource, spring.securityOauthJose
+    implementation spring.securityOauthResource , spring.securityOauthJose
+
     implementation misc.compress
     implementation misc.rabbitMQ
     implementation misc.commonsPool

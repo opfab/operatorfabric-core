@@ -118,5 +118,5 @@ Feature: update user settings
     When method put
     Then status 200
     And match response.login == userSettingsDispatcherForCleaningProcessesStatesNotNotified.login
-    And match response.processesStatesNotNotified == '#notpresent'
+    And match response.processesStatesNotNotified == {}
 

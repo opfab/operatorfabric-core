@@ -23,7 +23,7 @@ import org.opfab.configuration.test.WithMockOpFabUserReactive;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.opfab.common.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
@@ -141,9 +141,9 @@ class ConnectionRoutesShould {
             service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
 
             String[] expectedUsers = {
-                    "{\"login\":\"testuser\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
-                    "{\"login\":\"testuser2\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}",
-                    "{\"login\":\"testuser3\",\"firstName\":null,\"lastName\":null,\"entitiesConnected\":[],\"groups\":[]}" };
+                    "{\"login\":\"testuser\",\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser2\",\"entitiesConnected\":[],\"groups\":[]}",
+                    "{\"login\":\"testuser3\",\"entitiesConnected\":[],\"groups\":[]}" };
 
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk();
 
@@ -153,6 +153,7 @@ class ConnectionRoutesShould {
 
             int actualUsersCount = actualJson.split("\"login\":").length - 1;
             Assertions.assertEquals(3, actualUsersCount);
+            System.out.println("Actual JSON response: " + actualJson);
             for (String currentUser : expectedUsers) {
                 Assertions.assertTrue(actualJson.contains(currentUser));
             }

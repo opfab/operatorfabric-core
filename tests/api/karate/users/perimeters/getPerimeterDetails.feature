@@ -60,5 +60,5 @@ Feature: Get perimeter details (endpoint tested : GET /perimeters/{id})
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404
-    And match response.status == 'NOT_FOUND'
+    And match response.status == '404 NOT_FOUND'
     And match response.message == 'Perimeter Random not found'

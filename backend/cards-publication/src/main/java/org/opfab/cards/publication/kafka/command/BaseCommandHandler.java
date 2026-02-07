@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, Alliander (http://www.alliander.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,6 @@
 
 package org.opfab.cards.publication.kafka.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.opfab.avro.Card;
 import org.opfab.avro.CardCommand;
 import org.opfab.cards.publication.kafka.CardObjectMapper;
@@ -40,7 +39,7 @@ public class BaseCommandHandler {
                 cardData = objectMapper.readJSONValue(cardDataString);
             }
             card.data = cardData;
-        } catch (JsonProcessingException e) {
+        } catch (tools.jackson.core.JacksonException e) {
             log.error("Unable to serialize card {} into CardPublicationData. Message: {}", kafkaCard, e.getMessage());
         }
         return card;

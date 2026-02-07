@@ -10,17 +10,19 @@ apply plugin: 'org.springframework.boot'
 dependencies {
     implementation misc.jsonSmart
     implementation misc.commonsLang
-    implementation cloud.springKafka
+    implementation cloud.starterKafka
     implementation cloud.kafkaAvroSchemaRegistryClient
     implementation cloud.kafkaAvroSerializer
     implementation boot.actuator
     implementation misc.micrometer
-    implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterWeb
     implementation boot.starterSecurity
+    implementation spring.securityOauthResource, spring.securityOauthJose
     implementation boot.starterValidation
     implementation boot.starterMongo
     implementation project(':backend:java-common')
+
+
 
 //Transitive dependencies udpate needed for security reasons 
     implementation misc.guava

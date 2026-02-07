@@ -13,6 +13,8 @@ dependencies {
     implementation boot.actuator
     implementation misc.micrometer
     implementation boot.starterWeb
+    
+    
     implementation project(':backend:java-common')
 
     compileOnly boot.annotationConfiguration

@@ -17,13 +17,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import jakarta.validation.Valid;
 
 @Validated
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CurrentUserWithPerimeters {
 
     @Valid
