@@ -98,7 +98,8 @@ export abstract class AdminTableDirective implements OnDestroy {
 
     protected static defaultEditionModalOptions: NgbModalOptions = {
         backdrop: 'static', // Modal shouldn't close even if we click outside it
-        size: 'lg'
+        size: 'lg',
+        keyboard: false
     };
     /** Default modal options can be added to or overridden using this property in the xxx-table components extending the directive. */
     public modalOptions: NgbModalOptions = AdminTableDirective.defaultEditionModalOptions;
