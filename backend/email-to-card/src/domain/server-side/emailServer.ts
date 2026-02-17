@@ -10,8 +10,10 @@
 import {EmailServerInterface} from './emailServerInterface';
 import {Email} from '../application/email';
 import imaps from 'imap-simple';
-import {simpleParser} from 'mailparser';
+import {AddressObject, simpleParser} from 'mailparser';
 import {EmailServerConfig} from './emailServerConfig';
+
+const MAX_ATTACHMENT_TEXT_SIZE_BYTES = 100_000; // 100 KB
 
 export default class EmailServer implements EmailServerInterface {
     private logger: any;
@@ -28,9 +30,31 @@ export default class EmailServer implements EmailServerInterface {
     }
 
     public async fetchMailBox(login: string, password: string): Promise<Email[]> {
-        this.logger.info('Checking mailbox for ' + login + ' ...');
+        this.logger.info(`Checking mailbox for ${login} ...`);
 
-        const options = {
+        const connection = await this.openImapConnection(login, password);
+
+        try {
+            await connection.openBox('INBOX');
+
+            const messages = await connection.search(['UNSEEN'], {bodies: [''], markSeen: true});
+
+            return Promise.all(
+                messages
+                    .map((msg) => this.extractRawPart(msg))
+                    .filter(Boolean)
+                    .map((rawPart) => this.parseEmail(rawPart!.body))
+            );
+        } catch (err: any) {
+            this.logger.error('Failed to check mailbox: ' + err.message);
+            throw err;
+        } finally {
+            this.closeConnection(connection);
+        }
+    }
+
+    private async openImapConnection(login: string, password: string) {
+        return imaps.connect({
             imap: {
                 user: login,
                 password: password,
@@ -39,52 +63,54 @@ export default class EmailServer implements EmailServerInterface {
                 tls: this.emailServerConfig.tls,
                 authTimeout: this.emailServerConfig.authTimeout ?? 5000
             }
-        };
-        const emails: Email[] = [];
-        let connection;
+        });
+    }
 
-        try {
-            connection = await imaps.connect(options);
-            await connection.openBox('INBOX');
+    private extractRawPart(msg: any) {
+        return msg.parts.find((p: any) => p.which === '');
+    }
 
-            const searchCriteria = ['UNSEEN'];
-            const fetchOptions = {
-                bodies: ['HEADER', 'TEXT'],
-                markSeen: true
-            };
+    private async parseEmail(rawBody: string): Promise<Email> {
+        const parsed = await simpleParser(rawBody);
 
-            const messages = await connection.search(searchCriteria, fetchOptions);
+        return new Email(
+            this.formatAddress(parsed.from),
+            [this.formatAddress(parsed.to)],
+            parsed.subject ?? '<no subject>',
+            parsed.text?.trim() || '<empty>',
+            this.extractAttachments(parsed.attachments ?? [])
+        );
+    }
 
-            for (const msg of messages) {
-                const headerPart = msg.parts.find((p: any) => p.which === 'HEADER');
-                const bodyPart = msg.parts.find((p: any) => p.which === 'TEXT');
-
-                if (!bodyPart) continue;
-
-                const fullEmail = headerPart?.body + '\r\n' + bodyPart.body;
-                const parsed = await simpleParser(fullEmail);
-
-                const email = new Email(
-                    headerPart?.body.from[0],
-                    headerPart?.body.to ?? [],
-                    headerPart?.body.subject[0],
-                    parsed.text?.trim() || '<empty>'
-                );
-
-                emails.push(email);
-            }
-        } catch (err: any) {
-            this.logger.error('Failed to check mailbox: ' + err.message);
-            throw err;
-        } finally {
-            if (connection) {
-                try {
-                    connection.end();
-                } catch (endErr) {
-                    this.logger.warn('Error closing connection: ' + endErr);
+    private extractAttachments(attachments: any[]): {filename: string; content: string}[] {
+        return attachments
+            .filter((att) => {
+                if (att.content.length > MAX_ATTACHMENT_TEXT_SIZE_BYTES) {
+                    this.logger.warn(`Attachment ${att.filename} ignored (size=${att.content.length} bytes)`);
+                    return false;
                 }
-            }
+                return true;
+            })
+            .map((att) => ({
+                filename: att.filename ?? 'attachment.txt',
+                content: att.content.toString('utf-8')
+            }));
+    }
+
+    private closeConnection(connection: any) {
+        try {
+            connection?.end();
+        } catch (err) {
+            this.logger.warn('Error closing connection: ' + err);
         }
-        return emails;
+    }
+
+    private formatAddress(addr: AddressObject | AddressObject[] | undefined): string {
+        if (!addr) return '<unknown>';
+
+        if (Array.isArray(addr)) {
+            return addr.flatMap((a) => a.value.map((v) => v.address)).join(', ');
+        }
+        return addr.value.map((v) => v.address).join(', ');
     }
 }
