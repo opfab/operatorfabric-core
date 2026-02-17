@@ -12,11 +12,25 @@ export class Email {
     to: string[];
     subject: string | undefined;
     body: string;
+    attachments: {
+        filename: string;
+        content: string;
+    }[];
 
-    constructor(from: string | undefined, to: string[], subject: string | undefined, body: string) {
+    constructor(
+        from: string | undefined,
+        to: string[],
+        subject: string | undefined,
+        body: string,
+        attachments: {
+            filename: string;
+            content: string;
+        }[] = []
+    ) {
         this.from = from;
         this.to = to;
         this.subject = subject;
         this.body = body;
+        this.attachments = attachments;
     }
 }
