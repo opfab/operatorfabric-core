@@ -8,6 +8,19 @@
  */
 
 function convertEmailToCard(email) {
+
+    let xmlJson = null;
+
+    if (email.attachments && email.attachments.length > 0) {
+        const xmlAttachment = email.attachments.find(att =>
+            att.filename && att.filename.endsWith('.xml')
+        );
+
+        if (xmlAttachment) {
+            xmlJson = helpers.XMLToJSON(xmlAttachment.content);
+        }
+    }
+
     return {
         publisher: 'opfab',
         process: 'api_test',
@@ -26,7 +39,8 @@ function convertEmailToCard(email) {
                 body: email.body,
                 attachments: email.attachments.map((att) => ({
                     filename: att.filename,
-                    content: att.content
+                    content: att.content,
+                    contentInJsonFormat: xmlJson
                 }))
             },
             converter: 'emailToCardConverter2.js'
