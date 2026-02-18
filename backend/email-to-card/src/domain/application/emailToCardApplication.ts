@@ -14,6 +14,7 @@ import OpfabServicesInterface from '../../common/server-side/opfabServicesInterf
 import fs from 'node:fs';
 import vm from 'node:vm';
 import path from 'node:path';
+import {XMLParser} from 'fast-xml-parser';
 
 export default class EmailToCardApplication {
     private readonly emailServer: EmailServerInterface;
@@ -71,9 +72,23 @@ export default class EmailToCardApplication {
                     .fetchMailBox(mailbox.mailbox, mailbox.password)
                     .then(async (emails) => {
                         const filePath = 'config/js/' + mailbox.emailToCardConverter + '.js';
+
                         const code = fs.readFileSync(filePath, 'utf8');
-                        const context = vm.createContext();
-                        vm.runInContext(code, context, {filename: path.basename(filePath)});
+                        //const context = vm.createContext();
+
+                        //vm.runInContext(code, context, {filename: path.basename(filePath)});
+
+                        const globals = {
+                            helpers: {
+                                XMLToJSON: (xml: string) => this.XMLToJSON(xml)
+                            }
+                        };
+
+                        const context = vm.createContext(globals);
+
+                        vm.runInContext(code, context, {
+                            filename: path.basename(filePath)
+                        });
 
                         for (const email of emails) {
                             const card = context.convertEmailToCard(email);
@@ -88,5 +103,20 @@ export default class EmailToCardApplication {
         setTimeout(() => {
             this.checkMailBoxRegularly();
         }, intervalSeconds * 1000);
+    }
+
+    private XMLToJSON(xml: string): any {
+        try {
+            const parser = new XMLParser({
+                ignoreAttributes: false,
+                attributeNamePrefix: '@_',
+                trimValues: true
+            });
+
+            return parser.parse(xml);
+        } catch (error: any) {
+            this.logger.error('Failed to parse XML: ' + error.message);
+            throw error;
+        }
     }
 }
