@@ -116,10 +116,12 @@ Feature: Send card when an email is received
 
       '--boundary123\n' +
       'Content-Type: text/plain; charset="utf-8"\n' +
-      'Content-Disposition: attachment; filename="first-attachment.txt"\n\n' +
+      'Content-Disposition: attachment; filename="first-attachment.xml"\n\n' +
 
-      'This is the content of the first attachment.\n' +
-      'Line 2 of first attachment.\n\n' +
+      '<attachmentXml>\n' +
+      '  <line1>This is the content of the first attachment.</line1>\n' +
+      '  <line2>Line 2 of first attachment.</line2>\n' +
+      '</attachmentXml>\n\n' +
 
       '--boundary123\n' +
       'Content-Type: text/plain; charset="utf-8"\n' +
@@ -153,8 +155,9 @@ Feature: Send card when an email is received
     And match response.card.data.content.to[0] == 'operator1@test.com'
     And match response.card.data.content.subject == 'Test'
     And match response.card.data.content.body == 'Hello,\nplease find attachment.'
-    And match response.card.data.content.attachments[0].filename == 'first-attachment.txt'
-    And match response.card.data.content.attachments[0].content == 'This is the content of the first attachment.\nLine 2 of first attachment.\n'
+    And match response.card.data.content.attachments[0].filename == 'first-attachment.xml'
+    And match response.card.data.content.attachments[0].content == '<attachmentXml>\n  <line1>This is the content of the first attachment.</line1>\n  <line2>Line 2 of first attachment.</line2>\n</attachmentXml>\n'
+    And match response.card.data.content.attachments[0].contentInJsonFormat == {"attachmentXml":{"line1":"This is the content of the first attachment.","line2":"Line 2 of first attachment."}}
     And match response.card.data.content.attachments[1].filename == 'second-attachment.txt'
     And match response.card.data.content.attachments[1].content == 'This is the content of the second attachment.\nLine 2 of second attachment.\n'
 
