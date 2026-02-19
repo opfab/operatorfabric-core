@@ -19,7 +19,8 @@
         "amqp-connection-manager": "5.0.0",
         "amqplib": "0.10.9",
         "winston": "3.19.0",
-        "winston-daily-rotate-file": "5.0.0"
+        "winston-daily-rotate-file": "5.0.0",
+        "yaml": "2.8.1"
     },
     "devDependencies": {
         "@types/amqplib": "0.10.8",
@@ -29,6 +30,7 @@
         "@types/express": "5.0.6",
         "@types/config": "3.3.5",
         "eslint": "10.0.0",
+        "@eslint/js": "10.0.0",
         "eslint-plugin-jest": "29.15.0",
         "globals": "17.3.0",
         "jest": "30.2.0",
