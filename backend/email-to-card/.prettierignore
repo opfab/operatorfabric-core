@@ -1,7 +1,0 @@
-coverage/**
-build/**
-logs/**
-.vscode/**
-eslint.config.mjs
-tsconfig.json
-**/*.yml

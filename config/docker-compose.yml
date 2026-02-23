@@ -160,6 +160,8 @@ services:
       - "./web-ui/externalJs:/usr/share/nginx/html/externalJs"
       - "./web-ui/externalCss:/usr/share/nginx/html/externalCss"
       - "../tests/externalWebAppExample:/usr/share/nginx/html/external/appExample"
+  # Uncomment the line below to customize sounds for notification
+  #   - "./services/custom-sounds:/usr/share/nginx/html/assets/sounds"
   email-gateway:
     container_name: email-gateway
     image: "lfeoperatorfabric/of-email-gateway:SNAPSHOT"
@@ -197,20 +199,6 @@ services:
     volumes:
       - "./services/supervisor.yml:/usr/app/config/docker.yml"
       - "./services/common.yml:/usr/app/config/common.yml"
-  email-to-card:
-    container_name: email-to-card
-    image: "lfeoperatorfabric/of-email-to-card:SNAPSHOT"
-    user: ${USER_ID}:${USER_GID}
-    ports:
-      - "2109:2109"
-    environment:
-      - TZ=Europe/Paris
-      - NODE_ENV=base,common,docker
-    volumes:
-      - "./services/email-to-card.yml:/usr/app/config/docker.yml"
-      - "./services/common.yml:/usr/app/config/common.yml"
-  # Uncomment the line below to customize sounds for notification
-  #     - "./services/custom-sounds:/usr/share/nginx/html/assets/sounds"
   external-devices:
     container_name: external-devices
     image: "lfeoperatorfabric/of-external-devices:SNAPSHOT"
