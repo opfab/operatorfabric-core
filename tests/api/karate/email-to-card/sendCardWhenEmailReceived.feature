@@ -92,7 +92,7 @@ Feature: Send card when an email is received
 
 
   Scenario: Post file converter needed for operator1_fr
-    Given url 'http://localhost:2109/upload'
+    Given url 'http://localhost:2106/upload'
     And header Authorization = 'Bearer ' + authTokenAsAdmin
     And multipart file file = { read: 'resources/emailToCardConverter1.js' }
     When method post
@@ -185,7 +185,7 @@ Feature: Send card when an email is received
 
 
   Scenario: Delete file converter previously uploaded
-    Given url 'http://localhost:2109/delete' + '?filename=emailToCardConverter1.js'
+    Given url 'http://localhost:2106/delete' + '?filename=emailToCardConverter1.js'
     And header Authorization = 'Bearer ' + authTokenAsAdmin
     When method delete
     Then status 200

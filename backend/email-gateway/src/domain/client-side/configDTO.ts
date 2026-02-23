@@ -7,8 +7,10 @@
  * This file is part of the OperatorFabric project.
  */
 
+import IncomingEmailsConfigDTO from './incomingEmailsConfigDTO';
 import OutgoingEmailsConfigDTO from './outgoingEmailsConfigDTO';
 
 export default class ConfigDTO {
     public outgoingEmails: OutgoingEmailsConfigDTO;
+    public incomingEmails: IncomingEmailsConfigDTO;
 }
