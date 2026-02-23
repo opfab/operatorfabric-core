@@ -1,4 +1,3 @@
-
 operatorfabric:
   rabbitmq:
     host: rabbitmq
@@ -10,6 +9,7 @@ operatorfabric:
     authToken: "http://web-ui/auth/token"
     users: "http://users:2103"
     cardsConsultation: "http://cards-consultation:2104"
+    cardsPublication: "http://cards-publication:2102"
     businessconfig: "http://businessconfig:2100"
   internalAccount:
     login: opfab
@@ -21,15 +21,17 @@ operatorfabric:
     adminPort: 2106
     activeOnStartup: true
     defaultConfig:
+      incomingEmails:
+        secondsBetweenConnectionChecks: 10
       outgoingEmails:
-        subjectPrefix: 'Opfab card received '
-        bodyPrefix: 'You received a card in opfab : '
-        bodyPostfix: 'This email has been sent by Opfab, there is no need to reply.'
-        publisherEntityPrefix: 'The card has been sent by '
-        dailyEmailTitle: 'Cards received during the day'
-        weeklyEmailTitle: 'Cards received during the week'
-        dailyEmailBodyPrefix: 'You received the following cards during the past 24 hours : '
-        weeklyEmailBodyPrefix: 'You received the following cards during the past 7 days : '
+        subjectPrefix: "Opfab card received "
+        bodyPrefix: "You received a card in opfab : "
+        bodyPostfix: "This email has been sent by Opfab, there is no need to reply."
+        publisherEntityPrefix: "The card has been sent by "
+        dailyEmailTitle: "Cards received during the day"
+        weeklyEmailTitle: "Cards received during the week"
+        dailyEmailBodyPrefix: "You received the following cards during the past 24 hours : "
+        weeklyEmailBodyPrefix: "You received the following cards during the past 7 days : "
         dayOfWeekToSendWeeklyRecapEmail: 1
         hourToSendRecapEmail: 7
         minuteToSendRecapEmail: 30
@@ -38,8 +40,8 @@ operatorfabric:
         checkPeriodInSeconds: 10
         activateCardsDiffusionRateLimiter: true
         sendRateLimit: 100
-        sendRateLimitPeriodInSec : 3600
-        defaultTimeZone: 'Europe/Paris'
+        sendRateLimitPeriodInSec: 3600
+        defaultTimeZone: "Europe/Paris"
         showCardUrls: true
         forceEmailsInPlainText: false
         showCardTitleInBody: true
