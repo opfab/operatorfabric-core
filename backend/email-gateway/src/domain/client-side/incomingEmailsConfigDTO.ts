@@ -7,11 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-export default class ConfigDTO {
+export default class IngoingEmailsConfigDTO {
     public secondsBetweenConnectionChecks = 0;
     public mailboxes: {mailbox: string; password: string; emailToCardConverter: string}[];
-    public host: string;
-    public port: number;
-    public tls: boolean;
-    public authTimeout: number;
 }
