@@ -12,6 +12,9 @@ import {expressjwt} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
+import Busboy from 'busboy';
+import path from 'node:path';
+import fs from 'node:fs';
 
 import AuthorizationService from './common/server-side/authorizationService';
 import SendMailService from './domain/server-side/sendMailService';
@@ -22,6 +25,8 @@ import EmailGatewayDatabaseService from './domain/server-side/emailGatewayDataba
 import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
 import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
 import {loadHelpers} from './domain/server-side/CustomHandlebarsHelpers';
+import EmailServer from './domain/server-side/emailServer';
+import EmailToCardService from './domain/client-side/emailToCardService';
 
 const app = express();
 app.disable('x-powered-by');
@@ -51,11 +56,11 @@ const logger = getLogger();
 const activeOnStartUp = config.get('operatorfabric.emailGateway.activeOnStartup');
 
 const configService = new ConfigService(
-    config.get('operatorfabric.emailGateway.defaultConfig.outgoingEmails'),
+    config.get('operatorfabric.emailGateway.defaultConfig'),
     'config/serviceConfig.json',
     logger
 );
-
+logger.info('Configuration loaded: ' + JSON.stringify(configService.getConfig()));
 // load custom handlebars helpers
 // Need to ignore Sonar rule btypescript:S4325 because it is necessary to use "any" here to avoid TypeScript errors
 const customHandlebarsHelpersFile = (config.get('operatorfabric.emailGateway') as any)?.customHandlebarsHelpersFile; //NOSONAR
@@ -69,11 +74,16 @@ if (customHandlebarsHelpersFile && (customHandlebarsHelpersFile as string).lengt
 
 const mailService = new SendMailService(config.get('operatorfabric.emailGateway.smtpServer'));
 
+const emailServerService = new EmailServer()
+    .setEmailServerConfiguration(config.get('operatorfabric.emailGateway.imapServer'))
+    .setLogger(logger);
+
 const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
     .setLogin(config.get('operatorfabric.internalAccount.login'))
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
     .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
     .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
     .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
@@ -108,6 +118,8 @@ const emailGatewayService = new EmailGatewayService(
     serviceConfig,
     logger
 );
+
+const emailToCardService = new EmailToCardService(configService, emailServerService, opfabServicesInterface, logger);
 
 const processAdminRequest = (req: Request, res: Response, requestProcessor: Function) => {
     authorizationService
@@ -231,6 +243,130 @@ app.post('/sendWeeklyEmail', (req, res) => {
         });
 });
 
+// Create directory if it does not exist
+const uploadDir = path.join(__dirname, '../config/js');
+if (!fs.existsSync(uploadDir)) {
+    logger.info('Upload directory does not exist , creating it at ' + uploadDir);
+    fs.mkdirSync(uploadDir, {recursive: true});
+}
+
+app.post('/upload', (req: Request, res: Response) => {
+    processAdminRequest(req, res, () => {
+        logger.info('Upload file endpoint');
+
+        const busboy = Busboy({
+            headers: req.headers
+        });
+
+        let fileReceived = false;
+        let savedFileName: string | null = null;
+        let savedFileSize = 0;
+
+        busboy.on('file', (fieldname, file, info) => {
+            if (fieldname !== 'file') {
+                file.resume();
+                return;
+            }
+
+            const filename = info.filename;
+
+            if (!filename?.endsWith('.js')) {
+                file.resume();
+                busboy.emit('error', new Error('Only .js files are allowed'));
+                return;
+            }
+
+            fileReceived = true;
+            savedFileName = path.basename(filename);
+            const filePath = path.join(uploadDir, savedFileName);
+
+            const writeStream = fs.createWriteStream(filePath);
+
+            file.on('data', (data) => {
+                savedFileSize += data.length;
+            });
+
+            file.pipe(writeStream);
+
+            writeStream.on('error', (err) => {
+                busboy.emit('error', err);
+            });
+        });
+
+        busboy.on('finish', () => {
+            if (!fileReceived) {
+                return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
+            }
+
+            logger.info(`File received : ${savedFileName}, size : ${savedFileSize} bytes`);
+
+            res.send({success: true});
+        });
+
+        busboy.on('error', (err: unknown) => {
+            logger.error('Upload error:', err);
+
+            if (err instanceof Error) {
+                res.status(400).send(err.message);
+            } else {
+                res.status(400).send('Upload error');
+            }
+        });
+
+        req.pipe(busboy);
+    });
+});
+
+app.delete('/delete', (req, res) => {
+    processAdminRequest(req, res, () => {
+        const uploadDir = path.join(__dirname, '../config/js');
+
+        const filename = req.query.filename as string;
+        if (!filename) {
+            return res.status(400).send('Missing filename parameter');
+        }
+
+        const allowedFiles = fs.readdirSync(uploadDir);
+        if (!allowedFiles.includes(filename)) {
+            return res.status(400).send('Invalid filename');
+        }
+
+        const filePath = path.join(uploadDir, filename);
+
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                return res.status(404).send('File not found');
+            }
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    logger.error('Error deleting file:', err);
+                    return res.status(500).send('Failed to delete file');
+                }
+
+                logger.info(`File deleted: ${filePath}`);
+                res.send({success: true, message: `File ${filename} deleted`});
+            });
+        });
+    });
+});
+
+app.get('/list', (req, res) => {
+    processAdminRequest(req, res, () => {
+        const dirPath = path.join(__dirname, '../config/js');
+
+        fs.readdir(dirPath, (err, files) => {
+            if (err) {
+                logger.error('Error reading directory:', err);
+                return res.status(500).send('Failed to read directory');
+            }
+
+            const jsFiles = files.filter((f) => f.endsWith('.js'));
+
+            res.send({success: true, files: jsFiles});
+        });
+    });
+});
 async function start(): Promise<void> {
     await emailGatewayDatabaseService.connectToMongoDB();
     const response = await opfabServicesInterface.loadUsersData();
@@ -243,6 +379,7 @@ async function start(): Promise<void> {
 
     if (activeOnStartUp as boolean) {
         emailGatewayService.start();
+        emailToCardService.start();
     }
     logger.info('Application started');
 }

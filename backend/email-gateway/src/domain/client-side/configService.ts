@@ -8,6 +8,7 @@
  */
 
 import ConfigDTO from './configDTO';
+import IncomingEmailsConfigDTO from './incomingEmailsConfigDTO';
 import OutgoingEmailsConfigDTO from './outgoingEmailsConfigDTO';
 
 import fs from 'node:fs';
@@ -26,33 +27,43 @@ export default class ConfigService {
                 this.loadFromFile();
             } else {
                 this.config = new ConfigDTO();
+
+                this.config.incomingEmails = new IncomingEmailsConfigDTO();
+                this.config.incomingEmails.secondsBetweenConnectionChecks =
+                    defaultConfig?.incomingEmails?.secondsBetweenConnectionChecks;
+                this.config.incomingEmails.mailboxes = defaultConfig?.incomingEmails?.mailboxes;
+
                 this.config.outgoingEmails = new OutgoingEmailsConfigDTO();
 
-                this.config.outgoingEmails.mailFrom = defaultConfig?.mailFrom;
-                this.config.outgoingEmails.hourToSendRecapEmail = defaultConfig?.hourToSendRecapEmail;
-                this.config.outgoingEmails.minuteToSendRecapEmail = defaultConfig?.minuteToSendRecapEmail;
+                this.config.outgoingEmails.mailFrom = defaultConfig?.outgoingEmails.mailFrom;
+                this.config.outgoingEmails.hourToSendRecapEmail = defaultConfig?.outgoingEmails.hourToSendRecapEmail;
+                this.config.outgoingEmails.minuteToSendRecapEmail =
+                    defaultConfig?.outgoingEmails.minuteToSendRecapEmail;
                 this.config.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail =
-                    defaultConfig?.dayOfWeekToSendWeeklyRecapEmail;
-                this.config.outgoingEmails.dailyEmailTitle = defaultConfig?.dailyEmailTitle;
-                this.config.outgoingEmails.weeklyEmailTitle = defaultConfig?.weeklyEmailTitle;
-                this.config.outgoingEmails.dailyEmailBodyPrefix = defaultConfig?.dailyEmailBodyPrefix;
-                this.config.outgoingEmails.weeklyEmailBodyPrefix = defaultConfig?.weeklyEmailBodyPrefix;
-                this.config.outgoingEmails.subjectPrefix = defaultConfig?.subjectPrefix;
-                this.config.outgoingEmails.bodyPrefix = defaultConfig?.bodyPrefix;
-                this.config.outgoingEmails.bodyPostfix = defaultConfig?.bodyPostfix;
-                this.config.outgoingEmails.publisherEntityPrefix = defaultConfig?.publisherEntityPrefix;
-                this.config.outgoingEmails.opfabUrlInMailContent = defaultConfig?.opfabUrlInMailContent;
-                this.config.outgoingEmails.windowInSecondsForCardSearch = defaultConfig?.windowInSecondsForCardSearch;
-                this.config.outgoingEmails.checkPeriodInSeconds = defaultConfig?.checkPeriodInSeconds;
+                    defaultConfig?.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail;
+                this.config.outgoingEmails.dailyEmailTitle = defaultConfig?.outgoingEmails.dailyEmailTitle;
+                this.config.outgoingEmails.weeklyEmailTitle = defaultConfig?.outgoingEmails.weeklyEmailTitle;
+                this.config.outgoingEmails.dailyEmailBodyPrefix = defaultConfig?.outgoingEmails.dailyEmailBodyPrefix;
+                this.config.outgoingEmails.weeklyEmailBodyPrefix = defaultConfig?.outgoingEmails.weeklyEmailBodyPrefix;
+                this.config.outgoingEmails.subjectPrefix = defaultConfig?.outgoingEmails.subjectPrefix;
+                this.config.outgoingEmails.bodyPrefix = defaultConfig?.outgoingEmails.bodyPrefix;
+                this.config.outgoingEmails.bodyPostfix = defaultConfig?.outgoingEmails.bodyPostfix;
+                this.config.outgoingEmails.publisherEntityPrefix = defaultConfig?.outgoingEmails.publisherEntityPrefix;
+                this.config.outgoingEmails.opfabUrlInMailContent = defaultConfig?.outgoingEmails.opfabUrlInMailContent;
+                this.config.outgoingEmails.windowInSecondsForCardSearch =
+                    defaultConfig?.outgoingEmails.windowInSecondsForCardSearch;
+                this.config.outgoingEmails.checkPeriodInSeconds = defaultConfig?.outgoingEmails.checkPeriodInSeconds;
                 this.config.outgoingEmails.activateCardsDiffusionRateLimiter =
-                    defaultConfig?.activateCardsDiffusionRateLimiter;
-                this.config.outgoingEmails.sendRateLimit = defaultConfig?.sendRateLimit;
-                this.config.outgoingEmails.sendRateLimitPeriodInSec = defaultConfig?.sendRateLimitPeriodInSec;
-                this.config.outgoingEmails.customConfig = defaultConfig?.customConfig;
-                this.config.outgoingEmails.showCardUrls = defaultConfig?.showCardUrls;
-                this.config.outgoingEmails.forceEmailsInPlainText = defaultConfig?.forceEmailsInPlainText;
-                this.config.outgoingEmails.showCardTitleInBody = defaultConfig?.showCardTitleInBody;
-                this.config.outgoingEmails.defaultTimeZone = defaultConfig?.defaultTimeZone;
+                    defaultConfig?.outgoingEmails.activateCardsDiffusionRateLimiter;
+                this.config.outgoingEmails.sendRateLimit = defaultConfig?.outgoingEmails.sendRateLimit;
+                this.config.outgoingEmails.sendRateLimitPeriodInSec =
+                    defaultConfig?.outgoingEmails.sendRateLimitPeriodInSec;
+                this.config.outgoingEmails.customConfig = defaultConfig?.outgoingEmails.customConfig;
+                this.config.outgoingEmails.showCardUrls = defaultConfig?.outgoingEmails.showCardUrls;
+                this.config.outgoingEmails.forceEmailsInPlainText =
+                    defaultConfig?.outgoingEmails.forceEmailsInPlainText;
+                this.config.outgoingEmails.showCardTitleInBody = defaultConfig?.outgoingEmails.showCardTitleInBody;
+                this.config.outgoingEmails.defaultTimeZone = defaultConfig?.outgoingEmails.defaultTimeZone;
                 this.save();
             }
         } catch (err) {
@@ -78,11 +89,22 @@ export default class ConfigService {
         return this.config;
     }
 
-    public patch(update: object): ConfigDTO {
+    public patch(update: any): ConfigDTO {
         try {
-            for (const [key, value] of Object.entries(update)) {
-                if (Object.hasOwn(this.config.outgoingEmails, key) && value != null) {
-                    (this.config.outgoingEmails as any)[key] = value;
+            const udapteOutgoingEmails = update['outgoingEmails'];
+            if (udapteOutgoingEmails) {
+                for (const [key, value] of Object.entries(udapteOutgoingEmails)) {
+                    if (Object.hasOwn(this.config.outgoingEmails, key) && value != null) {
+                        (this.config.outgoingEmails as any)[key] = value;
+                    }
+                }
+            }
+            const updateIncomingEmails = update['incomingEmails'];
+            if (updateIncomingEmails) {
+                for (const [key, value] of Object.entries(updateIncomingEmails)) {
+                    if (Object.hasOwn(this.config.incomingEmails, key) && value != null) {
+                        (this.config.incomingEmails as any)[key] = value;
+                    }
                 }
             }
             this.save();
