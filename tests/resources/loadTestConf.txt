@@ -42,5 +42,6 @@ perimeter add-to-group supervisor Dispatcher
 process-group load processGroups/processGroups.json
 process-monitoring load processMonitoring/processMonitoring.json
 realtime-screen load realTimeScreens/realTimeScreens.json
+ui-menu load uiMenu/uimenu.json
 business-data load businessData/message-and-question-list
 business-data load businessData/services

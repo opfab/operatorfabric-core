@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -32,7 +32,7 @@ export class MenuService {
                 }
             }
         } else {
-            logger.error('No topRightMenus property set in ui-menu.json');
+            logger.error('No topRightMenus property set in the ui menu configuration');
         }
         return false;
     }

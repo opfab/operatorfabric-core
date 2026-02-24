@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -15,10 +15,17 @@ To customize the UI, declare specific parameters in the `web-ui.json` file as li
 [[menu_entries]]
 == Menu Entries
 
-The `ui-menu.json` file is used:
+A json description is used :
 
 * To manage the visibility of core OperatorFabric menus (feed, archives, etc.)
 * To declare specific business menus to be displayed in the navigation bar of OperatorFabric
+
+To update the menu, you can upload a file containing the json data via a POST HTTP request to the dedicated API endpoint
+as described in
+ifdef::single-page-doc[link:../api/index.html#tag/configurations/operation/uploadUIMenu[UI Menu API documentation]]
+ifndef::single-page-doc[link:/documentation/current/api/index.html#tag/configurations/operation/uploadUIMenu[UI Menu API documentation]]
+
+You can do it using the cli (command line interface), for example: `opfab ui-menu load <uiMenuFileName>`
 
 This file contains 4 fields :
 
@@ -111,8 +118,6 @@ listed groups.
 
 |===
 
-See `/config/docker/ui-menu.json` for an example containing all core menus.
-
 NOTE: If you decide not to make the night/day toggle visible (globally or for certain users), you should consider
 setting the `settings.styleWhenNightDayModeDesactivated` property in `web-ui.json` to specify which mode should be used.
 
@@ -121,9 +126,6 @@ setting the `settings.styleWhenNightDayModeDesactivated` property in `web-ui.jso
 A menu can target directly a link or give access to several sub-menus when clicked.
 Those sub-menus can target a link or an opfab core menu.
 A targeted link can be open in an iframe or in a new tab.
-
-Menus support i18n following the i18n OperatorFabric rules.
-The ui-menu.json file contains directly the i18n dictionary for the menus.
 
 In case of a single menu, the navigation bar displays the l10n of the `label` of the entry menu.
 In this case, the `label` declared at the root level of the menu is useless and can be omitted (see example below).

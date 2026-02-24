@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ export class AngularConfigServer extends AngularServer implements ConfigServer {
     constructor() {
         super();
         this.configUrl = `${environment.url}config/web-ui.json`;
-        this.menuUrl = `${environment.url}config/ui-menu.json`;
+        this.menuUrl = `${environment.url}businessconfig/uimenu`;
         this.processMonitoringConfigUrl = `${environment.url}businessconfig/processmonitoring`;
         this.localUrl = `${environment.url}assets/i18n`;
         this.realTimeScreensUrl = `${environment.url}businessconfig/realtimescreens`;

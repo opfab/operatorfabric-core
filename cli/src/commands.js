@@ -16,6 +16,7 @@ const config = require('./configCommands.js');
 const card = require('./cardCommands.js');
 const perimeter = require('./perimeterCommands.js');
 const processGroup = require('./processGroupCommands.js');
+const uiMenu = require('./uiMenuCommands.js');
 const realtimescreen = require('./realtimescreenCommands.js');
 const businessData = require('./businessDataCommands.js');
 const log = require('./logCommands.js');
@@ -76,6 +77,10 @@ const commands = {
             case 'process-group':
                 this.exitIfNotLoggedIn();
                 await processGroup.processProcessGroupCommand(args.slice(1));
+                break;
+            case 'ui-menu':
+                this.exitIfNotLoggedIn();
+                await uiMenu.processUIMenuCommand(args.slice(1));
                 break;
             case 'realtime-screen':
                 this.exitIfNotLoggedIn();
@@ -208,6 +213,7 @@ const commands = {
         reminder                Manage card reminder service
         status                  Show login status
         supervisor              Manage supervising entities
+        ui-menu                 Load the UI menu configuration
         user                    Manage users
         version                 Show CLI version
     `);
@@ -245,6 +251,9 @@ const commands = {
                     break;
                 case 'process-group':
                     processGroup.printHelp();
+                    break;
+                case 'ui-menu':
+                    uiMenu.printHelp();
                     break;
                 case 'realtime-screen':
                     realtimescreen.printHelp();

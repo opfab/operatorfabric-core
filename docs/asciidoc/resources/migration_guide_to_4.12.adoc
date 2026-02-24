@@ -169,3 +169,26 @@ For example:
 ----
 ./opfab logs email-gateway
 ----
+
+=== Menu Configuration via REST API
+
+The menu configuration, previously managed through the ui-menu.json file on the server filesystem, is now exposed via a
+dedicated REST API allowing retrieval (GET) and update (POST) of the full configuration. This aligns the menu management
+with the existing configuration mechanism used for other files, for example `processgroups`. +
+
+The API endpoint is `/businessconfig/uimenu`:
+----
+GET /businessconfig/uimenu
+POST /businessconfig/uimenu
+----
+Example update:
+----
+curl -X POST "$OPFAB_URL/businessconfig/uimenu" \
+  -H "Content-Type: application/json" \
+  -d `@uimenu.json`
+----
+
+You can also do it using the cli (command line interface), for example: `opfab ui-menu load <uiMenuFileName>`
+
+Additionally, within the `locales` section, the `i18n` property has been renamed to `localizedContent`
+(e.g. "i18n": { ... } becomes "localizedContent": { ... }). No other structural changes have been introduced.

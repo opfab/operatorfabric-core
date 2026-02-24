@@ -1,4 +1,5 @@
-      businessconfig/deleteBundle.feature `#nice to be the very first one`\
+
+      businessconfig/deleteBundle.feature `#need to be the very first one`\
       businessconfig/deleteBundleVersion.feature          \
       businessconfig/uploadBundle.feature                 \
       businessconfig/getABusinessconfig.feature           \
@@ -14,3 +15,5 @@
       businessconfig/getBusinessconfigHistory.feature     \
       businessconfig/security.feature                     \
       businessconfig/uploadAndGetProcessMonitoringFile.feature \
+      businessconfig/getUIMenu.feature                    \
+      businessconfig/uploadUIMenuFile.feature             \
