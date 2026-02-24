@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -37,7 +39,8 @@ public class LastUserActionController {
     }
 
     @GetMapping(value = "/{login}", produces = { "application/json" })
-    public LastUserAction fetchLastUserAction(HttpServletRequest request, HttpServletResponse response, @PathVariable("login") String login)
+    public LastUserAction fetchLastUserAction(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("login") String login)
             throws ApiErrorException {
         LastUserAction lastUserAction = lastUserActionService.fetchLastUserAction(login);
         if (lastUserAction == null) {
@@ -45,5 +48,16 @@ public class LastUserActionController {
                     new ApiError(HttpStatus.NOT_FOUND, "Last user action not found for login: " + login));
         }
         return lastUserAction;
+    }
+
+    @GetMapping(value = "/olderThan/{days}", produces = { "application/json" })
+    public List<LastUserAction> getLastUserActionOlderThan(HttpServletRequest request, HttpServletResponse response,
+            @PathVariable("days") int days) {
+        Instant date = Instant.now().minus(days, ChronoUnit.DAYS);
+        if (days <= 0) {
+            throw new ApiErrorException(
+                    new ApiError(HttpStatus.BAD_REQUEST, "Parameter 'days' must be a positive integer"));
+        }
+        return lastUserActionService.getLastUserActionOlderThan(date);
     }
 }

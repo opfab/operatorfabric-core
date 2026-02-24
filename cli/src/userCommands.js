@@ -27,7 +27,7 @@ const userCommands = {
                         { title: 'Add to group', value: 'add-to-group' },
                         { title: 'Load a list of users', value: 'load' },
                         { title: 'Delete a user', value: 'delete' },
-                        { title: 'Get the last action date for a user', value: 'last-user-action' },
+                        { title: 'Get last user action', value: 'last-user-action' },
                         { title: 'Patch the settings for a user', value: 'patch-settings' },
                         { title: 'Remove from entity', value: 'remove-from-entity' },
                         { title: 'Remove from group', value: 'remove-from-group' },
@@ -58,7 +58,7 @@ const userCommands = {
                 await this.deleteUser(args[1]);
                 break;
             case 'last-user-action':
-                await this.lastUserAction(args[1]);
+                await this.lastUserAction(args[1], args[2]);
                 break;
             case 'load':
                 await this.loadUserList(args[1]);
@@ -140,16 +140,79 @@ const userCommands = {
         );
     },
 
-    async lastUserAction(user) {
-        user = await utils.missingTextPrompt('User', user);
-        const result = await utils.sendRequest(
-            `users/lastUserAction/${user}`,
-            'GET',
-            undefined,
-            ``,
-            `Failed to fetch last user action for user ${user}`,
-            `Last user action not found for login: ${user}`
-        );
+    async lastUserAction(option, value) {
+        if (!option) {
+            const response = (
+                await prompts({
+                    type: 'select',
+                    name: 'value',
+                    message: 'Select last user action option',
+                    choices: [
+                        { title: 'Get last user action for a specific user', value: 'for-user' },
+                        { title: 'Get all user last actions', value: 'all-users' },
+                        { title: 'Get user last action older than x days', value: 'older-than' }
+                    ]
+                })
+            );
+            option = response.value;
+            if (!option) {
+                console.log('Option is required');
+                return;
+            }
+        }
+
+        let result;
+        switch (option) {
+            case 'for-user': {
+                const user = await utils.missingTextPrompt('User', value);
+                result = await utils.sendRequest(
+                    `users/lastUserAction/${user}`,
+                    'GET',
+                    undefined,
+                    ``,
+                    `Failed to fetch last user action for user ${user}`,
+                    `Last user action not found for login: ${user}`
+                );
+                break;
+            }
+            case 'all-users':
+                result = await utils.sendRequest(
+                    `users/lastUserAction`,
+                    'GET',
+                    undefined,
+                    ``,
+                    `Failed to fetch all last user actions`,
+                    `No last user actions found`
+                );
+                break;
+
+            case 'older-than': {
+                const days = await utils.missingTextPrompt('Number of days', value);
+                if (!days) {
+                    process.exitCode = 1;
+                    return;
+                }
+                if (Number.isNaN(days) || days <= 0 || !Number.isInteger(Number(days))) {
+                    console.error('Number of days must be a positive integer');
+                    process.exitCode = 1;
+                    return;
+                }
+                result = await utils.sendRequest(
+                    `users/lastUserAction/olderThan/${days}`,
+                    'GET',
+                    undefined,
+                    ``,
+                    `Failed to fetch last user actions older than ${days} days`,
+                    `No last user actions found`
+                );
+                break;
+            }
+            default:
+                console.log(`Unknown option: ${option}`);
+                console.log('Valid options are: for-user, all-users, older-than');
+                process.exitCode = 1;
+                return;
+        }
 
         if (result?.ok) {
             const lastUserAction = await result.text();
@@ -328,7 +391,10 @@ Commands list :
             add-to-entity           Add a <user> to an <entity> : opfab user add-to-entity <entityId> <user>
             add-to-group            Add a <user> to a <group> : opfab user add-to-group <groupId> <user>
             delete                  Delete a <user> : opfab user delete <user>
-            last-user-action        Get the last action date for a <user> : opfab user last-user-action <user>
+            last-user-action        Get last user action with options : 
+                                        opfab user last-user-action for-user <user>
+                                        opfab user last-user-action all-users
+                                        opfab user last-user-action older-than <numberOfDays>
             load                    Add or update a list of users : opfab user load <usersFilePath>
             patch-settings          Patch the settings for a <user> : opfab user patch-settings <user> <settingsData>
                                     settingsData must be a JSON string.

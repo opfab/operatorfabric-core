@@ -134,7 +134,11 @@ omelette('opfab')
             'add-to-entity': ['#EMPTY_COMPLETION'],
             'add-to-group': ['#EMPTY_COMPLETION'],
             delete: ['#EMPTY_COMPLETION'],
-            'last-user-action': ['#EMPTY_COMPLETION'],
+            'last-user-action': {
+                'for-user': ['#EMPTY_COMPLETION'],
+                'all-users': ['#EMPTY_COMPLETION'],
+                'older-than': ['#EMPTY_COMPLETION']
+            },
             load: [],
             'patch-settings': ['#EMPTY_COMPLETION'],
             'remove-from-entity': ['#EMPTY_COMPLETION'],

@@ -14,6 +14,14 @@ Feature: Get last user action
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
+    And match response == '#[]'
+
+Scenario: Get all user last action older than 1 day as admin 
+    Given url opfabUrl + 'users/lastUserAction/olderThan/1'
+    And header Authorization = 'Bearer ' + authToken
+    When method get
+    Then status 200
+    And match response == '#[]'
 
   Scenario: get card subscription
     Given url opfabUrl + 'cards-consultation/cardSubscription' +'?clientId=ghi0123456789jkl'
@@ -42,6 +50,12 @@ Feature: Get last user action
 
   Scenario: Get last user action as simple user
     Given url opfabUrl + 'users/lastUserAction'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method get
+    Then status 403
+    
+  Scenario: Get last user action older than one day as simple user
+    Given url opfabUrl + 'users/lastUserAction/olderThan/1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 403
