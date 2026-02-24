@@ -43,7 +43,7 @@
         "@types/jest": "30.0.0",
         "@types/jsdom": "27.0.0",
         "@types/node": "24.10.13",
-        "@types/nodemailer": "7.0.10",
+        "@types/nodemailer": "7.0.11",
         "@types/sinon": "21.0.0",
         "eslint": "10.0.0",
         "@eslint/js": "10.0.0",
