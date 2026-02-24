@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,7 +45,7 @@ describe('Calendar screen tests', function () {
         cy.get('of-light-card').should('have.length', 1);
 
         opfab.navigateToCalendar();
-        cy.tick(2 * SECONDS); // wait 1 seconds does not work locally
+        cy.tick(2 * SECONDS); // wait 1 second does not work locally
 
         // test month view (view by default)
         cy.get('.opfab-calendar-event').should('have.length', 1); // only one card should be present

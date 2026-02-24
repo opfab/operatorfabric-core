@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@ async function setCurrentUser(userGroups: string[]) {
 
 describe('MenuService', () => {
     describe('Night day mode menu', () => {
-        it('night day mode menu is not visible if not define in ui-menu.json', async () => {
+        it('night day mode menu is not visible if not define in the ui menu configuration', async () => {
             await setMenuConfig({navigationBar: [], topRightMenus: []});
 
             const isNightDayModeMenuVisible = MenuService.isNightDayModeMenuVisible();
@@ -47,7 +47,7 @@ describe('MenuService', () => {
             expect(isNightDayModeMenuVisible).toBeFalsy();
         });
 
-        it('night day mode menu is visible if define in ui-menu.json', async () => {
+        it('night day mode menu is visible if define in the ui menu configuration', async () => {
             await setMenuConfig({
                 navigationBar: [],
                 topRightMenus: [
@@ -62,7 +62,7 @@ describe('MenuService', () => {
 
             expect(isNightDayModeMenuVisible).toBeTruthy();
         });
-        it('night day mode menu is visible if define in ui-menu.json with user in groups define showOnlyForGroups', async () => {
+        it('night day mode menu is visible if define in the ui menu configuration with user in groups define showOnlyForGroups', async () => {
             await setMenuConfig({
                 navigationBar: [],
                 topRightMenus: [
@@ -79,7 +79,7 @@ describe('MenuService', () => {
 
             expect(isNightDayModeMenuVisible).toBeTruthy();
         });
-        it('night day mode menu is not visible if define in ui-menu.json with user not in groups define showOnlyForGroups', async () => {
+        it('night day mode menu is not visible if define in the ui menu configuration with user not in groups define showOnlyForGroups', async () => {
             await setMenuConfig({
                 navigationBar: [],
                 topRightMenus: [
@@ -94,7 +94,7 @@ describe('MenuService', () => {
             const isNightDayModeMenuVisible = MenuService.isNightDayModeMenuVisible();
             expect(isNightDayModeMenuVisible).toBeFalsy();
         });
-        it('night day mode menu is visible if define in ui-menu.json with  showOnlyForGroups = []', async () => {
+        it('night day mode menu is visible if define in the ui menu configuration with  showOnlyForGroups = []', async () => {
             await setMenuConfig({
                 navigationBar: [],
                 topRightMenus: [

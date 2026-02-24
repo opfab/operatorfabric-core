@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -151,6 +151,12 @@ public class BusinessconfigController implements UserExtractor {
         return processService.getProcessGroupsCache();
     }
 
+    @GetMapping(value = "/uimenu", produces = { "application/json" })
+    public UIMenu getUIMenu(HttpServletRequest request, HttpServletResponse response) {
+        return processService.getUIMenuCache();
+    }
+
+
     @PostMapping(value = "/processes", produces = { "application/json" }, consumes = {
             "multipart/form-data" })
     public Process uploadBundle(HttpServletRequest request, HttpServletResponse response,
@@ -187,12 +193,25 @@ public class BusinessconfigController implements UserExtractor {
             "multipart/form-data" })
     public Void uploadProcessgroups(HttpServletRequest request, HttpServletResponse response,
             @Valid @RequestPart("file") MultipartFile file) {
+
         CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
 
         uploadFile(request, response, file, "processgroups", null);
         logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update process groups");
         return null;
     }
+
+    @PostMapping(value = "/uimenu", produces = { "application/json" }, consumes = { "multipart/form-data" })
+    public Void uploadUIMenu(HttpServletRequest request, HttpServletResponse response,
+                             @Valid @RequestPart("file") MultipartFile file) {
+
+        CurrentUserWithPerimeters user = this.extractUserFromJwtToken(request);
+
+        uploadFile(request, response, file, "uimenu", null);
+        logUserAction(user.getUserData().getLogin(), user.getUserData().getEntities(), "Update UI menu");
+        return null;
+    }
+
 
     @DeleteMapping(value = "/processes", produces = { "application/json" })
     public Void clearProcesses(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -301,6 +320,8 @@ public class BusinessconfigController implements UserExtractor {
                 processService.updateBusinessDataFile(new String(file.getBytes()), resourceName);
             if (endPointName.equals("processmonitoring"))
                 processService.updateProcessMonitoringFile(new String(file.getBytes()));
+            if (endPointName.equals("uimenu"))
+                processService.updateUIMenuFile(new String(file.getBytes()));
 
             response.addHeader(LOCATION, request.getContextPath() + "/businessconfig/" + endPointName);
             response.setStatus(201);

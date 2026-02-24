@@ -79,6 +79,7 @@ omelette('opfab')
             reminder: ['#EMPTY_COMPLETION'],
             status: ['#EMPTY_COMPLETION'],
             supervisor: ['#EMPTY_COMPLETION'],
+            'ui-menu': ['#EMPTY_COMPLETION'],
             user: ['#EMPTY_COMPLETION'],
             version: ['#EMPTY_COMPLETION']
         },
@@ -114,6 +115,9 @@ omelette('opfab')
         'process-group': {
             load: [],
             clear: ['#EMPTY_COMPLETION']
+        },
+        'ui-menu': {
+            load: []
         },
         'process-monitoring': ['load'],
         'realtime-screen': ['load'],

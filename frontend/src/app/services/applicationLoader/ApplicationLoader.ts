@@ -114,6 +114,7 @@ export class ApplicationLoader {
 
         if (await this.isLoadingToBeStoppedBecauseAppLoadedInAnotherTab()) return false;
         await this.authenticate();
+        TranslationService.loadTranslationForMenu();
         await UserSettingsService.loadCurrentUserSettings();
         if (await this.isUserToBeDisconnectedBecauseLoginAlreadyInUse()) return false;
         await this.loadAllConfigurationData();
@@ -161,7 +162,6 @@ export class ApplicationLoader {
         if (locales) {
             TranslationService.loadGlobalTranslations(locales).subscribe(() => {
                 logger.info('opfab translation loaded for locales: ' + locales, LogOption.LOCAL_AND_REMOTE);
-                TranslationService.loadTranslationForMenu();
                 TranslationService.setTranslationForRichTextEditor();
             });
         } else logger.error('No locales define (value i18.supported.locales not present in web-ui.json)');

@@ -53,7 +53,7 @@ describe('NavbarMenuView', () => {
     });
 
     describe('get core navbar menus', () => {
-        it('should get menus defined ui-menu.json', async () => {
+        it('should get menus defined the ui menu configuration', async () => {
             stubMenuConfigLoading({
                 navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]
             });
@@ -74,7 +74,7 @@ describe('NavbarMenuView', () => {
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of menu.archives');
         });
 
-        it('should get dropdown menus defined ui-menu.json', async () => {
+        it('should get dropdown menus defined the ui menu configuration', async () => {
             stubMenuConfigLoading({
                 navigationBar: [{entries: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}]}]
             });
@@ -178,7 +178,7 @@ describe('NavbarMenuView', () => {
     });
 
     describe('get custom navbar menus', () => {
-        it('should get menus defined ui-menu.json', async () => {
+        it('should get menus defined the ui menu configuration', async () => {
             stubMenuConfigLoading({
                 navigationBar: [
                     {
@@ -219,7 +219,7 @@ describe('NavbarMenuView', () => {
             expect(navBarMenuElements[1].label).toEqual('Translation (en) of customMenu2Label_translation_key');
         });
 
-        it('should get dropdown menus defined ui-menu.json', async () => {
+        it('should get dropdown menus defined the ui menu configuration', async () => {
             stubMenuConfigLoading({
                 navigationBar: [
                     {
@@ -330,7 +330,7 @@ describe('NavbarMenuView', () => {
     });
 
     describe('get mixed core and custom  navbar menus', () => {
-        it('should get menus defined ui-menu.json', async () => {
+        it('should get menus defined the ui menu configuration', async () => {
             stubMenuConfigLoading({
                 navigationBar: [
                     {opfabCoreMenuId: 'feed'},

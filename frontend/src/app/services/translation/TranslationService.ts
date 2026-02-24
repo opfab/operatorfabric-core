@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -112,12 +112,12 @@ export class TranslationService {
     public static loadTranslationForMenu(): void {
         ConfigService.fetchMenuTranslations().subscribe((locales) => {
             locales.forEach((locale) => {
-                this.translationLib.setTranslation(locale.language, locale.i18n, true);
+                this.translationLib.setTranslation(locale.language, locale.localizedContent, true);
             });
         });
 
         catchError((err, caught) => {
-            logger.error('Impossible to load configuration file ui-menu.json' + JSON.stringify(err));
+            logger.error('Impossible to load configuration file the ui menu configuration' + JSON.stringify(err));
             return caught;
         });
     }

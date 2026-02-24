@@ -192,7 +192,7 @@ all the entities to which he belongs.
 By choosing to disconnect from an entity, the user will still be a member of this entity, but he will no longer have
 access to the cards intended for this entity, until he reconnects to it.
 
-If set visible in ui-menu.json, this interface is accessible via the user menu (top right of the screen).
+If set visible in the ui menu configuration, this interface is accessible via the user menu (top right of the screen).
 
 The choice of activity area may be done during user logging phase if you set activityArea.selectActivityAreaOnLogin to true in web-ui.json.
 
@@ -226,7 +226,7 @@ For each action the following information are available:
 
 By default, logs older than 61 days are automatically deleted.
 
-If set visible in ui-menu.json and user is admin, this interface is accessible via the user menu (top right of the screen).
+If set visible in the ui menu configuration and user is admin, this interface is accessible via the user menu (top right of the screen).
 
 
 

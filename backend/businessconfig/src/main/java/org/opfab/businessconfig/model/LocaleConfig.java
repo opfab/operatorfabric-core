@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
+/* Copyright (c) 2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,9 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-export class Locale {
-    constructor(
-        readonly language: string,
-        readonly localizedContent: Map<string, any>
-    ) {}
-}
+package org.opfab.businessconfig.model;
+
+import org.springframework.validation.annotation.Validated;
+
+import java.util.Map;
+
+@Validated
+public record LocaleConfig(
+        String language,
+        Map<String, Object> localizedContent
+) {}
+

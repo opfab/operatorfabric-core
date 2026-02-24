@@ -69,6 +69,8 @@ public class ProcessesService implements ResourceLoaderAware {
     private RealTimeScreens realTimeScreensCache;
     private ProcessMonitoring processMonitoringCache;
 
+    private UIMenu uiMenuCache;
+
     private EventBus eventBus;
 
     private static final Logger log = LoggerFactory.getLogger(ProcessesService.class);
@@ -88,10 +90,15 @@ public class ProcessesService implements ResourceLoaderAware {
         loadProcessGroupsCache();
         loadRealTimeScreensCache();
         loadProcessMonitoringCache();
+        loadUIMenuCache();
     }
 
     public ProcessGroups getProcessGroupsCache() {
         return processGroupsCache;
+    }
+
+    public UIMenu getUIMenuCache() {
+        return uiMenuCache;
     }
 
     /**
@@ -136,6 +143,23 @@ public class ProcessesService implements ResourceLoaderAware {
             log.warn("Unreadable processGroups.json file at  {}", storagePath);
         }
     }
+
+    public void loadUIMenuCache() {
+        this.uiMenuCache = new UIMenu(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
+        try {
+            Path rootPath = Paths.get(this.storagePath).normalize();
+            File f = new File(rootPath.toString() + "/uimenu.json");
+            if (f.exists() && f.isFile()) {
+                log.info("loading uimenu.json file from {}", new File(storagePath).getAbsolutePath());
+
+                this.uiMenuCache = objectMapper.readValue(f, UIMenu.class);
+            }
+        } catch (JacksonException e) {
+            log.warn("Unreadable uimenu.json file at {}", storagePath);
+        }
+    }
+
 
     /**
      * Loads realTimeScreens data to realTimeScreensCache
@@ -340,7 +364,7 @@ public class ProcessesService implements ResourceLoaderAware {
      *
      * @param is bundle input stream
      * @return the new or updated process data
-     * @throws IOException if error arise during stream reading
+     * @throws IOException if error arises during stream reading
      */
     public synchronized Process updateProcess(InputStream is) throws IOException {
         Path rootPath = Paths
@@ -388,7 +412,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * /businessconfig/processgroups
      *
      * @param fileContent processgroups file input stream
-     * @throws IOException if error arise during stream reading
+     * @throws IOException if error arises during stream reading
      */
     public synchronized void updateProcessGroupsFile(String fileContent) throws IOException {
         Path rootPath = Paths
@@ -411,6 +435,32 @@ public class ProcessesService implements ResourceLoaderAware {
         processGroupsCache = newProcessGroups;
         pushProcessChangeInEventBus();
     }
+
+    /**
+     * Updates or creates uimenu file from a file uploaded from POST
+     * /businessconfig/uimenu
+     *
+     * @param fileContent uimenu file input stream
+     * @throws IOException if error arises during stream reading
+     */
+    public synchronized void updateUIMenuFile(String fileContent) throws IOException {
+        Path rootPath = Paths.get(this.storagePath).normalize();
+        if (!rootPath.toFile().exists()) {
+            throw new FileNotFoundException("No directory available to copy uimenu file");
+        }
+
+        UIMenu newUIMenu = objectMapper.readValue(fileContent, UIMenu.class);
+
+        // copy file
+        PathUtils.copyInputStreamToFile(new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8)),
+                rootPath.toString() + "/uimenu.json");
+
+        this.uiMenuCache = newUIMenu;
+
+        pushProcessChangeInEventBus();
+    }
+
+
 
     /**
      * Updates or creates process from disk saved bundle
@@ -633,7 +683,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * /businessconfig/realtimescreens
      *
      * @param fileContent realtimescreens file input stream
-     * @throws IOException if error arise during stream reading
+     * @throws IOException if error arises during stream reading
      */
     public synchronized void updateRealTimeScreensFile(String fileContent) throws IOException {
         Path rootPath = Paths
@@ -684,7 +734,7 @@ public class ProcessesService implements ResourceLoaderAware {
      * /businessconfig/businessdata
      *
      * @param is businessdata file input stream
-     * @throws IOException if error arise during stream reading
+     * @throws IOException if error arises during stream reading
      */
     public synchronized void updateBusinessDataFile(String fileContent, String resourceName)
             throws IOException, ParseException {

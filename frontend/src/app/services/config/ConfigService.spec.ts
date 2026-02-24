@@ -101,7 +101,7 @@ describe('ConfigService', () => {
             locales: [
                 {
                     language: 'en',
-                    i18n: {
+                    localizedContent: {
                         title: 'First menu',
                         entry: 'Single menu entry'
                     }
@@ -115,7 +115,7 @@ describe('ConfigService', () => {
             );
             const translation = await firstValueFrom(ConfigService.fetchMenuTranslations());
             expect(translation[0].language).toEqual('en');
-            expect(translation[0].i18n['title']).toEqual('First menu');
+            expect(translation[0].localizedContent['title']).toEqual('First menu');
         });
     });
 });

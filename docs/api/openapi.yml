@@ -39,6 +39,10 @@
         "name": "realtime screen",
         "description": "Realtime screen configuration",
       },
+      {
+        "name": "UI menu",
+        "description": "UI menu configuration",
+      }
     ],
   "paths":
     {
@@ -3212,6 +3216,49 @@
                 },
             },
         },
+      "/businessconfig/uimenu":
+        {
+          "get":
+            {
+              "summary": "Get the UI menu config",
+              "description": "Get the UI menu config",
+              "tags": [ "UI menu" ],
+              "operationId": "getUIMenu",
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "OK",
+                      "content":
+                        {
+                          "application/json":
+                            {
+                              "schema":
+                                {
+                                  "$ref": "#/components/schemas/UIMenu",
+                                },
+                            },
+                        },
+                    },
+                  "401": { "description": "Authentication required" },
+                },
+            },
+          "post":
+            {
+              "summary": "Upload file defining the config of UI menu",
+              "description": "Upload file defining the config of UI menu. This file must be in json format and is saved to disk, under the name 'uimenu.json'.",
+              "tags": [ "UI menu" ],
+              "operationId": "uploadUIMenu",
+              "requestBody":
+                { "$ref": "#/components/requestBodies/uploadBundle" },
+              "responses":
+                {
+                  "201": { "description": "Successful creation" },
+                  "401": { "description": "Authentication required" },
+                  "403": { "description": "Forbidden - ADMIN role necessary" },
+                },
+            },
+        },
       "/businessconfig/realtimescreens":
         {
           "get":
@@ -5038,7 +5085,130 @@
                     },
                 },
             },
-          "RealTimeScreens":
+          "UIMenu":
+            {
+              "properties":
+                {
+                  "navigationBar":
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/NavigationBarItem" }
+                    },
+                  "topRightIconMenus":
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/TopRightIconMenu" }
+                    },
+                  "topRightMenus":
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/TopRightMenu" }
+                    },
+                  "locales":
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/LocaleConfig" }
+                   }
+                }
+            },
+          "NavigationBarItem": {
+            "description": "Represents an item in the navigation bar (core menu or custom menu)",
+            "oneOf": [
+              { "$ref": "#/components/schemas/CoreMenuItem" },
+              { "$ref": "#/components/schemas/CustomMenuItem" }
+            ]
+          },
+          "CoreMenuItem": {
+            "type": "object",
+            "properties": {
+              "opfabCoreMenuId": { "type": "string" },
+              "showOnlyForGroups": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": [ "opfabCoreMenuId" ]
+          },
+          "CustomMenuItem": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "entries": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/MenuEntry" }
+              },
+              "showOnlyForGroups": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": [ "id", "label", "entries" ]
+          },
+          "MenuEntry": {
+            "type": "object",
+            "properties": {
+              "customMenuId": { "type": "string" },
+              "customScreenId": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "label": { "type": "string" },
+              "linkType": { "type": "string", "enum": [ "BOTH", "INTERNAL", "EXTERNAL" ] },
+              "showOnlyForGroups": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "required": [ "customMenuId", "label" ]
+          },
+          "TopRightIconMenu": {
+            "type": "object",
+            "properties": {
+              "opfabCoreMenuId": {
+                "type": "string",
+                "description": "ID of the core menu displayed as icon in the top right area"
+              },
+              "visible": {
+                "type": "boolean",
+                "description": "Indicates whether the icon menu is visible"
+              }
+            },
+            "required": [ "opfabCoreMenuId", "visible" ]
+          },
+          "TopRightMenu": {
+            "type": "object",
+            "properties": {
+              "opfabCoreMenuId": {
+                "type": "string",
+                "description": "ID of the core menu displayed in the top right dropdown"
+              },
+              "visible": {
+                "type": "boolean",
+                "description": "Indicates whether the menu is visible"
+              },
+              "showOnlyForGroups": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Optional list of user groups allowed to see this menu"
+              }
+            },
+            "required": [ "opfabCoreMenuId", "visible" ]
+          },
+          "LocaleConfig": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "description": "Language code (e.g. en, fr, nl)"
+              },
+              "localizedContent": {
+                "type": "object",
+                "description": "Map containing localized labels; keys are strings, values can be strings or nested objects",
+                "additionalProperties": { }
+              }
+            },
+            "required": [ "language", "localizedContent" ]
+          },
+            "RealTimeScreens":
             {
               "properties":
                 {
