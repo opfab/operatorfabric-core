@@ -8,6 +8,7 @@
  */
 package org.opfab.users.services;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -78,7 +79,17 @@ public class UsersService {
                 return new OperationResult<>(null, false,
                         OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
 
-            boolean isAlreadyExisting = userRepository.findById(user.getLogin()).isPresent();
+            Optional<User> existingUser = userRepository.findById(user.getLogin());
+            boolean isAlreadyExisting = existingUser.isPresent();
+            
+            // Set creation date only for new users
+            if (!isAlreadyExisting) {
+                user.setCreationDate(Instant.now());
+            } else {
+                // Preserve existing creation date
+                user.setCreationDate(existingUser.get().getCreationDate());
+            }
+            
             User newUser = userRepository.save(user);
             if (isAlreadyExisting)
                 notificationService.publishUpdatedUserMessage(user.getLogin());
@@ -183,6 +194,13 @@ public class UsersService {
                         OperationResult.ErrorType.BAD_REQUEST, CANNOT_REMOVE_ADMIN_USER_FROM_ADMIN_GROUP);
             }
             setGroupsForUserUpdate(user, existingUser, updateGroups);
+            
+            // Set or preserve creation date
+            if (existingUser != null) {
+                user.setCreationDate(existingUser.getCreationDate());
+            } else {
+                user.setCreationDate(Instant.now());
+            }
 
             User newUser = userRepository.save(user);
             if ((existingUser != null) && !newUser.equals(existingUser))

@@ -570,6 +570,7 @@
                 "login": "IDENTIFIANT",
                 "lastName": "NOM",
                 "firstName": "PRÉNOM",
+                "creationDate": "DATE DE CRÉATION",
                 "comment": "COMMENTAIRE",
                 "groups": "GROUPES",
                 "entities": "ENTITÉS",

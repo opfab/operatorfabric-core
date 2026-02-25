@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import jakarta.annotation.PostConstruct;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -113,6 +114,7 @@ public class DataInitComponent {
     private void safeInsertUsers(User u) {
         try {
             u.setLogin(u.getLogin().toLowerCase());
+            u.setCreationDate(Instant.now());
             userRepository.insert(u);
         } catch (DuplicateKeyException ex) {
             log.warn("{} {} user: duplicate", FAILED_INIT_MSG, u.getLogin());

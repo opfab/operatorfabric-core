@@ -51,6 +51,9 @@ In case of a user does exist in a provided authentication service but he does no
 instance, when he is authenticated and connected for the first time in the `OperatorFabric` instance, the user is
 automatically created in the system without attached group or entity.
 The administration of the groups, entities and perimeters is dealt by the administrator manually.
+
+NOTE: When a user is created (either manually via API or automatically via authentication), a `creationDate` field is automatically set with the current date and time. This field is read-only and preserved during updates. It is displayed in the admin users screen and can be retrieved via the users API.
+
 More details about automated user creation
 ifdef::single-page-doc[<<opfab_spec_conf, here>>]
 ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#opfab_spec_conf, here>>]

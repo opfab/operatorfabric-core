@@ -11,6 +11,7 @@ package org.opfab.users.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -274,6 +275,57 @@ class UsersServiceShould {
             OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
             assertThat(result.isSuccess()).isTrue();
             assertThat(userRepositoryStub.findById("admin").get().getFirstName()).isEqualTo("firstName");
+        }
+
+        @Test
+        void GIVEN_A_New_User_WHEN_Create_User_THEN_Creation_Date_Is_Set() {
+
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("lastName");
+            user.addGroup("group1");
+
+            Instant beforeCreation = Instant.now();
+            OperationResult<EntityCreationReport<User>> result = usersService.createUser(user);
+            Instant afterCreation = Instant.now();
+
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getEntity().getCreationDate()).isNotNull();
+            assertThat(result.getResult().getEntity().getCreationDate()).isBetween(beforeCreation, afterCreation);
+            assertThat(userRepositoryStub.findById("newuser").get().getCreationDate()).isNotNull();
+            assertThat(userRepositoryStub.findById("newuser").get().getCreationDate()).isBetween(beforeCreation,
+                    afterCreation);
+        }
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_Update_User_THEN_Creation_Date_Is_Preserved() {
+
+            // Create a user with a specific creation date
+            User existingUser = new User();
+            existingUser.setLogin("existinguser");
+            existingUser.setFirstName("firstName");
+            existingUser.setLastName("lastName");
+            existingUser.addGroup("group1");
+            Instant originalCreationDate = Instant.now().minusSeconds(86400); // 1 day ago
+            existingUser.setCreationDate(originalCreationDate);
+            userRepositoryStub.insert(existingUser);
+
+            // Update the user
+            User updatedUser = new User();
+            updatedUser.setLogin("existinguser");
+            updatedUser.setFirstName("updatedFirstName");
+            updatedUser.setLastName("updatedLastName");
+            updatedUser.addGroup("group2");
+
+            OperationResult<EntityCreationReport<User>> result = usersService.createUser(updatedUser);
+
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().isUpdate()).isTrue();
+            // Verify creation date is preserved (not changed)
+            assertThat(result.getResult().getEntity().getCreationDate()).isEqualTo(originalCreationDate);
+            assertThat(userRepositoryStub.findById("existinguser").get().getCreationDate())
+                    .isEqualTo(originalCreationDate);
         }
 
     }
@@ -580,6 +632,56 @@ class UsersServiceShould {
             assertThat(userRepositoryStub.findById("user2").get().getGroups()).containsExactlyInAnyOrder(
                     "group2");
             assertThat(userRepositoryStub.findById("user2").get().getEntities()).containsExactlyInAnyOrder("entity1");
+        }
+
+        @Test
+        void GIVEN_A_New_User_WHEN_UpdateOrCreate_THEN_Creation_Date_Is_Set() {
+
+            User user = new User();
+            user.setLogin("newuser");
+            user.setFirstName("firstName");
+            user.setLastName("lastName");
+            user.addGroup("group1");
+
+            Instant beforeCreation = Instant.now();
+            OperationResult<User> result = usersService.updateOrCreateUser(user, true, true);
+            Instant afterCreation = Instant.now();
+
+            assertThat(result.isSuccess()).isTrue();
+            assertThat(result.getResult().getCreationDate()).isNotNull();
+            assertThat(result.getResult().getCreationDate()).isBetween(beforeCreation, afterCreation);
+            assertThat(userRepositoryStub.findById("newuser").get().getCreationDate()).isNotNull();
+            assertThat(userRepositoryStub.findById("newuser").get().getCreationDate()).isBetween(beforeCreation,
+                    afterCreation);
+        }
+
+        @Test
+        void GIVEN_An_Existing_User_WHEN_UpdateOrCreate_THEN_Creation_Date_Is_Preserved() {
+
+            // Create a user with a specific creation date
+            User existingUser = new User();
+            existingUser.setLogin("existinguser");
+            existingUser.setFirstName("firstName");
+            existingUser.setLastName("lastName");
+            existingUser.addGroup("group1");
+            Instant originalCreationDate = Instant.now().minusSeconds(86400); // 1 day ago
+            existingUser.setCreationDate(originalCreationDate);
+            userRepositoryStub.insert(existingUser);
+
+            // Update the user
+            User updatedUser = new User();
+            updatedUser.setLogin("existinguser");
+            updatedUser.setFirstName("updatedFirstName");
+            updatedUser.setLastName("updatedLastName");
+            updatedUser.addGroup("group1");
+
+            OperationResult<User> result = usersService.updateOrCreateUser(updatedUser, true, true);
+
+            assertThat(result.isSuccess()).isTrue();
+            // Verify creation date is preserved (not changed)
+            assertThat(result.getResult().getCreationDate()).isEqualTo(originalCreationDate);
+            assertThat(userRepositoryStub.findById("existinguser").get().getCreationDate())
+                    .isEqualTo(originalCreationDate);
         }
 
     }

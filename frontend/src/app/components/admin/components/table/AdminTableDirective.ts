@@ -41,6 +41,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {IdCellRendererComponent} from '../cell-renderers/IdCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
+import {DateCellRendererComponent} from '../cell-renderers/DateCellRendererComponent';
 
 export class ActionColumn {
     colId: any;
@@ -126,7 +127,8 @@ export abstract class AdminTableDirective implements OnDestroy {
                 actionCellRenderer: ActionCellRendererComponent,
                 idCellRenderer: IdCellRendererComponent,
                 stateRightsCellRenderer: StateRightsCellRendererComponent,
-                roleCellRenderer: RoleCellRendererComponent
+                roleCellRenderer: RoleCellRendererComponent,
+                dateCellRenderer: DateCellRendererComponent
             },
             rowHeight: 50,
             defaultColDef: {

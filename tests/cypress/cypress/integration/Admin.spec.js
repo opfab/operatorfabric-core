@@ -69,8 +69,16 @@ describe('AdmininstrationPages', () => {
 
         agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testuser');
 
+        // Check creation date is today's date
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const year = today.getFullYear();
+        const expectedDate = `${day}/${month}/${year}`;
+        agGrid.cellShould('ag-grid-angular', 8, 3, 'contain.text', expectedDate);
+
         // Edit previously created user
-        agGrid.clickCell('ag-grid-angular', 8, 5, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 8, 6, 'of-action-cell-renderer');
 
         cy.get('of-edit-user-modal').should('exist');
 
@@ -79,8 +87,10 @@ describe('AdmininstrationPages', () => {
         cy.get('.modal-title').should('contain.text', 'testuser');
         agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'name');
         agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'surname');
-        agGrid.cellShould('ag-grid-angular', 8, 3, 'have.text', 'Dispatcher');
-        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Control Center FR North');
+        // Check creation date is present (column 3)
+        agGrid.cellShould('ag-grid-angular', 8, 3, 'not.be.empty');
+        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Dispatcher');
+        agGrid.cellShould('ag-grid-angular', 8, 5, 'have.text', 'Control Center FR North');
 
         cy.get('#opfab-firstName').type(' updated');
 
@@ -116,11 +126,13 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 8, 0, 'have.text', 'testuser');
         agGrid.cellShould('ag-grid-angular', 8, 1, 'have.text', 'name updated');
         agGrid.cellShould('ag-grid-angular', 8, 2, 'have.text', 'surname updated');
-        agGrid.cellShould('ag-grid-angular', 8, 3, 'have.text', 'Manager');
-        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Control Center FR South');
+        // Verify creation date is still today's date (unchanged after edit)
+        agGrid.cellShould('ag-grid-angular', 8, 3, 'contain.text', expectedDate);
+        agGrid.cellShould('ag-grid-angular', 8, 4, 'have.text', 'Manager');
+        agGrid.cellShould('ag-grid-angular', 8, 5, 'have.text', 'Control Center FR South');
 
         // Delete previously created user
-        agGrid.clickCell('ag-grid-angular', 8, 7, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 8, 8, 'of-action-cell-renderer');
 
         cy.get('#opfab-btn-ok').click();
 
@@ -137,13 +149,13 @@ describe('AdmininstrationPages', () => {
         opfab.navigateToAdministration();
 
         // Edit settings operator1_fr
-        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 7, 'of-action-cell-renderer');
         cy.get('#opfab-setting-input-replayInterval').clear().type('50');
         cy.get('#opfab-settings-btn-save').click();
         cy.get('#opfab-btn-ok').click();
 
         // Check settings are saved
-        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 7, 'of-action-cell-renderer');
         cy.get('#opfab-setting-input-replayInterval').should('have.value', '50');
 
         // Reset settings operator1_fr
