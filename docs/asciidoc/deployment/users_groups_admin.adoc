@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -39,7 +39,8 @@ HTTP/1.1 200 OK
             "ENTITY2_FR"
         ],
         "lastName": null,
-        "login": "admin"
+        "login": "admin",
+        "creationDate": 1708876800000
     },
     {
         "firstName": null,
@@ -51,7 +52,9 @@ HTTP/1.1 200 OK
             "TEST"
         ],
         "lastName": null,
-        "login": "operator3_fr"
+        "login": "operator3_fr",
+        "creationDate": 1708876800000
+}
     },
     {
         "firstName": null,
@@ -59,7 +62,9 @@ HTTP/1.1 200 OK
             "ELIA"
         ],
         "lastName": null,
-        "login": "elia-operator"
+        "login": "elia-operator",
+        "creationDate": 1708876800000
+}
     },
     {
         "firstName": null,
@@ -67,7 +72,8 @@ HTTP/1.1 200 OK
             "CORESO"
         ],
         "lastName": null,
-        "login": "coreso-operator"
+        "login": "coreso-operator",
+        "creationDate": 1708876800000
     },
     {
         "firstName": null,
@@ -80,7 +86,8 @@ HTTP/1.1 200 OK
             "ENTITY1_FR"
         ],
         "lastName": null,
-        "login": "operator1_fr"
+        "login": "operator1_fr",
+        "creationDate": 1708876800000
     },
     {
         "firstName": null,
@@ -92,7 +99,8 @@ HTTP/1.1 200 OK
             "ENTITY2_FR"
         ],
         "lastName": null,
-        "login": "operator2_fr"
+        "login": "operator2_fr",
+        "creationDate": 1708876800000
     },
 ]
 ....
@@ -101,6 +109,7 @@ HTTP/1.1 200 OK
 
 We are sure that no John-doe-operator exists in our OperatorFabric instance.
 We can add him in our OperatorFabric instance using the following command, using cURL:
+
 ....
 curl -X POST http://localhost:2103/users -H "Authorization:Bearer $token" -H "Content-Type:application/json" --data '{"login":"john-doe-operator","firstName":"Jahne","lastName":"Doe"}'
 ....
@@ -111,9 +120,12 @@ HTTP/1.1 200 OK
 {
     "firstName": "Jahne",
     "lastName": "Doe",
-    "login": "john-doe-operator"
+    "login": "john-doe-operator",
+    "creationDate": 1708876800000
 }
 ....
+
+NOTE: When a user is created, a `creationDate` field is automatically set with the current date and time (epoch time in milliseconds). This field is read-only and cannot be modified.
 
 === Fetch user details
 
@@ -132,7 +144,8 @@ HTTP/1.1 200 OK
     "groups": [],
     "entities": [],
     "lastName": "Doe",
-    "login": "john-doe-operator"
+    "login": "john-doe-operator",
+    "creationDate": 1708876800000
 }
 ....
 
@@ -155,7 +168,8 @@ HTTP/1.1 200 OK
 {
     "firstName": "John",
     "lastName": "Doe",
-    "login": "john-doe-operator"
+    "login": "john-doe-operator",
+    "creationDate": 1708876800000
 }
 ....
 
@@ -333,7 +347,8 @@ HTTP/1.1 200 OK
     "groups": ["OPERATORS"],
     "entities": [],
     "lastName": "Doe",
-    "login": "john-doe-operator"
+    "login": "john-doe-operator",
+    "creationDate": 1708876800000
 }
 ....
 
@@ -357,7 +372,9 @@ HTTP/1.1 200 OK
 	firstName":"John",
 	"lastName":"Doe",
 	"groups":[],
-    "entities":[]
+    "entities":[],
+    "creationDate": 1708876800000
+}
 }
 
 ....
@@ -376,7 +393,8 @@ HTTP/1.1 200 OK
     "groups": [],
     "entities": [],
     "lastName": "Doe",
-    "login": "john-doe-operator"
+    "login": "john-doe-operator",
+    "creationDate": 1708876800000
 
 }
 ....

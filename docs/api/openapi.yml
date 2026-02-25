@@ -4262,6 +4262,13 @@
                       "type": "array",
                       "items": { "type": "string", "uniqueItems": true },
                     },
+                  "creationDate":
+                    {
+                      "type": "integer",
+                      "format": "int64",
+                      "description": "Date and time the user was created (epoch time in milliseconds). This field is automatically set by the system and cannot be modified.",
+                      "readOnly": true,
+                    },
                 },
               "required": ["login"],
               "example":
@@ -4271,6 +4278,7 @@
                   "lastName": "Cleese",
                   "groups": ["MONTY", "WANDA"],
                   "entities": ["ENTITY1", "ENTITY2"],
+                  "creationDate": 1708876800000,
                 },
             },
           "PermissionEnum":

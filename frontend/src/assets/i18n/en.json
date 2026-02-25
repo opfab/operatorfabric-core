@@ -569,6 +569,7 @@
                 "login": "LOGIN",
                 "lastName": "LAST NAME",
                 "firstName": "FIRST NAME",
+                "creationDate": "CREATION DATE",
                 "comment": "COMMENT",
                 "groups": "GROUPS",
                 "entities": "ENTITIES",

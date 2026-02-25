@@ -569,6 +569,7 @@
                 "login": "GEBRUIKERSNAAM",
                 "lastName": "ACHTERNAAM",
                 "firstName": "VOORNAAM",
+                "creationDate": "AANMAAKDATUM",
                 "comment": "OPMERKING",
                 "groups": "GROEPEN",
                 "entities": "ENTITEITEN",

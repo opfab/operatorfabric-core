@@ -32,6 +32,7 @@ export class UsersTableComponent extends AdminTableDirective implements OnInit {
         new Field('login', 3, 'idCellRenderer'),
         new Field('firstName', 3),
         new Field('lastName', 3),
+        new Field('creationDate', 3, 'dateCellRenderer'),
         new Field('groups', 6, null, null, 'groupsColumn'),
         new Field('entities', 6, null, null, 'entitiesColumn')
     ];

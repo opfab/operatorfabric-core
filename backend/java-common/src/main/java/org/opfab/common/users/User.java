@@ -8,6 +8,7 @@
  */
 package org.opfab.common.users;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ public class User {
     private String email;
     private String comment;
     private Set<String> entities;
+    private Instant creationDate;
 
     @JsonIgnore
     private Set<String> groupSet;
@@ -87,6 +89,14 @@ public class User {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void addGroup(String group) {
@@ -152,6 +162,7 @@ public class User {
         result = prime * result + ((comment == null) ? 0 : comment.hashCode());
         result = prime * result + ((entities == null) ? 0 : entities.hashCode());
         result = prime * result + ((groupSet == null) ? 0 : groupSet.hashCode());
+        result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
         return result;
     }
 
@@ -198,6 +209,11 @@ public class User {
             if (other.groupSet != null)
                 return false;
         } else if (!groupSet.equals(other.groupSet))
+            return false;
+        if (creationDate == null) {
+            if (other.creationDate != null)
+                return false;
+        } else if (!creationDate.equals(other.creationDate))
             return false;
         return true;
     }

@@ -203,7 +203,7 @@ describe('User action logs page', () => {
         cy.wait(500);
 
         // Edit previously created user
-        agGrid.clickCell('ag-grid-angular', 1, 5, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 6, 'of-action-cell-renderer');
 
         cy.get('of-edit-user-modal').should('exist');
         cy.get('.modal-title').should('contain.text', 'atestuser');
@@ -228,7 +228,7 @@ describe('User action logs page', () => {
     }
 
     function deleteUser() {
-        agGrid.clickCell('ag-grid-angular', 1, 7, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 1, 8, 'of-action-cell-renderer');
         cy.get('#opfab-btn-ok').click();
     }
 
