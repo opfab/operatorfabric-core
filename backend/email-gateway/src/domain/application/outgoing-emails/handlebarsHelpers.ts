@@ -278,7 +278,6 @@ export class HandlebarsHelper {
         }
     }
 
-    /* eslint-disable */
     private static registerSort(): void {
         Handlebars.registerHelper('sort', function () {
             const args = [];
@@ -296,6 +295,8 @@ export class HandlebarsHelper {
                 } else {
                     isObject = true;
                     for (const property in context) {
+                        // eslint warning to be solved , for now it is disabled
+                        // eslint-disable-next-line no-prototype-builtins
                         if (context.hasOwnProperty(property)) {
                             if (typeof context[property] === 'object') {
                                 arrayToSort.push({templatedObjectkey: property, ...context[property]});
@@ -323,7 +324,6 @@ export class HandlebarsHelper {
             return arrayToSort;
         });
     }
-    /* eslint-enable */
 
     private static registerDateFormat(): void {
         Handlebars.registerHelper('dateFormat', function (value: string | number, options) {

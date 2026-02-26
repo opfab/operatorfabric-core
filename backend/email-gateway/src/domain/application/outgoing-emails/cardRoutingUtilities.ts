@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Card} from './card';
-import {UserData, UserWithPerimeters} from './userWithPerimeter';
+import {Card} from '../../model/card';
+import {UserData, UserWithPerimeters} from '../../model/userWithPerimeter';
 
 export default class CardsRoutingUtilities {
     public static shouldUserReceiveTheCard(userWithPerimeters: UserWithPerimeters, card: Card): boolean {

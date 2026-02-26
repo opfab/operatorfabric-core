@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EmailServerInterface} from './emailServerInterface';
-import {Email} from '../application/email';
+import {IncomingEmailsServerInterface} from './incomingEmailsServerInterface';
+import {IncomingEmail} from '../model/incomingEmail';
 import imaps from 'imap-simple';
 import {AddressObject, simpleParser} from 'mailparser';
-import {EmailServerConfig} from './emailServerConfig';
+import {OutgoingEmailsServerConfig} from './outgoingEmailsServerConfig';
 
 const MAX_ATTACHMENT_TEXT_SIZE_BYTES = 100_000; // 100 KB
 
-export default class EmailServer implements EmailServerInterface {
+export default class IncomingEmailsServer implements IncomingEmailsServerInterface {
     private logger: any;
-    emailServerConfig: EmailServerConfig;
+    emailServerConfig: OutgoingEmailsServerConfig;
 
-    public setEmailServerConfiguration(emailServerConfig: EmailServerConfig): this {
+    public setEmailServerConfiguration(emailServerConfig: OutgoingEmailsServerConfig): this {
         this.emailServerConfig = emailServerConfig;
         return this;
     }
@@ -29,7 +29,7 @@ export default class EmailServer implements EmailServerInterface {
         return this;
     }
 
-    public async fetchMailBox(login: string, password: string): Promise<Email[]> {
+    public async fetchMailBox(login: string, password: string): Promise<IncomingEmail[]> {
         this.logger.info(`Checking mailbox for ${login} ...`);
 
         const connection = await this.openImapConnection(login, password);
@@ -70,10 +70,10 @@ export default class EmailServer implements EmailServerInterface {
         return msg.parts.find((p: any) => p.which === '');
     }
 
-    private async parseEmail(rawBody: string): Promise<Email> {
+    private async parseEmail(rawBody: string): Promise<IncomingEmail> {
         const parsed = await simpleParser(rawBody);
 
-        return new Email(
+        return new IncomingEmail(
             this.formatAddress(parsed.from),
             [this.formatAddress(parsed.to)],
             parsed.subject ?? '<no subject>',

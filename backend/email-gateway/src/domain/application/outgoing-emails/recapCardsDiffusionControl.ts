@@ -8,10 +8,10 @@
  */
 
 import CardsRoutingUtilities from './cardRoutingUtilities';
-import OutgoingEmailsConfigDTO from '../client-side/outgoingEmailsConfigDTO';
+import OutgoingEmailsConfigDTO from '../../client-side/outgoingEmailsConfigDTO';
 import CardsDiffusionControl from './cardsDiffusionControl';
-import {UserWithPerimeters} from './userWithPerimeter';
-import {Card} from './card';
+import {UserWithPerimeters} from '../../model/userWithPerimeter';
+import {Card} from '../../model/card';
 import {htmlToText} from 'html-to-text';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;

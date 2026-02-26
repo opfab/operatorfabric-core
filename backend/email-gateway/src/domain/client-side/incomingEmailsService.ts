@@ -8,19 +8,19 @@
  */
 
 import ConfigDTO from './configDTO';
-import EmailToCardApplication from '../application/emailToCardApplication';
-import {EmailServerInterface} from '../server-side/emailServerInterface';
+import EmailToCardApplication from '../application/incoming-emails/incomingEmailsApplication';
+import {IncomingEmailsServerInterface} from '../server-side/incomingEmailsServerInterface';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 import ConfigService from './configService';
 
-export default class EmailToCardService {
+export default class IncomingEmailsService {
     private readonly emailToCardApplication: EmailToCardApplication;
     private active = false;
     private secondsBetweenConnectionChecks = 10;
 
     constructor(
         servicesConfig: ConfigService,
-        emailServer: EmailServerInterface,
+        emailServer: IncomingEmailsServerInterface,
         opfabInterface: OpfabServicesInterface,
         private readonly logger: any
     ) {
