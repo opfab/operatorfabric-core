@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-export class Email {
+export class IncomingEmail {
     from: string | undefined;
     to: string[];
     subject: string | undefined;

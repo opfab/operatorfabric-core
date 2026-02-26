@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import SendMailService from '../server-side/sendMailService';
-import EmailGatewayOpfabServicesInterface from '../server-side/emailGatewayOpfabServicesInterface';
-import EmailGatewayDatabaseService from '../server-side/emailGatewayDatabaseService';
-import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
+import OutgoingEmailsServer from '../../server-side/outgoingEmailsServer';
+import UsersServer from '../../server-side/usersServer';
+import DatabaseServer from '../../server-side/databaseServer';
+import BusinessConfigServer from '../../server-side/businessConfigServer';
 import {formatInTimeZone} from 'date-fns-tz';
 
 export default class CardsDiffusionControl {
     protected opfabUrlInMailContent: any;
-    protected emailGatewayOpfabServicesInterface: EmailGatewayOpfabServicesInterface;
-    protected businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface;
-    protected emailGatewayDatabaseService: EmailGatewayDatabaseService;
+    protected emailGatewayOpfabServicesInterface: UsersServer;
+    protected businessConfigOpfabServicesInterface: BusinessConfigServer;
+    protected emailGatewayDatabaseService: DatabaseServer;
     protected logger: any;
-    protected mailService: SendMailService;
+    protected mailService: OutgoingEmailsServer;
     protected from: string;
     protected defaultTimeZone: string;
     protected showCardUrls: boolean;
@@ -31,19 +31,17 @@ export default class CardsDiffusionControl {
         return this;
     }
 
-    public setOpfabServicesInterface(emailGatewayOpfabServicesInterface: EmailGatewayOpfabServicesInterface): this {
+    public setOpfabServicesInterface(emailGatewayOpfabServicesInterface: UsersServer): this {
         this.emailGatewayOpfabServicesInterface = emailGatewayOpfabServicesInterface;
         return this;
     }
 
-    public setOpfabBusinessConfigServicesInterface(
-        businessConfigOpfabServicesInterface: BusinessConfigOpfabServicesInterface
-    ): this {
+    public setOpfabBusinessConfigServicesInterface(businessConfigOpfabServicesInterface: BusinessConfigServer): this {
         this.businessConfigOpfabServicesInterface = businessConfigOpfabServicesInterface;
         return this;
     }
 
-    public setEmailGatewayDatabaseService(emailGatewayDatabaseService: EmailGatewayDatabaseService): this {
+    public setEmailGatewayDatabaseService(emailGatewayDatabaseService: DatabaseServer): this {
         this.emailGatewayDatabaseService = emailGatewayDatabaseService;
         return this;
     }
@@ -53,7 +51,7 @@ export default class CardsDiffusionControl {
         return this;
     }
 
-    public setMailService(mailservice: SendMailService): this {
+    public setMailService(mailservice: OutgoingEmailsServer): this {
         this.mailService = mailservice;
         return this;
     }

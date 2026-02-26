@@ -17,16 +17,16 @@ import path from 'node:path';
 import fs from 'node:fs';
 
 import AuthorizationService from './common/server-side/authorizationService';
-import SendMailService from './domain/server-side/sendMailService';
-import EmailGatewayOpfabServicesInterface from './domain/server-side/emailGatewayOpfabServicesInterface';
-import EmailGatewayService from './domain/client-side/emailGatewayService';
+import OutgoingEmailsServer from './domain/server-side/outgoingEmailsServer';
+import UsersServer from './domain/server-side/usersServer';
+import OutgoingEmailsService from './domain/client-side/outgoingEmailsService';
 import ConfigService from './domain/client-side/configService';
-import EmailGatewayDatabaseService from './domain/server-side/emailGatewayDatabaseService';
-import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
+import DatabaseServer from './domain/server-side/databaseServer';
+import BusinessConfigServer from './domain/server-side/businessConfigServer';
 import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
-import {loadHelpers} from './domain/server-side/CustomHandlebarsHelpers';
-import EmailServer from './domain/server-side/emailServer';
-import EmailToCardService from './domain/client-side/emailToCardService';
+import {loadHelpers} from './domain/server-side/handlebarsHelpersServer';
+import IncomingEmailsServer from './domain/server-side/incomingEmailsServer';
+import IncomingEmailsService from './domain/client-side/incomingEmailsService';
 
 const app = express();
 app.disable('x-powered-by');
@@ -72,13 +72,13 @@ if (customHandlebarsHelpersFile && (customHandlebarsHelpersFile as string).lengt
     }
 }
 
-const mailService = new SendMailService(config.get('operatorfabric.emailGateway.smtpServer'));
+const outgoingEmailsServer = new OutgoingEmailsServer(config.get('operatorfabric.emailGateway.smtpServer'));
 
-const emailServerService = new EmailServer()
+const incomingEmailsServer = new IncomingEmailsServer()
     .setEmailServerConfiguration(config.get('operatorfabric.emailGateway.imapServer'))
     .setLogger(logger);
 
-const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
+const usersServer = new UsersServer()
     .setLogin(config.get('operatorfabric.internalAccount.login'))
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
@@ -89,7 +89,7 @@ const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
 
-const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInterface()
+const businessConfigServer = new BusinessConfigServer()
     .setLogin(config.get('operatorfabric.internalAccount.login'))
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
@@ -99,27 +99,27 @@ const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInte
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
 
-const emailGatewayDatabaseService = new EmailGatewayDatabaseService()
+const databaseServer = new DatabaseServer()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
     .setLogger(logger);
 
 const authorizationService = new AuthorizationService()
-    .setOpfabServicesInterface(opfabServicesInterface)
+    .setOpfabServicesInterface(usersServer)
     .setLoginClaim(config.get('operatorfabric.security.jwt.login-claim'))
     .setLogger(logger);
 
 const serviceConfig = configService.getConfig();
 
-const emailGatewayService = new EmailGatewayService(
-    opfabServicesInterface,
-    opfabBusinessConfigServicesInterface,
-    emailGatewayDatabaseService,
-    mailService,
+const outgoingEmailsService = new OutgoingEmailsService(
+    usersServer,
+    businessConfigServer,
+    databaseServer,
+    outgoingEmailsServer,
     serviceConfig,
     logger
 );
 
-const emailToCardService = new EmailToCardService(configService, emailServerService, opfabServicesInterface, logger);
+const incomingEmailsService = new IncomingEmailsService(configService, incomingEmailsServer, usersServer, logger);
 
 const processAdminRequest = (req: Request, res: Response, requestProcessor: Function) => {
     authorizationService
@@ -138,12 +138,12 @@ const processAdminRequest = (req: Request, res: Response, requestProcessor: Func
 };
 
 app.get('/status', (req, res) => {
-    processAdminRequest(req, res, () => res.send(emailGatewayService.isActive()));
+    processAdminRequest(req, res, () => res.send(outgoingEmailsService.isActive()));
 });
 
 app.get('/start', (req, res) => {
     processAdminRequest(req, res, () => {
-        emailGatewayService.start();
+        outgoingEmailsService.start();
         res.send('Start service');
     });
 });
@@ -151,7 +151,7 @@ app.get('/start', (req, res) => {
 app.get('/stop', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Stop email gateway service asked');
-        emailGatewayService.stop();
+        outgoingEmailsService.stop();
         res.send('Stop service');
     });
 });
@@ -164,7 +164,7 @@ app.post('/config', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
         const updated = configService.patch(req.body as object);
-        emailGatewayService.setConfiguration(updated);
+        outgoingEmailsService.setConfiguration(updated);
         res.send(updated);
     });
 });
@@ -209,7 +209,7 @@ app.post('/sendDailyEmail', (req, res) => {
         .then((isAdmin) => {
             if (isAdmin) {
                 logger.info('Sending email with cards from the last 24 hours');
-                emailGatewayService.sendDailyRecap().catch((err) => {
+                outgoingEmailsService.sendDailyRecap().catch((err) => {
                     logger.error('Error in sendDailyEmail' + err);
                 });
                 res.send();
@@ -229,7 +229,7 @@ app.post('/sendWeeklyEmail', (req, res) => {
         .then((isAdmin) => {
             if (isAdmin) {
                 logger.info('Sending email with cards from the last 7 days');
-                emailGatewayService.sendWeeklyRecap().catch((err) => {
+                outgoingEmailsService.sendWeeklyRecap().catch((err) => {
                     logger.error('Error in sendWeeklyEmail' + err);
                 });
                 res.send();
@@ -368,18 +368,18 @@ app.get('/list', (req, res) => {
     });
 });
 async function start(): Promise<void> {
-    await emailGatewayDatabaseService.connectToMongoDB();
-    const response = await opfabServicesInterface.loadUsersData();
+    await databaseServer.connectToMongoDB();
+    const response = await usersServer.loadUsersData();
     if (!response.isValid()) {
         logger.error('Impossible to load users data, exiting');
         process.exit(1);
     }
-    opfabServicesInterface.startListener();
-    opfabBusinessConfigServicesInterface.startListener();
+    usersServer.startListener();
+    businessConfigServer.startListener();
 
     if (activeOnStartUp as boolean) {
-        emailGatewayService.start();
-        emailToCardService.start();
+        outgoingEmailsService.start();
+        incomingEmailsService.start();
     }
     logger.info('Application started');
 }

@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import CardsRoutingUtilities from '../domain/application/cardRoutingUtilities';
+import CardsRoutingUtilities from '../domain/application/outgoing-emails/cardRoutingUtilities';
 
 describe('Card routing', function () {
     const user = {login: 'operator_1', groups: ['Dispatcher'], entities: ['ENTITY1']};

@@ -7,8 +7,8 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Email} from '../application/email';
+import {IncomingEmail} from '../model/incomingEmail';
 
-export abstract class EmailServerInterface {
-    public abstract fetchMailBox(login: string, password: string): Promise<Email[]>;
+export abstract class IncomingEmailsServerInterface {
+    public abstract fetchMailBox(login: string, password: string): Promise<IncomingEmail[]>;
 }
