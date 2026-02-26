@@ -8,15 +8,15 @@
  */
 
 import CardsRoutingUtilities from './cardRoutingUtilities';
-import OutgoingEmailsConfigDTO from '../client-side/outgoingEmailsConfigDTO';
+import OutgoingEmailsConfigDTO from '../../client-side/outgoingEmailsConfigDTO';
 import CardsDiffusionRateLimiter from './cardsDiffusionRateLimiter';
 import CardsDiffusionControl from './cardsDiffusionControl';
-import {UserWithPerimeters} from './userWithPerimeter';
-import {Card} from './card';
+import {UserWithPerimeters} from '../../model/userWithPerimeter';
+import {Card} from '../../model/card';
 import {formatInTimeZone} from 'date-fns-tz';
 import {htmlToText} from 'html-to-text';
 import {HandlebarsHelper} from './handlebarsHelpers';
-import {LightCard} from './lightCard';
+import {LightCard} from '../../model/lightCard';
 
 export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl {
     private windowInSecondsForCardSearch: number;

@@ -7,19 +7,19 @@
  * This file is part of the OperatorFabric project.
  */
 
-import CardsDiffusionRateLimiter from '../application/cardsDiffusionRateLimiter';
-import EmailGatewayDatabaseService from '../server-side/emailGatewayDatabaseService';
-import BusinessConfigOpfabServicesInterface from '../server-side/BusinessConfigOpfabServicesInterface';
-import EmailGatewayOpfabServicesInterface from '../server-side/emailGatewayOpfabServicesInterface';
-import SendMailService from '../server-side/sendMailService';
+import CardsDiffusionRateLimiter from '../application/outgoing-emails/cardsDiffusionRateLimiter';
+import DatabaseServer from '../server-side/databaseServer';
+import BusinessConfigServer from '../server-side/businessConfigServer';
+import UsersServer from '../server-side/usersServer';
+import OutgoingEmailsServer from '../server-side/outgoingEmailsServer';
 import ConfigDTO from './configDTO';
-import RecapCardsDiffusionControl from '../application/recapCardsDiffusionControl';
-import RealTimeCardsDiffusionControl from '../application/realTimeCardsDiffusionControl';
+import RecapCardsDiffusionControl from '../application/outgoing-emails/recapCardsDiffusionControl';
+import RealTimeCardsDiffusionControl from '../application/outgoing-emails/realTimeCardsDiffusionControl';
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 const MILLISECONDS_IN_A_WEEK = 7 * MILLISECONDS_IN_A_DAY;
 
-export default class EmailGatewayService {
+export default class OutgoingEmailsService {
     private readonly recapCardsDiffusionControl: RecapCardsDiffusionControl;
     private readonly realTimeCardsDiffusionControl: RealTimeCardsDiffusionControl;
     private checkPeriodInSeconds: number;
@@ -30,10 +30,10 @@ export default class EmailGatewayService {
     private readonly logger: any;
 
     constructor(
-        opfabServicesInterface: EmailGatewayOpfabServicesInterface,
-        opfabBusinessConfigServicesInterface: BusinessConfigOpfabServicesInterface,
-        emailGatewayDatabaseService: EmailGatewayDatabaseService,
-        mailService: SendMailService,
+        opfabServicesInterface: UsersServer,
+        opfabBusinessConfigServicesInterface: BusinessConfigServer,
+        emailGatewayDatabaseService: DatabaseServer,
+        mailService: OutgoingEmailsServer,
         serviceConfig: any,
         logger: any
     ) {

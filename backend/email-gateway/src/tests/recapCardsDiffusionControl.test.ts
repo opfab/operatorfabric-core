@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import RecapCardsDiffusionControl from '../domain/application/recapCardsDiffusionControl';
+import RecapCardsDiffusionControl from '../domain/application/outgoing-emails/recapCardsDiffusionControl';
 import {getLogger} from '../common/server-side/logger';
 import {
     DatabaseServiceStub,

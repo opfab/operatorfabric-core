@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-export class EmailServerConfig {
+export class OutgoingEmailsServerConfig {
     constructor(
         readonly host: string,
         readonly port: number,
