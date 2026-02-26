@@ -12,7 +12,7 @@ import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
 
-export default class EmailGatewayOpfabServicesInterface extends OpfabServicesInterface implements EventListener {
+export default class UsersServer extends OpfabServicesInterface implements EventListener {
     private users: any[] = [];
 
     private readonly userWithPerimeters = new Map<string, any>();

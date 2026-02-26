@@ -8,7 +8,7 @@
  */
 
 import 'jest';
-import CardsDiffusionRateLimiter from '../domain/application/cardsDiffusionRateLimiter';
+import CardsDiffusionRateLimiter from '../domain/application/outgoing-emails/cardsDiffusionRateLimiter';
 
 function setCurrentTime(dateTime: string): void {
     jest.setSystemTime(new Date(dateTime));

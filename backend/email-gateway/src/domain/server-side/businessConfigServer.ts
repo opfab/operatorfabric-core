@@ -8,14 +8,14 @@
  */
 
 import Handlebars from 'handlebars';
-import {HandlebarsHelper} from '../application/handlebarsHelpers';
+import {HandlebarsHelper} from '../application/outgoing-emails/handlebarsHelpers';
 import GetResponse from '../../common/server-side/getResponse';
 import EventBusListener from '../../common/server-side/eventBus';
 import {EventListener} from '../../common/server-side/eventListener';
 import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
-import {MailHandlebarsHelper} from '../application/mailHandlebarsHelpers';
+import {MailHandlebarsHelper} from '../application/outgoing-emails/mailHandlebarsHelpers';
 
-export default class BusinessConfigOpfabServicesInterface extends OpfabServicesInterface implements EventListener {
+export default class BusinessConfigServer extends OpfabServicesInterface implements EventListener {
     private static configCache = new Map<string, any>();
     private static templateCompilerCache = new Map<string, Map<string, Function> | undefined>();
 
@@ -37,8 +37,8 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
     }
 
     public clearBusinessConfigCache(): void {
-        BusinessConfigOpfabServicesInterface.templateCompilerCache = new Map();
-        BusinessConfigOpfabServicesInterface.configCache = new Map();
+        BusinessConfigServer.templateCompilerCache = new Map();
+        BusinessConfigServer.configCache = new Map();
     }
 
     public setEventBusConfiguration(eventBusConfig: any): this {
@@ -67,24 +67,24 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
 
     public async fetchProcessConfig(processId: string, version: string): Promise<any> {
         const key = processId + '.' + version;
-        if (!BusinessConfigOpfabServicesInterface.configCache.has(key)) {
+        if (!BusinessConfigServer.configCache.has(key)) {
             const cardConfigResponse = await this.getProcessConfig(processId, version);
             if (cardConfigResponse.isValid()) {
-                BusinessConfigOpfabServicesInterface.configCache.set(key, cardConfigResponse.getData());
+                BusinessConfigServer.configCache.set(key, cardConfigResponse.getData());
             }
         }
-        return BusinessConfigOpfabServicesInterface.configCache.get(key);
+        return BusinessConfigServer.configCache.get(key);
     }
 
     public async fetchTemplate(processId: string, emailTemplate: string, version: string): Promise<Function> {
         const key = processId + '.' + version;
-        const cachedMap = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key);
+        const cachedMap = BusinessConfigServer.templateCompilerCache.get(key);
 
         if (!cachedMap?.has(emailTemplate)) {
             await this.addTemplateToCache(processId, emailTemplate, version, key);
         }
 
-        const compiler = BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key)?.get(emailTemplate);
+        const compiler = BusinessConfigServer.templateCompilerCache.get(key)?.get(emailTemplate);
 
         return compiler ?? (() => null);
     }
@@ -96,12 +96,12 @@ export default class BusinessConfigOpfabServicesInterface extends OpfabServicesI
         key: string
     ): Promise<void> {
         const cachedMap: Map<string, Function> | undefined =
-            BusinessConfigOpfabServicesInterface.templateCompilerCache.get(key) ?? new Map<string, Function>();
+            BusinessConfigServer.templateCompilerCache.get(key) ?? new Map<string, Function>();
         const templateResponse = await this.getTemplate(processId, emailTemplate, version);
         if (templateResponse.isValid()) {
             const cachedCompiler: Function = Handlebars.compile(templateResponse.getData());
             cachedMap.set(emailTemplate, cachedCompiler);
-            BusinessConfigOpfabServicesInterface.templateCompilerCache.set(key, cachedMap);
+            BusinessConfigServer.templateCompilerCache.set(key, cachedMap);
         }
     }
 

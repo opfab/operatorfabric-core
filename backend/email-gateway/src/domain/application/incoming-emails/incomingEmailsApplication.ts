@@ -7,20 +7,20 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {EmailServerInterface} from '../server-side/emailServerInterface';
-import OpfabServicesInterface from '../../common/server-side/opfabServicesInterface';
+import {IncomingEmailsServerInterface} from '../../server-side/incomingEmailsServerInterface';
+import OpfabServicesInterface from '../../../common/server-side/opfabServicesInterface';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import path from 'node:path';
 import {XMLParser} from 'fast-xml-parser';
 
 export default class EmailToCardApplication {
-    private readonly emailServer: EmailServerInterface;
+    private readonly emailServer: IncomingEmailsServerInterface;
     private readonly opfabInterface: OpfabServicesInterface;
     private mailboxes: any[] = [];
 
     constructor(
-        emailServer: EmailServerInterface,
+        emailServer: IncomingEmailsServerInterface,
         opfabInterface: OpfabServicesInterface,
         private readonly logger: any
     ) {
