@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {MailHandlebarsHelper} from '../domain/application/mailHandlebarsHelpers';
+import {MailHandlebarsHelper} from '../domain/application/outgoing-emails/mailHandlebarsHelpers';
 import * as Handlebars from 'handlebars';
 
 describe('Handlebars Services', () => {

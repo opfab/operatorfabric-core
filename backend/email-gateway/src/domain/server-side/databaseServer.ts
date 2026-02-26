@@ -9,7 +9,7 @@
 
 import {Db, MongoClient} from 'mongodb';
 
-export default class EmailGatewayDatabaseService {
+export default class DatabaseServer {
     logger: any;
     mongoClient: MongoClient;
     mongoDB: Db;
