@@ -1,2 +1,4 @@
-      email-gateway/emailGateway.feature                     \
+      email-gateway/emailGateway.feature        \
+      email-gateway/jsFileUpload.feature        \
+      email-gateway/incomingEmails.feature      \
       
