@@ -86,20 +86,20 @@ The custom parameters can then be referred in handlebars template prefixed with 
 It is possible to define a handlebars template that will generate an attachment to the email. This feature is only for direct emails and not for recap emails.
 In the configuration of your bundle you need to define the following fields in the state definition :
 
-+[source,json]
-+----
-+{
-+  "emailAttachmentTemplate": "email_attachment_template",
-+  "emailAttachmentFileName": "chartLineData.xml"
-+}
-+----
+[source,json]
+----
+{
+  "emailAttachmentTemplate": "email_attachment_template",
+  "emailAttachmentFileName": "chartLineData.xml"
+}
+----
 
 If no file name is specified the default value is "attachment".
 
 Here is an example of a template to generate an xml attached file containing the data of the card :
 
-+[source,xml]
-+----
+[source,xml]
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
   <process>{{card.process}}</process>
@@ -113,7 +113,9 @@ Here is an example of a template to generate an xml attached file containing the
     <keywords>{{card.data.keywords}}</keywords>
   </data>
 </document>
-+----=== Custom Handlebars helpers
+----
+
+=== Custom Handlebars helpers
 
 As with the UI via the Frontend API, you can define custom Handlebars helpers for use in email templates. To do this, create a JavaScript file and assign an array of functions to the `helpers` variable. For example:
 
