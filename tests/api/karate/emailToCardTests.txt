@@ -1,2 +1,0 @@
-      email-to-card/emailToCard.feature                     \
-      email-to-card/sendCardWhenEmailReceived.feature \
