@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -43,13 +43,13 @@ describe('MessageOrQuestionList Card template', () => {
         view.listenToInputFieldVisibility((visible) => (inputFieldVisibility = visible));
         expect(inputFieldVisibility).toBeFalse();
     });
-    it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCard.data.comment is "my_response", responseCard.data.agreement is "Yes" and response is valid', () => {
+    it('GIVEN input is "my response" and "Yes" WHEN get user response THEN responseCard.data.comment is "my_response", responseCard.data.agreement is "Yes" and response is valid', async () => {
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => {
             return [true, 'my response'];
         });
 
-        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
+        const userResponse = await CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCard.data.comment).toEqual('my response');
         expect(userResponse.responseCard.data.agreement).toEqual(true);

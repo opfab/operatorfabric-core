@@ -158,6 +158,13 @@ include::../../../tests/resources/bundles/defaultProcess_V1/template/question.ha
 include::../../../tests/resources/bundles/defaultProcess_V1/template/question.handlebars[tag=opfab.currentCard.registerFunctionToGetUserResponse_example]
 ----
 
+
+[NOTE]
+====
+The method registered via `opfab.currentCard.registerFunctionToGetUserResponse` can also return a Promise of the object described above instead of the object itself, to allow asynchronous processing in the template before sending the response.
+====
+
+
 === Define permissions
 
 To respond to a card a user must have the right privileges, it is done using "perimeters". The user must be in a group

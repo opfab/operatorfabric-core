@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2021-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -149,6 +149,10 @@ If not using 'timeSpans' it's possible to set the 'viewCardInCalendar' field to 
 If the form is not filled correctly by the user, you can provide an error message (see example above).
 Again, have a look to the examples provided. 
 
+[NOTE]
+====
+The method registered via `opfab.currentCard.registerFunctionToGetSpecificCardInformation` can also return a Promise of the object described above instead of the object itself, to allow asynchronous processing in the template before sending the card.
+====
 
 == Define permissions
 
