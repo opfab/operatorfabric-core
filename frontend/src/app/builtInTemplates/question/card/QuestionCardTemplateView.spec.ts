@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -72,11 +72,11 @@ describe('Question Card template', () => {
         expect(inputFieldVisibility).toBeTrue();
     });
 
-    it('GIVEN input is "my response" WHEN get user response THEN responseCard.data.responses[0].response is] "my_response" and response is valid', () => {
+    it('GIVEN input is "my response" WHEN get user response THEN responseCard.data.responses[0].response is] "my_response" and response is valid', async () => {
         // Simulate input "my response"
         view.setFunctionToGetResponseInput(() => 'my response', false);
 
-        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
+        const userResponse = await CardTemplateGateway.getUserResponseFromTemplate(undefined);
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCard.data.responses[0].response).toEqual('my response');
     });
@@ -111,7 +111,7 @@ describe('Question Card template', () => {
         ]);
     });
 
-    it('GIVEN 1 child card and keepResponseHistoryInCard="true" WHEN calling getUserResponse THEN response contains response history with 2 responses', () => {
+    it('GIVEN 1 child card and keepResponseHistoryInCard="true" WHEN calling getUserResponse THEN response contains response history with 2 responses', async () => {
         const childcards = [
             {
                 publisher: 'entity1',
@@ -128,7 +128,7 @@ describe('Question Card template', () => {
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', true);
         jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
-        const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
+        const userResponse = await CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCard.data.responses[0].response).toEqual('response_entity1');
@@ -141,7 +141,7 @@ describe('Question Card template', () => {
         );
     });
 
-    it('GIVEN 1 child card and keepResponseHistoryInCard="false" WHEN calling getUserResponse THEN response contains response history with only last response', () => {
+    it('GIVEN 1 child card and keepResponseHistoryInCard="false" WHEN calling getUserResponse THEN response contains response history with only last response', async () => {
         const childcards = [
             {
                 publisher: 'entity1',
@@ -157,7 +157,7 @@ describe('Question Card template', () => {
 
         view.setFunctionToGetResponseInput(() => 'my 2nd response', false);
         jasmine.clock().mockDate(new Date('2024-06-01T09:24:00'));
-        const userResponse = CardTemplateGateway.getUserResponseFromTemplate('entity1');
+        const userResponse = await CardTemplateGateway.getUserResponseFromTemplate('entity1');
 
         expect(userResponse.valid).toBeTrue();
         expect(userResponse.responseCard.data.responses[0].responseDate).toEqual(

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -140,8 +140,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.userEntityOptionsDropdownList.sort((a, b) => Utilities.compareObj(a.label, b.label));
     }
 
-    public processClickOnSendResponse() {
-        const userResponse = CardTemplateGateway.getUserResponseFromTemplate(undefined);
+    public async processClickOnSendResponse() {
+        const userResponse = await CardTemplateGateway.getUserResponseFromTemplate(undefined);
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !userResponse.responseCard.publisher)
             this.displayEntitiesChoicePopup();
@@ -154,8 +154,8 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.entityChoiceModal = this.modalService.open(this.chooseEntitiesForResponsePopupRef, {centered: true});
     }
 
-    private submitResponse() {
-        const response = CardTemplateGateway.getUserResponseFromTemplate(this.userEntityIdToUseForResponse);
+    private async submitResponse() {
+        const response = await CardTemplateGateway.getUserResponseFromTemplate(this.userEntityIdToUseForResponse);
 
         if (response.valid) {
             const publisherEntity = response.responseCard.publisher ?? this.userEntityIdToUseForResponse;

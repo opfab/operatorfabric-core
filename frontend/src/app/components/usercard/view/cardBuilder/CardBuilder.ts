@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -89,7 +89,7 @@ export class CardBuilder {
     }
 
     public async getCard(): Promise<Card> {
-        this.specificCardInformation = UserCardTemplateGateway.getSpecificCardInformationFromTemplate();
+        this.specificCardInformation = await UserCardTemplateGateway.getSpecificCardInformationFromTemplate();
         if (!this.isSpecificCardInformationValid()) {
             return undefined;
         }
@@ -98,9 +98,7 @@ export class CardBuilder {
             return undefined;
         }
         if (!this.inputFieldVisibility.get(InputFieldName.Severity)) {
-            this.severity =
-                UserCardTemplateGateway.getSpecificCardInformationFromTemplate()?.card?.severity ??
-                Severity.INFORMATION;
+            this.severity = this.specificCardInformation?.card?.severity ?? Severity.INFORMATION;
         }
         let actions = this.specificCardInformation.card.actions ?? undefined;
         let keepChildCardsChoice = actions?.includes(CardAction.KEEP_CHILD_CARDS) ?? this.keepChildCards ?? undefined;
