@@ -93,10 +93,10 @@ const connectedUserCommands = {
             if (connectedUsers.length > 0) {
                 console.info('login | entitiesConnected | groups');
             }
-            connectedUsers.forEach(connectedUser => {
-                console.info(connectedUser.login +
-                    ' | ' + connectedUser.entitiesConnected +
-                    ' | ' + connectedUser.groups);
+            connectedUsers.forEach((connectedUser) => {
+                console.info(
+                    connectedUser.login + ' | ' + connectedUser.entitiesConnected + ' | ' + connectedUser.groups
+                );
             });
         }
     },

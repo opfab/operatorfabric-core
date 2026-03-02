@@ -11,7 +11,6 @@ const prompts = require('prompts');
 const utils = require('./utils.js');
 
 const uiMenuCommands = {
-
     async processUIMenuCommand(args) {
         let command = args[0];
         if (!command) {
@@ -20,9 +19,7 @@ const uiMenuCommands = {
                     type: 'select',
                     name: 'value',
                     message: 'UI Menu command',
-                    choices: [
-                        {title: 'load', value: 'load'}
-                    ]
+                    choices: [{title: 'load', value: 'load'}]
                 })
             ).value;
             if (!command) {
@@ -40,7 +37,6 @@ const uiMenuCommands = {
     },
 
     async loadUIMenuFile(uiMenuFile) {
-        
         if (!uiMenuFile) {
             uiMenuFile = (
                 await prompts({

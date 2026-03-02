@@ -11,10 +11,9 @@ const prompts = require('prompts');
 const utils = require('./utils.js');
 
 const reminder = {
-
     async processReminderCommand(args) {
         const action = await this.getAction(args);
-        
+
         if (!action) {
             console.log('Reminder action is required');
             return;
@@ -58,11 +57,9 @@ const reminder = {
             ).value;
         }
         return action;
-
     },
 
     async getStatus() {
-        
         const response = await utils.sendRequest(
             'cards-reminder/status',
             'GET',
@@ -78,7 +75,6 @@ const reminder = {
     },
 
     async start() {
-        
         await utils.sendRequest(
             'cards-reminder/start',
             'GET',
@@ -90,7 +86,6 @@ const reminder = {
     },
 
     async stop() {
-        
         await utils.sendRequest(
             'cards-reminder/stop',
             'GET',
@@ -102,7 +97,6 @@ const reminder = {
     },
 
     async reset() {
-        
         await utils.sendRequest(
             'cards-reminder/reset',
             'GET',

@@ -8,7 +8,7 @@
  */
 
 const prompts = require('prompts');
-const utils = require("./utils");
+const utils = require('./utils');
 const fs = require('node:fs').promises;
 const JSON5 = require('json5');
 
@@ -22,8 +22,8 @@ const entityCommands = {
                     name: 'value',
                     message: 'Entity action',
                     choices: [
-                        { title: 'Create or update a list of entities', value: 'load' },
-                        { title: 'Delete a list of entities', value: 'delete' }
+                        {title: 'Create or update a list of entities', value: 'load'},
+                        {title: 'Delete a list of entities', value: 'delete'}
                     ]
                 })
             ).value;

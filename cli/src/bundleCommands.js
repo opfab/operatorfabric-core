@@ -20,9 +20,9 @@ const bundleCommand = {
                     name: 'value',
                     message: 'Bundle action',
                     choices: [
-                        { title: 'Load', value: 'load' },
-                        { title: 'Delete', value: 'delete' },
-                        { title: 'Delete all', value: 'delete-all' }
+                        {title: 'Load', value: 'load'},
+                        {title: 'Delete', value: 'delete'},
+                        {title: 'Delete all', value: 'delete-all'}
                     ]
                 })
             ).value;
@@ -63,7 +63,7 @@ const bundleCommand = {
                 console.log('Bundle directory is required');
                 return;
             }
-            bundleDirectories = [bundleDirectory]
+            bundleDirectories = [bundleDirectory];
         }
         for (const bundleDirectory of bundleDirectories) {
             let gzippedBundle;
@@ -134,14 +134,7 @@ const bundleCommand = {
             notFoundMessage = `Bundle ${processId} version ${version} not found`;
         }
 
-        await utils.sendRequest(
-            path,
-            'DELETE',
-            undefined,
-            successMessage,
-            errorMessage,
-            notFoundMessage
-        );
+        await utils.sendRequest(path, 'DELETE', undefined, successMessage, errorMessage, notFoundMessage);
     },
 
     async deleteAllBundles() {

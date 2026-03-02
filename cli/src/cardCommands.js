@@ -14,7 +14,6 @@ const JSON5 = require('json5');
 const utils = require('./utils');
 
 const cardCommands = {
-
     async processCardCommand(args) {
         let action = args[0];
         if (!action) {
@@ -24,10 +23,10 @@ const cardCommands = {
                     name: 'value',
                     message: 'Card action',
                     choices: [
-                        { title: 'Send', value: 'send' },
-                        { title: 'Delete', value: 'delete' },
-                        { title: 'Reset Rate Limiter', value: 'reset-ratelimiter' }
-                    ],
+                        {title: 'Send', value: 'send'},
+                        {title: 'Delete', value: 'delete'},
+                        {title: 'Reset Rate Limiter', value: 'reset-ratelimiter'}
+                    ]
                 })
             ).value;
             if (!action) {
@@ -52,7 +51,6 @@ const cardCommands = {
                 break;
         }
     },
-
 
     async sendCard(args) {
         let cardFile = args[0];
@@ -194,7 +192,7 @@ const cardCommands = {
         if (jsonCard.lttd != undefined) jsonCard.lttd = now + jsonCard.lttd;
         if (jsonCard.expirationDate != undefined) jsonCard.expirationDate = now + jsonCard.expirationDate;
 
-        jsonCard.timeSpans?.forEach(timespan => {
+        jsonCard.timeSpans?.forEach((timespan) => {
             if (timespan.start != undefined) timespan.start = now + timespan.start;
             if (timespan.end != undefined) timespan.end = now + timespan.end;
         });
@@ -204,10 +202,7 @@ const cardCommands = {
     patchCard(card, cardCustomization) {
         try {
             for (const [key, value] of Object.entries(cardCustomization)) {
-                if (
-                    Object.hasOwn(card, key) &&
-                    value != null
-                ) {
+                if (Object.hasOwn(card, key) && value != null) {
                     card[key] = value;
                 }
             }

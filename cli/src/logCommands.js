@@ -22,8 +22,8 @@ const logCommands = {
                     name: 'value',
                     message: 'Log action',
                     choices: [
-                        { title: 'Get-level', value: 'get-level' },
-                        { title: 'Set-level', value: 'set-level' }
+                        {title: 'Get-level', value: 'get-level'},
+                        {title: 'Set-level', value: 'set-level'}
                     ]
                 })
             ).value;
@@ -80,12 +80,12 @@ const logCommands = {
                     name: 'value',
                     message: 'Log level',
                     choices: [
-                        { title: 'TRACE', value: 'trace' },
-                        { title: 'DEBUG', value: 'debug' },
-                        { title: 'INFO', value: 'info' },
-                        { title: 'WARN', value: 'warn' },
-                        { title: 'ERROR', value: 'error' },
-                        { title: 'FATAL', value: 'fatal' }
+                        {title: 'TRACE', value: 'trace'},
+                        {title: 'DEBUG', value: 'debug'},
+                        {title: 'INFO', value: 'info'},
+                        {title: 'WARN', value: 'warn'},
+                        {title: 'ERROR', value: 'error'},
+                        {title: 'FATAL', value: 'fatal'}
                     ]
                 })
             ).value;
@@ -99,7 +99,7 @@ const logCommands = {
         await utils.sendRequest(
             this.getServicePath(serviceName),
             'POST',
-            JSON.stringify({ configuredLevel: logLevel }),
+            JSON.stringify({configuredLevel: logLevel}),
             'Log level set successfully',
             'Failed to set log level',
             'Failed to set log level not found error'
@@ -171,14 +171,14 @@ const logCommands = {
                     name: 'value',
                     message: 'Service name',
                     choices: [
-                        { title: 'Users', value: 'users' },
-                        { title: 'Businessconfig', value: 'businessconfig' },
-                        { title: 'Cards-consultation', value: 'cards-consultation' },
-                        { title: 'Cards-publication', value: 'cards-publication' },
-                        { title: 'External-devices', value: 'external-devices' },
-                        { title: 'Supervisor', value: 'supervisor' },
-                        { title: 'Email-gateway', value: 'email-gateway' },
-                        { title: 'Cards-reminder', value: 'cards-reminder' }
+                        {title: 'Users', value: 'users'},
+                        {title: 'Businessconfig', value: 'businessconfig'},
+                        {title: 'Cards-consultation', value: 'cards-consultation'},
+                        {title: 'Cards-publication', value: 'cards-publication'},
+                        {title: 'External-devices', value: 'external-devices'},
+                        {title: 'Supervisor', value: 'supervisor'},
+                        {title: 'Email-gateway', value: 'email-gateway'},
+                        {title: 'Cards-reminder', value: 'cards-reminder'}
                     ]
                 })
             ).value;

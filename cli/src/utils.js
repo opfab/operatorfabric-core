@@ -107,7 +107,6 @@ const utils = {
             console.log(`${action} successfully`);
             const result = await response.text();
             if (result) console.log(result);
-
         } catch (error) {
             this.logError(`Failed to ${action}`, error, true);
             throw error;
@@ -140,7 +139,7 @@ const utils = {
 
             // Handle error responses
             const errorMsg = await this.handleApiError(response);
-            
+
             if (response.status === 404 && notFoundMessage) {
                 console.error(notFoundMessage);
             } else if (response.status === 403) {
@@ -149,10 +148,9 @@ const utils = {
                 console.error(errorMessage);
                 console.error(`Server response: ${errorMsg}`);
             }
-            
+
             process.exitCode = 1;
             return response;
-
         } catch (error) {
             this.logError(errorMessage, error, true);
             throw error;
