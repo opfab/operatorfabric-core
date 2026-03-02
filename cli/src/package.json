@@ -3,7 +3,8 @@
     "version": "SNAPSHOT",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "prettier": "prettier . -c"
     },
     "bin": {
         "opfab": "index.js"
@@ -17,5 +18,8 @@
         "tar": "7.5.9",
         "omelette": "0.4.17",
         "json5": "^2.2.3"
+    },
+    "devDependencies": {
+        "prettier": "3.8.1"
     }
 }

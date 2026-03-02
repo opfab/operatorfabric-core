@@ -23,21 +23,21 @@ const userCommands = {
                     name: 'value',
                     message: 'User action',
                     choices: [
-                        { title: 'Add to entity', value: 'add-to-entity' },
-                        { title: 'Add to group', value: 'add-to-group' },
-                        { title: 'Load a list of users', value: 'load' },
-                        { title: 'Delete a user', value: 'delete' },
-                        { title: 'Get last user action', value: 'last-user-action' },
-                        { title: 'Patch the settings for a user', value: 'patch-settings' },
-                        { title: 'Remove from entity', value: 'remove-from-entity' },
-                        { title: 'Remove from group', value: 'remove-from-group' },
-                        { title: 'Set not notified', value: 'set-not-notified' },
-                        { title: 'Set not notified by mail', value: 'set-not-notified-mail' },
-                        { title: 'Set activity area', value: 'set-activity-area' },
-                        { title: 'Set notified', value: 'set-notified' },
-                        { title: 'Set notified by mail', value: 'set-notified-mail' },
-                        { title: 'Get the settings for a user', value: 'settings' },
-                        { title: 'Unset activity area', value: 'unset-activity-area' }
+                        {title: 'Add to entity', value: 'add-to-entity'},
+                        {title: 'Add to group', value: 'add-to-group'},
+                        {title: 'Load a list of users', value: 'load'},
+                        {title: 'Delete a user', value: 'delete'},
+                        {title: 'Get last user action', value: 'last-user-action'},
+                        {title: 'Patch the settings for a user', value: 'patch-settings'},
+                        {title: 'Remove from entity', value: 'remove-from-entity'},
+                        {title: 'Remove from group', value: 'remove-from-group'},
+                        {title: 'Set not notified', value: 'set-not-notified'},
+                        {title: 'Set not notified by mail', value: 'set-not-notified-mail'},
+                        {title: 'Set activity area', value: 'set-activity-area'},
+                        {title: 'Set notified', value: 'set-notified'},
+                        {title: 'Set notified by mail', value: 'set-notified-mail'},
+                        {title: 'Get the settings for a user', value: 'settings'},
+                        {title: 'Unset activity area', value: 'unset-activity-area'}
                     ]
                 })
             ).value;
@@ -142,18 +142,16 @@ const userCommands = {
 
     async lastUserAction(option, value) {
         if (!option) {
-            const response = (
-                await prompts({
-                    type: 'select',
-                    name: 'value',
-                    message: 'Select last user action option',
-                    choices: [
-                        { title: 'Get last user action for a specific user', value: 'for-user' },
-                        { title: 'Get all user last actions', value: 'all-users' },
-                        { title: 'Get user last action older than x days', value: 'older-than' }
-                    ]
-                })
-            );
+            const response = await prompts({
+                type: 'select',
+                name: 'value',
+                message: 'Select last user action option',
+                choices: [
+                    {title: 'Get last user action for a specific user', value: 'for-user'},
+                    {title: 'Get all user last actions', value: 'all-users'},
+                    {title: 'Get user last action older than x days', value: 'older-than'}
+                ]
+            });
             option = response.value;
             if (!option) {
                 console.log('Option is required');
@@ -301,7 +299,7 @@ const userCommands = {
         if (!entitiesDisconnectedResponse?.ok) {
             return;
         }
-        let { entitiesDisconnected } = await entitiesDisconnectedResponse.json();
+        let {entitiesDisconnected} = await entitiesDisconnectedResponse.json();
         if (!entitiesDisconnected) {
             entitiesDisconnected = [];
         }
@@ -316,7 +314,7 @@ const userCommands = {
         await utils.sendRequest(
             `users/users/${user}/settings`,
             'PATCH',
-            JSON.stringify({ login: user, entitiesDisconnected: entitiesDisconnected }),
+            JSON.stringify({login: user, entitiesDisconnected: entitiesDisconnected}),
             `Activity area ${entity} has been ${setting ? 'set' : 'unset'} for user ${user}`,
             `Failed to change activity area ${entity} for user ${user}`,
             `Activity area ${entity} or user ${user} could not be found`

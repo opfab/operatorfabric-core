@@ -1,10 +1,33 @@
 plugins {
 	id "base"
+    id 'com.github.node-gradle.node'
+}
+
+npmInstall {
+    workingDir = file('src')
+    npmCommand = ['ci']
+    inputs.file('src/package.json')
+    inputs.file('src/package-lock.json')
+    outputs.dir('src/node_modules')
+}
+
+
+task runPrettier(type:NpmTask) {
+    workingDir = file('src')
+    inputs.files(fileTree('src'))
+    inputs.file('src/package.json')
+    inputs.file('src/package-lock.json')
+    inputs.file('.prettierrc.json')
+
+    args = ['run','prettier']
+    dependsOn npmInstall
 }
 
 task buildDocker(type: Exec) {
     workingDir project.projectDir
     commandLine 'docker', 'build', '--build-arg', "https_proxy=${proxy.https}",'-t', "lfeoperatorfabric/of-opfab-cli:${project.version}", '.'
+
+    dependsOn runPrettier
 }
 
 tasks.named("buildDocker") {

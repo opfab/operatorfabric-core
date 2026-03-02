@@ -170,7 +170,6 @@ const loginCommands = {
             config.setConfig('url', this.url);
             config.setConfig('port', this.port);
             console.log(`Logged in with user ${this.login} on ${this.url}:${this.port}`);
-
         } catch (error) {
             utils.logError('Failed to log in', error, true);
         }
@@ -179,7 +178,7 @@ const loginCommands = {
     getExpirationDate(token) {
         const payload = token.split('.')[1];
         const decodedPayload = Buffer.from(payload, 'base64').toString('utf8');
-        const { exp } = JSON5.parse(decodedPayload);
+        const {exp} = JSON5.parse(decodedPayload);
         return exp * 1000; // to have it in ms since epoch
     },
 

@@ -131,8 +131,8 @@ omelette('opfab')
         supervisor: {
             'add-entity': ['#EMPTY_COMPLETION'],
             'delete-entity': ['#EMPTY_COMPLETION'],
-            'start': ['#EMPTY_COMPLETION'],
-            'stop': ['#EMPTY_COMPLETION']
+            start: ['#EMPTY_COMPLETION'],
+            stop: ['#EMPTY_COMPLETION']
         },
         user: {
             'add-to-entity': ['#EMPTY_COMPLETION'],
@@ -152,8 +152,8 @@ omelette('opfab')
             'set-activity-area': ['#EMPTY_COMPLETION'],
             'set-notified': ['#EMPTY_COMPLETION'],
             'set-notified-mail': ['#EMPTY_COMPLETION'],
-            'settings': ['#EMPTY_COMPLETION'],
-            'unset-activity-area': ['#EMPTY_COMPLETION'],
+            settings: ['#EMPTY_COMPLETION'],
+            'unset-activity-area': ['#EMPTY_COMPLETION']
         },
         version: ['#EMPTY_COMPLETION']
     })
