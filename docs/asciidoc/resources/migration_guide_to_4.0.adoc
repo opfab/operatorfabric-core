@@ -1,4 +1,4 @@
-// Copyright (c) 2023 RTE (http://www.rte-france.com)
+// Copyright (c) 2023-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -332,14 +332,14 @@ to
 
 External publishers are now monitored by a new module which limits how many cards they can send
 ifdef::single-page-doc[<<cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#cardSendingLimitCardCount, `cardSendingLimitCardCount`>>]
  in a period of time
 ifdef::single-page-doc[<<cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#cardSendingLimitPeriod, `cardSendingLimitPeriod`>>]
 .
 This is to avoid potential overloading due to external apps stuck in a card sending loop.
 
 Default value is set to 1000 cards per hour. It can be disabled / enabled with
 ifdef::single-page-doc[<<activateCardSendingLimiter, `activateCardSendingLimiter`>>]
-ifndef::single-page-doc[<</documentation/current/deployment/configuration/configuration.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
+ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#activateCardSendingLimiter, `activateCardSendingLimiter`>>]
 

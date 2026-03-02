@@ -1,4 +1,4 @@
-// Copyright (c) 2018-2025 RTE (http://www.rte-france.com)
+// Copyright (c) 2018-2026 RTE (http://www.rte-france.com)
 // See AUTHORS.txt
 // This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
 // If a copy of the license was not distributed with this
@@ -51,5 +51,7 @@ include::kafka.adoc[leveloffset=+1]
 include::greenmail.adoc[leveloffset=+1]
 
 include::dependency.adoc[leveloffset=+1]
+
+include::opfab-cli.adoc[leveloffset=+1]
 
 
