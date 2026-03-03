@@ -60,7 +60,7 @@ const configService = new ConfigService(
     'config/serviceConfig.json',
     logger
 );
-logger.info('Configuration loaded: ' + JSON.stringify(configService.getConfig()));
+logger.debug('Configuration loaded: ' + JSON.stringify(configService.getConfig()));
 // load custom handlebars helpers
 // Need to ignore Sonar rule btypescript:S4325 because it is necessary to use "any" here to avoid TypeScript errors
 const customHandlebarsHelpersFile = (config.get('operatorfabric.emailGateway') as any)?.customHandlebarsHelpersFile; //NOSONAR
@@ -144,6 +144,7 @@ app.get('/status', (req, res) => {
 app.get('/start', (req, res) => {
     processAdminRequest(req, res, () => {
         outgoingEmailsService.start();
+        incomingEmailsService.start();
         res.send('Start service');
     });
 });
@@ -152,6 +153,7 @@ app.get('/stop', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Stop email gateway service asked');
         outgoingEmailsService.stop();
+        incomingEmailsService.stop();
         res.send('Stop service');
     });
 });
@@ -291,16 +293,16 @@ app.post('/upload', (req: Request, res: Response) => {
             writeStream.on('error', (err) => {
                 busboy.emit('error', err);
             });
-        });
 
-        busboy.on('finish', () => {
-            if (!fileReceived) {
-                return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
-            }
+            writeStream.on('finish', () => {
+                if (!fileReceived) {
+                    return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
+                }
 
-            logger.info(`File received : ${savedFileName}, size : ${savedFileSize} bytes`);
+                logger.info(`File received : ${savedFileName}, size : ${savedFileSize} bytes`);
 
-            res.send({success: true});
+                res.send({success: true});
+            });
         });
 
         busboy.on('error', (err: unknown) => {
