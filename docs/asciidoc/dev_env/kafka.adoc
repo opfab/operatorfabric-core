@@ -15,7 +15,7 @@ Next to publishing cards to OperatorFabric using the REST API, OperatorFabric al
 In the default configuration Kafka is enabled.
 
 == Setup Kafka environment
-Opfab by default starts a bitnami Kafka docker container and a zookeeper container as defined in `docker-compose.yml`.
+Opfab by default starts a Kafka docker container as defined in `docker-compose.yml`.
 If you have a Kafka environment running you need to configure Opfab to connect to your Kafka server by setting `spring.kafka.bootstrap-servers` property in `card-publication.yml`:
 
 [source,yaml]

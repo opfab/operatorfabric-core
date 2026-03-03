@@ -3,7 +3,7 @@ spring:
   kafka:
     consumer:
       group-id: opfab-command
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: kafka:29092
 
 #  VALUE FOR TESTING
 #  TO BE REMOVED FOR PRODUCTION MODE
