@@ -386,6 +386,10 @@ The email gateway service can be configured with the following properties:
 |operatorfabric.logConfig.logFolder|logs|no|Log file folder (inside docker container)
 |operatorfabric.logConfig.logFile|"opfab.%DATE%.log"|no|Log file name
 |operatorfabric.logConfig.logLevel|info|no|Default log level
+|operatorfabric.emailGateway.imapServer.authTimeout||yes|Defines the maximum amount of time (in milliseconds) the client will wait for the authentication process to complete before timing out
+|operatorfabric.emailGateway.imapServer.host||yes|Mail server host
+|operatorfabric.emailGateway.imapServer.port||yes|Mail server port
+|operatorfabric.emailGateway.imapServer.tls||yes|Flag to set whether the connection to the IMAP server should be secured using TLS (Transport Layer Security)
 |operatorfabric.emailGateway.smtpServer.host||yes|Mail server host
 |operatorfabric.emailGateway.smtpServer.port||yes|Mail server port
 |operatorfabric.emailGateway.smtpServer.auth.user||yes|Mail server authentication user
@@ -393,6 +397,11 @@ The email gateway service can be configured with the following properties:
 |operatorfabric.emailGateway.adminPort|2106|no|Listen port
 |operatorfabric.emailGateway.activeOnStartup|true|no|Flag to start the notification service on startup
 |operatorfabric.emailGateway.customHandlebarsHelpersFile||no|Path to a javascript file containing custom Handlebars helpers to be used in email templates
+|operatorfabric.emailGateway.defaultConfig.incomingEmails.mailboxes||yes|List of mailboxes that the email gateway will monitor
+|operatorfabric.emailGateway.defaultConfig.incomingEmails.mailboxes[].mailbox||yes|Email address of the mailbox to monitor
+|operatorfabric.emailGateway.defaultConfig.incomingEmails.mailboxes[].password||yes|Password used to authenticate to the mailbox via IMAP
+|operatorfabric.emailGateway.defaultConfig.incomingEmails.mailboxes[].emailToCardConverter||yes|Identifier of the converter used to transform incoming emails into OperatorFabric cards
+|operatorfabric.emailGateway.defaultConfig.incomingEmails.secondsBetweenConnectionChecks|10|no|Connection check period
 |operatorfabric.emailGateway.defaultConfig.outgoingEmails.mailFrom||yes|Mail from address
 |operatorfabric.emailGateway.defaultConfig.outgoingEmails.dailyEmailTitle|'Cards received during the day'|no|Daily mail subject title
 |operatorfabric.emailGateway.defaultConfig.outgoingEmails.weeklyEmailTitle|'Cards received during the week'|no|Weekly mail subject title
