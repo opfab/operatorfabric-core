@@ -6,11 +6,15 @@
 // SPDX-License-Identifier: CC-BY-4.0
 
 
-= Email Notifications
+= Email Gateway
+
+The **email-gateway** service in OpFab supports both outgoing email notifications and incoming email handling for conversion into OperatorFabric cards.
+
+== Outgoing Emails
 
 OpFab can send card notifications via email. These notifications are sent when a new card is published for a user and remains unread for a configured period. The email subject includes the card title, summary, and start and end dates.
 
-== Configuring Email Notifications
+=== Configuring Email Notifications
 
 Users can enable email notifications in their user settings. If the parameter
 `operatorfabric.users.getEmailFromUserInsteadOfSettingsThey` is set to true, the email address is fetched from the token.
@@ -20,7 +24,7 @@ notifications and select the processes/states they want to be notified about.
 Users can specify the desired timezone for displaying dates and times in emails. To do this, they must fill in
 the "timezone for mails" field in the user settings screen.
 
-== Email Content
+=== Email Content
 
 The email body contains a link to the card details in OpFab. In the config.json file containing the state definition,
 the `email.bodyTemplate` field allows defining a template specific to the email body content.
@@ -41,7 +45,7 @@ email : {
     cardFieldUsedForSubject:"titleTranslated"
 }
 ....
-== Email templates
+=== Email templates
 In email handlebars templates it is possible to refer card fields by prefixing with "card" prefix. For example:
 
 ....
@@ -49,7 +53,7 @@ In email handlebars templates it is possible to refer card fields by prefixing w
   {{#card.data.networkContingencies}}
 ....
 
-=== Rich text content
+==== Rich text content
 
 A specific handlebars helper `deltaToHtml` allows to display rich text content from a card containing the 'richMessage' field with the following syntax:
 
@@ -63,7 +67,7 @@ Ensure to encapsulate the expression within three curly braces to prevent HTML e
 
 
 It is also possible to configure custom parameters to be used in handlebars email templates.
-The custom parameter can be added in email-gateway configuration under the "defaultConfig.customConfig" section:
+The custom parameter can be added in **email-gateway** configuration under the "defaultConfig.customConfig" section:
 
 ```
 emailGateway:
@@ -81,7 +85,7 @@ The custom parameters can then be referred in handlebars template prefixed with 
 {{#config.myParam1}}
 ....
 
-== Email attachment templates
+=== Email attachment templates
 
 It is possible to define a handlebars template that will generate an attachment to the email. This feature is only for direct emails and not for recap emails.
 In the configuration of your bundle you need to define the following fields in the state definition :
@@ -115,7 +119,7 @@ Here is an example of a template to generate an xml attached file containing the
 </document>
 ----
 
-=== Custom Handlebars helpers
+==== Custom Handlebars helpers
 
 As with the UI via the Frontend API, you can define custom Handlebars helpers for use in email templates. To do this, create a JavaScript file and assign an array of functions to the `helpers` variable. For example:
 
@@ -149,10 +153,203 @@ helpers = [example_severityColor];
 ```
 Each helper will be registered with the same name as the helper function. To avoid conflicts with existing helpers, it is recommended to prefix your helper names (for example: `myapp_xxx`).
 
-Reference this file in the YAML configuration of the `email-gateway` service using the `customHandlebarsHelpersFile` parameter:
+Reference this file in the YAML configuration of the **email-gateway** service using the `customHandlebarsHelpersFile` parameter:
 
 ```
 emailGateway:
     adminPort: 2106
     customHandlebarsHelpersFile: /path/to/the/file/containing/helpers.js
 ```
+
+== Incoming Emails
+
+The **email-gateway** service can also monitor mailboxes via IMAP and convert incoming emails into OperatorFabric cards.
+
+Incoming email handling is configured in the `defaultConfig.incomingEmails` section of the **email-gateway** configuration.
+
+=== Configuration
+
+Example configuration:
+
+```
+emailGateway:
+  defaultConfig:
+    incomingEmails:
+      secondsBetweenConnectionChecks: 10
+      mailboxes:
+        - mailbox: "operator1@test.com"
+          password: "a"
+          emailToCardConverter: "emailToCardConverter1"
+        - mailbox: "operator2@test.com"
+          password: "b"
+          emailToCardConverter: "emailToCardConverter2"
+```
+
+The IMAP server connection is configured using:
+```
+operatorfabric.emailGateway.imapServer.host
+operatorfabric.emailGateway.imapServer.port
+operatorfabric.emailGateway.imapServer.tls
+operatorfabric.emailGateway.imapServer.authTimeout
+```
+
+=== Behavior
+
+For each configured mailbox:
+
+1. The service opens a secure IMAP connection using the configured `host`, `port`, `tls`, and `authTimeout`.
+2. The `INBOX` folder is opened.
+3. Only unread messages (`UNSEEN`) are fetched.
+4. Retrieved messages are automatically marked as read.
+5. Each message is parsed and transformed into an internal `IncomingEmail` object.
+6. The configured `emailToCardConverter` is then used to convert the email into a card.
+
+Mailbox checks are performed periodically according to `secondsBetweenConnectionChecks`.
+
+=== Email Parsing Rules
+
+When an email is received, attachments are processed as follows:
+
+  * Only text attachments are supported.
+  * Attachments larger than 100 KB are ignored.
+  * Attachment content is converted to UTF-8 text.
+
+Each processed email is then handed over to the configured converter, which is responsible for generating the corresponding OperatorFabric card.
+
+=== Runtime Configuration
+
+As with other `defaultConfig` parameters, the `incomingEmails` configuration can be updated at runtime by sending an HTTP POST request to the `/config` endpoint of the **email-gateway** service with a JSON payload containing the updated parameters.
+
+=== emailToCardConverter
+
+The `emailToCardConverter` parameter defines the JavaScript converter responsible for transforming an incoming email into an OperatorFabric card.
+
+Each configured mailbox must reference a converter by its identifier, for example :
+
+```
+incomingEmails:
+  mailboxes:
+    - mailbox: "operator1@test.com"
+      password: "a"
+      emailToCardConverter: "emailToCardConverter1"
+```
+
+The value `emailToCardConverter1` refers to a JavaScript file implementing the conversion logic.
+
+=== Converter File
+
+A converter is a JavaScript file loaded by the email-gateway service.
+It must export a conversion function that:
+
+* Receives an `IncomingEmail` object
+* Returns a valid OperatorFabric card object (JSON)
+
+The converter is responsible for:
+
+* Mapping email metadata (subject, sender, body)
+* Parsing structured content (e.g., XML attachments)
+* Constructing the card payload
+* Defining process, state, severity, and data
+
+==== IncomingEmail Object
+
+The converter receives an object containing:
+
+* `from` (string)
+* `to` (string[])
+* `subject` (string)
+* `body` (string)
+* `attachments` (array of `{ filename, content }`)
+
+==== Required Method `convertEmailToCard(email)`
+
+The converter file must define the function convertEmailToCard(email), for example:
+
+```
+function convertEmailToCard(email) {
+
+    let xmlJson = null;
+
+    if (email.attachments && email.attachments.length > 0) {
+        const xmlAttachment = email.attachments.find(att =>
+            att.filename && att.filename.endsWith('.xml')
+        );
+
+        if (xmlAttachment) {
+            xmlJson = helpers.XMLToJSON(xmlAttachment.content);
+        }
+    }
+
+    return {
+        publisher: 'opfab',
+        process: 'api_test',
+        state: 'messageState',
+        processVersion: '1',
+        processInstanceId: 'emailToCardTest',
+        severity: 'ALARM',
+        summary: {key: 'detail.title'},
+        title: {key: 'detail.title'},
+        startDate: 7200000,
+        data: {
+            content: {
+                from: email.from,
+                to: email.to,
+                subject: email.subject,
+                body: email.body,
+                attachments: email.attachments.map((att) => ({
+                    filename: att.filename,
+                    content: att.content,
+                    contentInJsonFormat: xmlJson
+                }))
+            },
+            converter: 'emailToCardConverter1.js'
+        },
+        entityRecipients: ['ENTITY_FR']
+    };
+}
+```
+
+The service will call this function for each incoming email and publish the returned card to OperatorFabric.
+
+==== Upload, list and delete Converter File
+
+Converters are uploaded through the **/upload** endpoint using a multipart/form-data POST request.
+Only users with administrator privileges are allowed to upload converter files.
+
+Example using curl:
+
+```
+curl -X POST "http://localhost:2106/upload" -H "Authorization: Bearer <admin_token>" -F "file=@emailToCardConverter.js"
+```
+
+If the upload is successful, the service returns a 200 OK response and the converter file becomes available for use by the email-gateway service.
+
+If a non-administrator user attempts to upload a file, the service returns a 403 Forbidden response.
+
+Uploaded converter files can later be listed or deleted using the corresponding administration endpoints (**/list** and **/delete**).
+
+==== XMLToJSON helper method
+
+When writing an `emailToCardConverter`, a helper function named `XMLToJSON` is made available in the execution context.
+
+This helper allows converters to easily transform XML content (for example from an email attachment or from the email body) into a JavaScript JSON object.
+
+The helper is exposed under the `helpers` object:
+
+```
+helpers.XMLToJSON(xmlString)
+```
+
+===== Behavior
+
+* It parses the provided XML string.
+* It converts XML elements into a JavaScript object.
+* XML attributes are preserved.
+* Leading and trailing spaces in values are trimmed.
+* If parsing fails, an error is thrown and logged.
+
+Internally, the method uses the `fast-xml-parser` library with the following configuration:
+
+* `ignoreAttributes: false` → XML attributes are kept
+* `attributeNamePrefix: '@_'` → attributes are prefixed with `@_`
+* `trimValues: true` → whitespace is automatically removed from values
