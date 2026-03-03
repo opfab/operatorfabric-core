@@ -14,7 +14,7 @@ print_help() {
     echo "  dev   -   all service in docker with permissive CORS (Default value)"
     echo "  prod  -   all service in docker with strict CORS , not useable with ng serve"
     echo "  java  -   run the Java application directly, using docker for other services , permissive CORS"
-    echo "  light -   run only the essential services in docker, without test modules (Kafka,Zookeeper,Modbus dummy devices and ext app) permissive CORS"
+    echo "  light -   run only the essential services in docker, without test modules (Kafka,Modbus dummy devices and ext app) permissive CORS"
 }
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -69,7 +69,7 @@ cd "$SCRIPT_DIR" || exit 1
         java)
             echo "Java mode : Starting Java application directly with permissive CORS"
             sed "s/\${MY_DOCKER_HOST}/$MY_DOCKER_HOST/g" ./web-ui/nginx-dev.conf.template > ./web-ui/nginx.conf
-            docker compose -f docker-compose.yml up -d mongodb rabbitmq keycloak greenmail zookeeper kafka web-ui email-gateway cards-reminder supervisor ext-app dummy-modbus-device_1 dummy-modbus-device_2
+            docker compose -f docker-compose.yml up -d mongodb rabbitmq keycloak greenmail kafka web-ui email-gateway cards-reminder supervisor ext-app dummy-modbus-device_1 dummy-modbus-device_2
             cd ../bin
             ./run_all.sh start
             ;;
