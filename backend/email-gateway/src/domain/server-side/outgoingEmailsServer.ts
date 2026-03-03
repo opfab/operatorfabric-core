@@ -9,7 +9,7 @@
 
 import nodemailer, {TransportOptions, Transporter} from 'nodemailer';
 
-export default class SendMailService {
+export default class OutgoingEmailsServer {
     logger: any;
     transporter: Transporter;
 

@@ -10,10 +10,10 @@
 import 'jest';
 import sinon from 'sinon';
 import {getLogger} from '../common/server-side/logger';
-import EmailGatewayOpfabServicesInterface from '../domain/server-side/emailGatewayOpfabServicesInterface';
+import UsersServer from '../domain/server-side/usersServer';
 
-function getOpfabServicesInterface(): EmailGatewayOpfabServicesInterface {
-    return new EmailGatewayOpfabServicesInterface()
+function getOpfabServicesInterface(): UsersServer {
+    return new UsersServer()
         .setLogin('test')
         .setPassword('test')
         .setOpfabGetTokenUrl('tokenurl')

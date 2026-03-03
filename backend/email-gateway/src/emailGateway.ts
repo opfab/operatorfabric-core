@@ -12,16 +12,21 @@ import {expressjwt} from 'express-jwt';
 import jwksRsa from 'jwks-rsa';
 import bodyParser from 'body-parser';
 import config from 'config';
+import Busboy from 'busboy';
+import path from 'node:path';
+import fs from 'node:fs';
 
 import AuthorizationService from './common/server-side/authorizationService';
-import SendMailService from './domain/server-side/sendMailService';
-import EmailGatewayOpfabServicesInterface from './domain/server-side/emailGatewayOpfabServicesInterface';
-import EmailGatewayService from './domain/client-side/emailGatewayService';
+import OutgoingEmailsServer from './domain/server-side/outgoingEmailsServer';
+import UsersServer from './domain/server-side/usersServer';
+import OutgoingEmailsService from './domain/client-side/outgoingEmailsService';
 import ConfigService from './domain/client-side/configService';
-import EmailGatewayDatabaseService from './domain/server-side/emailGatewayDatabaseService';
-import BusinessConfigOpfabServicesInterface from './domain/server-side/BusinessConfigOpfabServicesInterface';
+import DatabaseServer from './domain/server-side/databaseServer';
+import BusinessConfigServer from './domain/server-side/businessConfigServer';
 import {getLogger, getLogLevel, setLogLevel} from './common/server-side/logger';
-import {loadHelpers} from './domain/server-side/CustomHandlebarsHelpers';
+import {loadHelpers} from './domain/server-side/handlebarsHelpersServer';
+import IncomingEmailsServer from './domain/server-side/incomingEmailsServer';
+import IncomingEmailsService from './domain/client-side/incomingEmailsService';
 
 const app = express();
 app.disable('x-powered-by');
@@ -51,11 +56,11 @@ const logger = getLogger();
 const activeOnStartUp = config.get('operatorfabric.emailGateway.activeOnStartup');
 
 const configService = new ConfigService(
-    config.get('operatorfabric.emailGateway.defaultConfig.outgoingEmails'),
+    config.get('operatorfabric.emailGateway.defaultConfig'),
     'config/serviceConfig.json',
     logger
 );
-
+logger.info('Configuration loaded: ' + JSON.stringify(configService.getConfig()));
 // load custom handlebars helpers
 // Need to ignore Sonar rule btypescript:S4325 because it is necessary to use "any" here to avoid TypeScript errors
 const customHandlebarsHelpersFile = (config.get('operatorfabric.emailGateway') as any)?.customHandlebarsHelpersFile; //NOSONAR
@@ -67,9 +72,24 @@ if (customHandlebarsHelpersFile && (customHandlebarsHelpersFile as string).lengt
     }
 }
 
-const mailService = new SendMailService(config.get('operatorfabric.emailGateway.smtpServer'));
+const outgoingEmailsServer = new OutgoingEmailsServer(config.get('operatorfabric.emailGateway.smtpServer'));
 
-const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
+const incomingEmailsServer = new IncomingEmailsServer()
+    .setEmailServerConfiguration(config.get('operatorfabric.emailGateway.imapServer'))
+    .setLogger(logger);
+
+const usersServer = new UsersServer()
+    .setLogin(config.get('operatorfabric.internalAccount.login'))
+    .setPassword(config.get('operatorfabric.internalAccount.password'))
+    .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
+    .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
+    .setOpfabCardsPublicationUrl(config.get('operatorfabric.servicesUrls.cardsPublication'))
+    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
+    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
+    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
+    .setLogger(logger);
+
+const businessConfigServer = new BusinessConfigServer()
     .setLogin(config.get('operatorfabric.internalAccount.login'))
     .setPassword(config.get('operatorfabric.internalAccount.password'))
     .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
@@ -79,35 +99,27 @@ const opfabServicesInterface = new EmailGatewayOpfabServicesInterface()
     .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
     .setLogger(logger);
 
-const opfabBusinessConfigServicesInterface = new BusinessConfigOpfabServicesInterface()
-    .setLogin(config.get('operatorfabric.internalAccount.login'))
-    .setPassword(config.get('operatorfabric.internalAccount.password'))
-    .setOpfabUsersUrl(config.get('operatorfabric.servicesUrls.users'))
-    .setOpfabCardsConsultationUrl(config.get('operatorfabric.servicesUrls.cardsConsultation'))
-    .setopfabBusinessconfigUrl(config.get('operatorfabric.servicesUrls.businessconfig'))
-    .setOpfabGetTokenUrl(config.get('operatorfabric.servicesUrls.authToken'))
-    .setEventBusConfiguration(config.get('operatorfabric.rabbitmq'))
-    .setLogger(logger);
-
-const emailGatewayDatabaseService = new EmailGatewayDatabaseService()
+const databaseServer = new DatabaseServer()
     .setMongoDbConfiguration(config.get('operatorfabric.mongodb'))
     .setLogger(logger);
 
 const authorizationService = new AuthorizationService()
-    .setOpfabServicesInterface(opfabServicesInterface)
+    .setOpfabServicesInterface(usersServer)
     .setLoginClaim(config.get('operatorfabric.security.jwt.login-claim'))
     .setLogger(logger);
 
 const serviceConfig = configService.getConfig();
 
-const emailGatewayService = new EmailGatewayService(
-    opfabServicesInterface,
-    opfabBusinessConfigServicesInterface,
-    emailGatewayDatabaseService,
-    mailService,
+const outgoingEmailsService = new OutgoingEmailsService(
+    usersServer,
+    businessConfigServer,
+    databaseServer,
+    outgoingEmailsServer,
     serviceConfig,
     logger
 );
+
+const incomingEmailsService = new IncomingEmailsService(configService, incomingEmailsServer, usersServer, logger);
 
 const processAdminRequest = (req: Request, res: Response, requestProcessor: Function) => {
     authorizationService
@@ -126,12 +138,12 @@ const processAdminRequest = (req: Request, res: Response, requestProcessor: Func
 };
 
 app.get('/status', (req, res) => {
-    processAdminRequest(req, res, () => res.send(emailGatewayService.isActive()));
+    processAdminRequest(req, res, () => res.send(outgoingEmailsService.isActive()));
 });
 
 app.get('/start', (req, res) => {
     processAdminRequest(req, res, () => {
-        emailGatewayService.start();
+        outgoingEmailsService.start();
         res.send('Start service');
     });
 });
@@ -139,7 +151,7 @@ app.get('/start', (req, res) => {
 app.get('/stop', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Stop email gateway service asked');
-        emailGatewayService.stop();
+        outgoingEmailsService.stop();
         res.send('Stop service');
     });
 });
@@ -152,7 +164,7 @@ app.post('/config', (req, res) => {
     processAdminRequest(req, res, () => {
         logger.info('Reconfiguration asked: ' + JSON.stringify(req.body));
         const updated = configService.patch(req.body as object);
-        emailGatewayService.setConfiguration(updated);
+        outgoingEmailsService.setConfiguration(updated);
         res.send(updated);
     });
 });
@@ -197,7 +209,7 @@ app.post('/sendDailyEmail', (req, res) => {
         .then((isAdmin) => {
             if (isAdmin) {
                 logger.info('Sending email with cards from the last 24 hours');
-                emailGatewayService.sendDailyRecap().catch((err) => {
+                outgoingEmailsService.sendDailyRecap().catch((err) => {
                     logger.error('Error in sendDailyEmail' + err);
                 });
                 res.send();
@@ -217,7 +229,7 @@ app.post('/sendWeeklyEmail', (req, res) => {
         .then((isAdmin) => {
             if (isAdmin) {
                 logger.info('Sending email with cards from the last 7 days');
-                emailGatewayService.sendWeeklyRecap().catch((err) => {
+                outgoingEmailsService.sendWeeklyRecap().catch((err) => {
                     logger.error('Error in sendWeeklyEmail' + err);
                 });
                 res.send();
@@ -231,18 +243,143 @@ app.post('/sendWeeklyEmail', (req, res) => {
         });
 });
 
+// Create directory if it does not exist
+const uploadDir = path.join(__dirname, '../config/js');
+if (!fs.existsSync(uploadDir)) {
+    logger.info('Upload directory does not exist , creating it at ' + uploadDir);
+    fs.mkdirSync(uploadDir, {recursive: true});
+}
+
+app.post('/upload', (req: Request, res: Response) => {
+    processAdminRequest(req, res, () => {
+        logger.info('Upload file endpoint');
+
+        const busboy = Busboy({
+            headers: req.headers
+        });
+
+        let fileReceived = false;
+        let savedFileName: string | null = null;
+        let savedFileSize = 0;
+
+        busboy.on('file', (fieldname, file, info) => {
+            if (fieldname !== 'file') {
+                file.resume();
+                return;
+            }
+
+            const filename = info.filename;
+
+            if (!filename?.endsWith('.js')) {
+                file.resume();
+                busboy.emit('error', new Error('Only .js files are allowed'));
+                return;
+            }
+
+            fileReceived = true;
+            savedFileName = path.basename(filename);
+            const filePath = path.join(uploadDir, savedFileName);
+
+            const writeStream = fs.createWriteStream(filePath);
+
+            file.on('data', (data) => {
+                savedFileSize += data.length;
+            });
+
+            file.pipe(writeStream);
+
+            writeStream.on('error', (err) => {
+                busboy.emit('error', err);
+            });
+        });
+
+        busboy.on('finish', () => {
+            if (!fileReceived) {
+                return res.status(400).send('No file received or invalid file type (only *.js files accepted)');
+            }
+
+            logger.info(`File received : ${savedFileName}, size : ${savedFileSize} bytes`);
+
+            res.send({success: true});
+        });
+
+        busboy.on('error', (err: unknown) => {
+            logger.error('Upload error:', err);
+
+            if (err instanceof Error) {
+                res.status(400).send(err.message);
+            } else {
+                res.status(400).send('Upload error');
+            }
+        });
+
+        req.pipe(busboy);
+    });
+});
+
+app.delete('/delete', (req, res) => {
+    processAdminRequest(req, res, () => {
+        const uploadDir = path.join(__dirname, '../config/js');
+
+        const filename = req.query.filename as string;
+        if (!filename) {
+            return res.status(400).send('Missing filename parameter');
+        }
+
+        const allowedFiles = fs.readdirSync(uploadDir);
+        if (!allowedFiles.includes(filename)) {
+            return res.status(400).send('Invalid filename');
+        }
+
+        const filePath = path.join(uploadDir, filename);
+
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                return res.status(404).send('File not found');
+            }
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    logger.error('Error deleting file:', err);
+                    return res.status(500).send('Failed to delete file');
+                }
+
+                logger.info(`File deleted: ${filePath}`);
+                res.send({success: true, message: `File ${filename} deleted`});
+            });
+        });
+    });
+});
+
+app.get('/list', (req, res) => {
+    processAdminRequest(req, res, () => {
+        const dirPath = path.join(__dirname, '../config/js');
+
+        fs.readdir(dirPath, (err, files) => {
+            if (err) {
+                logger.error('Error reading directory:', err);
+                return res.status(500).send('Failed to read directory');
+            }
+
+            const jsFiles = files.filter((f) => f.endsWith('.js'));
+
+            res.send({success: true, files: jsFiles});
+        });
+    });
+});
 async function start(): Promise<void> {
-    await emailGatewayDatabaseService.connectToMongoDB();
-    const response = await opfabServicesInterface.loadUsersData();
+    await databaseServer.connectToMongoDB();
+    const response = await usersServer.loadUsersData();
     if (!response.isValid()) {
         logger.error('Impossible to load users data, exiting');
         process.exit(1);
     }
-    opfabServicesInterface.startListener();
-    opfabBusinessConfigServicesInterface.startListener();
+    usersServer.startListener();
+    businessConfigServer.startListener();
 
     if (activeOnStartUp as boolean) {
-        emailGatewayService.start();
+        outgoingEmailsService.start();
+        incomingEmailsService.start();
     }
     logger.info('Application started');
 }

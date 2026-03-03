@@ -8,17 +8,17 @@
  */
 
 import 'jest';
-import SendMailService from '../domain/server-side/sendMailService';
+import OutgoingEmailsServer from '../domain/server-side/outgoingEmailsServer';
 import GetResponse from '../common/server-side/getResponse';
 import Handlebars from 'handlebars';
-import EmailGatewayOpfabServicesInterface from '../domain/server-side/emailGatewayOpfabServicesInterface';
-import EmailGatewayDatabaseService from '../domain/server-side/emailGatewayDatabaseService';
-import BusinessConfigOpfabServicesInterface from '../domain/server-side/BusinessConfigOpfabServicesInterface';
+import UsersServer from '../domain/server-side/usersServer';
+import DatabaseServer from '../domain/server-side/databaseServer';
+import BusinessConfigServer from '../domain/server-side/businessConfigServer';
 import {format} from 'date-fns';
-import {LightCard} from '../domain/application/lightCard';
-import {Card} from '../domain/application/card';
+import {LightCard} from '../domain/model/lightCard';
+import {Card} from '../domain/model/card';
 
-export class OpfabServicesInterfaceStub extends EmailGatewayOpfabServicesInterface {
+export class OpfabServicesInterfaceStub extends UsersServer {
     public isResponseValid = true;
 
     card: any;
@@ -44,7 +44,7 @@ export class OpfabServicesInterfaceStub extends EmailGatewayOpfabServicesInterfa
     }
 }
 
-export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfabServicesInterface {
+export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigServer {
     public isResponseValid = true;
     config: any;
     template: string;
@@ -58,7 +58,7 @@ export class OpfabBusinessConfigServicesInterfaceStub extends BusinessConfigOpfa
     }
 }
 
-export class SendMailServiceStub extends SendMailService {
+export class SendMailServiceStub extends OutgoingEmailsServer {
     numberOfMailsSent = 0;
     sent: any[] = [];
 
@@ -76,7 +76,7 @@ export class SendMailServiceStub extends SendMailService {
     }
 }
 
-export class DatabaseServiceStub extends EmailGatewayDatabaseService {
+export class DatabaseServiceStub extends DatabaseServer {
     sent: any[] = [];
     cards = new Array<Card>();
 
