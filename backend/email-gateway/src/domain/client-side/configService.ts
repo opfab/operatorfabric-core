@@ -35,35 +35,35 @@ export default class ConfigService {
 
                 this.config.outgoingEmails = new OutgoingEmailsConfigDTO();
 
-                this.config.outgoingEmails.mailFrom = defaultConfig?.outgoingEmails.mailFrom;
-                this.config.outgoingEmails.hourToSendRecapEmail = defaultConfig?.outgoingEmails.hourToSendRecapEmail;
+                this.config.outgoingEmails.mailFrom = defaultConfig?.outgoingEmails?.mailFrom;
+                this.config.outgoingEmails.hourToSendRecapEmail = defaultConfig?.outgoingEmails?.hourToSendRecapEmail;
                 this.config.outgoingEmails.minuteToSendRecapEmail =
-                    defaultConfig?.outgoingEmails.minuteToSendRecapEmail;
+                    defaultConfig?.outgoingEmails?.minuteToSendRecapEmail;
                 this.config.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail =
-                    defaultConfig?.outgoingEmails.dayOfWeekToSendWeeklyRecapEmail;
-                this.config.outgoingEmails.dailyEmailTitle = defaultConfig?.outgoingEmails.dailyEmailTitle;
-                this.config.outgoingEmails.weeklyEmailTitle = defaultConfig?.outgoingEmails.weeklyEmailTitle;
-                this.config.outgoingEmails.dailyEmailBodyPrefix = defaultConfig?.outgoingEmails.dailyEmailBodyPrefix;
-                this.config.outgoingEmails.weeklyEmailBodyPrefix = defaultConfig?.outgoingEmails.weeklyEmailBodyPrefix;
-                this.config.outgoingEmails.subjectPrefix = defaultConfig?.outgoingEmails.subjectPrefix;
-                this.config.outgoingEmails.bodyPrefix = defaultConfig?.outgoingEmails.bodyPrefix;
-                this.config.outgoingEmails.bodyPostfix = defaultConfig?.outgoingEmails.bodyPostfix;
-                this.config.outgoingEmails.publisherEntityPrefix = defaultConfig?.outgoingEmails.publisherEntityPrefix;
-                this.config.outgoingEmails.opfabUrlInMailContent = defaultConfig?.outgoingEmails.opfabUrlInMailContent;
+                    defaultConfig?.outgoingEmails?.dayOfWeekToSendWeeklyRecapEmail;
+                this.config.outgoingEmails.dailyEmailTitle = defaultConfig?.outgoingEmails?.dailyEmailTitle;
+                this.config.outgoingEmails.weeklyEmailTitle = defaultConfig?.outgoingEmails?.weeklyEmailTitle;
+                this.config.outgoingEmails.dailyEmailBodyPrefix = defaultConfig?.outgoingEmails?.dailyEmailBodyPrefix;
+                this.config.outgoingEmails.weeklyEmailBodyPrefix = defaultConfig?.outgoingEmails?.weeklyEmailBodyPrefix;
+                this.config.outgoingEmails.subjectPrefix = defaultConfig?.outgoingEmails?.subjectPrefix;
+                this.config.outgoingEmails.bodyPrefix = defaultConfig?.outgoingEmails?.bodyPrefix;
+                this.config.outgoingEmails.bodyPostfix = defaultConfig?.outgoingEmails?.bodyPostfix;
+                this.config.outgoingEmails.publisherEntityPrefix = defaultConfig?.outgoingEmails?.publisherEntityPrefix;
+                this.config.outgoingEmails.opfabUrlInMailContent = defaultConfig?.outgoingEmails?.opfabUrlInMailContent;
                 this.config.outgoingEmails.windowInSecondsForCardSearch =
-                    defaultConfig?.outgoingEmails.windowInSecondsForCardSearch;
-                this.config.outgoingEmails.checkPeriodInSeconds = defaultConfig?.outgoingEmails.checkPeriodInSeconds;
+                    defaultConfig?.outgoingEmails?.windowInSecondsForCardSearch;
+                this.config.outgoingEmails.checkPeriodInSeconds = defaultConfig?.outgoingEmails?.checkPeriodInSeconds;
                 this.config.outgoingEmails.activateCardsDiffusionRateLimiter =
-                    defaultConfig?.outgoingEmails.activateCardsDiffusionRateLimiter;
-                this.config.outgoingEmails.sendRateLimit = defaultConfig?.outgoingEmails.sendRateLimit;
+                    defaultConfig?.outgoingEmails?.activateCardsDiffusionRateLimiter;
+                this.config.outgoingEmails.sendRateLimit = defaultConfig?.outgoingEmails?.sendRateLimit;
                 this.config.outgoingEmails.sendRateLimitPeriodInSec =
-                    defaultConfig?.outgoingEmails.sendRateLimitPeriodInSec;
-                this.config.outgoingEmails.customConfig = defaultConfig?.outgoingEmails.customConfig;
-                this.config.outgoingEmails.showCardUrls = defaultConfig?.outgoingEmails.showCardUrls;
+                    defaultConfig?.outgoingEmails?.sendRateLimitPeriodInSec;
+                this.config.outgoingEmails.customConfig = defaultConfig?.outgoingEmails?.customConfig;
+                this.config.outgoingEmails.showCardUrls = defaultConfig?.outgoingEmails?.showCardUrls;
                 this.config.outgoingEmails.forceEmailsInPlainText =
-                    defaultConfig?.outgoingEmails.forceEmailsInPlainText;
-                this.config.outgoingEmails.showCardTitleInBody = defaultConfig?.outgoingEmails.showCardTitleInBody;
-                this.config.outgoingEmails.defaultTimeZone = defaultConfig?.outgoingEmails.defaultTimeZone;
+                    defaultConfig?.outgoingEmails?.forceEmailsInPlainText;
+                this.config.outgoingEmails.showCardTitleInBody = defaultConfig?.outgoingEmails?.showCardTitleInBody;
+                this.config.outgoingEmails.defaultTimeZone = defaultConfig?.outgoingEmails?.defaultTimeZone;
                 this.save();
             }
         } catch (err) {

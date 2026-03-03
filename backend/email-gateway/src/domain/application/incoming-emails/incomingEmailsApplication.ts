@@ -29,7 +29,7 @@ export default class EmailToCardApplication {
     }
 
     public setMailboxes(mailboxes: any): void {
-        this.logger.info('Setting mailboxes : ' + JSON.stringify(mailboxes));
+        this.logger.debug('Setting mailboxes : ' + JSON.stringify(mailboxes));
         this.mailboxes = mailboxes;
     }
 
