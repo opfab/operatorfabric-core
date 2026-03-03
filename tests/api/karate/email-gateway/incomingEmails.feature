@@ -174,6 +174,8 @@ Feature: Send card when an email is received
     Given url opfabUrl + 'cards-consultation/cards/api_test.emailToCardTest'
     And header Authorization = 'Bearer ' + authToken
     And retry until responseStatus == 404
+    When method get
+    Then status 404
 
 
   Scenario: Delete perimeter perimeterKarateForEmailToCard created previously
