@@ -28,11 +28,13 @@ export class CardTemplateGateway {
     private static _functionToSendResponseUnlockToTemplate: Function;
     private static _functionToSendChildCardsToTemplate: Function;
     private static _functionToSendLttdExpiredToTemplate: Function;
+    private static _functionToSendResponseFromChildCardsSendingToTemplate: Function;
     private static _functionToSendScreenSizeToTemplate: Function;
     private static _functionToSendStyleChangeToTemplate: Function;
     private static _functionToSendTemplateRenderingCompleteToTemplate: Function;
 
     private static _functionToGetUserResponseFromTemplate: Function;
+
     private static _functionToEditCard: Function;
     private static _functionToSendDestroyToTemplate: Function;
 
@@ -58,6 +60,7 @@ export class CardTemplateGateway {
         CardTemplateGateway._functionToSendChildCardsToTemplate = (childCards: Card[]) => {};
         CardTemplateGateway._functionToSendDestroyToTemplate = () => {};
         CardTemplateGateway._functionToSendLttdExpiredToTemplate = (lttdExpired: boolean) => {};
+        CardTemplateGateway._functionToSendResponseFromChildCardsSendingToTemplate = (response: any) => {};
         CardTemplateGateway._functionToSendScreenSizeToTemplate = (size: string) => {};
         CardTemplateGateway._functionToSendStyleChangeToTemplate = () => {};
         CardTemplateGateway._functionToSendTemplateRenderingCompleteToTemplate = () => {};
@@ -144,6 +147,10 @@ export class CardTemplateGateway {
         CardTemplateGateway._functionToSendLttdExpiredToTemplate(expired);
     }
 
+    public static sendResponseFromChildCardsSendingToTemplate(response: any) {
+        CardTemplateGateway._functionToSendResponseFromChildCardsSendingToTemplate(response);
+    }
+
     public static sendResponseLockToTemplate() {
         CardTemplateGateway._functionToSendResponseLockToTemplate();
     }
@@ -215,6 +222,10 @@ export class CardTemplateGateway {
 
     public static setTemplateListenerForLttdExpired(listener: Function) {
         CardTemplateGateway._functionToSendLttdExpiredToTemplate = listener;
+    }
+
+    public static setTemplateListenerForResponseFromChildCardsSending(listener: Function) {
+        CardTemplateGateway._functionToSendResponseFromChildCardsSendingToTemplate = listener;
     }
 
     public static setTemplateListenerForResponseLock(listener: Function) {

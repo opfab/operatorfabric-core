@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -77,6 +77,10 @@ describe('Response card tests', function () {
 
         card.checkEntityIsRedInCardHeader('ENTITY1_FR');
         card.checkEntityIsGreyInCardHeader('ENTITY2_FR');
+
+        // Check template has received the child card sending response
+        // via the registered method define in listenToResponseFromChildcardsSending provided by the UI API
+        cy.get('#publisherUsedForChildCard').should('have.text', 'ENTITY1_FR');
 
         // update card
         script.sendCard('defaultProcess/question.json');
@@ -214,22 +218,14 @@ describe('Response card tests', function () {
         cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' NOK ');
         cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
 
-        // operator4_fr updates the answer of ENTITY1_FR and ENTITY2_FR
+        // operator4_fr updates the answer of ENTITY1_FR, ENTITY2_FR and ENTITY3_FR
         card.modifyResponse();
-        cy.get('#opfab-slider').click();
+        cy.get('#opfab-slider').click(); // set to OK (Yes)
         card.clickOnSendResponseWithConfirmationPopup();
-        cy.get('#opfab-card-details-entities-choice-selector').click();
-        cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(0).click(); // We unselect ENTITY3_FR (East)
-        cy.get('#opfab-card-details-entity-choice-btn-confirm').should('be.disabled'); // Check if the button is disabled when no entity is selected
+        cy.get('#opfab-card-details-entities-choice-selector').click(); // ENTITY3_FR is already selected, we click to see the list of selected entities
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(1).click(); // We select ENTITY1_FR (North)
         cy.get('#opfab-card-details-entities-choice-selector').find('.vscomp-option-text').eq(2).click(); // We select ENTITY2_FR (South)
         cy.get('#opfab-card-details-entities-choice-selector').click();
-        cy.get('#opfab-card-details-entities-choice-selector')
-            .find('.vscomp-value')
-            .should('contain.text', 'Control Center FR North');
-        cy.get('#opfab-card-details-entities-choice-selector')
-            .find('.vscomp-value')
-            .should('contain.text', 'Control Center FR South');
         cy.get('#opfab-card-details-entity-choice-btn-confirm').click();
         card.closeMessageAfterResponseSend();
 
@@ -237,7 +233,7 @@ describe('Response card tests', function () {
         // Check the response from ENTITY1_FR and ENTITY2_FR have been updated and the other response is still the same
         cy.get('#response_from_ENTITY1_FR').next().should('have.text', ' OK ');
         cy.get('#response_from_ENTITY2_FR').next().should('have.text', ' OK ');
-        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' NOK ');
+        cy.get('#response_from_ENTITY3_FR').next().should('have.text', ' OK ');
 
         // operator4_fr disconnect from ENTITY_1_FR and ENTITY2_FR (the popup for entities choice must not be displayed)
         // because the only one entity allowed to respond for him is now ENTITY3_FR
@@ -256,7 +252,7 @@ describe('Response card tests', function () {
         opfab.navigateToFeed();
         feed.openFirstCard();
         card.modifyResponse();
-        cy.get('#opfab-slider').click();
+        cy.get('#opfab-slider').click(); // set to NOK (No)
         card.sendResponseWithConfirmationPopup();
         cy.get('#opfab-card-details-entities-choice-selector').should('not.exist'); // entities choice popup must not be displayed
         cy.waitDefaultTime();

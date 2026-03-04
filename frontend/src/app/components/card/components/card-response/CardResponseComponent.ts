@@ -66,7 +66,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
     private entityChoiceModal: NgbModalRef;
     private userEntitiesAllowedToRespond = [];
     private userEntityOptionsDropdownList = [];
-    private userEntityIdToUseForResponse = '';
 
     public user: User;
     public multiSelectConfig: MultiSelectConfig = {
@@ -109,7 +108,6 @@ export class CardResponseComponent implements OnChanges, OnInit {
         this.isReadOnlyUser = UsersService.hasCurrentUserAnyPermission([PermissionEnum.READONLY]);
 
         this.showButton = this.cardState.response && !this.isReadOnlyUser;
-        this.userEntityIdToUseForResponse = this.userEntitiesAllowedToRespond[0];
         this.setButtonLabels();
         this.computeEntityOptionsDropdownListForResponse();
     }
@@ -145,32 +143,50 @@ export class CardResponseComponent implements OnChanges, OnInit {
 
         if (this.userEntitiesAllowedToRespond.length > 1 && !userResponse.responseCard.publisher)
             this.displayEntitiesChoicePopup();
-        else this.submitResponse();
+        else await this.submitResponse(this.userEntitiesAllowedToRespond[0]);
     }
 
     private displayEntitiesChoicePopup() {
-        this.userEntityIdToUseForResponse = '';
         this.selectEntitiesForm.get('entities').setValue(this.userEntityOptionsDropdownList[0].value);
         this.entityChoiceModal = this.modalService.open(this.chooseEntitiesForResponsePopupRef, {centered: true});
     }
 
-    private async submitResponse() {
-        const response = await CardTemplateGateway.getUserResponseFromTemplate(this.userEntityIdToUseForResponse);
+    private async submitResponse(userEntityIdToUseForResponse: string) {
+        const response = await CardTemplateGateway.getUserResponseFromTemplate(userEntityIdToUseForResponse);
 
         if (response.valid) {
-            const publisherEntity = response.responseCard.publisher ?? this.userEntityIdToUseForResponse;
+            const publisherEntity = response.responseCard.publisher ?? userEntityIdToUseForResponse;
             response.responseCard.publisher = publisherEntity;
             this.sendingResponseInProgress = true;
+            const currentCardId = this.card.id;
             CardResponseService.sendResponse(this.card, response.responseCard)
                 .then(() => {
                     this.sendingResponseInProgress = false;
                     this.isResponseLocked = true;
-                    CardTemplateGateway.sendResponseLockToTemplate();
+                    //  we check if the current card is still the same as when we submitted the response
+                    //  to avoid sending messages to the template if the user has navigated to another card in the meantime
+                    if (currentCardId === CardTemplateGateway.getCard().id) {
+                        CardTemplateGateway.sendResponseLockToTemplate();
+                        CardTemplateGateway.sendResponseFromChildCardsSendingToTemplate({
+                            publisher: publisherEntity,
+                            error: false,
+                            message: ''
+                        });
+                    }
                     this.displayMessage(ResponseI18nKeys.SUBMIT_SUCCESS_MSG, null, MessageLevel.INFO);
                 })
                 .catch((error) => {
                     this.sendingResponseInProgress = false;
                     logger.error(error);
+                    //  we check if the current card is still the same as when we submitted the response
+                    //  to avoid sending messages to the template if the user has navigated to another card in the meantime
+                    if (currentCardId === CardTemplateGateway.getCard().id) {
+                        CardTemplateGateway.sendResponseFromChildCardsSendingToTemplate({
+                            publisher: publisherEntity,
+                            error: true,
+                            message: error.message
+                        });
+                    }
                     this.displayMessage(ResponseI18nKeys.SUBMIT_ERROR_MSG, null, MessageLevel.ERROR);
                 });
         } else {
@@ -184,13 +200,12 @@ export class CardResponseComponent implements OnChanges, OnInit {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
 
-    public submitEntitiesChoice() {
+    public async submitEntitiesChoice() {
         this.entityChoiceModal.dismiss();
 
-        this.getSelectedEntities().forEach((selectedEntity) => {
-            this.userEntityIdToUseForResponse = selectedEntity;
-            this.submitResponse();
-        });
+        for (const selectedEntity of this.getSelectedEntities()) {
+            await this.submitResponse(selectedEntity);
+        }
     }
 
     public getSelectedEntities() {
