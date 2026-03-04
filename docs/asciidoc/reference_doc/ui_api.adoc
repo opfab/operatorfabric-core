@@ -282,6 +282,21 @@ Register a function to listen for template destruction (i.e., when a card is rem
 
 Only one listener can be registered at a time. If you register another listener, the previous listener will not receive events.
 
+
+=== Function listenToResponseFromChildcardsSending
+
+Register a function that will be called after a child card (or response card) has been sent. The function will receive as parameter an object with the following fields:
+ - error: boolean indicating if an error occurred during the sending of the child card
+ - message: in case of error, the error message 
+ - publisher: the entity on behalf of which the child card has been sent
+
+``` 
+    opfab.currentCard.listenToResponseFromChildcardsSending((response) => {
+         console.log("Response from child card sending: ", response);
+    });
+```
+
+
 === Function listenToResponseLock
 
 Register a function to be informed when the template is locked (i.e. user has responded to the current card)
