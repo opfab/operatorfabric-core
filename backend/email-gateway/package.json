@@ -31,7 +31,7 @@
         "jsdom": "27.0.0",
         "jwks-rsa": "4.0.1",
         "jwt-decode": "4.0.0",
-        "mailparser": "3.9.0",
+        "mailparser": "3.9.3",
         "mongodb": "7.1.0",
         "nodemailer": "8.0.1",
         "quill": "2.0.3",
