@@ -22,6 +22,7 @@ import {resetServices, setUserPerimeter} from '@tests/helpers';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {ApplicationRouterMock} from '@tests/mocks/applicationRouter.mock';
+import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 
 declare const opfabStyle;
 
@@ -814,6 +815,158 @@ describe('NavbarMenuView', () => {
             ConfigService.setConfigValue('settings.locale', 'fr');
             expect(listenerHasBeenCalled).toBeTruthy();
             navbarMenuView.destroy();
+        });
+    });
+
+    describe('UI Menu Config Change', () => {
+        it('should update menu elements when UI menu config changes', async () => {
+            // Initial menu config
+            await stubMenuConfigLoading({
+                navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}],
+                topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}],
+                topRightIconMenus: [{opfabCoreMenuId: 'calendar', visible: false}]
+            });
+            const navbarMenuView = new NavbarMenuView();
+            let navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
+            let rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
+            expect(navBarMenuElements.length).toEqual(2);
+            expect(navBarMenuElements[0].id).toEqual('feed');
+            expect(rightMenuElements.length).toEqual(1);
+            expect(navbarMenuView.getNavbarMenu().isCalendarIconVisible).toBeFalsy();
+
+            // Setup listener to verify menu change occurs
+            navbarMenuView.setMenuChangeListener(() => {
+                // Verify menus have been updated
+                navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
+                rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
+                expect(navBarMenuElements.length).toEqual(3);
+                expect(navBarMenuElements[0].id).toEqual('feed');
+                expect(navBarMenuElements[1].id).toEqual('archives');
+                expect(navBarMenuElements[2].id).toEqual('logging');
+                expect(rightMenuElements.length).toEqual(2);
+                expect(rightMenuElements[0].id).toEqual('realtimeusers');
+                expect(rightMenuElements[1].id).toEqual('settings');
+                expect(navbarMenuView.getNavbarMenu().isCalendarIconVisible).toBeTruthy();
+                navbarMenuView.destroy();
+            });
+
+            // Simulate UI menu config change
+            const newMenuConfig = {
+                navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives'}, {opfabCoreMenuId: 'logging'}],
+                topRightMenus: [
+                    {opfabCoreMenuId: 'realtimeusers', visible: true},
+                    {opfabCoreMenuId: 'settings', visible: true}
+                ],
+                topRightIconMenus: [{opfabCoreMenuId: 'calendar', visible: true}]
+            };
+            const configServerMock = new ConfigServerMock();
+            configServerMock.setResponseForMenuConfiguration(
+                new ServerResponse(newMenuConfig, ServerResponseStatus.OK, null)
+            );
+            ConfigService.setConfigServer(configServerMock);
+            await firstValueFrom(ConfigService.loadUiMenuConfig());
+
+            // Trigger the event
+            ApplicationEventsService.setUiMenuConfigChange();
+        });
+
+        it('should update upper menu elements visibility when config changes', async () => {
+            await stubMenuConfigLoading({
+                navigationBar: [{opfabCoreMenuId: 'feed'}]
+            });
+            await stubCurrentUserData(['groupA']);
+            const navbarMenuView = new NavbarMenuView();
+            let navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
+            expect(navBarMenuElements.length).toEqual(1);
+
+            navbarMenuView.setMenuChangeListener(() => {
+                navBarMenuElements = navbarMenuView.getNavbarMenu().upperMenuElements;
+                expect(navBarMenuElements.length).toEqual(2);
+                expect(navBarMenuElements[1].id).toEqual('archives');
+                navbarMenuView.destroy();
+            });
+
+            // Change menu config to add a menu visible only for groupA
+            const newMenuConfig = {
+                navigationBar: [{opfabCoreMenuId: 'feed'}, {opfabCoreMenuId: 'archives', showOnlyForGroups: ['groupA']}]
+            };
+            const configServerMock = new ConfigServerMock();
+            configServerMock.setResponseForMenuConfiguration(
+                new ServerResponse(newMenuConfig, ServerResponseStatus.OK, null)
+            );
+            ConfigService.setConfigServer(configServerMock);
+            await firstValueFrom(ConfigService.loadUiMenuConfig());
+
+            ApplicationEventsService.setUiMenuConfigChange();
+        });
+
+        it('should update right menu elements when config changes', async () => {
+            await stubMenuConfigLoading({
+                navigationBar: [],
+                topRightMenus: [{opfabCoreMenuId: 'realtimeusers', visible: true}]
+            });
+            const navbarMenuView = new NavbarMenuView();
+            let rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
+            expect(rightMenuElements.length).toEqual(1);
+            expect(rightMenuElements[0].id).toEqual('realtimeusers');
+
+            navbarMenuView.setMenuChangeListener(() => {
+                rightMenuElements = navbarMenuView.getNavbarMenu().rightMenuElements;
+                expect(rightMenuElements.length).toEqual(2);
+                expect(rightMenuElements[0].id).toEqual('realtimeusers');
+                expect(rightMenuElements[1].id).toEqual('feedconfiguration');
+                navbarMenuView.destroy();
+            });
+
+            // Add a new right menu
+            const newMenuConfig = {
+                navigationBar: [],
+                topRightMenus: [
+                    {opfabCoreMenuId: 'realtimeusers', visible: true},
+                    {opfabCoreMenuId: 'feedconfiguration', visible: true}
+                ]
+            };
+            const configServerMock = new ConfigServerMock();
+            configServerMock.setResponseForMenuConfiguration(
+                new ServerResponse(newMenuConfig, ServerResponseStatus.OK, null)
+            );
+            ConfigService.setConfigServer(configServerMock);
+            await firstValueFrom(ConfigService.loadUiMenuConfig());
+
+            ApplicationEventsService.setUiMenuConfigChange();
+        });
+
+        it('should update icon visibility when config changes', async () => {
+            await stubMenuConfigLoading({
+                navigationBar: [],
+                topRightIconMenus: [{opfabCoreMenuId: 'calendar', visible: false}]
+            });
+            const navbarMenuView = new NavbarMenuView();
+            expect(navbarMenuView.getNavbarMenu().isCalendarIconVisible).toBeFalsy();
+            expect(navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible).toBeFalsy();
+
+            navbarMenuView.setMenuChangeListener(() => {
+                expect(navbarMenuView.getNavbarMenu().isCalendarIconVisible).toBeTruthy();
+                expect(navbarMenuView.getNavbarMenu().isCreateUserCardIconVisible).toBeTruthy();
+                navbarMenuView.destroy();
+            });
+
+            // Change icon visibility
+            const newMenuConfig = {
+                navigationBar: [],
+                topRightIconMenus: [
+                    {opfabCoreMenuId: 'calendar', visible: true},
+                    {opfabCoreMenuId: 'usercard', visible: true}
+                ]
+            };
+            const configServerMock = new ConfigServerMock();
+            configServerMock.setResponseForMenuConfiguration(
+                new ServerResponse(newMenuConfig, ServerResponseStatus.OK, null)
+            );
+            ConfigService.setConfigServer(configServerMock);
+            await firstValueFrom(ConfigService.loadUiMenuConfig());
+
+            ApplicationEventsService.setUiMenuConfigChange();
         });
     });
 });

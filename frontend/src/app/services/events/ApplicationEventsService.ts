@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,6 +11,7 @@ import {Observable, Subject} from 'rxjs';
 
 export class ApplicationEventsService {
     private static readonly configChangeEvent = new Subject<void>();
+    private static readonly uiMenuConfigChangeEvent = new Subject<void>();
 
     public static setUserConfigChange() {
         this.configChangeEvent.next();
@@ -18,5 +19,13 @@ export class ApplicationEventsService {
 
     public static getUserConfigChanges(): Observable<void> {
         return this.configChangeEvent.asObservable();
+    }
+
+    public static setUiMenuConfigChange() {
+        this.uiMenuConfigChangeEvent.next();
+    }
+
+    public static getUiMenuConfigChanges(): Observable<void> {
+        return this.uiMenuConfigChangeEvent.asObservable();
     }
 }
