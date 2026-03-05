@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,6 +20,7 @@ import {OpfabEventStreamService} from './OpfabEventStreamService';
 import {ProcessesService} from '../processes/ProcessesService';
 import {BusinessDataService} from '../businessdata/businessdata.service';
 import {ConfigService} from '../config/ConfigService';
+import {TranslationService} from '@ofServices/translation/TranslationService';
 
 export class ApplicationUpdateService {
     public static init() {
@@ -27,6 +28,7 @@ export class ApplicationUpdateService {
         ApplicationUpdateService.listenForUserConfigUpdate();
         ApplicationUpdateService.listenForBusinessDataUpdate();
         ApplicationUpdateService.listenForMonitoringConfigUpdate();
+        ApplicationUpdateService.listenForUiMenuConfigUpdate();
     }
 
     private static listenForBusinessConfigUpdate() {
@@ -83,5 +85,25 @@ export class ApplicationUpdateService {
             logger.info(`Update monitoring configuration`, LogOption.LOCAL_AND_REMOTE);
             ConfigService.loadProcessMonitoringConfig().subscribe();
         });
+    }
+
+    private static listenForUiMenuConfigUpdate() {
+        OpfabEventStreamService.getUiMenuConfigChangeRequests()
+            .pipe(
+                debounce(() => timer(5000 + Math.floor(Math.random() * 5000))), // use a random part to avoid all UI to access at the same time the server
+                switchMap(() => {
+                    logger.info('Update UI menu configuration', LogOption.LOCAL_AND_REMOTE);
+                    return ConfigService.loadUiMenuConfig();
+                }),
+                map(() => {
+                    TranslationService.loadTranslationForMenu();
+                    return ApplicationEventsService.setUiMenuConfigChange();
+                }),
+                catchError((error, caught) => {
+                    logger.error('Error in update UI menu config ', error);
+                    return caught;
+                })
+            )
+            .subscribe();
     }
 }

@@ -33,7 +33,7 @@ export class TranslationService {
     }
 
     public static setLang(lang: string) {
-        this.translationLib.setLang(lang);
+        this.translationLib.setCurrentLang(lang);
     }
 
     public static getTranslation(key: string, params?: Object): string {
@@ -53,7 +53,7 @@ export class TranslationService {
         } else {
             this._locale = 'en';
         }
-        this.translationLib.setLang(this._locale);
+        this.translationLib.setCurrentLang(this._locale);
         this.setTranslationForRichTextEditor();
     }
 
@@ -114,6 +114,7 @@ export class TranslationService {
             locales.forEach((locale) => {
                 this.translationLib.setTranslation(locale.language, locale.localizedContent, true);
             });
+            ConfigService.setConfigValue('settings.locale', this._locale); // to trigger the update of translations in the UI with the new loaded translations
         });
 
         catchError((err, caught) => {

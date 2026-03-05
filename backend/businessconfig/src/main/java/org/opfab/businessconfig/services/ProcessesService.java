@@ -457,7 +457,7 @@ public class ProcessesService implements ResourceLoaderAware {
 
         this.uiMenuCache = newUIMenu;
 
-        pushProcessChangeInEventBus();
+        eventBus.sendEvent(PROCESS_EVENT_KEY, "UIMENU_CONFIG_CHANGE");
     }
 
 

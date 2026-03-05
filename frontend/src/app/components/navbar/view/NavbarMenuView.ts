@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,6 +14,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {GlobalStyleService} from '@ofServices/style/global-style.service';
 import {Subject, skip, takeUntil} from 'rxjs';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {ApplicationEventsService} from '@ofServices/events/ApplicationEventsService';
 
 export class NavbarMenuView {
     private static readonly ADMIN_MENUS = ['admin', 'externaldevicesconfiguration'];
@@ -34,6 +35,7 @@ export class NavbarMenuView {
         this.computeRightMenuElements();
         this.computeRightMenuCollapsedElements();
         this.reComputeTranslations();
+        this.listenForUiMenuConfigChanges();
     }
 
     private computeUpperMenuElements(): void {
@@ -123,6 +125,8 @@ export class NavbarMenuView {
     }
 
     private computeRightIconsVisibility(): void {
+        this.navbarMenu.isCalendarIconVisible = false;
+        this.navbarMenu.isCreateUserCardIconVisible = false;
         ConfigService.getMenuConfig().topRightIconMenus?.forEach((menuElementConfig: any) => {
             if (
                 menuElementConfig?.opfabCoreMenuId &&
@@ -181,6 +185,18 @@ export class NavbarMenuView {
             .pipe(takeUntil(this.destroy$), skip(1))
             .subscribe(() => {
                 this.computeUpperMenuElements();
+                this.computeRightMenuElements();
+                this.computeRightMenuCollapsedElements();
+                if (this.menuChangeListener) this.menuChangeListener();
+            });
+    }
+
+    private listenForUiMenuConfigChanges(): void {
+        ApplicationEventsService.getUiMenuConfigChanges()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                this.computeUpperMenuElements();
+                this.computeRightIconsVisibility();
                 this.computeRightMenuElements();
                 this.computeRightMenuCollapsedElements();
                 if (this.menuChangeListener) this.menuChangeListener();

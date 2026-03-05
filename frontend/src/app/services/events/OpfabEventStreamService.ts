@@ -32,6 +32,7 @@ export class OpfabEventStreamService {
     private static readonly userSettingsChange = new Subject<void>();
     private static readonly businessDataChange = new Subject<void>();
     private static readonly processMonitoringConfigChange = new Subject<void>();
+    private static readonly uiMenuConfigChange = new Subject<void>();
 
     private static eventStreamClosed = false;
 
@@ -70,6 +71,10 @@ export class OpfabEventStreamService {
                     case 'PROCESSMONITORING_CONFIG_CHANGE':
                         OpfabEventStreamService.processMonitoringConfigChange.next();
                         logger.info(`EventStreamService - PROCESSMONITORING_CONFIG_CHANGE received`);
+                        break;
+                    case 'UIMENU_CONFIG_CHANGE':
+                        OpfabEventStreamService.uiMenuConfigChange.next();
+                        logger.info(`EventStreamService - UIMENU_CONFIG_CHANGE received`);
                         break;
                     case 'USER_CONFIG_CHANGE':
                         OpfabEventStreamService.userConfigChange.next();
@@ -217,6 +222,10 @@ export class OpfabEventStreamService {
 
     static getProcessMonitoringConfigChangeRequests(): Observable<void> {
         return OpfabEventStreamService.processMonitoringConfigChange.asObservable();
+    }
+
+    static getUiMenuConfigChangeRequests(): Observable<void> {
+        return OpfabEventStreamService.uiMenuConfigChange.asObservable();
     }
 
     static getLoadingInProgress(): Observable<boolean> {
