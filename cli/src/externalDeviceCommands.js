@@ -9,7 +9,6 @@
 
 const prompts = require('prompts');
 const utils = require('./utils');
-const fs = require('node:fs').promises;
 
 const externalDeviceCommands = {
     async processExternalDeviceCommand(args) {
@@ -74,7 +73,7 @@ const externalDeviceCommands = {
         if (!port) {
             return;
         }
-        if (isNaN(port)) {
+        if (Number.isNaN(Number(port))) {
             console.log('Port must be a number');
             return;
         }
