@@ -160,7 +160,7 @@ omelette('opfab')
     .init();
 
 (async () => {
-    if (args[0] === undefined) {
+    if (args[0] == undefined) {
         commands.printHelp();
     } else {
         config.loadConfig();
