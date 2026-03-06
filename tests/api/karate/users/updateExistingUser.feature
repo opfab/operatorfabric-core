@@ -28,6 +28,16 @@ Feature: Update existing user
 }
 """
 
+    * def operator1_frUpdate =
+"""
+{
+  "login" : "operator1_fr",
+  "firstName" : "new first name operator1_fr",
+  "lastName" : "lastname",
+  "comment" : "test"
+}
+
+"""
     * def fakeUser =
 """
 {
@@ -52,6 +62,13 @@ Feature: Update existing user
     When method put
     Then status 403
 
+  Scenario: update user own account without admin authentication
+
+    Given url opfabUrl + 'users/users/' + "operator1_fr"
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    And request operator1_frUpdate
+    When method put
+    Then status 403
 
   Scenario: update an existing user with a bad format request
 
