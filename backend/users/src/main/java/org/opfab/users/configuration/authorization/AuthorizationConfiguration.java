@@ -86,7 +86,7 @@ public class AuthorizationConfiguration {
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticated())
                         .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                        .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasAnyRole(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqual(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
