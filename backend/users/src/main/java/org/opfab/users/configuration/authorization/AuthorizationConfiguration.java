@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -86,7 +86,7 @@ public class AuthorizationConfiguration {
                         .requestMatchers(HttpMethod.GET, PROMETHEUS_PATH).permitAll()
                         .requestMatchers(HttpMethod.POST, USER_TOKEN_SYNCHRONIZATION_PATH).access(authenticated())
                         .requestMatchers(HttpMethod.GET, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
-                        .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
+                        .requestMatchers(HttpMethod.PUT, USER_PATH).access(hasAnyRole(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.DELETE, USER_PATH).access(hasRoleAndLoginNotEqual(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.GET, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
                         .requestMatchers(HttpMethod.PUT, USERS_SETTINGS_PATH).access(hasRoleOrLogin(ADMIN_ROLE))
