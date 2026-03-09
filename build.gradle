@@ -132,6 +132,7 @@ sonar {
           '**/tests/**',
           '**/model/**',
           '**/rabbit/**',
+          '**/mongo/**',
           '**/src/test/**',
           '**/test-utilities/**', 
           '**/repositories/**',
