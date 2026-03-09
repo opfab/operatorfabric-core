@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,9 +14,11 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.opfab.businessconfig.application.IntegrationTestApplication;
+import org.opfab.businessconfig.model.AcknowledgmentAllowedEnum;
 import org.opfab.businessconfig.model.Process;
 import org.opfab.businessconfig.model.ProcessGroup;
 import org.opfab.businessconfig.model.ProcessGroups;
+import org.opfab.businessconfig.model.TypeOfStateEnum;
 import org.opfab.utilities.PathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -90,6 +92,16 @@ class ProcessesServiceShould {
     void fetch() {
         Process firstProcess = service.fetch("first");
         assertThat(firstProcess).hasFieldOrPropertyWithValue("version", "v1");
+        assertThat(firstProcess.states()).hasSize(1);
+        System.out.println(firstProcess.states());
+        assertThat(firstProcess.states().get("firstState").name()).isEqualTo("Message");
+        assertThat(firstProcess.states().get("firstState").description()).isEqualTo("Message state");
+        assertThat(firstProcess.states().get("firstState").userCard().template()).isEqualTo("usercard_message");
+        assertThat(firstProcess.states().get("firstState").acknowledgmentAllowed())
+                .isEqualTo(AcknowledgmentAllowedEnum.ALWAYS);
+        assertThat(firstProcess.states().get("firstState").type()).isEqualTo(TypeOfStateEnum.FINISHED);
+        assertThat(firstProcess.states().get("firstState").email().bodyTemplate()).isEqualTo("templateMail");
+
     }
 
     @Test

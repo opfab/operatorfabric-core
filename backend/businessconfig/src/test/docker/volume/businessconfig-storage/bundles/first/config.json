@@ -1,13 +1,29 @@
 {
   "id": "first",
   "version": "v1",
+  "defaultLocale": "fr",
   "locales": [
     "fr",
     "en"
   ],
-  "states": {
-    "testState": {
-      "templateName": "template"
+    "states": {
+        "firstState": {
+            "name": "Message",
+            "description": "Message state",
+            "color": "#CC9900",
+            "userCard": {
+                "template": "usercard_message",
+                "endDateVisible": false,
+                "recipientForInformationVisible": true,
+                "publisherList": [{"id": "ENTITY_FR", "levels": [1]}]
+            },
+            "templateName": "template",
+            "email": {
+                "bodyTemplate": "templateMail"
+            },
+            "styles": ["style"],
+            "acknowledgmentAllowed": "Always",
+            "type": "FINISHED"
+        }
     }
-  }
 }
