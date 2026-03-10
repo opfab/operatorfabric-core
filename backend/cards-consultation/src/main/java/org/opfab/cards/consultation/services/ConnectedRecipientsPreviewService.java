@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,8 +29,8 @@ public class ConnectedRecipientsPreviewService {
     public List<String> getConnectedRecipients(Card lightcard) {
         List<String> connectedRecipients = new ArrayList<>();
 
-        List<String> cardRecipients = lightcard.entityRecipients;
-        List<String> cardRecipientsForInformation = lightcard.entityRecipientsForInformation;
+        List<String> cardRecipients = lightcard.entityRecipients != null ? lightcard.entityRecipients : new ArrayList<>();
+        List<String> cardRecipientsForInformation = lightcard.entityRecipientsForInformation != null ? lightcard.entityRecipientsForInformation : new ArrayList<>();
 
         List<String> cardTotalRecipients = new ArrayList<>(cardRecipients);
         cardTotalRecipients.addAll(cardRecipientsForInformation);
