@@ -44,7 +44,7 @@ public class ProcessRepositoryMock implements ProcessRepository  {
 
     private void setProcessAsString(String processAsString,String processVersion) {
             Process process = objectMapper.readValue(processAsString, Process.class);
-            processes.put(process.getId()+ "." + processVersion, process);
+            processes.put(process.id()+ "." + processVersion, process);
     }
 
     @Override

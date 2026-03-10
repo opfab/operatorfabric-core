@@ -6,111 +6,13 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
+
 package org.opfab.common.businessconfig;
 
-import java.util.Objects;
+import org.springframework.validation.annotation.Validated;
 
-public class Email {
+@Validated
+public record Email(String bodyTemplate, Boolean hideDefaultBodyPrefixAndPostfix, String sender,
+                    String cardFieldUsedForSubject) {
 
-    private String bodyTemplate;
-    private Boolean hideDefaultBodyPrefixAndPostfix = false;
-    private String sender;
-    private String cardFieldUsedForSubject;
-
-    public Email bodyTemplate(String bodyTemplate) {
-        this.bodyTemplate = bodyTemplate;
-        return this;
-    }
-
-    public String getBodyTemplate() {
-        return bodyTemplate;
-    }
-
-    public void setBodyTemplate(String bodyTemplate) {
-        this.bodyTemplate = bodyTemplate;
-    }
-
-    public Email hideDefaultBodyPrefixAndPostfix(Boolean hideDefaultBodyPrefixAndPostfix) {
-        this.hideDefaultBodyPrefixAndPostfix = hideDefaultBodyPrefixAndPostfix;
-        return this;
-    }
-
-    public Boolean getHideDefaultBodyPrefixAndPostfix() {
-        return hideDefaultBodyPrefixAndPostfix;
-    }
-
-    public void setHideDefaultBodyPrefixAndPostfix(Boolean hideDefaultBodyPrefixAndPostfix) {
-        this.hideDefaultBodyPrefixAndPostfix = hideDefaultBodyPrefixAndPostfix;
-    }
-
-    public Email sender(String sender) {
-        this.sender = sender;
-        return this;
-    }
-
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public Email cardFieldUsedForSubject(String cardFieldUsedForSubject) {
-        this.cardFieldUsedForSubject = cardFieldUsedForSubject;
-        return this;
-    }
-
-    public String getCardFieldUsedForSubject() {
-        return cardFieldUsedForSubject;
-    }
-
-    public void setCardFieldUsedForSubject(String cardFieldUsedForSubject) {
-        this.cardFieldUsedForSubject = cardFieldUsedForSubject;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Email email = (Email) o;
-        return Objects.equals(this.bodyTemplate, email.bodyTemplate) &&
-                Objects.equals(this.hideDefaultBodyPrefixAndPostfix, email.hideDefaultBodyPrefixAndPostfix) &&
-                Objects.equals(this.sender, email.sender) &&
-                Objects.equals(this.cardFieldUsedForSubject, email.cardFieldUsedForSubject);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(bodyTemplate, hideDefaultBodyPrefixAndPostfix, sender, cardFieldUsedForSubject);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class Email {\n");
-
-        sb.append("    bodyTemplate: ").append(toIndentedString(bodyTemplate)).append("\n");
-        sb.append("    hideDefaultBodyPrefixAndPostfix: ").append(toIndentedString(hideDefaultBodyPrefixAndPostfix))
-                .append("\n");
-        sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
-        sb.append("    cardFieldUsedForSubject: ").append(toIndentedString(cardFieldUsedForSubject)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
 }
