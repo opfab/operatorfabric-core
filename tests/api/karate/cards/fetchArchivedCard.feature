@@ -67,7 +67,8 @@ Feature: fetchArchive
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process_archive_1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process_archive_1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -128,7 +129,8 @@ Feature: fetchArchive
 
 
 #get card with user operator1_fr
-        Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+        Given url opfabUrl + 'cards-consultation/cards'
+        And param cardId = 'api_test.process1'
         And header Authorization = 'Bearer ' + authToken
         When method get
         Then status 200

@@ -39,10 +39,7 @@
         "name": "realtime screen",
         "description": "Realtime screen configuration",
       },
-      {
-        "name": "UI menu",
-        "description": "UI menu configuration",
-      }
+      { "name": "UI menu", "description": "UI menu configuration" },
     ],
   "paths":
     {
@@ -54,16 +51,17 @@
                 "in": "path",
                 "name": "id",
                 "required": true,
-                "description": "The id parameter is constructed as follows : {process}.{processInstanceId}",
+                "description": "DEPRECATED: Use /cards-consultation/cards?cardId={id} instead. The id parameter is constructed as follows : {process}.{processInstanceId}. Note: This endpoint has issues with special characters, particularly slashes, even when URL-encoded.",
                 "schema": { "type": "string" },
               },
             ],
           "get":
             {
-              "operationId": "getCard",
+              "deprecated": true,
+              "operationId": "getCardDeprecated",
               "tags": ["cards consultation"],
-              "summary": "Get card",
-              "description": "Get card with its id",
+              "summary": "Get card (DEPRECATED)",
+              "description": "DEPRECATED: Use GET /cards-consultation/cards?cardId={id} instead. This endpoint is deprecated because it cannot properly handle card IDs containing slashes (/) even when URL-encoded. Get card with its id",
               "responses":
                 {
                   "200":
@@ -98,11 +96,65 @@
                     {
                       "description": "Forbidden - User doesn't have any group",
                     },
+                  "404": { "description": "Card not found" },
                 },
             },
         },
       "/cards-consultation/cards":
         {
+          "get":
+            {
+              "operationId": "getCardByQueryParam",
+              "tags": ["cards consultation"],
+              "summary": "Get card by ID (query parameter)",
+              "description": "Get card with its id passed as a query parameter. This endpoint properly handles card IDs with special characters including slashes.",
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "cardId",
+                    "required": true,
+                    "description": "The card ID constructed as follows : {process}.{processInstanceId}. This parameter handles all special characters including slashes.",
+                    "schema": { "type": "string" },
+                  },
+                ],
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "OK",
+                      "content":
+                        {
+                          "*/*":
+                            {
+                              "schema":
+                                {
+                                  "type": "object",
+                                  "properties":
+                                    {
+                                      "card":
+                                        { "$ref": "#/components/schemas/Card" },
+                                      "childCards":
+                                        {
+                                          "type": "array",
+                                          "items":
+                                            {
+                                              "$ref": "#/components/schemas/Card",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                  "401": { "description": "Authentication required" },
+                  "403":
+                    {
+                      "description": "Forbidden - User doesn't have any group",
+                    },
+                  "404": { "description": "Card not found" },
+                },
+            },
           "post":
             {
               "tags": ["cards consultation"],
@@ -403,16 +455,38 @@
             {
               "tags": ["cards publication"],
               "summary": "Delete cards",
-              "description": "Delete cards from OperatorFabric where card endDate is before the specified date or where  card has no endDate and startDate is before the specified date.",
+              "description": "Delete cards from OperatorFabric. Two modes: 1) Delete a specific card by providing 'cardId' parameter (properly handles special characters including slashes), 2) Bulk delete cards by providing 'endDateBefore' parameter to delete cards where endDate is before the specified date or where card has no endDate and startDate is before the specified date.",
               "operationId": "deleteCards",
               "parameters":
                 [
-                  { "in": "query", "schema": { "type": "string" } },
-                  { "name": "endDateBefore", "schema": { "type": "string" } },
-                  {},
-                  { "required": true },
+                  {
+                    "in": "query",
+                    "name": "cardId",
+                    "description": "The card ID to delete, constructed as follows : {process}.{processInstanceId}. This parameter handles all special characters including slashes. Mutually exclusive with endDateBefore.",
+                    "schema": { "type": "string" },
+                    "required": false,
+                  },
+                  {
+                    "in": "query",
+                    "name": "endDateBefore",
+                    "description": "Delete all cards where endDate is before this timestamp, or where card has no endDate and startDate is before this timestamp. Mutually exclusive with cardId.",
+                    "schema": { "type": "string" },
+                    "required": false,
+                  },
                 ],
-              "responses": { "200": { "description": "OK" } },
+              "responses":
+                {
+                  "200": { "description": "OK" },
+                  "401": { "description": "Authentication required" },
+                  "403":
+                    {
+                      "description": "Forbidden - User not allowed to delete this card(s)",
+                    },
+                  "404":
+                    {
+                      "description": "Card not found (when using cardId parameter)",
+                    },
+                },
             },
         },
       "/cards-publication/cards/{id}":
@@ -423,37 +497,120 @@
                 "in": "path",
                 "name": "id",
                 "required": true,
-                "description": "The id parameter is constructed as follows : {process}.{processInstanceId}",
+                "description": "DEPRECATED: Use DELETE /cards-publication/cards?cardId={id} instead. The id parameter is constructed as follows : {process}.{processInstanceId}. Note: This endpoint has issues with special characters, particularly slashes, even when URL-encoded.",
                 "schema": { "type": "string" },
               },
             ],
           "delete":
             {
-              "operationId": "deleteCard",
+              "deprecated": true,
+              "operationId": "deleteCardDeprecated",
               "tags": ["cards publication"],
-              "summary": "Delete a card",
-              "description": "Delete a card",
-              "responses": { "200": { "description": "OK" } },
+              "summary": "Delete a card (DEPRECATED)",
+              "description": "DEPRECATED: Use DELETE /cards-publication/cards?cardId={id} instead. This endpoint is deprecated because it cannot properly handle card IDs containing slashes (/) even when URL-encoded.",
+              "responses":
+                {
+                  "200": { "description": "OK" },
+                  "404": { "description": "Card not found" },
+                },
             },
         },
-      "/cards-publication/cards/userAcknowledgement/{uid}":
+      "/cards-publication/cards/userCard/{id}":
         {
           "parameters":
             [
               {
                 "in": "path",
-                "name": "uid",
+                "name": "id",
                 "required": true,
-                "description": "The card uid",
+                "description": "DEPRECATED: Use DELETE /cards-publication/cards/userCard?cardId={id} instead. The id parameter is constructed as follows : {process}.{processInstanceId}. Note: This endpoint has issues with special characters, particularly slashes, even when URL-encoded.",
                 "schema": { "type": "string" },
               },
             ],
+          "delete":
+            {
+              "deprecated": true,
+              "operationId": "deleteUserCardDeprecated",
+              "tags": ["cards publication"],
+              "summary": "Delete a user card (DEPRECATED)",
+              "description": "DEPRECATED: Use DELETE /cards-publication/cards/userCard?cardId={id} instead. This endpoint is deprecated because it cannot properly handle card IDs containing slashes (/) even when URL-encoded.",
+              "responses":
+                {
+                  "200": { "description": "OK" },
+                  "403":
+                    {
+                      "description": "Forbidden - User not allowed to delete this card",
+                    },
+                  "404": { "description": "Card not found" },
+                },
+            },
+        },
+      "/cards-publication/cards/userCard":
+        {
+          "delete":
+            {
+              "operationId": "deleteUserCardByQueryParam",
+              "tags": ["cards publication"],
+              "summary": "Delete a user card by ID (query parameter)",
+              "description": "Delete a user card with its id passed as a query parameter. This endpoint properly handles card IDs with special characters including slashes. Only the card owner or users with proper permissions can delete the card.",
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "cardId",
+                    "required": true,
+                    "description": "The card ID constructed as follows : {process}.{processInstanceId}. This parameter handles all special characters including slashes.",
+                    "schema": { "type": "string" },
+                  },
+                ],
+              "responses":
+                {
+                  "200": { "description": "OK" },
+                  "403":
+                    {
+                      "description": "Forbidden - User not allowed to delete this card",
+                    },
+                  "404": { "description": "Card not found" },
+                },
+            },
+        },
+      "/cards-publication/cards/userAcknowledgement":
+        {
           "post":
             {
               "operationId": "postUserAcknowledgement",
               "tags": ["cards publication"],
               "summary": "Update current card adding a user acknowledgement",
-              "description": "Update current card users acknowledgements, adding a new item, by card id and authenticated user",
+              "description": "Update current card users acknowledgements, adding a new item, by card uid and authenticated user",
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "type": "object",
+                              "properties":
+                                {
+                                  "cardUid":
+                                    {
+                                      "type": "string",
+                                      "description": "The card uid",
+                                    },
+                                  "entitiesAcks":
+                                    {
+                                      "type": "array",
+                                      "items": { "type": "string" },
+                                      "description": "List of entity IDs",
+                                    },
+                                },
+                              "required": ["cardUid", "entitiesAcks"],
+                            },
+                        },
+                    },
+                },
               "responses":
                 {
                   "200":
@@ -468,24 +625,43 @@
                 },
             },
         },
-      "/cards-publication/cards/cancelUserAcknowledgement/{uid}":
+      "/cards-publication/cards/cancelUserAcknowledgement":
         {
-          "parameters":
-            [
-              {
-                "in": "path",
-                "name": "uid",
-                "required": true,
-                "description": "The card uid",
-                "schema": { "type": "string" },
-              },
-            ],
           "post":
             {
               "operationId": "deleteUserAcknowledgement",
               "tags": ["cards publication"],
               "summary": "Update current card removing a user acknowledgement",
-              "description": "Update current card users acknowledgements, removing an item, by card id and authenticated user",
+              "description": "Update current card users acknowledgements, removing an item, by card uid and authenticated user",
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "type": "object",
+                              "properties":
+                                {
+                                  "cardUid":
+                                    {
+                                      "type": "string",
+                                      "description": "The card uid",
+                                    },
+                                  "entitiesAcks":
+                                    {
+                                      "type": "array",
+                                      "items": { "type": "string" },
+                                      "description": "List of entity IDs",
+                                    },
+                                },
+                              "required": ["cardUid", "entitiesAcks"],
+                            },
+                        },
+                    },
+                },
               "responses":
                 {
                   "200": { "description": "Item removed" },
@@ -497,24 +673,37 @@
                 },
             },
         },
-      "/cards-publication/cards/userCardRead/{uid}":
+      "/cards-publication/cards/userCardRead":
         {
-          "parameters":
-            [
-              {
-                "in": "path",
-                "name": "uid",
-                "required": true,
-                "description": "The card uid",
-                "schema": { "type": "string" },
-              },
-            ],
           "post":
             {
               "operationId": "postUserRead",
               "tags": ["cards publication"],
               "summary": "Update current card adding a user read",
-              "description": "Update current card users reads, adding a new item, by card id and authenticated user",
+              "description": "Update current card users reads, adding a new item, by card uid and authenticated user",
+              "requestBody":
+                {
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "type": "object",
+                              "properties":
+                                {
+                                  "cardUid":
+                                    {
+                                      "type": "string",
+                                      "description": "The card uid",
+                                    },
+                                },
+                              "required": ["cardUid"],
+                            },
+                        },
+                    },
+                },
               "responses":
                 {
                   "200":
@@ -533,7 +722,17 @@
               "operationId": "deleteUserRead",
               "tags": ["cards publication"],
               "summary": "Update current card removing a user read",
-              "description": "Update current card users reads, removing an item, by card id and authenticated user",
+              "description": "Update current card users reads, removing an item, by card uid and authenticated user",
+              "parameters":
+                [
+                  {
+                    "in": "query",
+                    "name": "cardUid",
+                    "required": true,
+                    "description": "The card uid",
+                    "schema": { "type": "string" },
+                  },
+                ],
               "responses":
                 {
                   "200":
@@ -548,24 +747,38 @@
                 },
             },
         },
-      "/cards-publication/cards/resetReadAndAcks/{uid}":
+      "/cards-publication/cards/resetReadAndAcks":
         {
-          "parameters":
-            [
-              {
-                "in": "path",
-                "name": "uid",
-                "required": true,
-                "description": "The card uid",
-                "schema": { "type": "string" },
-              },
-            ],
           "post":
             {
               "operationId": "resetReadAndAcks",
               "tags": ["cards publication"],
               "summary": "Update current card removing acknowledgements and reads",
               "description": "Update current card removing acknowledgements and reads, send the card with updated publishDate",
+              "requestBody":
+                {
+                  "description": "Card uid",
+                  "required": true,
+                  "content":
+                    {
+                      "application/json":
+                        {
+                          "schema":
+                            {
+                              "type": "object",
+                              "properties":
+                                {
+                                  "cardUid":
+                                    {
+                                      "type": "string",
+                                      "description": "The card uid",
+                                    },
+                                },
+                              "required": ["cardUid"],
+                            },
+                        },
+                    },
+                },
               "responses":
                 {
                   "200":
@@ -3222,7 +3435,7 @@
             {
               "summary": "Get the UI menu config",
               "description": "Get the UI menu config",
-              "tags": [ "UI menu" ],
+              "tags": ["UI menu"],
               "operationId": "getUIMenu",
               "responses":
                 {
@@ -3234,9 +3447,7 @@
                           "application/json":
                             {
                               "schema":
-                                {
-                                  "$ref": "#/components/schemas/UIMenu",
-                                },
+                                { "$ref": "#/components/schemas/UIMenu" },
                             },
                         },
                     },
@@ -3247,7 +3458,7 @@
             {
               "summary": "Upload file defining the config of UI menu",
               "description": "Upload file defining the config of UI menu. This file must be in json format and is saved to disk, under the name 'uimenu.json'.",
-              "tags": [ "UI menu" ],
+              "tags": ["UI menu"],
               "operationId": "uploadUIMenu",
               "requestBody":
                 { "$ref": "#/components/requestBodies/uploadBundle" },
@@ -4618,13 +4829,15 @@
                       "type": "string",
                       "description": "Email address to use as recipient for email notifications",
                     },
-                  "emailAttachmentTemplate": {
+                  "emailAttachmentTemplate":
+                    {
                       "type": "string",
                       "description": "Name of the handlebar template to use to build the email's attachement",
                     },
-                    "emailAttachmentFileName": {
+                  "emailAttachmentFileName":
+                    {
                       "type": "string",
-                      "description": "Name of the attachement file in the email"
+                      "description": "Name of the attachement file in the email",
                     },
                   "timezoneForEmails":
                     {
@@ -4904,8 +5117,7 @@
                                   "description": "Name of the template to use",
                                   "type": "string",
                                 },
-                              "email":
-                                { "$ref": "#/components/schemas/Email" },
+                              "email": { "$ref": "#/components/schemas/Email" },
                               "styles":
                                 {
                                   "description": "Name of the css files to apply",
@@ -5092,123 +5304,145 @@
                   "navigationBar":
                     {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/NavigationBarItem" }
+                      "items":
+                        { "$ref": "#/components/schemas/NavigationBarItem" },
                     },
                   "topRightIconMenus":
                     {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/TopRightIconMenu" }
+                      "items":
+                        { "$ref": "#/components/schemas/TopRightIconMenu" },
                     },
                   "topRightMenus":
                     {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/TopRightMenu" }
+                      "items": { "$ref": "#/components/schemas/TopRightMenu" },
                     },
                   "locales":
                     {
                       "type": "array",
-                      "items": { "$ref": "#/components/schemas/LocaleConfig" }
-                   }
-                }
+                      "items": { "$ref": "#/components/schemas/LocaleConfig" },
+                    },
+                },
             },
-          "NavigationBarItem": {
-            "description": "Represents an item in the navigation bar (core menu or custom menu)",
-            "oneOf": [
-              { "$ref": "#/components/schemas/CoreMenuItem" },
-              { "$ref": "#/components/schemas/CustomMenuItem" }
-            ]
-          },
-          "CoreMenuItem": {
-            "type": "object",
-            "properties": {
-              "opfabCoreMenuId": { "type": "string" },
-              "showOnlyForGroups": {
-                "type": "array",
-                "items": { "type": "string" }
-              }
+          "NavigationBarItem":
+            {
+              "description": "Represents an item in the navigation bar (core menu or custom menu)",
+              "oneOf":
+                [
+                  { "$ref": "#/components/schemas/CoreMenuItem" },
+                  { "$ref": "#/components/schemas/CustomMenuItem" },
+                ],
             },
-            "required": [ "opfabCoreMenuId" ]
-          },
-          "CustomMenuItem": {
-            "type": "object",
-            "properties": {
-              "id": { "type": "string" },
-              "label": { "type": "string" },
-              "entries": {
-                "type": "array",
-                "items": { "$ref": "#/components/schemas/MenuEntry" }
-              },
-              "showOnlyForGroups": {
-                "type": "array",
-                "items": { "type": "string" }
-              }
+          "CoreMenuItem":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "opfabCoreMenuId": { "type": "string" },
+                  "showOnlyForGroups":
+                    { "type": "array", "items": { "type": "string" } },
+                },
+              "required": ["opfabCoreMenuId"],
             },
-            "required": [ "id", "label", "entries" ]
-          },
-          "MenuEntry": {
-            "type": "object",
-            "properties": {
-              "customMenuId": { "type": "string" },
-              "customScreenId": { "type": "string" },
-              "url": { "type": "string", "format": "uri" },
-              "label": { "type": "string" },
-              "linkType": { "type": "string", "enum": [ "BOTH", "INTERNAL", "EXTERNAL" ] },
-              "showOnlyForGroups": {
-                "type": "array",
-                "items": { "type": "string" }
-              }
+          "CustomMenuItem":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "id": { "type": "string" },
+                  "label": { "type": "string" },
+                  "entries":
+                    {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/MenuEntry" },
+                    },
+                  "showOnlyForGroups":
+                    { "type": "array", "items": { "type": "string" } },
+                },
+              "required": ["id", "label", "entries"],
             },
-            "required": [ "customMenuId", "label" ]
-          },
-          "TopRightIconMenu": {
-            "type": "object",
-            "properties": {
-              "opfabCoreMenuId": {
-                "type": "string",
-                "description": "ID of the core menu displayed as icon in the top right area"
-              },
-              "visible": {
-                "type": "boolean",
-                "description": "Indicates whether the icon menu is visible"
-              }
+          "MenuEntry":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "customMenuId": { "type": "string" },
+                  "customScreenId": { "type": "string" },
+                  "url": { "type": "string", "format": "uri" },
+                  "label": { "type": "string" },
+                  "linkType":
+                    {
+                      "type": "string",
+                      "enum": ["BOTH", "INTERNAL", "EXTERNAL"],
+                    },
+                  "showOnlyForGroups":
+                    { "type": "array", "items": { "type": "string" } },
+                },
+              "required": ["customMenuId", "label"],
             },
-            "required": [ "opfabCoreMenuId", "visible" ]
-          },
-          "TopRightMenu": {
-            "type": "object",
-            "properties": {
-              "opfabCoreMenuId": {
-                "type": "string",
-                "description": "ID of the core menu displayed in the top right dropdown"
-              },
-              "visible": {
-                "type": "boolean",
-                "description": "Indicates whether the menu is visible"
-              },
-              "showOnlyForGroups": {
-                "type": "array",
-                "items": { "type": "string" },
-                "description": "Optional list of user groups allowed to see this menu"
-              }
+          "TopRightIconMenu":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "opfabCoreMenuId":
+                    {
+                      "type": "string",
+                      "description": "ID of the core menu displayed as icon in the top right area",
+                    },
+                  "visible":
+                    {
+                      "type": "boolean",
+                      "description": "Indicates whether the icon menu is visible",
+                    },
+                },
+              "required": ["opfabCoreMenuId", "visible"],
             },
-            "required": [ "opfabCoreMenuId", "visible" ]
-          },
-          "LocaleConfig": {
-            "type": "object",
-            "properties": {
-              "language": {
-                "type": "string",
-                "description": "Language code (e.g. en, fr, nl)"
-              },
-              "localizedContent": {
-                "type": "object",
-                "description": "Map containing localized labels; keys are strings, values can be strings or nested objects",
-                "additionalProperties": { }
-              }
+          "TopRightMenu":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "opfabCoreMenuId":
+                    {
+                      "type": "string",
+                      "description": "ID of the core menu displayed in the top right dropdown",
+                    },
+                  "visible":
+                    {
+                      "type": "boolean",
+                      "description": "Indicates whether the menu is visible",
+                    },
+                  "showOnlyForGroups":
+                    {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Optional list of user groups allowed to see this menu",
+                    },
+                },
+              "required": ["opfabCoreMenuId", "visible"],
             },
-            "required": [ "language", "localizedContent" ]
-          },
-            "RealTimeScreens":
+          "LocaleConfig":
+            {
+              "type": "object",
+              "properties":
+                {
+                  "language":
+                    {
+                      "type": "string",
+                      "description": "Language code (e.g. en, fr, nl)",
+                    },
+                  "localizedContent":
+                    {
+                      "type": "object",
+                      "description": "Map containing localized labels; keys are strings, values can be strings or nested objects",
+                      "additionalProperties": {},
+                    },
+                },
+              "required": ["language", "localizedContent"],
+            },
+          "RealTimeScreens":
             {
               "properties":
                 {
@@ -5393,10 +5627,10 @@
             {
               "properties":
                 {
-                  "bodyTemplate": { "type": "string"},
-                  "hideDefaultBodyPrefixAndPostfix": { "type": "boolean"},
-                  "sender": { "type": "string"},
-                  "cardFieldUsedForSubject": { "type": "string"},
+                  "bodyTemplate": { "type": "string" },
+                  "hideDefaultBodyPrefixAndPostfix": { "type": "boolean" },
+                  "sender": { "type": "string" },
+                  "cardFieldUsedForSubject": { "type": "string" },
                 },
             },
         },

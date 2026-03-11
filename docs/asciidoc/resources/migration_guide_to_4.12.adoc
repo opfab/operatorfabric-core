@@ -192,3 +192,61 @@ You can also do it using the cli (command line interface), for example: `opfab u
 
 Additionally, within the `locales` section, the `i18n` property has been renamed to `localizedContent`
 (e.g. "i18n": { ... } becomes "localizedContent": { ... }). No other structural changes have been introduced.
+
+== Card API endpoints updated to use query parameters
+
+To properly handle card IDs containing special characters (especially slashes `/`), the card consultation and deletion endpoints now use query parameters instead of path parameters.
+
+=== Affected endpoints
+
+The following endpoints are now deprecated and will be removed in a future release:
+
+* `GET /cards-consultation/cards/{id}` - replaced by `GET /cards-consultation/cards?cardId={id}`
+* `DELETE /cards-publication/cards/userCard/{id}` - replaced by `DELETE /cards-publication/cards/userCard?cardId={id}`
+* `DELETE /cards-publication/cards/{id}` - replaced by `DELETE /cards-publication/cards?cardId={id}`
+
+The deprecated endpoints will continue to work for backward compatibility, but a deprecation warning will be logged when they are used.
+
+=== Why this change?
+
+Even when URL-encoded (e.g., `/` as `%2F`), Spring Framework interprets slashes in path parameters, which causes issues when card IDs contain this character. Using query parameters resolves this issue and allows card IDs to contain any special character.
+
+=== Impact on custom integrations
+
+If you have custom code or scripts that call these endpoints directly (not using the OperatorFabric web UI or CLI), you need to update them to use the new query parameter format:
+
+*Before:*
+----
+GET /cards-consultation/cards/myProcess.instance
+DELETE /cards-publication/cards/userCard/myProcess.instance
+DELETE /cards-publication/cards/myProcess.instance
+----
+
+*After:*
+----
+GET /cards-consultation/cards?cardId=myProcess.instance
+DELETE /cards-publication/cards/userCard?cardId=myProcess.instance
+DELETE /cards-publication/cards?cardId=myProcess.instance
+----
+
+Remember to properly URL-encode the card ID when calling these endpoints. For example, a card ID containing a slash like `myProcess/instance` should be encoded as `myProcess%2Finstance` in the query parameter.
+
+== Card API endpoints updated to use request body or query parameters
+
+Several additional card endpoints have been updated to properly handle card UIDs containing special characters. These are breaking changes without backward compatibility.
+
+=== Affected endpoints
+
+The following endpoints have been changed:
+
+* `POST /cards-publication/cards/resetReadAndAcks/{uid}` - now `POST /cards-publication/cards/resetReadAndAcks` with JSON body
+* `POST /cards-publication/cards/userAcknowledgement/{cardUid}` - now `POST /cards-publication/cards/userAcknowledgement` with JSON body
+* `POST /cards-publication/cards/cancelUserAcknowledgement/{cardUid}` - now `POST /cards-publication/cards/cancelUserAcknowledgement` with JSON body
+* `POST /cards-publication/cards/userCardRead/{cardUid}` - now `POST /cards-publication/cards/userCardRead` with JSON body
+* `DELETE /cards-publication/cards/userCardRead/{cardUid}` - now `DELETE /cards-publication/cards/userCardRead?cardUid={cardUid}` with query parameter
+
+These endpoints are used internally by the OperatorFabric web UI and are not typically called directly by external integrations. No backward compatibility is provided for these endpoints.
+
+=== Impact on custom integrations
+
+If you have custom code or scripts calling these endpoints directly, you must update them to use the new request format. The OperatorFabric web UI, CLI, and internal services have all been updated to use the new format.

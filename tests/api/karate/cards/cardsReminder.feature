@@ -102,7 +102,8 @@ Scenario: ResetCardsReadsAndAcks
     When method post
     Then status 201
 
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -111,21 +112,22 @@ Scenario: ResetCardsReadsAndAcks
     And def uid = response.card.uid
 
     #Signal that card has been read card by operator1_fr
-    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead'
     And header Authorization = 'Bearer ' + authToken
-    And request ''
+    And request { cardUid: '#(uid)' }
     When method post
     Then status 201
 
     #make an acknowledgement to the card with operator1_fr
-    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement'
     And header Authorization = 'Bearer ' + authToken
-    And request entity1Array
+    And request { cardUid: '#(uid)', entitiesAcks: '#(entity1Array)' }
     When method post
     Then status 201
 
 
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -134,21 +136,22 @@ Scenario: ResetCardsReadsAndAcks
     And def uid = response.card.uid
 
     #Signal that card has been read card by operator2_fr
-    Given url opfabUrl + 'cards-publication/cards/userCardRead/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userCardRead'
     And header Authorization = 'Bearer ' + authToken2
-    And request ''
+    And request { cardUid: '#(uid)' }
     When method post
     Then status 201
 
     #make an acknowledgement to the card with operator2_fr
-    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + uid
+    Given url opfabUrl + 'cards-publication/cards/userAcknowledgement'
     And header Authorization = 'Bearer ' + authToken2
-    And request entity2Array
+    And request { cardUid: '#(uid)', entitiesAcks: '#(entity2Array)' }
     When method post
     Then status 201
 
 #get card with user operator1_fr and check hasBeenRead is set to true
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -158,27 +161,28 @@ Scenario: ResetCardsReadsAndAcks
     And match response.card.uid == uid
 
     #call resetReadAndAcks with unauthorized user operator2_fr 
-    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks/' + uid
+    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks'
     And header Authorization = 'Bearer ' + authToken2
-    And request ''
+    And request { cardUid: '#(uid)' }
     When method post
     Then status 403
 
     #call resetReadAndAcks with not existent card Uid 
-    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks/' + 'notExistingUid'
+    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks'
     And header Authorization = 'Bearer ' + authTokenInternal
-    And request ''
+    And request { cardUid: 'notExistingUid' }
     When method post
     Then status 404
 
-    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks/' + uid
+    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks'
     And header Authorization = 'Bearer ' + authTokenInternal
-    And request ''
+    And request { cardUid: '#(uid)' }
     When method post
     Then status 200
 
     #get card with user operator1_fr and check hasBeenRead and hasBeenAcknowledged is set to false and entitiesAck is empty
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -188,7 +192,8 @@ Scenario: ResetCardsReadsAndAcks
     And match response.card.uid == uid
     
     #get card with user operator2_fr and check hasBeenRead and hasBeenAcknowledged is set to false
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authToken2
     When method get
     Then status 200
@@ -204,7 +209,8 @@ Scenario: ResetCardsReadsAndAcks
     When method post
     Then status 201
 
-    Given url opfabUrl + 'cards-consultation/cards/api_test.cardWithNotNotifiedAction'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.cardWithNotNotifiedAction'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -213,14 +219,15 @@ Scenario: ResetCardsReadsAndAcks
     And match response.card.actions == ["NOT_NOTIFIED"]
     And def uid = response.card.uid
 
-    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks/' + uid
+    Given url opfabUrl + 'cards-publication/cards/resetReadAndAcks'
     And header Authorization = 'Bearer ' + authTokenInternal
-    And request ''
+    And request { cardUid: '#(uid)' }
     When method post
     Then status 200
 
     #get card and check actions does not contain 'NOT_NOTIFIED' and hasBeenRead/hasBeenAcknowledged is set to false and entitiesAck is empty
-    Given url opfabUrl + 'cards-consultation/cards/api_test.cardWithNotNotifiedAction'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.cardWithNotNotifiedAction'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

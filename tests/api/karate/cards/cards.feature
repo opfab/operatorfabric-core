@@ -93,7 +93,8 @@ Scenario: Post a new version of the card
   And def cardUid = response.uid
   And def cardId = response.id
   # Get card with user operator1_fr
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -106,13 +107,15 @@ Scenario: Post a new version of the card
   And match response.card.severity == 'INFORMATION'
 
   # Get card without authentication
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1'
   When method get
   Then status 401
 
 Scenario: Delete the card
   # Get card with user operator1_fr
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -164,7 +167,8 @@ Scenario: Post card with attribute externalRecipients
   Then status 201
 
   # Get card with user operator1_fr and new attribute externalRecipients
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -174,7 +178,8 @@ Scenario: Post card with attribute externalRecipients
   # Make sure externalRecipient received the card 
   # with correct startDate and endDate
   * configure retry = { count: 3, interval: 3000 }
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1_created'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1_created'
   And header Authorization = 'Bearer ' + authTokenForOperator5
   And retry until responseStatus == 200 
   When method get
@@ -189,7 +194,8 @@ Scenario: Post card with attribute externalRecipients
 
   # Make sure externalRecipients are notified of card suppression
   * configure retry = { count: 3, interval: 3000 }
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1_deleted'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1_deleted'
   And header Authorization = 'Bearer ' + authTokenForOperator5
   And retry until responseStatus == 200 
   When method get
@@ -229,7 +235,8 @@ Scenario: Push card and its two child cards, then get the parent card
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -291,7 +298,9 @@ Scenario: Push card and its two child cards, then get the parent card
 
   # Get the parent card with its two child cards
 
-  Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+  Given url opfabUrl + 'cards-consultation/cards'
+
+  And param cardId = 'api_test.process1'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200
@@ -324,7 +333,8 @@ Scenario: Push card with null publisherType
   Then status 201
 
   # Get parent card id
-  Given url opfabUrl + 'cards-consultation/cards/api_test.processPublisherTypeNull'
+  Given url opfabUrl + 'cards-consultation/cards'
+  And param cardId = 'api_test.processPublisherTypeNull'
   And header Authorization = 'Bearer ' + authToken
   When method get
   Then status 200

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -69,9 +69,13 @@ export default class CardsReminderOpfabServicesInterface extends OpfabServicesIn
     public sendCardReminderRequest(cardId: string): any {
         return this.sendRequest({
             method: 'post',
-            url: this.opfabCardsPublicationUrl + '/cards/resetReadAndAcks/' + cardId,
+            url: this.opfabCardsPublicationUrl + '/cards/resetReadAndAcks',
             headers: {
-                Authorization: 'Bearer ' + this.token
+                Authorization: 'Bearer ' + this.token,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                cardUid: cardId
             }
         });
     }

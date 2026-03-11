@@ -75,7 +75,8 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process3users' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process3users' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

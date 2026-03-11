@@ -66,7 +66,8 @@ Feature: postCardWithStoreOnlyInArchives
     And def cardUid = response.uid
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process_postCardWithStoreOnlyInArchives'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process_postCardWithStoreOnlyInArchives'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 404

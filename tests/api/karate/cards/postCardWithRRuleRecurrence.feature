@@ -103,7 +103,8 @@ Feature: postCardWithRRuleRecurrence
     Then status 201
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process_cardWithRRuleObject'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process_cardWithRRuleObject'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
@@ -158,7 +159,8 @@ Feature: postCardWithRRuleRecurrence
 
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process_cardWithRRuleObjectAndTimezone'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process_cardWithRRuleObjectAndTimezone'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

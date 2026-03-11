@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -45,9 +45,11 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     loadCard(id: string): Observable<ServerResponse<any>> {
-        // it is necessary to encode the id because it can contain special characters
+        // Using query parameter to avoid issues with special characters (especially slashes) in card IDs
         return this.processHttpResponse(
-            this.httpClient.get<CardWithChildCards>(`${this.cardConsultationUrl}/${encodeURIComponent(id)}`)
+            this.httpClient.get<CardWithChildCards>(`${this.cardConsultationUrl}`, {
+                params: {cardId: id}
+            })
         );
     }
 
@@ -70,18 +72,20 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     deleteCard(card: Card): Observable<ServerResponse<any>> {
-        // it is necessary to encode the id because it can contain special characters
+        // Using query parameter to avoid issues with special characters (especially slashes) in card IDs
         return this.processHttpResponse(
-            this.httpClient.delete<void>(`${this.userCardUrl}/${encodeURIComponent(card.id)}`)
+            this.httpClient.delete<void>(`${this.userCardUrl}`, {
+                params: {cardId: card.id}
+            })
         );
     }
 
     postUserCardRead(cardUid: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post<void>(`${this.userCardReadUrl}/${cardUid}`, null));
+        return this.processHttpResponse(this.httpClient.post<void>(this.userCardReadUrl, {cardUid}));
     }
 
     deleteUserCardRead(cardUid: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.delete<void>(`${this.userCardReadUrl}/${cardUid}`));
+        return this.processHttpResponse(this.httpClient.delete<void>(`${this.userCardReadUrl}?cardUid=${cardUid}`));
     }
 
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {

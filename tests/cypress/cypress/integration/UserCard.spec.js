@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -479,7 +479,7 @@ describe('User Card ', function () {
             opfab.loginWithUser('operator1_fr');
 
             feed.openFirstCard();
-            cy.intercept('DELETE', '/cards-publication/cards/userCard/*', {delay: 2000, statusCode: 502});
+            cy.intercept('DELETE', '/cards-publication/cards/userCard**', {delay: 2000, statusCode: 502});
 
             feed.deleteCurrentCard();
             opfab.checkLoadingSpinnerIsDisplayed();

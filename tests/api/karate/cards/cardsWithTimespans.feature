@@ -72,7 +72,8 @@ Feature: Cards with timespans
   Scenario: Delete the card
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.processTimeSpan'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.processTimeSpan'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
