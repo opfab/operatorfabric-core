@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,6 +16,8 @@ import org.opfab.cards.consultation.model.CardsFilter;
 import org.opfab.cards.consultation.repositories.CardRepository;
 import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -33,6 +35,11 @@ import static reactor.util.function.Tuples.of;
 @Configuration
 public class CardRoutesConfig implements UserExtractor {
 
+    public static final String CARDS_PATH = "/cards";
+    public static final String DEPRECATED_CARDS_PATH = "/cards/{id}";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardRoutesConfig.class);
+
     private final CardRepository cardRepository;
 
     public CardRoutesConfig(CardRepository cardRepository) {
@@ -41,21 +48,46 @@ public class CardRoutesConfig implements UserExtractor {
 
     /**
      * Card route configuration
-     *
-     * @return route
      */
     @Bean
     public RouterFunction<ServerResponse> cardRoutes() {
         return RouterFunctions
-                .route(RequestPredicates.GET("/cards/{id}"), cardGetRoute())
-                .andRoute(RequestPredicates.OPTIONS("/cards/{id}"), cardOptionRoute())
-                .andRoute(RequestPredicates.POST("/cards"), queryCardPostRoute());
+                .route(RequestPredicates.GET(DEPRECATED_CARDS_PATH), cardGetRouteDeprecated())
+                .andRoute(RequestPredicates.GET(CARDS_PATH).and(RequestPredicates.queryParam("cardId", t -> true)),
+                        cardGetRouteWithQueryParam())
+                .andRoute(RequestPredicates.OPTIONS(DEPRECATED_CARDS_PATH), cardOptionRoute())
+                .andRoute(RequestPredicates.OPTIONS(CARDS_PATH), cardOptionRoute())
+                .andRoute(RequestPredicates.POST(CARDS_PATH), queryCardPostRoute());
     }
 
-    private HandlerFunction<ServerResponse> cardGetRoute() {
-        return request -> extractUserFromJwtToken(request)
+    private HandlerFunction<ServerResponse> cardGetRouteWithQueryParam() {
+        return request -> {
+            String cardId = request.queryParam("cardId").orElse("");
+            return getCardWithChildren(request, cardId);
+        };
+    }
+
+    /**
+     * This endpoint is deprecated. Use GET /cards?cardId={id} instead
+     * to avoid issues with special characters (especially slashes) in
+     * card IDs.
+     */
+    private HandlerFunction<ServerResponse> cardGetRouteDeprecated() {
+        return request -> {
+            String cardId = request.pathVariable("id");
+            LOGGER.warn("DEPRECATED API USAGE: GET /cards/{} is deprecated. Use GET /cards?cardId={} instead.", cardId,
+                    cardId);
+            return getCardWithChildren(request, cardId);
+        };
+    }
+
+    /**
+     * Common method to get a card with its child cards
+     */
+    private Mono<ServerResponse> getCardWithChildren(ServerRequest request, String cardId) {
+        return extractUserFromJwtToken(request)
                 .flatMap(currentUserWithPerimeters -> Mono.just(currentUserWithPerimeters).zipWith(
-                        cardRepository.findByIdWithUser(request.pathVariable("id"), currentUserWithPerimeters)))
+                        cardRepository.findByIdWithUser(cardId, currentUserWithPerimeters)))
                 .flatMap(userCardT2 -> Mono.just(userCardT2)
                         .zipWith(cardRepository.findByParentCardId(userCardT2.getT2().id).collectList()))
                 .doOnNext(t2 -> {

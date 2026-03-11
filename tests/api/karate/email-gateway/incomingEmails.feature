@@ -143,7 +143,8 @@ Feature: Send card when an email is received
 
 
     * configure retry = { count: 20, interval: 1000 }
-    Given url opfabUrl + 'cards-consultation/cards/api_test.emailToCardTest'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.emailToCardTest'
     And header Authorization = 'Bearer ' + authToken
     And retry until responseStatus == 200
     When method get
@@ -171,7 +172,8 @@ Feature: Send card when an email is received
 
     # Check card was deleted
     * configure retry = { count: 5, interval: 1000 }
-    Given url opfabUrl + 'cards-consultation/cards/api_test.emailToCardTest'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.emailToCardTest'
     And header Authorization = 'Bearer ' + authToken
     And retry until responseStatus == 404
     When method get

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2022-2024, RTE (http://www.rte-france.com)
+# Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
 # See AUTHORS.txt
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,8 +24,11 @@ then
 else
     source ../getToken.sh $url $1
     if [[ $acknowledgingEntities == *.json ]]; then
-        curl -X POST $url:2102/cards/userAcknowledgement/$2 -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$(envsubst <$acknowledgingEntities)"
+        entitiesAcks=$(envsubst <$acknowledgingEntities)
+        requestBody="{\"cardUid\":\"$2\",\"entitiesAcks\":$entitiesAcks}"
+        curl -X POST $url:2102/cards/userAcknowledgement -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$requestBody"
     else
-        curl -X POST $url:2102/cards/userAcknowledgement/$2 -H "Authorization: Bearer $token" -H "Content-type:application/json" --data $acknowledgingEntities
+        requestBody="{\"cardUid\":\"$2\",\"entitiesAcks\":$acknowledgingEntities}"
+        curl -X POST $url:2102/cards/userAcknowledgement -H "Authorization: Bearer $token" -H "Content-type:application/json" --data "$requestBody"
     fi
 fi

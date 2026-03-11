@@ -259,41 +259,47 @@ Feature: deleteUserCards tests
 
 
   Scenario: delete user card with no authentication, expected response 401
-    Given url opfabPublishCardUrl + 'cards/userCard/processDeleteUserCard.processDeleteUserCardOk'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'processDeleteUserCard.processDeleteUserCardOk'
     When method delete
     Then status 401
 
 
   Scenario: Delete user card for a non-existent card, expected response 404
-    Given url opfabPublishCardUrl + 'cards/userCard/NonExistentUserCard'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'NonExistentUserCard'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 404
 
 
   Scenario: delete card not published by an entity, expected response 403
-    Given url opfabPublishCardUrl + 'cards/userCard/api_test.processDeleteUserCardForbidden1'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'api_test.processDeleteUserCardForbidden1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: delete user card not published by an entity of the user, expected response 403
-    Given url opfabPublishCardUrl + 'cards/userCard/processDeleteUserCard.processDeleteUserCardForbidden2'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'processDeleteUserCard.processDeleteUserCardForbidden2'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: delete user card with no Write access for process/state for the user, expected response 403
-    Given url opfabPublishCardUrl + 'cards/userCard/processDeleteUserCard.processDeleteUserCardForbidden3'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'processDeleteUserCard.processDeleteUserCardForbidden3'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 403
 
 
   Scenario: delete user card, expected response 200
-    Given url opfabPublishCardUrl + 'cards/userCard/processDeleteUserCard.processDeleteUserCardOk'
+    Given url opfabPublishCardUrl + 'cards/userCard'
+    And param cardId = 'processDeleteUserCard.processDeleteUserCardOk'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method delete
     Then status 200

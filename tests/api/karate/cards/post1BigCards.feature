@@ -50,7 +50,8 @@ Then status 201
 
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/APOGEESEA.SEA0' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'APOGEESEA.SEA0' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200

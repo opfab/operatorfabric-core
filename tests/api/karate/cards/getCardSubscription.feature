@@ -91,7 +91,8 @@ Scenario: Create perimeter and attach it to group Maintainer
       Then status 201
 
     # Get card uid and check rRule field
-      Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+      Given url opfabUrl + 'cards-consultation/cards'
+      And param cardId = 'api_test.process1'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200
@@ -169,9 +170,9 @@ Scenario: Create perimeter and attach it to group Maintainer
       And match response == ''
 
     # make an acknowledgement to the card with operator4_fr
-      Given url opfabUrl + 'cards-publication/cards/userAcknowledgement/' + cardUid
+      Given url opfabUrl + 'cards-publication/cards/userAcknowledgement'
       And header Authorization = 'Bearer ' + authTokenAsTSO4
-      And request entity1Array
+      And request { cardUid: '#(cardUid)', entitiesAcks: '#(entity1Array)' }
       When method post
       Then status 201
 

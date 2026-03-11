@@ -91,7 +91,8 @@ Feature: Cards
     Then status 200
 
 # Get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.processForTestingPatch'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.processForTestingPatch'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

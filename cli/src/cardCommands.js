@@ -124,7 +124,7 @@ const cardCommands = {
             }
         }
 
-        const url = `${config.getConfig('url')}:${config.getConfig('port')}/cards-publication/cards/${cardId}`;
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/cards-publication/cards?cardId=${encodeURIComponent(cardId)}`;
         const token = config.getConfig('access_token');
         const options = {
             method: 'DELETE',

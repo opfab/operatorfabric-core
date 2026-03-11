@@ -14,6 +14,8 @@ import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.model.CardCreationReport;
 import org.opfab.cards.publication.model.Card;
+import org.opfab.cards.publication.model.CardUidRequest;
+import org.opfab.cards.publication.model.UserAcknowledgementRequest;
 import org.opfab.cards.publication.model.FieldToTranslate;
 import org.opfab.cards.publication.model.TranslatedField;
 import org.opfab.cards.publication.repositories.UserBasedOperationResult;
@@ -23,8 +25,11 @@ import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
 import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,6 +46,8 @@ import java.util.UUID;
 @RequestMapping("/cards")
 
 public class CardController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CardController.class);
 
     private CardDeletionService cardDeletionService;
     private CardProcessingService cardProcessingService;
@@ -107,7 +114,8 @@ public class CardController {
         return new CardCreationReport(card.id, card.uid);
     }
 
-    @DeleteMapping
+    @DeleteMapping(params = "endDateBefore")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Void deleteCards(@RequestParam String endDateBefore, Principal principal) {
 
@@ -139,13 +147,33 @@ public class CardController {
         return new CardCreationReport(card.id, card.uid);
     }
 
+    /**
+     * DELETE /userCard with query parameter cardId (new endpoint to avoid issues
+     * with special characters)
+     * 
+     * @param cardId The card ID passed as query parameter
+     */
+    @DeleteMapping(value = "/userCard", params = "cardId")
+    public Void deleteUserCardWithQueryParam(@RequestParam String cardId, HttpServletResponse response,
+            Principal principal) {
+        return performDeleteUserCard(cardId, response, principal);
+    }
+
+    /**
+     * DELETE /userCard/{id} - deprecated endpoint
+     */
     @DeleteMapping("/userCard/{id}")
     public Void deleteUserCard(@PathVariable String id, HttpServletResponse response, Principal principal) {
+        LOGGER.warn("DEPRECATED API USAGE: DELETE /userCard/{} is deprecated. Use DELETE /userCard?cardId={} instead.",
+                id, id);
+        return performDeleteUserCard(id, response, principal);
+    }
 
+    private Void performDeleteUserCard(String cardId, HttpServletResponse response, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
         try {
-            Optional<Card> deletedCard = cardDeletionService.deleteUserCard(id, user,
+            Optional<Card> deletedCard = cardDeletionService.deleteUserCard(cardId, user,
                     Optional.of(jwtPrincipal.getToken()));
             if (!deletedCard.isPresent()) {
                 response.setStatus(404);
@@ -156,13 +184,35 @@ public class CardController {
                         user.getUserData().getEntities(), card.uid, null);
             }
         } catch (Exception e) {
+            LOGGER.info("Error while deleting user card with id {} for user {}: {}", cardId,
+                    user.getUserData().getLogin(),
+                    e.getMessage());
             response.setStatus(403);
         }
         return null;
     }
 
+    /**
+     * DELETE /cards with query parameter cardId (new endpoint to avoid issues with
+     * special characters)
+     */
+    @DeleteMapping(value = "", params = "cardId")
+    public Void deleteCardWithQueryParam(@RequestParam String cardId, HttpServletResponse response,
+            Principal principal) {
+        return performDeleteCard(cardId, response, principal);
+    }
+
+    /**
+     * DELETE /cards/{id} - deprecated endpoint
+     */
     @DeleteMapping("/{id}")
     public Void deleteCards(@PathVariable String id, HttpServletResponse response, Principal principal) {
+        LOGGER.warn("DEPRECATED API USAGE: DELETE /cards/{} is deprecated. Use DELETE /cards?cardId={} instead.", id,
+                id);
+        return performDeleteCard(id, response, principal);
+    }
+
+    private Void performDeleteCard(String cardId, HttpServletResponse response, Principal principal) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = null;
         Jwt token = null;
@@ -170,7 +220,7 @@ public class CardController {
             user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
             token = jwtPrincipal.getToken();
         }
-        Optional<Card> deletedCard = cardDeletionService.deleteCardByIdWithUser(id, Optional.ofNullable(user),
+        Optional<Card> deletedCard = cardDeletionService.deleteCardByIdWithUser(cardId, Optional.ofNullable(user),
                 Optional.ofNullable(token));
         if (!deletedCard.isPresent())
             response.setStatus(404);
@@ -190,18 +240,16 @@ public class CardController {
 
     /**
      * POST userAcknowledgement for a card updating the card
-     *
-     * @param cardUid Id to create publisher
      */
-    @PostMapping("/userAcknowledgement/{cardUid}")
+    @PostMapping("/userAcknowledgement")
     public Void postUserAcknowledgement(Principal principal,
-            @PathVariable("cardUid") String cardUid,
             HttpServletResponse response,
-            @RequestBody List<String> entitiesAcks) {
+            @RequestBody UserAcknowledgementRequest request) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardReadAndAckService.processUserAcknowledgement(cardUid, user, entitiesAcks);
+        UserBasedOperationResult result = cardReadAndAckService.processUserAcknowledgement(request.cardUid(), user,
+                request.entitiesAcks());
 
         if (!result.isCardFound())
             response.setStatus(404);
@@ -212,7 +260,7 @@ public class CardController {
                 response.setStatus(200);
 
             logUserAction(user.getUserData().getLogin(), UserActionEnum.ACK_CARD, user.getUserData().getEntities(),
-                    cardUid, null);
+                    request.cardUid(), null);
 
         }
         return null;
@@ -220,16 +268,15 @@ public class CardController {
 
     /**
      * POST userCardRead for a card
-     *
-     * @param cardUid of the card that has been read
      */
-    @PostMapping("/userCardRead/{cardUid}")
+    @PostMapping("/userCardRead")
     public Void postUserCardRead(Principal principal,
-            @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+            @RequestBody CardUidRequest request, HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
 
-        UserBasedOperationResult result = cardReadAndAckService.processUserRead(cardUid, user.getUserData().getLogin());
+        UserBasedOperationResult result = cardReadAndAckService.processUserRead(request.cardUid(),
+                user.getUserData().getLogin());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -239,23 +286,22 @@ public class CardController {
                 response.setStatus(200);
 
             logUserAction(user.getUserData().getLogin(), UserActionEnum.READ_CARD, user.getUserData().getEntities(),
-                    cardUid, null);
+                    request.cardUid(), null);
         }
         return null;
     }
 
     /**
      * POST cancelUserAcknowledgement for a card to updating that card
-     *
-     * @param cardUid Id to create publisher
      */
-    @PostMapping("/cancelUserAcknowledgement/{cardUid}")
-    public Void deleteUserAcknowledgement(Principal principal, @PathVariable("cardUid") String cardUid,
-            @RequestBody List<String> entitiesAcks,
+    @PostMapping("/cancelUserAcknowledgement")
+    public Void deleteUserAcknowledgement(Principal principal,
+            @RequestBody UserAcknowledgementRequest request,
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
-        UserBasedOperationResult result = cardReadAndAckService.deleteUserAcknowledgement(cardUid, user, entitiesAcks);
+        UserBasedOperationResult result = cardReadAndAckService.deleteUserAcknowledgement(request.cardUid(), user,
+                request.entitiesAcks());
         if (!result.isCardFound())
             response.setStatus(404);
         else {
@@ -265,18 +311,17 @@ public class CardController {
                 response.setStatus(204);
 
             logUserAction(user.getUserData().getLogin(), UserActionEnum.UNACK_CARD, user.getUserData().getEntities(),
-                    cardUid, null);
+                    request.cardUid(), null);
         }
         return null;
     }
 
     /**
      * DELETE userRead for a card
-     *
-     * @param cardUid Id of the card to update
      */
-    @DeleteMapping("/userCardRead/{cardUid}")
-    public Void deleteUserRead(Principal principal, @PathVariable("cardUid") String cardUid,
+    @DeleteMapping("/userCardRead")
+    public Void deleteUserRead(Principal principal,
+            @RequestParam String cardUid,
             HttpServletResponse response) {
         OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
         CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
@@ -324,13 +369,13 @@ public class CardController {
     /**
      * POST request to reset acks and reads for a card and resend card as reminder
      *
-     * @param cardUid of the card
+     * @param cardUidRequest request body containing the card uid
      */
-    @PostMapping("/resetReadAndAcks/{cardUid}")
+    @PostMapping("/resetReadAndAcks")
     public Void postResetReadAndAcks(Principal principal,
-            @PathVariable("cardUid") String cardUid, HttpServletResponse response) {
+            @RequestBody CardUidRequest cardUidRequest, HttpServletResponse response) {
 
-        UserBasedOperationResult result = cardReadAndAckService.resetReadAndAcks(cardUid);
+        UserBasedOperationResult result = cardReadAndAckService.resetReadAndAcks(cardUidRequest.cardUid());
         if (!result.isCardFound())
             response.setStatus(404);
         else {

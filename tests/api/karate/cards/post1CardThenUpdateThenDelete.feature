@@ -66,7 +66,8 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process1' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -108,7 +109,8 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process1' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -128,7 +130,8 @@ Scenario: Delete the card
 
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process1' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 200
@@ -141,7 +144,8 @@ When method delete
 Then status 200
 
 #get card with user operator1_fr should return 404
-Given url opfabUrl + 'cards-consultation/cards/api_test.process1' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process1' 
 And header Authorization = 'Bearer ' + authToken 
 When method get
 Then status 404

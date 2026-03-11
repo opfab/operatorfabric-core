@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,12 +31,10 @@ export class AngularAcknowledgeServer extends AngularServer implements Acknowled
     }
 
     postUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        return this.processHttpResponse(this.httpClient.post<void>(`${this.userAckUrl}/${cardUid}`, entitiesAcks));
+        return this.processHttpResponse(this.httpClient.post<void>(this.userAckUrl, {cardUid, entitiesAcks}));
     }
 
     deleteUserAcknowledgement(cardUid: string, entitiesAcks: string[]): Observable<ServerResponse<void>> {
-        return this.processHttpResponse(
-            this.httpClient.post<void>(`${this.cancelUserAckUrl}/${cardUid}`, entitiesAcks)
-        );
+        return this.processHttpResponse(this.httpClient.post<void>(this.cancelUserAckUrl, {cardUid, entitiesAcks}));
     }
 }

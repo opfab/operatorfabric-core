@@ -83,7 +83,7 @@ Feature: Kafka Producer and Consumer Demo
 	  And header Authorization = 'Bearer ' + authToken
 	  And request filter
     And retry until responseStatus == 200  && response.numberOfElements == 1
-	  Then method post
+	Then method post
     And match response.content[0].processInstanceId == "process.kafka.1"
     And match response.content[0].process == "api_test"
     And match response.content[0].state == "messageState"
@@ -94,9 +94,10 @@ Feature: Kafka Producer and Consumer Demo
 
   # Check card was deleted
     * configure retry = { count: 5, interval: 1000 }
-	  Given url opfabUrl + 'cards-consultation/cards/api_test.process.kafka.1'
+	  Given url opfabUrl + 'cards-consultation/cards'
+	  And param cardId = 'api_test.process.kafka.1'
 	  And header Authorization = 'Bearer ' + authToken
-    And retry until responseStatus == 404
+      And retry until responseStatus == 404
 
   # Delete perimeter created previously
   * callonce read('../common/deletePerimeter.feature') { perimeterId: '#(perimeter.id)', token: '#(authTokenAdmin)' }

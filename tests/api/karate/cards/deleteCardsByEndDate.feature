@@ -131,6 +131,14 @@ Feature: Delete Cards by end date before
     When method post
     Then status 201
 
+  Scenario: Delete cards before date as non admin
+
+    # delete all cards before date as non admin should return 403 forbidden
+    Given url opfabPublishCardUrl + 'cards?' + 'endDateBefore=1553186800000'
+    And header Authorization = 'Bearer ' + authTokenAsTSO
+    When method delete
+    Then status 403
+
   Scenario: Delete the cards before date as admin
 
 # delete all cards before date
@@ -140,25 +148,29 @@ Feature: Delete Cards by end date before
     Then status 200
 
 #get deleted card should return NOT_FOUND
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 #get deleted card should return NOT_FOUND
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card1'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process2card1'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 404
 
 #get card with user operator1_fr 
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card2'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process2card2'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200
 
 #get card with user operator1_fr 
-    Given url opfabUrl + 'cards-consultation/cards/api_test.process2card3'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.process2card3'
     And header Authorization = 'Bearer ' + authTokenAsTSO
     When method get
     Then status 200

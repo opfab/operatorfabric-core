@@ -67,7 +67,8 @@ Scenario: Post a card with representative
   Scenario: Get the card, get the card from archives then delete the card
 
 #get card with user operator1_fr
-    Given url opfabUrl + 'cards-consultation/cards/api_test.processRepresentative'
+    Given url opfabUrl + 'cards-consultation/cards'
+    And param cardId = 'api_test.processRepresentative'
     And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200

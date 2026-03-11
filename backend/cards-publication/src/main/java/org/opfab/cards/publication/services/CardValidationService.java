@@ -109,9 +109,6 @@ public class CardValidationService {
             throw new ConstraintViolationException(
                     "constraint violation : forbidden characters ('#','?','/') in process", null);
 
-        if (checkSlashInProcessInstanceId(c))
-            throw new ConstraintViolationException(
-                    "constraint violation : forbidden characters '/' in processInstanceId", null);
     }
 
     void checkIsCardAChildCard(Card card) {
@@ -155,10 +152,6 @@ public class CardValidationService {
                 return false;
         }
         return true;
-    }
-
-    boolean checkSlashInProcessInstanceId(Card card) {
-        return card.processInstanceId.contains("/");
     }
 
     boolean checkIsDotCharacterNotInProcessAndState(Card c) {

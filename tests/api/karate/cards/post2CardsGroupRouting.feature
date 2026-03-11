@@ -67,7 +67,8 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process2' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -84,7 +85,8 @@ And match response.card.data.message == 'a message for group Dispatcher'
 
 
 #get card with user operator2_fr should not be possible
-Given url opfabUrl + 'cards-consultation/cards/api_test.process2' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process2' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 404
@@ -125,7 +127,8 @@ When method post
 Then status 201
 
 #get card with user operator1_fr
-Given url opfabUrl + 'cards-consultation/cards/api_test.process2tso' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso1 
 When method get
 Then status 200
@@ -142,7 +145,8 @@ And match response.card.data.message == 'a message for groups Dispatcher and Pla
 
 
 #get card with user operator2_fr should be possible
-Given url opfabUrl + 'cards-consultation/cards/api_test.process2tso' 
+Given url opfabUrl + 'cards-consultation/cards'
+And param cardId = 'api_test.process2tso' 
 And header Authorization = 'Bearer ' + authTokenTso2 
 When method get
 Then status 200
