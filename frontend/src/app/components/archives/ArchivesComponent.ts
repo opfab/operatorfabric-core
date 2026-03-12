@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -292,6 +292,21 @@ export class ArchivesComponent implements OnDestroy, OnInit {
         if (isAdminModeChecked) {
             filters.set('adminMode', ['true']);
         }
+        const mainFilters = this.filtersTemplate.filters;
+        // Apply date filters from the main query
+        if (mainFilters.has('publishDateFrom')) {
+            filters.set('publishDateFrom', mainFilters.get('publishDateFrom'));
+        }
+        if (mainFilters.has('publishDateTo')) {
+            filters.set('publishDateTo', mainFilters.get('publishDateTo'));
+        }
+        if (mainFilters.has('activeFrom')) {
+            filters.set('activeFrom', mainFilters.get('activeFrom'));
+        }
+        if (mainFilters.has('activeTo')) {
+            filters.set('activeTo', mainFilters.get('activeTo'));
+        }
+
         const filter = this.getFilter(0, 1 + this.historySize, filters, false);
 
         return CardsService.fetchFilteredArchivedCards(filter).pipe(
