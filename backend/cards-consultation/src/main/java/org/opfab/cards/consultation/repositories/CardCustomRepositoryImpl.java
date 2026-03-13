@@ -69,13 +69,16 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
     @Override
     public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
-        return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields)
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
+            boolean getNotNotifiedLightCards) {
+        return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields,
+                getNotNotifiedLightCards)
                 .map(lightCard -> new CardOperation(CardOperationTypeEnum.ADD, null, lightCard));
     }
 
     private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
+            boolean getNotNotifiedLightCards) {
         Criteria criteria;
         if (updatedFrom != null) {
             if ((rangeEnd != null) || (rangeStart != null))
@@ -133,11 +136,13 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
             customScreenDataFields.getDataFields().forEach(dataField -> query.fields().include("data." + dataField));
         }
 
-        Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
-                currentUserWithPerimeters);
-
         query.addCriteria(criteria);
-        query.addCriteria(criteriaForProcessesStatesNotNotified);
+        if (!getNotNotifiedLightCards) {
+            Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
+                    currentUserWithPerimeters);
+
+            query.addCriteria(criteriaForProcessesStatesNotNotified);
+        }
         log.debug("launch query with user {}", currentUserWithPerimeters.getUserData().getLogin());
         return template.find(query, Card.class).map(card -> {
             log.debug("Find card {}", card.id);

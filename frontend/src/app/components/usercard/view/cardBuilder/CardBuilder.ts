@@ -128,6 +128,7 @@ export class CardBuilder {
             hasBeenAcknowledged: false,
             hasBeenRead: false,
             hasChildCardFromCurrentUserEntity: false,
+            isNotificationFiltered: false,
             id: 'dummyId', // will be set by the backend
             lttd: this.lttd,
             process: this.processId,
@@ -365,6 +366,7 @@ export class CardBuilder {
             hasBeenAcknowledged: false,
             hasBeenRead: false,
             hasChildCardFromCurrentUserEntity: false,
+            isNotificationFiltered: false,
             id: '', // will be set by the backend
             publisher,
             publisherType: 'ENTITY',

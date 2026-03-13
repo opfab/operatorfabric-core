@@ -5,6 +5,7 @@
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "heartbeatSendingInterval": 30,
+  "loadNotNotifiedLightCard": true,
   "defaultEntryPage": "feed",
   "dateRangePickerConfig":"default",
   "activityArea" : {

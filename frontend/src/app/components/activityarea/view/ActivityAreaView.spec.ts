@@ -456,7 +456,7 @@ describe('ActivityAreaView', () => {
             settingsServerMock.setResponseForPatchUserSettings(new ServerResponse(null, ServerResponseStatus.OK, null));
             const saved = await firstValueFrom(activityAreaView.saveActivityArea());
             expect(saved).toBeTruthy();
-            const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getLightCards());
+            const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getNotifiedLightCards());
             expect(lightCards).toEqual([]);
         });
     });

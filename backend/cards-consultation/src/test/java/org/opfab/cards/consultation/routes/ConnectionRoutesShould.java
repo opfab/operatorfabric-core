@@ -80,7 +80,7 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithNoUSerConnectedIsEmptyAfterDeleteSubscription() {
-            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test", false);
             subscription.getPublisher().subscribe(log::info);
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                     .expectBody()
@@ -95,7 +95,7 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithOneUserConnected() {
-            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test", false);
             subscription.getPublisher().subscribe(log::info);
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                     .expectBody()
@@ -109,7 +109,7 @@ class ConnectionRoutesShould {
             Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(true);
 
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test", false);
             Assertions.assertTrue(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
 
             // Simulate a log off
@@ -125,7 +125,7 @@ class ConnectionRoutesShould {
             Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(false);
 
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test", false);
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
 
             // Simulate a log off
@@ -136,9 +136,9 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithThreeUserConnected() {
-            service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
-            service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
-            service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
+            service.subscribe(currentUserWithPerimeters, "test", false).getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser2"), "test2", false).getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser3"), "test3", false).getPublisher().subscribe(log::info);
 
             String[] expectedUsers = {
                     "{\"login\":\"testuser\",\"entitiesConnected\":[],\"groups\":[]}",

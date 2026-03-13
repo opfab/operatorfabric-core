@@ -267,8 +267,9 @@ export class ApplicationLoader {
     }
 
     private initServices() {
-        OpfabEventStreamService.initEventStream();
-        OpfabStore.init(); // this will effectively open the http stream connection
+        const loadNotNotifiedLightCard = ConfigService.getConfigValue('loadNotNotifiedLightCard', false);
+        OpfabEventStreamService.initEventStream(loadNotNotifiedLightCard);
+        OpfabStore.init(loadNotNotifiedLightCard); // this will effectively open the http stream connection
         ApplicationUpdateService.init();
         NotificationDecision.init();
         SystemNotificationService.initSystemNotificationService();

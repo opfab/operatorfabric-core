@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -51,7 +51,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.isHeartbeatRunning = false;
     }
 
-    public initStream() {
+    public initStream(getNotNotifiedLightCards: boolean): void {
         this.heartbeatSendingIntervalSeconds = ConfigService.getConfigValue('heartbeatSendingInterval', 30);
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
@@ -59,10 +59,13 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         if (CurrentUserStore.doesAuthenticationUseToken()) {
             securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`};
         }
-        this.eventSource = new EventSourcePolyfill(`${this.eventStreamUrl}&notification=true`, {
-            headers: securityHeader
-            // if necessary, we can set here internal heartbeatTimeout: xxx (in ms)
-        });
+        this.eventSource = new EventSourcePolyfill(
+            `${this.eventStreamUrl}&notification=true&getNotNotifiedLightCards=${getNotNotifiedLightCards}`,
+            {
+                headers: securityHeader
+                // if necessary, we can set here internal heartbeatTimeout: xxx (in ms)
+            }
+        );
 
         this.checkHeartBeatReceive();
 

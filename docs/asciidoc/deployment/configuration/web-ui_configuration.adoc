@@ -146,7 +146,7 @@ a|card time display mode in the feed. Values :
 
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
-
+|loadNotNotifiedLightCard|false|no|If set to true, light cards are loaded in the UI even if user has set the card as not notified in the notification configuration screen (cards are still not visible on the feed) .This is to be used only if you the dashboard screen to show not notified cards. Be aware that this can lead to performance issues if too much cards.
 |logging.filters.publishDate.days|10|no|The default search period (days) for publish date filter in logging page
 |logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
 

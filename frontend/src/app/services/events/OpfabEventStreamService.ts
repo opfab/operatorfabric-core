@@ -39,8 +39,8 @@ export class OpfabEventStreamService {
         OpfabEventStreamService.opfabEventStreamServer = opfabEventStreamServer;
     }
 
-    public static initEventStream() {
-        OpfabEventStreamService.opfabEventStreamServer.initStream();
+    public static initEventStream(getNotNotifiedLightCards: boolean) {
+        OpfabEventStreamService.opfabEventStreamServer.initStream(getNotNotifiedLightCards);
     }
 
     public static closeEventStream() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -38,7 +38,7 @@ export class PinnedCardsComponent implements OnInit, OnDestroy {
         this.pinnedCards = [];
 
         OpfabStore.getLightCardStore()
-            .getLightCards()
+            .getNotifiedLightCards()
             .subscribe((cards) => this.setPinnedCards(cards));
 
         timer(10000, 10000)

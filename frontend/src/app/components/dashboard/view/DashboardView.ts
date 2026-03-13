@@ -104,7 +104,8 @@ export class Dashboard {
     private processLightCards() {
         combineLatest([
             this.filteredLightCardStore.getBusinessDateFilterChanges(),
-            OpfabStore.getLightCardStore().getLightCards()
+            OpfabStore.getLightCardStore().getAllLightCards() // Get even not notified cards , the not notified cards will be present only
+            // if the web-ui config param loadNotNotifiedLightCard is set to true.
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {

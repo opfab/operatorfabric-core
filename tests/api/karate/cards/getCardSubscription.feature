@@ -185,7 +185,59 @@ Scenario: Create perimeter and attach it to group Maintainer
       And match response contains '"card":{'
       And match response contains '"uid":"' + cardUid + '"'
 
+    Scenario: get card subscription with notification filter
 
 
-    #delete perimeter created previously
+    * def userSettings =
+    """
+    {
+      "login" : "operator1_fr",
+      "processesStatesNotNotified": {"api_test": ["messageState"]}
+    }
+    """
+
+      Given url opfabUrl + 'users/users/operator1_fr/settings'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      And request userSettings
+      When method patch
+      Then status 200
+
+    # Push card
+      Given url opfabPublishCardUrl + 'cards'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      And header Content-Type = 'application/json'
+      And request card
+      When method post
+      Then status 201
+      And def cardUid = response.uid
+
+    # Get subscription and check that card is not returned
+      Given url opfabUrl + 'cards-consultation/cardSubscription' +'?notification=false&clientId=ghi0123456789jkl&updatedFrom=0'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method get
+      Then status 200
+      And match response == ''
+
+    # Get subscription with getNotNotifiedCard set to true and check that card is returned
+    Given url opfabUrl + 'cards-consultation/cardSubscription' +'?clientId=ghi0123456789jkl&getNotNotifiedLightCards=true&updatedFrom=0'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method get
+      Then status 200
+      And match response contains '"card":{'
+      And match response contains '"uid":"' + cardUid + '"'
+
+    # Delete card
+      Given url opfabPublishCardUrl + 'cards/api_test.process1'
+      And header Authorization = 'Bearer ' + authTokenAsTSO
+      When method delete
+      Then status 200
+
+    # Restore user settings
+      Given url opfabUrl + 'users/users/operator1_fr/settings'
+      And header Authorization = 'Bearer ' + authTokenAsTSO 
+      And request { login: 'operator1_fr', processesStatesNotNotified: {} }
+      When method patch
+      Then status 200
+
+    # Delete perimeter created previously
       * callonce read('../common/deletePerimeter.feature') {perimeterId: '#(perimeter.id)', token: '#(authToken)'}
