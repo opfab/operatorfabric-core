@@ -45,7 +45,7 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
      */
     Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
             CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
-            List<String> processStatesAlwaysLoaded);
+            List<String> processStatesLoadedRegardlessOfNotificationConfig);
 
     Mono<CardPage> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> params);

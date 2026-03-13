@@ -42,6 +42,6 @@ public class CardOperationsGetParameters {
     /**
      * List of process/states to send even if not notified (e.g., process1.state1;process2.state2)
      */
-    public List<String> processStatesAlwaysLoaded;
+    public List<String> processStatesLoadedRegardlessOfNotificationConfig;
 
 }

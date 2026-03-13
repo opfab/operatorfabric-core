@@ -80,7 +80,7 @@ public class CardOperationsController {
                             subscription = cardSubscriptionService.subscribe(
                                     cardOperationsGetParameters.currentUserWithPerimeters,
                                     cardOperationsGetParameters.clientId,
-                                    cardOperationsGetParameters.processStatesAlwaysLoaded,
+                                    cardOperationsGetParameters.processStatesLoadedRegardlessOfNotificationConfig,
                                     cardOperationsGetParameters.uiVersion,
                                     wrongUiVersion);
                             return subscription.getPublisher();
@@ -130,25 +130,25 @@ public class CardOperationsController {
             CustomScreenDataFields customScreenDataFields) {
 
         return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters(),
-                customScreenDataFields, subscription.getProcessStatesAlwaysLoaded());
+                customScreenDataFields, subscription.getProcessStatesLoadedRegardlessOfNotificationConfig());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters,
             CustomScreenDataFields customScreenDataFields) {
         return fetchOldCards0(parameters.updatedFrom, parameters.rangeStart, parameters.rangeEnd,
                 parameters.currentUserWithPerimeters,
-                customScreenDataFields, parameters.processStatesAlwaysLoaded);
+                customScreenDataFields, parameters.processStatesLoadedRegardlessOfNotificationConfig);
     }
 
     private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end,
             CurrentUserWithPerimeters currentUserWithPerimeters,
             CustomScreenDataFields customScreenDataFields,
-            java.util.List<String> processStatesAlwaysLoaded) {
+            java.util.List<String> processStatesLoadedRegardlessOfNotificationConfig) {
         Flux<CardOperation> oldCards;
         log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}", start, end, updatedFrom);
         if ((end != null && start != null) || (updatedFrom != null)) {
             oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters,
-                    customScreenDataFields, processStatesAlwaysLoaded);
+                    customScreenDataFields, processStatesLoadedRegardlessOfNotificationConfig);
         } else {
             log.info("Not loading published cards as no range or no publish date is provided");
             oldCards = Flux.empty();

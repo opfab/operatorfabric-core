@@ -62,7 +62,7 @@ export class LightCardsStore {
     // But in case we need to show on custom card list screen some filtered notifications,
     // we can set this variable to a list of process.state to get them from the backend and have it
     // available in the store for the custom card list screen.
-    private processStatesAlwaysLoaded: string[] = [];
+    private processStatesLoadedRegardlessOfNotificationConfig: string[] = [];
 
     private nbCardLoadedInHalfSecondInterval = 0;
     private readonly receivedAcksSubject = new Subject<{
@@ -130,8 +130,8 @@ export class LightCardsStore {
 
     // debounceTimeInMs is to be modify only in testing case
     // Default value must be kept for production
-    public initStore(processStatesAlwaysLoaded: string[] = []) {
-        this.processStatesAlwaysLoaded = processStatesAlwaysLoaded;
+    public initStore(processStatesLoadedRegardlessOfNotificationConfig: string[] = []) {
+        this.processStatesLoadedRegardlessOfNotificationConfig = processStatesLoadedRegardlessOfNotificationConfig;
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         OpfabEventStreamService.getCardOperationStream()
             .pipe(takeUntil(this.unsubscribe$))
@@ -211,10 +211,10 @@ export class LightCardsStore {
 
     public addOrUpdateLightCard(card) {
         this.nbCardLoadedInHalfSecondInterval++;
-        // in case we have no processStatesAlwaysLoaded ,
+        // in case we have no processStatesLoadedRegardlessOfNotificationConfig ,
         // filtered cards are not send by the backend
         // so isNotificationFiltered is set to default value false
-        if (this.processStatesAlwaysLoaded.length > 0) {
+        if (this.processStatesLoadedRegardlessOfNotificationConfig.length > 0) {
             card.isNotificationFiltered = this.isLightCardNotificationFiltered(card);
         }
         if (card.parentCardId) {

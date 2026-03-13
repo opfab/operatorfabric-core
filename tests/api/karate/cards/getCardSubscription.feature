@@ -218,8 +218,8 @@ Scenario: Create perimeter and attach it to group Maintainer
       Then status 200
       And match response == ''
 
-    # Get subscription with processStatesAlwaysLoaded set to api_test.messageState and check that card is returned
-    Given url opfabUrl + 'cards-consultation/cardSubscription' +'?clientId=ghi0123456789jkl&processStatesAlwaysLoaded=api_test.messageState&updatedFrom=0'
+    # Get subscription with processStatesLoadedRegardlessOfNotificationConfig set to api_test.messageState and check that card is returned
+    Given url opfabUrl + 'cards-consultation/cardSubscription' +'?clientId=ghi0123456789jkl&processStatesLoadedRegardlessOfNotificationConfig=api_test.messageState&updatedFrom=0'
       And header Authorization = 'Bearer ' + authTokenAsTSO
       When method get
       Then status 200

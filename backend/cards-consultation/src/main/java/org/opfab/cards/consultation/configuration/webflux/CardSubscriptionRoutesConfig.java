@@ -130,8 +130,8 @@ public class CardSubscriptionRoutesConfig implements UserExtractor {
                             request.queryParam("updatedFrom").orElse(null));
                     cardOperationsGetParameters.notification = request.queryParam("notification").orElse(FALSE)
                             .equals(TRUE);
-                    cardOperationsGetParameters.processStatesAlwaysLoaded = parseProcessStates(
-                            request.queryParam("processStatesAlwaysLoaded").orElse(null));
+                    cardOperationsGetParameters.processStatesLoadedRegardlessOfNotificationConfig = parseProcessStates(
+                            request.queryParam("processStatesLoadedRegardlessOfNotificationConfig").orElse(null));
                     return cardOperationsGetParameters;
                 });
     }

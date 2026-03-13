@@ -16,7 +16,7 @@ import {Observable, of, Subject} from 'rxjs';
 export class OpfabEventStreamServerMock implements OpfabEventStreamServer {
     private readonly events = new Subject<any>();
 
-    initStream(processStatesAlwaysLoaded: string[]) {
+    initStream(processStatesLoadedRegardlessOfNotificationConfig: string[]) {
         // nothing to do
     }
     getStreamInitDone(): Observable<void> {

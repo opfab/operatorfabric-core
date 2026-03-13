@@ -24,12 +24,12 @@ export class OpfabStore {
         return OpfabStore.lightCardsStore;
     }
 
-    public static init(processStatesAlwaysLoaded: string[]) {
-        OpfabStore.lightCardsStore.initStore(processStatesAlwaysLoaded);
+    public static init(processStatesLoadedRegardlessOfNotificationConfig: string[]) {
+        OpfabStore.lightCardsStore.initStore(processStatesLoadedRegardlessOfNotificationConfig);
     }
 
     // This method shall only be used for testing purposes
-    public static reset(processStatesAlwaysLoaded: string[] = []) {
+    public static reset(processStatesLoadedRegardlessOfNotificationConfig: string[] = []) {
         if (OpfabStore.lightCardsStore) {
             OpfabStore.lightCardsStore.destroy();
         }
@@ -38,6 +38,6 @@ export class OpfabStore {
         }
         OpfabStore.lightCardsStore = new LightCardsStore();
         OpfabStore.filteredLightCardsStore = new FilteredLightCardsStore(OpfabStore.lightCardsStore);
-        OpfabStore.init(processStatesAlwaysLoaded);
+        OpfabStore.init(processStatesLoadedRegardlessOfNotificationConfig);
     }
 }

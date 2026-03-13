@@ -155,13 +155,13 @@ public class CardSubscriptionService implements EventListener {
     }
 
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId,
-            List<String> processStatesAlwaysLoaded) {
-        return this.subscribe(currentUserWithPerimeters, clientId, processStatesAlwaysLoaded,
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
+        return this.subscribe(currentUserWithPerimeters, clientId, processStatesLoadedRegardlessOfNotificationConfig,
                 null, false);
     }
 
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId,
-            List<String> processStatesAlwaysLoaded,
+            List<String> processStatesLoadedRegardlessOfNotificationConfig,
             String uiVersion, boolean sendReload) {
 
         if (mustCheckIfUserIsAlreadyConnected()) {
@@ -172,8 +172,8 @@ public class CardSubscriptionService implements EventListener {
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),
                 clientId);
         CardSubscription cardSubscription = new CardSubscription(userServiceCache, currentUserWithPerimeters, clientId);
-        cardSubscription.setProcessStatesAlwaysLoaded(
-                processStatesAlwaysLoaded);
+        cardSubscription.setProcessStatesLoadedRegardlessOfNotificationConfig(
+                processStatesLoadedRegardlessOfNotificationConfig);
 
         cardSubscription.initSubscription(sendReload, () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
@@ -272,7 +272,7 @@ public class CardSubscriptionService implements EventListener {
 
         if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(cardOperation,
                 subscription.getCurrentUserWithPerimeters(),
-                subscription.getProcessStatesAlwaysLoaded())) {
+                subscription.getProcessStatesLoadedRegardlessOfNotificationConfig())) {
             publishCard(cardOperation, subscription);
         } else {
             publishCardDelete(cardOperation, subscription);
@@ -297,7 +297,7 @@ public class CardSubscriptionService implements EventListener {
     private void publishCardDelete(JSONObject cardOperation, CardSubscription subscription) {
         if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,
                 subscription.getCurrentUserWithPerimeters(),
-                subscription.getProcessStatesAlwaysLoaded())) {
+                subscription.getProcessStatesLoadedRegardlessOfNotificationConfig())) {
             cardOperation.replace("type", "DELETE");
             cardOperation.replace("card", "");
             subscription.publishDataIntoSubscription(cardOperation.toJSONString());

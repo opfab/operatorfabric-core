@@ -267,9 +267,12 @@ export class ApplicationLoader {
     }
 
     private initServices() {
-        const processStatesAlwaysLoaded = ConfigService.getConfigValue('processStatesAlwaysLoaded', []);
-        OpfabEventStreamService.initEventStream(processStatesAlwaysLoaded);
-        OpfabStore.init(processStatesAlwaysLoaded); // this will effectively open the http stream connection
+        const processStatesLoadedRegardlessOfNotificationConfig = ConfigService.getConfigValue(
+            'processStatesLoadedRegardlessOfNotificationConfig',
+            []
+        );
+        OpfabEventStreamService.initEventStream(processStatesLoadedRegardlessOfNotificationConfig);
+        OpfabStore.init(processStatesLoadedRegardlessOfNotificationConfig); // this will effectively open the http stream connection
         ApplicationUpdateService.init();
         NotificationDecision.init();
         SystemNotificationService.initSystemNotificationService();

@@ -25,7 +25,7 @@ public class CardRoutingUtilities {
     }
 
     public static boolean checkIfUserNeedToReceiveADeleteCardOperation(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesAlwaysLoaded) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesLoadedRegardlessOfNotificationConfig) {
         // In case of an UPDATE, we need to send a delete card operation to delete the
         // card from the feed in case user was recipient of the previous version
         String typeOperation = cardOperation.get("type").toString();
@@ -35,7 +35,7 @@ public class CardRoutingUtilities {
             String state = (String) card.get("state");
             if (isReceiveRightsForProcessAndState(process, state,
                     loadUserRightsPerProcessAndState(currentUserWithPerimeters))
-                    && (shouldSendEvenIfNotNotified(process, state, processStatesAlwaysLoaded)
+                    && (shouldSendEvenIfNotNotified(process, state, processStatesLoadedRegardlessOfNotificationConfig)
                             || checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters)))
                 return true;
         }
@@ -43,12 +43,12 @@ public class CardRoutingUtilities {
     }
 
     private static boolean shouldSendEvenIfNotNotified(String process, String state, 
-            List<String> processStatesAlwaysLoaded) {
-        if (processStatesAlwaysLoaded == null || processStatesAlwaysLoaded.isEmpty()) {
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
+        if (processStatesLoadedRegardlessOfNotificationConfig == null || processStatesLoadedRegardlessOfNotificationConfig.isEmpty()) {
             return false;
         }
         String processState = process + "." + state;
-        return processStatesAlwaysLoaded.contains(processState);
+        return processStatesLoadedRegardlessOfNotificationConfig.contains(processState);
     }
 
     public static boolean checkIfUserMustBeNotifiedForThisProcessState(String process, String state,
@@ -94,7 +94,7 @@ public class CardRoutingUtilities {
      * ReceiveAndWrite)
      **/
     public static boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesAlwaysLoaded) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesLoadedRegardlessOfNotificationConfig) {
 
         String idCard;
         String process;
@@ -128,7 +128,7 @@ public class CardRoutingUtilities {
                 groupRecipientsArray,
                 userRecipientsArray,
                 entityRecipientsArray,
-                processStatesAlwaysLoaded);
+                processStatesLoadedRegardlessOfNotificationConfig);
     }
 
     public static boolean checkIfUserMustReceiveTheCard(CurrentUserWithPerimeters currentUserWithPerimeters,
@@ -140,13 +140,13 @@ public class CardRoutingUtilities {
             Collection<?> groupRecipientsArray,
             Collection<?> userRecipientsArray,
             Collection<?> entityRecipientsArray,
-            List<String> processStatesAlwaysLoaded) {
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
 
         String processStateKey = process + "." + state;
         List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 
-        if (!shouldSendEvenIfNotNotified(process, state, processStatesAlwaysLoaded)
+        if (!shouldSendEvenIfNotNotified(process, state, processStatesLoadedRegardlessOfNotificationConfig)
                 && !checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
             return false;
 

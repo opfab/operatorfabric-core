@@ -70,15 +70,15 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
     @Override
     public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
             CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
-            List<String> processStatesAlwaysLoaded) {
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
         return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields,
-                processStatesAlwaysLoaded)
+                processStatesLoadedRegardlessOfNotificationConfig)
                 .map(lightCard -> new CardOperation(CardOperationTypeEnum.ADD, null, lightCard));
     }
 
     private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
             CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
-            List<String> processStatesAlwaysLoaded) {
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
         Criteria criteria;
         if (updatedFrom != null) {
             if ((rangeEnd != null) || (rangeStart != null))
@@ -137,9 +137,9 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         }
 
         query.addCriteria(criteria);
-        if (processStatesAlwaysLoaded == null
-                || processStatesAlwaysLoaded.isEmpty()) {
-            // If no specific process/states to always load, then we can simply
+        if (processStatesLoadedRegardlessOfNotificationConfig == null
+                || processStatesLoadedRegardlessOfNotificationConfig.isEmpty()) {
+            // If no specific process/states to send regardless of notification config,
             // filter out all process/states not notified
             Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
                     currentUserWithPerimeters);
@@ -148,7 +148,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         } else {
             // Filter out process/states not notified, except for those in the list
             Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotifiedExceptList(
-                    currentUserWithPerimeters, processStatesAlwaysLoaded);
+                    currentUserWithPerimeters, processStatesLoadedRegardlessOfNotificationConfig);
 
             query.addCriteria(criteriaForProcessesStatesNotNotified);
         }
@@ -183,7 +183,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
      */
     private Criteria computeCriteriaForProcessesStatesNotNotifiedExceptList(
             CurrentUserWithPerimeters currentUserWithPerimeters,
-            List<String> processStatesAlwaysLoaded) {
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
         List<String> processesStatesNotNotifiedList = new ArrayList<>();
         Map<String, List<String>> processesStatesNotNotifiedMap = currentUserWithPerimeters
                 .getProcessesStatesNotNotified();
@@ -192,7 +192,7 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
             processesStatesNotNotifiedMap.keySet().forEach(process -> processesStatesNotNotifiedMap.get(process)
                     .forEach(state -> {
                         String processState = process + "." + state;
-                        if (!processStatesAlwaysLoaded.contains(processState)) {
+                        if (!processStatesLoadedRegardlessOfNotificationConfig.contains(processState)) {
                             processesStatesNotNotifiedList.add(processState);
                         }
                     }));

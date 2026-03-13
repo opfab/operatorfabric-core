@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 import {ServerResponse} from '../../../server/ServerResponse';
 
 export abstract class OpfabEventStreamServer {
-    abstract initStream(processStatesAlwaysLoaded: string[]): void;
+    abstract initStream(processStatesLoadedRegardlessOfNotificationConfig: string[]): void;
     abstract getStreamInitDone(): Observable<void>;
     abstract closeStream();
     abstract getEvents(): Observable<any>;

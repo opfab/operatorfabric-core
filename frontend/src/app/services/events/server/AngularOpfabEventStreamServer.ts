@@ -51,7 +51,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.isHeartbeatRunning = false;
     }
 
-    public initStream(processStatesAlwaysLoaded: string[]): void {
+    public initStream(processStatesLoadedRegardlessOfNotificationConfig: string[]): void {
         this.heartbeatSendingIntervalSeconds = ConfigService.getConfigValue('heartbeatSendingInterval', 30);
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
@@ -60,10 +60,10 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
             securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`};
         }
 
-        // Build URL with processStatesAlwaysLoaded parameter
-        const processStatesParam = encodeURIComponent(processStatesAlwaysLoaded.join(';'));
+        // Build URL with processStatesLoadedRegardlessOfNotificationConfig parameter
+        const processStatesParam = encodeURIComponent(processStatesLoadedRegardlessOfNotificationConfig.join(';'));
         this.eventSource = new EventSourcePolyfill(
-            `${this.eventStreamUrl}&notification=true&processStatesAlwaysLoaded=${processStatesParam}`,
+            `${this.eventStreamUrl}&notification=true&processStatesLoadedRegardlessOfNotificationConfig=${processStatesParam}`,
             {
                 headers: securityHeader
                 // if necessary, we can set here internal heartbeatTimeout: xxx (in ms)

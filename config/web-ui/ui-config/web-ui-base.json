@@ -5,7 +5,7 @@
   "showUserEntitiesOnTopRightOfTheScreen": true,
   "externalDevicesEnabled": true,
   "heartbeatSendingInterval": 30,
-  "processStatesAlwaysLoaded": ["defaultProcess.dataQualityState"],
+  "processStatesLoadedRegardlessOfNotificationConfig": ["defaultProcess.dataQualityState"],
   "defaultEntryPage": "feed",
   "dateRangePickerConfig":"default",
   "activityArea" : {

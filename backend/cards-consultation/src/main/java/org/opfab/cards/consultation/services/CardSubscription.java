@@ -25,7 +25,7 @@ public class CardSubscription {
     private Instant lastHearbeatReceptionDate;
     private CurrentUserWithPerimeters currentUserWithPerimeters;
     private String id;
-    private List<String> processStatesAlwaysLoaded;
+    private List<String> processStatesLoadedRegardlessOfNotificationConfig;
     private Flux<String> publisher;
     private FluxSink<String> messageSink;
 
@@ -121,15 +121,15 @@ public class CardSubscription {
         return this.lastHearbeatReceptionDate;
     }
 
-    public List<String> getProcessStatesAlwaysLoaded() {
-        return processStatesAlwaysLoaded != null
-                ? processStatesAlwaysLoaded
+    public List<String> getProcessStatesLoadedRegardlessOfNotificationConfig() {
+        return processStatesLoadedRegardlessOfNotificationConfig != null
+                ? processStatesLoadedRegardlessOfNotificationConfig
                 : Collections.emptyList();
     }
 
-    public void setProcessStatesAlwaysLoaded(
-            List<String> processStatesAlwaysLoaded) {
-        this.processStatesAlwaysLoaded = processStatesAlwaysLoaded;
+    public void setProcessStatesLoadedRegardlessOfNotificationConfig(
+            List<String> processStatesLoadedRegardlessOfNotificationConfig) {
+        this.processStatesLoadedRegardlessOfNotificationConfig = processStatesLoadedRegardlessOfNotificationConfig;
     }
 
 }
