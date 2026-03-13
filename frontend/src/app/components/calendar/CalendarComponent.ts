@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,6 +25,7 @@ import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService'
 import {OpfabStore} from '../../store/OpfabStore';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {CardComponent} from '../card/CardComponent';
+import {Card} from 'app/model/Card';
 
 @Component({
     selector: 'of-calendar',
@@ -37,7 +38,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
     constructor() {
         ProcessesService.getAllProcesses().forEach((process) => {
-            if (process.uiVisibility?.calendar) this.mapOfProcesses.set(process.id, 1);
+            if (process.uiVisibility?.calendar) this.processesVisiblesInCalendar.set(process.id, 1);
         });
     }
 
@@ -75,7 +76,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         datesSet: this.datesRangeChange.bind(this),
         eventClick: this.selectCard.bind(this)
     };
-    mapOfProcesses = new Map<string, number>();
+    processesVisiblesInCalendar = new Map<string, number>();
 
     ngOnInit() {
         this.initDataPipe();
@@ -88,37 +89,38 @@ export class CalendarComponent implements OnInit, OnDestroy {
             .subscribe((cards) => this.processCards(cards));
     }
 
-    private processCards(cards) {
+    private processCards(cards: Card[]) {
         this.calendarEvents = [];
         for (const card of cards) {
-            if (this.mapOfProcesses?.has(card.process)) {
-                if (card.timeSpans) {
-                    for (const timespan of card.timeSpans) {
-                        if (timespan.end) {
-                            const startDate = new Date(timespan.start.valueOf());
-                            const endDate = new Date(timespan.end.valueOf());
-
-                            this.calendarEvents = this.calendarEvents.concat({
-                                // add new event data. must create new array
-                                id: card.id,
-                                title: card.titleTranslated,
-                                start: startDate,
-                                end: endDate,
-                                className: [
-                                    'opfab-calendar-event',
-                                    'opfab-calendar-event-' + card.severity.toLowerCase()
-                                ],
-                                allDay: false
-                            });
-                        }
-                    }
-                }
-                this.computeRRuleCalendarEvents(card);
+            if (this.processesVisiblesInCalendar?.has(card.process) && !card.isNotificationFiltered) {
+                this.processOneCard(card);
             }
         }
         // It is necessary to reassign the updated events to the corresponding options property to trigger change detection
         // See https://fullcalendar.io/docs/angular §Modifying properties
         this.calendarOptions.events = this.calendarEvents;
+    }
+
+    private processOneCard(card: Card) {
+        if (card.timeSpans) {
+            for (const timespan of card.timeSpans) {
+                if (timespan.end) {
+                    const startDate = new Date(timespan.start.valueOf());
+                    const endDate = new Date(timespan.end.valueOf());
+
+                    this.calendarEvents = this.calendarEvents.concat({
+                        // add new event data. must create new array
+                        id: card.id,
+                        title: card.titleTranslated,
+                        start: startDate,
+                        end: endDate,
+                        className: ['opfab-calendar-event', 'opfab-calendar-event-' + card.severity.toLowerCase()],
+                        allDay: false
+                    });
+                }
+            }
+        }
+        this.computeRRuleCalendarEvents(card);
     }
 
     private computeRRuleCalendarEvents(card: any) {

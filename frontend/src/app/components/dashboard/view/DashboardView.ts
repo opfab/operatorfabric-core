@@ -90,7 +90,9 @@ export class DashboardView {
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {
-                const cards = results[1].filter((card) => results[0].applyFilter(card));
+                const cards = results[1].filter((card) =>
+                    this.filteredLightCardStore.getBusinessDateFilter().applyFilter(card)
+                );
                 this.buildTiles();
                 cards.forEach((lightCard) => {
                     this.processOneLightCard(lightCard);

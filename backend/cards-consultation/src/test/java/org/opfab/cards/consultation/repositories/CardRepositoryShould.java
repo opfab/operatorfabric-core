@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Predicate;
@@ -149,7 +150,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null, null));
         persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, nowMinusThree, nowMinusTwo, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, nowMinusThree, nowMinusTwo, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .expectComplete()
                 .verify();
@@ -161,7 +162,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", nowMinusOne, now, nowPlusTwo, LOGIN, null, null));
         persistCard(createSimpleCard("3", nowMinusOne, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusOne, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusOne, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -182,7 +183,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null, null));
         persistCard(createSimpleCard("3", now, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -208,7 +209,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("3", nowMinusOne, nowPlusOne, null, LOGIN, null, null));
 
         HashMap<String, CardOperation> results = new HashMap<String, CardOperation>();
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusTwo, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusTwo, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -234,7 +235,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("3", now, nowMinusTwo, nowMinusOne, LOGIN, null, null));
 
         HashMap<String, CardOperation> results = new HashMap<String, CardOperation>();
-        StepVerifier.create(repository.getCardOperations(null, null, nowMinusOne, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, null, nowMinusOne, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -260,7 +261,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("3", nowPlusOne, nowMinusTwo, nowMinusOne, LOGIN, null, null));
 
         HashMap<String, CardOperation> results = new HashMap<String, CardOperation>();
-        StepVerifier.create(repository.getCardOperations(null, nowPlusOne, null, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, nowPlusOne, null, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -285,7 +286,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null, null));
         persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(nowPlusThree, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(nowPlusThree, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .expectComplete()
                 .verify();
@@ -297,7 +298,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", nowPlusTwo, now, nowPlusTwo, LOGIN, null, null));
         persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(nowPlusOne, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(nowPlusOne, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -318,7 +319,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", nowPlusOne, now, nowPlusOne, LOGIN, null, null));
         persistCard(createSimpleCard("3", nowPlusOne, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(nowPlusOne, nowPlusTwo, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(nowPlusOne, nowPlusTwo, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -335,7 +336,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null, null));
         persistCard(createSimpleCard("3", nowPlusTwo, nowPlusTwo, nowPlusThree, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(nowMinusThree, now, nowPlusOne, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(nowMinusThree, now, nowPlusOne, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -350,7 +351,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, LOGIN, null, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, LOGIN, null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .expectComplete()
                 .verify();
@@ -361,7 +362,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[] { "rte", "operator" }, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[] { "rte", "operator" }, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .expectComplete()
                 .verify();
@@ -372,7 +373,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("1", now, now, nowPlusOne, null, new String[] { "rte", "operator" }, null));
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[] { "rte", "operator" }, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -393,7 +394,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[] { "rte", "operator" },
                 new String[] { "entity2" }));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .expectComplete()
                 .verify();
@@ -406,7 +407,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, now, nowPlusTwo, null, new String[] { "rte", "operator" },
                 new String[] { "entity1" }));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, rteUserEntity1, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -426,7 +427,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null, null, new String[] { "admin" },
                 null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -450,7 +451,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null, null,
                 new String[] { "dummyuser" }, null, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -473,7 +474,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null, null, null,
                 new String[] { "admin" }, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();
@@ -497,7 +498,7 @@ class CardRepositoryShould {
         persistCard(createSimpleCard("2", now, nowPlusTwo, nowPlusThree, LOGIN, null, null, null,
                 new String[] { "dummyuser" }, null));
 
-        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null)
+        StepVerifier.create(repository.getCardOperations(null, now, nowPlusThree, adminUser, null, Collections.emptyList())
                 .doOnNext(TestUtilities::logCardOperation))
                 .assertNext(op -> {
                     assertThat(op.card()).isNotNull();

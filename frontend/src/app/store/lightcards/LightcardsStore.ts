@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,6 +56,13 @@ export class LightCardsStore {
 
     private timeOfLastDebounce = 0;
     private numberOfCardProcessedByPreviousDebounce = 0;
+
+    // By Default , we do not get from the backend the cards that the user has filtered
+    // via the notification filter screen
+    // But in case we need to show on custom card list screen some filtered notifications,
+    // we can set this variable to a list of process.state to get them from the backend and have it
+    // available in the store for the custom card list screen.
+    private processStatesAlwaysLoaded: string[] = [];
 
     private nbCardLoadedInHalfSecondInterval = 0;
     private readonly receivedAcksSubject = new Subject<{
@@ -123,7 +130,8 @@ export class LightCardsStore {
 
     // debounceTimeInMs is to be modify only in testing case
     // Default value must be kept for production
-    public initStore() {
+    public initStore(processStatesAlwaysLoaded: string[] = []) {
+        this.processStatesAlwaysLoaded = processStatesAlwaysLoaded;
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         OpfabEventStreamService.getCardOperationStream()
             .pipe(takeUntil(this.unsubscribe$))
@@ -203,6 +211,12 @@ export class LightCardsStore {
 
     public addOrUpdateLightCard(card) {
         this.nbCardLoadedInHalfSecondInterval++;
+        // in case we have no processStatesAlwaysLoaded ,
+        // filtered cards are not send by the backend
+        // so isNotificationFiltered is set to default value false
+        if (this.processStatesAlwaysLoaded.length > 0) {
+            card.isNotificationFiltered = this.isLightCardNotificationFiltered(card);
+        }
         if (card.parentCardId) {
             this.addChildCard(card);
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
@@ -227,6 +241,15 @@ export class LightCardsStore {
             card.hasBeenRead = this.isLightCardHasBeenRead(card);
             this.addOrUpdateParentLightCard(card);
         }
+    }
+
+    private isLightCardNotificationFiltered(card) {
+        const processesStatesNotNotified = UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified;
+        if (!processesStatesNotNotified) {
+            return false;
+        }
+        const states = processesStatesNotNotified.get(card.process);
+        return states ? states.includes(card.state) : false;
     }
 
     public isLightCardHasBeenAcknowledged(card) {
@@ -296,7 +319,9 @@ export class LightCardsStore {
 
     private addOrUpdateParentLightCard(card) {
         this.lightCards.set(card.id, card);
-        this.newLightCards.next(card);
+        // do not emit event if the card is filtered for notification
+        // if not it will trigger sound or system notification
+        if (!card.isNotificationFiltered) this.newLightCards.next(card);
         this.lightCardsEvents.next(this.lightCards);
     }
 

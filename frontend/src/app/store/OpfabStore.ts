@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,12 +24,12 @@ export class OpfabStore {
         return OpfabStore.lightCardsStore;
     }
 
-    public static init() {
-        OpfabStore.lightCardsStore.initStore();
+    public static init(processStatesAlwaysLoaded: string[]) {
+        OpfabStore.lightCardsStore.initStore(processStatesAlwaysLoaded);
     }
 
     // This method shall only be used for testing purposes
-    public static reset() {
+    public static reset(processStatesAlwaysLoaded: string[] = []) {
         if (OpfabStore.lightCardsStore) {
             OpfabStore.lightCardsStore.destroy();
         }
@@ -38,6 +38,6 @@ export class OpfabStore {
         }
         OpfabStore.lightCardsStore = new LightCardsStore();
         OpfabStore.filteredLightCardsStore = new FilteredLightCardsStore(OpfabStore.lightCardsStore);
-        OpfabStore.init();
+        OpfabStore.init(processStatesAlwaysLoaded);
     }
 }

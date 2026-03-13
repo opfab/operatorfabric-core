@@ -51,7 +51,7 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         this.isHeartbeatRunning = false;
     }
 
-    public initStream() {
+    public initStream(processStatesAlwaysLoaded: string[]): void {
         this.heartbeatSendingIntervalSeconds = ConfigService.getConfigValue('heartbeatSendingInterval', 30);
 
         // security header needed here as SSE request are not intercepted by our angular header interceptor
@@ -59,10 +59,16 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
         if (CurrentUserStore.doesAuthenticationUseToken()) {
             securityHeader = {Authorization: `Bearer ${CurrentUserStore.getToken()}`};
         }
-        this.eventSource = new EventSourcePolyfill(`${this.eventStreamUrl}&notification=true`, {
-            headers: securityHeader
-            // if necessary, we can set here internal heartbeatTimeout: xxx (in ms)
-        });
+
+        // Build URL with processStatesAlwaysLoaded parameter
+        const processStatesParam = encodeURIComponent(processStatesAlwaysLoaded.join(';'));
+        this.eventSource = new EventSourcePolyfill(
+            `${this.eventStreamUrl}&notification=true&processStatesAlwaysLoaded=${processStatesParam}`,
+            {
+                headers: securityHeader
+                // if necessary, we can set here internal heartbeatTimeout: xxx (in ms)
+            }
+        );
 
         this.checkHeartBeatReceive();
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -87,9 +87,11 @@ export class FilteredLightCardsStore {
 
                     if (onlyBusinessFitlerForTimeLine) {
                         const cardFilteredByBusinessDate =
-                            this.lightCardFilter.filterLightCardsOnlyByBusinessDate(lightCards);
+                            this.lightCardFilter.filterLightCardsOnlyByBusinessDateAndIsNotification(lightCards);
                         this.filteredLightCardsForTimeLine.next(cardFilteredByBusinessDate);
-                        return this.lightCardFilter.filterLightCardsWithoutBusinessDate(cardFilteredByBusinessDate);
+                        return this.lightCardFilter.filterLightCardsExcludingBusinessDateAndIsNotificationFilters(
+                            cardFilteredByBusinessDate
+                        );
                     }
 
                     const cardFilter = this.lightCardFilter.filterLightCards(lightCards);

@@ -722,6 +722,20 @@ results: {
 
 For each configured severity, a column will be exported (but not shown in the UI) with the entities that responded with that severity.These columns are only present in the export, not in the UI.
 
+=== User notification filter  
+
+
+It is possible to see cards in custom screens even if cards are filtered by the user via the notification configuration screen. To do so, you can configure in the web-ui.json the list of processes/states for which the card should be visible even if it is filtered. The parameter to configure is `processStatesAlwaysLoaded` and the value is an array of process/state in the format "processName.stateName".
+
+For example, if you want to see the cards of the state "state1" of the process "process1" even if the user has filtered the state, you can set the parameter as follows:
+
+....
+"processStatesAlwaysLoaded": [
+    "process1.state1"
+]
+....
+
+
 
 == Dashboard screen
 

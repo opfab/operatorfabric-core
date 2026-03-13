@@ -154,11 +154,14 @@ public class CardSubscriptionService implements EventListener {
         }
     }
 
-    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId) {
-        return this.subscribe(currentUserWithPerimeters, clientId, null, false);
+    public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId,
+            List<String> processStatesAlwaysLoaded) {
+        return this.subscribe(currentUserWithPerimeters, clientId, processStatesAlwaysLoaded,
+                null, false);
     }
 
     public CardSubscription subscribe(CurrentUserWithPerimeters currentUserWithPerimeters, String clientId,
+            List<String> processStatesAlwaysLoaded,
             String uiVersion, boolean sendReload) {
 
         if (mustCheckIfUserIsAlreadyConnected()) {
@@ -169,6 +172,8 @@ public class CardSubscriptionService implements EventListener {
         String subId = CardSubscription.computeSubscriptionId(currentUserWithPerimeters.getUserData().getLogin(),
                 clientId);
         CardSubscription cardSubscription = new CardSubscription(userServiceCache, currentUserWithPerimeters, clientId);
+        cardSubscription.setProcessStatesAlwaysLoaded(
+                processStatesAlwaysLoaded);
 
         cardSubscription.initSubscription(sendReload, () -> evictSubscription(subId));
         cache.put(subId, cardSubscription);
@@ -266,7 +271,8 @@ public class CardSubscriptionService implements EventListener {
         }
 
         if (CardRoutingUtilities.checkIfUserMustReceiveTheCard(cardOperation,
-                subscription.getCurrentUserWithPerimeters())) {
+                subscription.getCurrentUserWithPerimeters(),
+                subscription.getProcessStatesAlwaysLoaded())) {
             publishCard(cardOperation, subscription);
         } else {
             publishCardDelete(cardOperation, subscription);
@@ -290,7 +296,8 @@ public class CardSubscriptionService implements EventListener {
 
     private void publishCardDelete(JSONObject cardOperation, CardSubscription subscription) {
         if (CardRoutingUtilities.checkIfUserNeedToReceiveADeleteCardOperation(cardOperation,
-                subscription.getCurrentUserWithPerimeters())) {
+                subscription.getCurrentUserWithPerimeters(),
+                subscription.getProcessStatesAlwaysLoaded())) {
             cardOperation.replace("type", "DELETE");
             cardOperation.replace("card", "");
             subscription.publishDataIntoSubscription(cardOperation.toJSONString());
