@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,41 +11,34 @@ import {Filter, FilterType} from '@ofStore/lightcards/model/Filter';
 import {Card} from 'app/model/Card';
 import {Severity} from 'app/model/Severity';
 import {LogOption, LoggerService as logger} from '@ofServices/logs/LoggerService';
-import {Observable, Subject, ReplaySubject} from 'rxjs';
+import {Observable, ReplaySubject, filter} from 'rxjs';
 
 export class LightCardsFilter {
     private static readonly TWO_HOURS_IN_MILLIS = 2 * 60 * 60 * 1000;
     private static readonly TWO_DAYS_IN_MILLIS = 48 * 60 * 60 * 1000;
 
     private readonly filters = new Array();
-    private businessDateFilter: Filter;
-    private readonly newBusinessDateFilter = new Subject();
     private readonly filterChanges = new ReplaySubject(1);
 
     constructor() {
-        this.initFilter();
+        this.initFilterList();
     }
 
-    private initFilter() {
-        this.filters[FilterType.TYPE_FILTER] = this.initTypeFilter();
-        this.filters[FilterType.PUBLISHDATE_FILTER] = this.initPublishDateFilter();
-        this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.initAcknowledgementFilter();
-        this.filters[FilterType.RESPONSE_FILTER] = this.initResponseFilter();
-        this.filters[FilterType.PROCESS_FILTER] = this.initProcessFilter();
-        this.businessDateFilter = this.initBusinessDateFilter();
+    private initFilterList() {
+        this.filters[FilterType.TYPE_FILTER] = this.typeFilter;
+        this.filters[FilterType.PUBLISHDATE_FILTER] = this.publishDateFilter;
+        this.filters[FilterType.ACKNOWLEDGEMENT_FILTER] = this.acknowledgementFilter;
+        this.filters[FilterType.RESPONSE_FILTER] = this.responseFilter;
+        this.filters[FilterType.PROCESS_FILTER] = this.processFilter;
+        this.filters[FilterType.NOTIFICATION_FILTER] = this.isNotificationFilter;
+        this.filters[FilterType.BUSINESSDATE_FILTER] = this.businessDateFilter;
     }
 
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
-        if (filterType === FilterType.BUSINESSDATE_FILTER) {
-            this.businessDateFilter.active = active;
-            this.businessDateFilter.status = status;
-            this.newBusinessDateFilter.next(this.businessDateFilter);
-        } else {
-            const filterToUpdate = this.filters[filterType];
-            if (filterToUpdate) {
-                filterToUpdate.active = active;
-                filterToUpdate.status = status;
-            }
+        const filterToUpdate = this.filters[filterType];
+        if (filterToUpdate) {
+            filterToUpdate.active = active;
+            filterToUpdate.status = status;
         }
         logger.debug(
             'Filter change : type=' +
@@ -56,23 +49,27 @@ export class LightCardsFilter {
                 JSON.stringify(status),
             LogOption.REMOTE
         );
-        this.filterChanges.next(true);
+        this.filterChanges.next(filterType);
     }
 
     public filterLightCards(cards: Card[]) {
-        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter, ...this.filters]));
-    }
-
-    public filterLightCardsOnlyByBusinessDate(cards: Card[]) {
-        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter]));
-    }
-
-    public filterLightCardsWithoutBusinessDate(cards: Card[]) {
         return cards.filter((card) => Filter.chainFilter(card, this.filters));
     }
 
-    public getFilters(): Array<Filter> {
-        return this.filters;
+    public filterLightCardsOnlyByBusinessDateAndIsNotification(cards: Card[]) {
+        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter, this.isNotificationFilter]));
+    }
+
+    public filterLightCardsExcludingBusinessDateAndIsNotificationFilters(cards: Card[]) {
+        return cards.filter((card) =>
+            Filter.chainFilter(card, [
+                this.typeFilter,
+                this.publishDateFilter,
+                this.acknowledgementFilter,
+                this.responseFilter,
+                this.processFilter
+            ])
+        );
     }
 
     public getFiltersChanges() {
@@ -84,57 +81,51 @@ export class LightCardsFilter {
     }
 
     public getBusinessDateFilterChanges(): Observable<any> {
-        return this.newBusinessDateFilter.asObservable();
+        return this.filterChanges
+            .asObservable()
+            .pipe(filter((filterType) => filterType === FilterType.BUSINESSDATE_FILTER));
     }
 
-    private initTypeFilter(): Filter {
-        const alarm = Severity.ALARM;
-        const action = Severity.ACTION;
-        const compliant = Severity.COMPLIANT;
-        const information = Severity.INFORMATION;
-        return new Filter(
-            (card, status) => {
+    private readonly typeFilter = new Filter(
+        (card, status) => {
+            return (
+                (status.alarm && card.severity === Severity.ALARM) ||
+                (status.action && card.severity === Severity.ACTION) ||
+                (status.compliant && card.severity === Severity.COMPLIANT) ||
+                (status.information && card.severity === Severity.INFORMATION)
+            );
+        },
+        true,
+        {
+            alarm: true,
+            action: true,
+            compliant: true,
+            information: true
+        }
+    );
+
+    private readonly businessDateFilter = new Filter(
+        (card: Card, status) => {
+            if (status.start && status.end) {
+                return this.checkCardVisibilityinRange(card, status.start, status.end);
+            } else if (status.start) {
                 return (
-                    (status.alarm && card.severity === alarm) ||
-                    (status.action && card.severity === action) ||
-                    (status.compliant && card.severity === compliant) ||
-                    (status.information && card.severity === information)
+                    card.publishDate >= status.start ||
+                    (!card.endDate && card.startDate >= status.start) ||
+                    (card.endDate && status.start <= card.endDate)
                 );
-            },
-            true,
-            {
-                alarm: true,
-                action: true,
-                compliant: true,
-                information: true
+            } else if (status.end) {
+                return card.publishDate <= status.end || card.startDate <= status.end;
             }
-        );
-    }
-
-    private initBusinessDateFilter() {
-        return new Filter(
-            (card: Card, status) => {
-                if (status.start && status.end) {
-                    return this.checkCardVisibilityinRange(card, status.start, status.end);
-                } else if (status.start) {
-                    return (
-                        card.publishDate >= status.start ||
-                        (!card.endDate && card.startDate >= status.start) ||
-                        (card.endDate && status.start <= card.endDate)
-                    );
-                } else if (status.end) {
-                    return card.publishDate <= status.end || card.startDate <= status.end;
-                }
-                logger.warn('Unexpected business date filter situation');
-                return false;
-            },
-            false,
-            {
-                start: Date.now() - LightCardsFilter.TWO_HOURS_IN_MILLIS,
-                end: Date.now() + LightCardsFilter.TWO_DAYS_IN_MILLIS
-            }
-        );
-    }
+            logger.warn('Unexpected business date filter situation');
+            return false;
+        },
+        false,
+        {
+            start: Date.now() - LightCardsFilter.TWO_HOURS_IN_MILLIS,
+            end: Date.now() + LightCardsFilter.TWO_DAYS_IN_MILLIS
+        }
+    );
 
     private checkCardVisibilityinRange(card: Card, start, end) {
         if (start <= card.publishDate && card.publishDate <= end) {
@@ -150,56 +141,57 @@ export class LightCardsFilter {
         );
     }
 
-    private initPublishDateFilter(): Filter {
-        return new Filter(
-            (card: Card, status) => {
-                if (status.start && status.end) {
-                    return status.start <= card.publishDate && card.publishDate <= status.end;
-                } else if (status.start) {
-                    return status.start <= card.publishDate;
-                } else if (status.end) {
-                    return card.publishDate <= status.end;
-                }
-                return true;
-            },
-            false,
-            {start: null, end: null}
-        );
-    }
+    private readonly publishDateFilter = new Filter(
+        (card: Card, status) => {
+            if (status.start && status.end) {
+                return status.start <= card.publishDate && card.publishDate <= status.end;
+            } else if (status.start) {
+                return status.start <= card.publishDate;
+            } else if (status.end) {
+                return card.publishDate <= status.end;
+            }
+            return true;
+        },
+        false,
+        {start: null, end: null}
+    );
 
-    private initAcknowledgementFilter(): Filter {
-        return new Filter(
-            (card: Card, status) => {
-                if (status == null) return false;
-                return (status && card.hasBeenAcknowledged) || (!status && !card.hasBeenAcknowledged);
-            },
-            true,
-            false
-        );
-    }
+    private readonly acknowledgementFilter = new Filter(
+        (card: Card, status) => {
+            if (status == null) return false;
+            return (status && card.hasBeenAcknowledged) || (!status && !card.hasBeenAcknowledged);
+        },
+        true,
+        false
+    );
 
-    private initResponseFilter(): Filter {
-        return new Filter(
-            (card: Card, status) => {
-                return status || (!status && !card.hasChildCardFromCurrentUserEntity);
-            },
-            false,
-            true
-        );
-    }
+    private readonly responseFilter = new Filter(
+        (card: Card, status) => {
+            return status || (!status && !card.hasChildCardFromCurrentUserEntity);
+        },
+        false,
+        true
+    );
 
-    private initProcessFilter(): Filter {
-        return new Filter(
-            (card: Card, status) => {
-                if (status.process && status.state) {
-                    return status.process === card.process && status.state === card.process + '.' + card.state;
-                } else if (status.process) {
-                    return status.process === card.process;
-                }
-                return true;
-            },
-            false,
-            {process: null}
-        );
-    }
+    private readonly processFilter = new Filter(
+        (card: Card, status) => {
+            if (status.process && status.state) {
+                return status.process === card.process && status.state === card.process + '.' + card.state;
+            } else if (status.process) {
+                return status.process === card.process;
+            }
+            return true;
+        },
+        false,
+        {process: null}
+    );
+
+    private readonly isNotificationFilter = new Filter(
+        (card: Card, status) => {
+            if (status) return !card.isNotificationFiltered;
+            return true;
+        },
+        true,
+        true
+    );
 }

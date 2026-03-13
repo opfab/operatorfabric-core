@@ -11,6 +11,7 @@ package org.opfab.cards.consultation.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.opfab.cards.consultation.model.Card;
@@ -29,8 +30,11 @@ public class ConnectedRecipientsPreviewService {
     public List<String> getConnectedRecipients(Card lightcard) {
         List<String> connectedRecipients = new ArrayList<>();
 
-        List<String> cardRecipients = lightcard.entityRecipients != null ? lightcard.entityRecipients : new ArrayList<>();
-        List<String> cardRecipientsForInformation = lightcard.entityRecipientsForInformation != null ? lightcard.entityRecipientsForInformation : new ArrayList<>();
+        List<String> cardRecipients = lightcard.entityRecipients != null ? lightcard.entityRecipients
+                : new ArrayList<>();
+        List<String> cardRecipientsForInformation = lightcard.entityRecipientsForInformation != null
+                ? lightcard.entityRecipientsForInformation
+                : new ArrayList<>();
 
         List<String> cardTotalRecipients = new ArrayList<>(cardRecipients);
         cardTotalRecipients.addAll(cardRecipientsForInformation);
@@ -46,7 +50,8 @@ public class ConnectedRecipientsPreviewService {
                     lightcard.publisherType.toString(),
                     lightcard.groupRecipients,
                     lightcard.userRecipients,
-                    cardTotalRecipients)) {
+                    cardTotalRecipients,
+                    Collections.emptyList())) {
                 for (String entity : userWithPerimeters.getUserData().getEntities()) {
                     if (cardTotalRecipients.contains(entity)) {
                         connectedRecipients.add(entity);

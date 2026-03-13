@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import java.time.Instant;
+import java.util.List;
 
 /*
 * <p>Needed to avoid trouble at runtime when springframework try to create mongo request for findByIdWithUser method</p>
@@ -43,7 +44,8 @@ public interface CardCustomRepository extends UserUtilitiesCommonToCardRepositor
      * login or to groups or to entities
      */
     Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields);
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
+            List<String> processStatesAlwaysLoaded);
 
     Mono<CardPage> findWithUserAndFilter(
             Tuple2<CurrentUserWithPerimeters, CardsFilter> params);

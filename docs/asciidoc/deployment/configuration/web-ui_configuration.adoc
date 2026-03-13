@@ -105,7 +105,6 @@ a|card time display mode in the feed. Values :
 
 |i18n.supported.locales||no|List of supported locales (Only fr and en so far)
 Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[TZ database].
-
 |logging.filters.publishDate.days|10|no|The default search period (days) for publish date filter in logging page
 |logging.filters.tags.list||no|List of tags to choose from in the corresponding filter in logging page
 
@@ -113,6 +112,7 @@ Values should be taken from the link:https://en.wikipedia.org/wiki/List_of_tz_da
 |logo.height|40|no|The height of the logo (in px) (only taken into account if logo.base64 is set). The value cannot be more than 48px (if it is set to more than 48px, it will be ignored and set to 48px).
 |logo.width|40|no|The width of the logo (in px) (only taken into account if logo.base64 is set).
 
+|processStatesAlwaysLoaded|[]|no|Array of strings specifying process.state pairs (e.g., ["process1.state1", "process2.state2"]) that should be sent to the UI even if the user has configured them as not notified in the notification configuration screen. These cards will still not be visible in the feed but will be available in card list custom screens. Each entry should follow the format "processId.stateId". Be aware that this can lead to performance issues if too many process/state pairs are configured.
 |secondsToCloseSession|60|no|Number of seconds between logout and token expiration. If you use IMPLICIT authentication mode, exercise caution when modifying the value to prevent logouts before token silent refresh.
 
 |security.changePasswordUrl||no|URL to change the user password (if the top-right menu item "Change password" is visible)

@@ -31,6 +31,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -80,7 +82,7 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithNoUSerConnectedIsEmptyAfterDeleteSubscription() {
-            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test", Collections.emptyList());
             subscription.getPublisher().subscribe(log::info);
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                     .expectBody()
@@ -95,7 +97,7 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithOneUserConnected() {
-            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test");
+            CardSubscription subscription = service.subscribe(currentUserWithPerimeters, "test", Collections.emptyList());
             subscription.getPublisher().subscribe(log::info);
             webTestClient.get().uri("/connections").exchange().expectStatus().isOk()
                     .expectBody()
@@ -109,7 +111,7 @@ class ConnectionRoutesShould {
             Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(true);
 
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test", Collections.emptyList());
             Assertions.assertTrue(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
 
             // Simulate a log off
@@ -125,7 +127,7 @@ class ConnectionRoutesShould {
             Mockito.when(subscriptionSpy.mustCheckIfUserIsAlreadyConnected()).thenReturn(false);
 
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
-            subscriptionSpy.subscribe(currentUserWithPerimeters, "test");
+            subscriptionSpy.subscribe(currentUserWithPerimeters, "test", Collections.emptyList());
             Assertions.assertFalse(subscriptionSpy.willDisconnectAnExistingSubscriptionWhenLoggingIn(USER_LOGIN));
 
             // Simulate a log off
@@ -136,9 +138,9 @@ class ConnectionRoutesShould {
 
         @Test
         void respondWithThreeUserConnected() {
-            service.subscribe(currentUserWithPerimeters, "test").getPublisher().subscribe(log::info);
-            service.subscribe(createUserWithPerimeter("testuser2"), "test2").getPublisher().subscribe(log::info);
-            service.subscribe(createUserWithPerimeter("testuser3"), "test3").getPublisher().subscribe(log::info);
+            service.subscribe(currentUserWithPerimeters, "test", Collections.emptyList()).getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser2"), "test2", Collections.emptyList()).getPublisher().subscribe(log::info);
+            service.subscribe(createUserWithPerimeter("testuser3"), "test3", Collections.emptyList()).getPublisher().subscribe(log::info);
 
             String[] expectedUsers = {
                     "{\"login\":\"testuser\",\"entitiesConnected\":[],\"groups\":[]}",

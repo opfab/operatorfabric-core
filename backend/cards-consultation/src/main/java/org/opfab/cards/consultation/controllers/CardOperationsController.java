@@ -63,23 +63,29 @@ public class CardOperationsController {
      */
     public Flux<String> registerSubscriptionAndPublish(Mono<CardOperationsGetParameters> input) {
         return input
-                .flatMapMany(t -> {
+                .flatMapMany(cardOperationsGetParameters -> {
 
-                    if (t.clientId != null) {
-                        log.debug("Check UI version {} match current version: {}", t.uiVersion, version);
+                    if (cardOperationsGetParameters.clientId != null) {
+                        log.debug("Check UI version {} match current version: {}",
+                                cardOperationsGetParameters.uiVersion, version);
 
                         CardSubscription subscription = null;
-                        if (t.notification) {
+                        if (cardOperationsGetParameters.notification) {
                             boolean wrongUiVersion = false;
-                            if (version != null && (t.uiVersion == null || !t.uiVersion.equals(version))) {
-                                log.warn("Wrong UI version : {}", t.uiVersion);
+                            if (version != null && (cardOperationsGetParameters.uiVersion == null
+                                    || !cardOperationsGetParameters.uiVersion.equals(version))) {
+                                log.warn("Wrong UI version : {}", cardOperationsGetParameters.uiVersion);
                                 wrongUiVersion = true;
                             }
-                            subscription = cardSubscriptionService.subscribe(t.currentUserWithPerimeters,
-                                    t.clientId, t.uiVersion, wrongUiVersion);
+                            subscription = cardSubscriptionService.subscribe(
+                                    cardOperationsGetParameters.currentUserWithPerimeters,
+                                    cardOperationsGetParameters.clientId,
+                                    cardOperationsGetParameters.processStatesAlwaysLoaded,
+                                    cardOperationsGetParameters.uiVersion,
+                                    wrongUiVersion);
                             return subscription.getPublisher();
                         } else {
-                            return fetchOldCards(t, customScreenDataFields);
+                            return fetchOldCards(cardOperationsGetParameters, customScreenDataFields);
                         }
                     } else {
                         log.warn("\"clientId\" is a mandatory request parameter");
@@ -124,25 +130,25 @@ public class CardOperationsController {
             CustomScreenDataFields customScreenDataFields) {
 
         return fetchOldCards0(updatedFrom, start, end, subscription.getCurrentUserWithPerimeters(),
-                customScreenDataFields);
+                customScreenDataFields, subscription.getProcessStatesAlwaysLoaded());
     }
 
     private Flux<String> fetchOldCards(CardOperationsGetParameters parameters,
             CustomScreenDataFields customScreenDataFields) {
         return fetchOldCards0(parameters.updatedFrom, parameters.rangeStart, parameters.rangeEnd,
                 parameters.currentUserWithPerimeters,
-                customScreenDataFields);
+                customScreenDataFields, parameters.processStatesAlwaysLoaded);
     }
 
     private Flux<String> fetchOldCards0(Instant updatedFrom, Instant start, Instant end,
             CurrentUserWithPerimeters currentUserWithPerimeters,
-            CustomScreenDataFields customScreenDataFields) {
+            CustomScreenDataFields customScreenDataFields,
+            java.util.List<String> processStatesAlwaysLoaded) {
         Flux<CardOperation> oldCards;
-
         log.debug("Fetch card with startDate = {} and endDate = {} and updatedFrom = {}", start, end, updatedFrom);
         if ((end != null && start != null) || (updatedFrom != null)) {
             oldCards = cardRepository.getCardOperations(updatedFrom, start, end, currentUserWithPerimeters,
-                    customScreenDataFields);
+                    customScreenDataFields, processStatesAlwaysLoaded);
         } else {
             log.info("Not loading published cards as no range or no publish date is provided");
             oldCards = Flux.empty();
