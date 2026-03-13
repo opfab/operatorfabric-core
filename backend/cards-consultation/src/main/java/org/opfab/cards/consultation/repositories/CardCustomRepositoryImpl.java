@@ -69,13 +69,16 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
 
     @Override
     public Flux<CardOperation> getCardOperations(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
-        return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields)
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
+            List<String> processStatesToSendEvenIfNotNotified) {
+        return findCards(updatedFrom, rangeStart, rangeEnd, currentUserWithPerimeters, customScreenDataFields,
+                processStatesToSendEvenIfNotNotified)
                 .map(lightCard -> new CardOperation(CardOperationTypeEnum.ADD, null, lightCard));
     }
 
     private Flux<Card> findCards(Instant updatedFrom, Instant rangeStart, Instant rangeEnd,
-            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, CustomScreenDataFields customScreenDataFields,
+            List<String> processStatesToSendEvenIfNotNotified) {
         Criteria criteria;
         if (updatedFrom != null) {
             if ((rangeEnd != null) || (rangeStart != null))
@@ -133,11 +136,20 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
             customScreenDataFields.getDataFields().forEach(dataField -> query.fields().include("data." + dataField));
         }
 
-        Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
-                currentUserWithPerimeters);
-
         query.addCriteria(criteria);
-        query.addCriteria(criteriaForProcessesStatesNotNotified);
+        if (processStatesToSendEvenIfNotNotified == null || processStatesToSendEvenIfNotNotified.isEmpty()) {
+            // If no specific process/states to send even if not notified, filter out all process/states not notified
+            Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotified(
+                    currentUserWithPerimeters);
+
+            query.addCriteria(criteriaForProcessesStatesNotNotified);
+        } else {
+            // Filter out process/states not notified, except for those in the list
+            Criteria criteriaForProcessesStatesNotNotified = computeCriteriaForProcessesStatesNotNotifiedExceptList(
+                    currentUserWithPerimeters, processStatesToSendEvenIfNotNotified);
+
+            query.addCriteria(criteriaForProcessesStatesNotNotified);
+        }
         log.debug("launch query with user {}", currentUserWithPerimeters.getUserData().getLogin());
         return template.find(query, Card.class).map(card -> {
             log.debug("Find card {}", card.id);
@@ -158,6 +170,30 @@ public class CardCustomRepositoryImpl implements CardCustomRepository {
         if (processesStatesNotNotifiedMap != null) {
             processesStatesNotNotifiedMap.keySet().forEach(process -> processesStatesNotNotifiedMap.get(process)
                     .forEach(state -> processesStatesNotNotifiedList.add(process + "." + state)));
+        }
+        return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
+    }
+
+    /**
+     * Computes criteria to filter out process/states that user doesn't want to be notified about,
+     * except for those in the provided list (which should be sent even if not notified)
+     */
+    private Criteria computeCriteriaForProcessesStatesNotNotifiedExceptList(
+            CurrentUserWithPerimeters currentUserWithPerimeters, 
+            List<String> processStatesToSendEvenIfNotNotified) {
+        List<String> processesStatesNotNotifiedList = new ArrayList<>();
+        Map<String, List<String>> processesStatesNotNotifiedMap = currentUserWithPerimeters
+                .getProcessesStatesNotNotified();
+
+        if (processesStatesNotNotifiedMap != null) {
+            processesStatesNotNotifiedMap.keySet().forEach(process -> processesStatesNotNotifiedMap.get(process)
+                    .forEach(state -> {
+                        String processState = process + "." + state;
+                        // Only add to exclusion list if it's not in the list to send anyway
+                        if (!processStatesToSendEvenIfNotNotified.contains(processState)) {
+                            processesStatesNotNotifiedList.add(processState);
+                        }
+                    }));
         }
         return where(PROCESS_STATE_KEY).not().in(processesStatesNotNotifiedList);
     }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ public class CardRoutingUtilities {
     }
 
     public static boolean checkIfUserNeedToReceiveADeleteCardOperation(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesToSendEvenIfNotNotified) {
         // In case of an UPDATE, we need to send a delete card operation to delete the
         // card from the feed in case user was recipient of the previous version
         String typeOperation = cardOperation.get("type").toString();
@@ -35,10 +35,20 @@ public class CardRoutingUtilities {
             String state = (String) card.get("state");
             if (isReceiveRightsForProcessAndState(process, state,
                     loadUserRightsPerProcessAndState(currentUserWithPerimeters))
-                    && checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+                    && (shouldSendEvenIfNotNotified(process, state, processStatesToSendEvenIfNotNotified)
+                            || checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters)))
                 return true;
         }
         return false;
+    }
+
+    private static boolean shouldSendEvenIfNotNotified(String process, String state, 
+            List<String> processStatesToSendEvenIfNotNotified) {
+        if (processStatesToSendEvenIfNotNotified == null || processStatesToSendEvenIfNotNotified.isEmpty()) {
+            return false;
+        }
+        String processState = process + "." + state;
+        return processStatesToSendEvenIfNotNotified.contains(processState);
     }
 
     public static boolean checkIfUserMustBeNotifiedForThisProcessState(String process, String state,
@@ -84,7 +94,7 @@ public class CardRoutingUtilities {
      * ReceiveAndWrite)
      **/
     public static boolean checkIfUserMustReceiveTheCard(JSONObject cardOperation,
-            CurrentUserWithPerimeters currentUserWithPerimeters) {
+            CurrentUserWithPerimeters currentUserWithPerimeters, List<String> processStatesToSendEvenIfNotNotified) {
 
         String idCard;
         String process;
@@ -117,7 +127,8 @@ public class CardRoutingUtilities {
                 publisherType,
                 groupRecipientsArray,
                 userRecipientsArray,
-                entityRecipientsArray);
+                entityRecipientsArray,
+                processStatesToSendEvenIfNotNotified);
     }
 
     public static boolean checkIfUserMustReceiveTheCard(CurrentUserWithPerimeters currentUserWithPerimeters,
@@ -128,13 +139,15 @@ public class CardRoutingUtilities {
             String publisherType,
             Collection<?> groupRecipientsArray,
             Collection<?> userRecipientsArray,
-            Collection<?> entityRecipientsArray) {
+            Collection<?> entityRecipientsArray,
+            List<String> processStatesToSendEvenIfNotNotified) {
 
         String processStateKey = process + "." + state;
         List<String> userGroups = currentUserWithPerimeters.getUserData().getGroups();
         List<String> userEntities = currentUserWithPerimeters.getUserData().getEntities();
 
-        if (!checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
+        if (!shouldSendEvenIfNotNotified(process, state, processStatesToSendEvenIfNotNotified)
+                && !checkIfUserMustBeNotifiedForThisProcessState(process, state, currentUserWithPerimeters))
             return false;
 
         log.debug("Check if user {} shall receive card {} for processStateKey {}",

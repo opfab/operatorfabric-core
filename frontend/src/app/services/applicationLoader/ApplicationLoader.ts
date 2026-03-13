@@ -267,8 +267,12 @@ export class ApplicationLoader {
     }
 
     private initServices() {
-        OpfabEventStreamService.initEventStream();
-        OpfabStore.init(); // this will effectively open the http stream connection
+        const processStatesToSendEvenIfNotNotified = ConfigService.getConfigValue(
+            'processStatesToSendEvenIfNotNotified',
+            []
+        );
+        OpfabEventStreamService.initEventStream(processStatesToSendEvenIfNotNotified);
+        OpfabStore.init(processStatesToSendEvenIfNotNotified); // this will effectively open the http stream connection
         ApplicationUpdateService.init();
         NotificationDecision.init();
         SystemNotificationService.initSystemNotificationService();

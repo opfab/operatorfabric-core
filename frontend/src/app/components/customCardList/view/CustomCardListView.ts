@@ -76,7 +76,7 @@ export class CustomCardListView {
     }
 
     public getResults(): Observable<any> {
-        return combineLatest([OpfabStore.getLightCardStore().getLightCards(), this.filter$]).pipe(
+        return combineLatest([OpfabStore.getLightCardStore().getNotifiedLightCards(), this.filter$]).pipe(
             takeUntil(this.unsubscribe$),
             map((result) => {
                 const cards = result[0];

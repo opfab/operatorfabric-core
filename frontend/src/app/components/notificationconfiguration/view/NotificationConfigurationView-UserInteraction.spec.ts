@@ -444,7 +444,7 @@ describe('Notification configuration view - User interaction ', () => {
                 notificationConfigurationView.clickOnSaveButton();
                 await waitForAllPromises();
                 modalComponentMock.clickOnButton('ok');
-                const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getLightCards());
+                const lightCards = await firstValueFrom(OpfabStore.getLightCardStore().getNotifiedLightCards());
                 expect(lightCards).toEqual([]);
             });
 

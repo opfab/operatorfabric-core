@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -56,6 +56,13 @@ export class LightCardsStore {
 
     private timeOfLastDebounce = 0;
     private numberOfCardProcessedByPreviousDebounce = 0;
+
+    // By Default , we do not get from the backend the cards that the user has filtered
+    // via the notification filter screen
+    // But in case we need to show on the dahsboard screen the filtered notifications,
+    // we can set this variable to a list of process.state to get them from the backend and have it
+    // available in the store for the dashboard screen.
+    private processStatesToSendEvenIfNotNotified: string[] = [];
 
     private nbCardLoadedInHalfSecondInterval = 0;
     private readonly receivedAcksSubject = new Subject<{
@@ -123,7 +130,8 @@ export class LightCardsStore {
 
     // debounceTimeInMs is to be modify only in testing case
     // Default value must be kept for production
-    public initStore() {
+    public initStore(processStatesToSendEvenIfNotNotified: string[] = []) {
+        this.processStatesToSendEvenIfNotNotified = processStatesToSendEvenIfNotNotified;
         this.getLightCardsWithLimitedUpdateRate().subscribe();
         OpfabEventStreamService.getCardOperationStream()
             .pipe(takeUntil(this.unsubscribe$))
@@ -203,6 +211,9 @@ export class LightCardsStore {
 
     public addOrUpdateLightCard(card) {
         this.nbCardLoadedInHalfSecondInterval++;
+        if (this.processStatesToSendEvenIfNotNotified.length > 0) {
+            card.isNotificationFiltered = this.isLightCardNotificationFiltered(card);
+        }
         if (card.parentCardId) {
             this.addChildCard(card);
             const isFromCurrentUser = this.isLightChildCardFromCurrentUserEntity(card);
@@ -227,6 +238,26 @@ export class LightCardsStore {
             card.hasBeenRead = this.isLightCardHasBeenRead(card);
             this.addOrUpdateParentLightCard(card);
         }
+    }
+
+    // In case we received from the backend cards that the user has filtered via the notification filter screen,
+    // we need to filter them in the frontend to show them but only on the dashboard screen
+    private isLightCardNotificationFiltered(card) {
+        let isFiltered = false;
+        if (UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified) {
+            for (const [
+                process,
+                states
+            ] of UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified.entries()) {
+                if (card.process === process) {
+                    if (states.includes(card.state)) {
+                        isFiltered = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return isFiltered;
     }
 
     public isLightCardHasBeenAcknowledged(card) {
@@ -296,7 +327,9 @@ export class LightCardsStore {
 
     private addOrUpdateParentLightCard(card) {
         this.lightCards.set(card.id, card);
-        this.newLightCards.next(card);
+        // do not emit event if the card is filtered for notification
+        // if not it will trigger sound or system notification
+        if (!card.isNotificationFiltered) this.newLightCards.next(card);
         this.lightCardsEvents.next(this.lightCards);
     }
 
@@ -406,7 +439,19 @@ export class LightCardsStore {
     }
 
     // for observable subscribe after the events are emitted we use replaySubject
-    public getLightCards(): Observable<Card[]> {
+    public getNotifiedLightCards(): Observable<Card[]> {
+        return this.getAllLightCards().pipe(
+            map((cards) => {
+                if (this.processStatesToSendEvenIfNotNotified.length > 0) {
+                    return cards.filter((card) => !card.isNotificationFiltered);
+                } else {
+                    return cards;
+                }
+            })
+        );
+    }
+
+    public getAllLightCards() {
         return this.lightCardsEventsWithLimitedUpdateRate.asObservable();
     }
 

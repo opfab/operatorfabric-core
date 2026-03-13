@@ -40,8 +40,8 @@ export class OpfabEventStreamService {
         OpfabEventStreamService.opfabEventStreamServer = opfabEventStreamServer;
     }
 
-    public static initEventStream() {
-        OpfabEventStreamService.opfabEventStreamServer.initStream();
+    public static initEventStream(processStatesToSendEvenIfNotNotified: string[]) {
+        OpfabEventStreamService.opfabEventStreamServer.initStream(processStatesToSendEvenIfNotNotified);
     }
 
     public static closeEventStream() {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,6 +23,9 @@ import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -127,6 +130,8 @@ public class CardSubscriptionRoutesConfig implements UserExtractor {
                             request.queryParam("updatedFrom").orElse(null));
                     cardOperationsGetParameters.notification = request.queryParam("notification").orElse(FALSE)
                             .equals(TRUE);
+                    cardOperationsGetParameters.processStatesToSendEvenIfNotNotified = parseProcessStates(
+                            request.queryParam("processStatesToSendEvenIfNotNotified").orElse(null));
                     return cardOperationsGetParameters;
                 });
     }
@@ -180,5 +185,17 @@ public class CardSubscriptionRoutesConfig implements UserExtractor {
      */
     private static Instant parseAsInstant(String instantAsEpochMillString) {
         return instantAsEpochMillString == null ? null : Instant.ofEpochMilli(Long.parseLong(instantAsEpochMillString));
+    }
+
+    /**
+     * Parses semicolon-separated process/state pairs (e.g., "process1.state1;process2.state2")
+     * @param processStatesStr the semicolon-separated string
+     * @return list of process.state strings, or empty list if null/empty
+     */
+    private static List<String> parseProcessStates(String processStatesStr) {
+        if (processStatesStr == null || processStatesStr.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(processStatesStr.split(";"));
     }
 }
