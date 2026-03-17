@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {CustomCardListView} from './CustomCardListView';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {
@@ -30,13 +29,18 @@ import {OpfabStore} from '@ofStore/OpfabStore';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {
+    CardListScreenDefinition,
+    FieldType,
+    HeaderFilter
+} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 describe('CustomCardListView', () => {
-    const getCustomScreenDefinition = () => {
-        const customScreenDefinition = new CustomScreenDefinition();
-        customScreenDefinition.id = 'testId';
-        customScreenDefinition.name = 'testName';
-        return customScreenDefinition;
+    const getCardListScreenDefinition = () => {
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
+        return cardListScreenDefinition;
     };
 
     beforeAll(() => {
@@ -56,22 +60,22 @@ describe('CustomCardListView', () => {
     describe('Custom screen configuration', () => {
         it('should return false if custom screen definition does not exist', () => {
             const customScreenView = new CustomCardListView('unexistingId');
-            expect(customScreenView.isCustomScreenDefinitionExist()).toEqual(false);
+            expect(customScreenView.isCardListScreenDefinitionExist()).toEqual(false);
         });
         it('should return true if custom screen definition exists', () => {
-            CustomScreenService.addCustomScreenDefinition(getCustomScreenDefinition());
+            CustomScreenService.addCustomScreenDefinition(getCardListScreenDefinition());
             const customScreenView = new CustomCardListView('testId');
-            expect(customScreenView.isCustomScreenDefinitionExist()).toEqual(true);
+            expect(customScreenView.isCardListScreenDefinitionExist()).toEqual(true);
         });
         it('filter visibility should be true if custom screen header filter PROCESS is define visible in customScreenDefinition', () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             customScreenDefinition.headerFilters = [HeaderFilter.PROCESS];
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
             const customScreenView = new CustomCardListView('testId');
             expect(customScreenView.isFilterVisibleInHeader(HeaderFilter.PROCESS)).toEqual(true);
         });
         it('filter visibility should be false if custom screen header filter  PROCESS is not define visible in customScreenDefinition', () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             customScreenDefinition.headerFilters = [HeaderFilter.TYPE_OF_STATE];
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
             const customScreenView = new CustomCardListView('testId');
@@ -88,7 +92,7 @@ describe('CustomCardListView', () => {
         });
 
         it('with one process from user perimeter if user has one process', async () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
 
             await setUserPerimeter({
@@ -109,7 +113,7 @@ describe('CustomCardListView', () => {
         });
 
         it('with two processes from user perimeter if user has two process state visible', async () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
 
             await setUserPerimeter({
@@ -136,7 +140,7 @@ describe('CustomCardListView', () => {
             'with two processes from user perimeter if user has two process state visible and customScreenDefinition ' +
                 'defines processIds field but it is an empty array',
             async () => {
-                const customScreenDefinition = getCustomScreenDefinition();
+                const customScreenDefinition = getCardListScreenDefinition();
                 customScreenDefinition.processIds = [];
                 CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
 
@@ -177,7 +181,7 @@ describe('CustomCardListView', () => {
                         entities: []
                     }
                 });
-                const customScreenDefinition = getCustomScreenDefinition();
+                const customScreenDefinition = getCardListScreenDefinition();
                 customScreenDefinition.processIds = ['myProcess'];
                 CustomScreenService.addCustomScreenDefinition(customScreenDefinition);
                 const customScreenView = new CustomCardListView('testId');
@@ -221,7 +225,7 @@ describe('CustomCardListView', () => {
         });
 
         it('from light cards store', async () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             customScreenDefinition.results = {
                 columns: [
                     {
@@ -274,7 +278,7 @@ describe('CustomCardListView', () => {
         });
 
         it('filtered from light cards store', async () => {
-            const customScreenDefinition = getCustomScreenDefinition();
+            const customScreenDefinition = getCardListScreenDefinition();
             customScreenDefinition.results = {
                 columns: [
                     {

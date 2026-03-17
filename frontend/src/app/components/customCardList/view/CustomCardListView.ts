@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {CustomScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './resultTable/ResultTable';
 import {OpfabStore} from '@ofStore/OpfabStore';
 import {Observable, ReplaySubject, Subject, combineLatest, map, takeUntil} from 'rxjs';
@@ -19,6 +18,7 @@ import {LoggerService} from '@ofServices/logs/LoggerService';
 import {ButtonActions} from './buttonActions/ButtonActions';
 import {FilterValues} from './FilterValues';
 import {getColumnsDefinitionForAgGrid} from './resultTable/ColumnDefinitions';
+import {CardListScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 /**
  * This class is responsible for implementing the business logic related to the UI component.
@@ -30,11 +30,11 @@ import {getColumnsDefinitionForAgGrid} from './resultTable/ColumnDefinitions';
  *    - Send response for selected cards
  *    - Acknowledge selected cards
  *
- * Everything is configured via the CustomScreenDefinition, which is loaded on startup and accessible via the CustomScreenService.
+ * Everything is configured via the CardListScreenDefinition, which is loaded on startup and accessible via the CustomScreenService.
  **/
 
 export class CustomCardListView {
-    private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly cardListScreenDefinition: CardListScreenDefinition;
     private readonly resultTable: ResultTable;
     private readonly buttonActions: ButtonActions;
     private results: Array<any> = [];
@@ -42,12 +42,12 @@ export class CustomCardListView {
     filter$: Subject<void> = new ReplaySubject<void>(1);
 
     constructor(id: string) {
-        this.customScreenDefinition = CustomScreenService.getCustomScreenDefinition(id);
-        this.resultTable = new ResultTable(this.customScreenDefinition);
-        this.buttonActions = new ButtonActions(this.customScreenDefinition);
+        this.cardListScreenDefinition = CustomScreenService.getCustomScreenDefinition(id) as CardListScreenDefinition;
+        this.resultTable = new ResultTable(this.cardListScreenDefinition);
+        this.buttonActions = new ButtonActions(this.cardListScreenDefinition);
         const filterValues = new FilterValues();
 
-        if (this.customScreenDefinition?.initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
+        if (this.cardListScreenDefinition?.initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
             const now = new Date();
             const currentYear = now.getFullYear();
             filterValues.startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
@@ -57,7 +57,7 @@ export class CustomCardListView {
             filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
         }
 
-        filterValues.includeCardsWithResponseFromMyEntities = !this.customScreenDefinition?.headerFilters?.includes(
+        filterValues.includeCardsWithResponseFromMyEntities = !this.cardListScreenDefinition?.headerFilters?.includes(
             HeaderFilter.RESPONSE_FROM_MY_ENTITIES
         );
 
@@ -67,12 +67,12 @@ export class CustomCardListView {
         this.filter$.next();
     }
 
-    public isCustomScreenDefinitionExist(): boolean {
-        return this.customScreenDefinition !== undefined;
+    public isCardListScreenDefinitionExist(): boolean {
+        return this.cardListScreenDefinition !== undefined;
     }
 
     public getColumnsDefinitionForAgGrid(): any[] {
-        return getColumnsDefinitionForAgGrid(this.customScreenDefinition);
+        return getColumnsDefinitionForAgGrid(this.cardListScreenDefinition);
     }
 
     public getResults(): Observable<any> {
@@ -113,12 +113,12 @@ export class CustomCardListView {
     }
 
     public isFilterVisibleInHeader(filter: HeaderFilter): boolean {
-        return this.customScreenDefinition.headerFilters?.includes(filter);
+        return this.cardListScreenDefinition.headerFilters?.includes(filter);
     }
 
     private getProcessList(processIds: string[]): string[] {
-        if (processIds?.length > 0 || !this.customScreenDefinition) return processIds;
-        return this.customScreenDefinition.processIds ?? [];
+        if (processIds?.length > 0 || !this.cardListScreenDefinition) return processIds;
+        return this.cardListScreenDefinition.processIds ?? [];
     }
 
     public getAllProcessesListAvailableForUser(): {id: string; label: string}[] {
@@ -126,7 +126,7 @@ export class CustomCardListView {
         const processes = new Map();
         perimeters.forEach((perimeter) => {
             const process = ProcessesService.getProcess(perimeter.process);
-            if (process && this.isProcessIdInTheListOfCustomScreenDefinition(process.id)) {
+            if (process && this.isProcessIdInTheListOfCardListScreenDefinition(process.id)) {
                 processes.set(process.id, {id: process.id, label: process.name});
             }
         });
@@ -135,18 +135,18 @@ export class CustomCardListView {
     }
 
     public getDefaultSelectedTypeOfState(): string[] {
-        return this.customScreenDefinition?.defaultSelectedTypeOfState ?? [];
+        return this.cardListScreenDefinition?.defaultSelectedTypeOfState ?? [];
     }
 
     public getDefaultSelectedReadAndAck(): string[] {
-        return this.customScreenDefinition?.defaultSelectedReadAndAck ?? [];
+        return this.cardListScreenDefinition?.defaultSelectedReadAndAck ?? [];
     }
 
-    private isProcessIdInTheListOfCustomScreenDefinition(processId: string): boolean {
+    private isProcessIdInTheListOfCardListScreenDefinition(processId: string): boolean {
         return (
-            !this.customScreenDefinition?.processIds ||
-            this.customScreenDefinition.processIds?.length === 0 ||
-            this.customScreenDefinition.processIds.includes(processId)
+            !this.cardListScreenDefinition?.processIds ||
+            this.cardListScreenDefinition.processIds?.length === 0 ||
+            this.cardListScreenDefinition.processIds.includes(processId)
         );
     }
 

@@ -30,7 +30,7 @@ import {Subject, takeUntil} from 'rxjs';
 import {ResponsesCellRendererComponent} from './cellRenderers/ResponsesCellRendererComponent';
 import {MultiSelectOption} from '../share/multi-select/model/MultiSelect';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
-import {HeaderFilter} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {HeaderFilter} from '@ofServices/customScreen/model/CardListScreenDefinition';
 import {ReadAndAckEnum, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {HasResponseCellRendererComponent} from './cellRenderers/HasResponseCellRendererComponent';
 import {InputCellRendererComponent} from './cellRenderers/InputCellRendererComponent';
@@ -65,7 +65,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     @Input() customScreenId: string;
     customCardListView: CustomCardListView;
-    isCustomScreenDefinitionExist: boolean;
+    isCardListScreenDefinitionExist: boolean;
 
     // Header form configuration
     headerForm = new FormGroup({
@@ -178,7 +178,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.customCardListView = new CustomCardListView(this.customScreenId);
-        this.isCustomScreenDefinitionExist = this.customCardListView.isCustomScreenDefinitionExist();
+        this.isCardListScreenDefinitionExist = this.customCardListView.isCardListScreenDefinitionExist();
         this.initialStartDate = this.customCardListView.getBusinessPeriod().startDate;
         this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
         this.typeOfStateSelected = this.customCardListView.getDefaultSelectedTypeOfState();

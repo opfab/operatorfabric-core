@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Column, CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 import {Utilities} from 'app/utils/Utilities';
 
 // See AgGrid documentation for column definitions
@@ -37,10 +37,10 @@ export type AgGridColDef = {
     valueFormatter?: Function;
 };
 
-export function getColumnsDefinitionForAgGrid(customScreenDefinition: CustomScreenDefinition): AgGridColDef[] {
+export function getColumnsDefinitionForAgGrid(cardListScreenDefinition: CardListScreenDefinition): AgGridColDef[] {
     const agGridColumns: AgGridColDef[] = [];
-    if (customScreenDefinition) {
-        for (const column of customScreenDefinition.results.columns) {
+    if (cardListScreenDefinition) {
+        for (const column of cardListScreenDefinition.results.columns) {
             const col: AgGridColDef = getDefaultColumnDefinition(column);
 
             switch (column.fieldType) {

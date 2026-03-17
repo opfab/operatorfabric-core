@@ -7,22 +7,22 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
 import {getOneLightCard, mockTranslation, resetServices, setEntities, setProcessConfiguration} from '@tests/helpers';
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Severity} from 'app/model/Severity';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable - Export', () => {
-    const getResultTable = (customScreenDefinitionResults: any, responseSeverityColumnLabelsForExportFile?) => {
-        const customScreenDefinition = new CustomScreenDefinition();
-        customScreenDefinition.id = 'testId';
-        customScreenDefinition.name = 'testName';
-        customScreenDefinition.responseSeverityColumnLabelsForExportFile = responseSeverityColumnLabelsForExportFile;
-        customScreenDefinition.results = customScreenDefinitionResults;
-        return new ResultTable(customScreenDefinition);
+    const getResultTable = (cardListScreenDefinitionResults: any, responseSeverityColumnLabelsForExportFile?) => {
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
+        cardListScreenDefinition.responseSeverityColumnLabelsForExportFile = responseSeverityColumnLabelsForExportFile;
+        cardListScreenDefinition.results = cardListScreenDefinitionResults;
+        return new ResultTable(cardListScreenDefinition);
     };
 
     const emptyChildCardsList = new Map<string, Array<Card>>();

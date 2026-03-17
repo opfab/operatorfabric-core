@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
 import {getColumnsDefinitionForAgGrid} from './ColumnDefinitions';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
-function createCustomScreenDefinition(columns: any[]): CustomScreenDefinition {
+function createCardListScreenDefinition(columns: any[]): CardListScreenDefinition {
     return {
         id: 'testId',
         name: 'testName',
+        type: ScreenType.CARD_LIST,
         headerFilters: [],
         processIds: [],
         results: {
@@ -21,11 +23,11 @@ function createCustomScreenDefinition(columns: any[]): CustomScreenDefinition {
         }
     };
 }
-describe('CustomScreenView - ResultTable', () => {
+describe('CustomCardListView - ResultTable', () => {
     describe('Should get columns definition for ag-grid', () => {
         it('with default column definition', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Process',
@@ -43,7 +45,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('columnDefinition type is STRING', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Process',
@@ -61,7 +63,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is DATE_AND_TIME ', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Start Date',
@@ -77,7 +79,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is HTML', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'HTML',
@@ -93,7 +95,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is coloredCircle', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Circle',
@@ -109,7 +111,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is BUSINESS_PERIOD', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Business Period',
@@ -127,7 +129,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is SEVERITY', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'severity',
                         cardField: 'processId',
@@ -143,7 +145,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition type is TYPE_OF_STATE', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         headerName: 'Status',
                         fieldType: FieldType.TYPE_OF_STATE
@@ -157,7 +159,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition showTooltips is set to true', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'test',
                         headerName: 'Status',
@@ -171,7 +173,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when minWidth is defined in column definition', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         field: 'testField',
                         headerName: 'Process',
@@ -193,7 +195,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition with multiLineText to true then autoHeight and wrapText are true', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         headerName: 'Status',
                         fieldType: FieldType.TYPE_OF_STATE,
@@ -207,7 +209,7 @@ describe('CustomScreenView - ResultTable', () => {
 
         it('when columnDefinition maxInputLength is set when maxInputLength is set', () => {
             const columnDefs = getColumnsDefinitionForAgGrid(
-                createCustomScreenDefinition([
+                createCardListScreenDefinition([
                     {
                         headerName: 'Status',
                         fieldType: FieldType.TYPE_OF_STATE,
