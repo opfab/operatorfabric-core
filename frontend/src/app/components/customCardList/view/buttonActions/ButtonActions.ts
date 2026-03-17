@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,26 +8,26 @@
  */
 
 import {CardResponseService} from '@ofServices/cardResponse/CardResponseService';
-import {CustomScreenDefinition, ResponseButton} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {Card} from 'app/model/Card';
 import {OpfabStore} from '@ofStore/OpfabStore';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {I18n} from 'app/model/I18n';
+import {CardListScreenDefinition, ResponseButton} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 export class ButtonActions {
-    private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly cardListScreenDefinition: CardListScreenDefinition;
 
-    constructor(customScreenDefinition: CustomScreenDefinition) {
-        this.customScreenDefinition = customScreenDefinition;
+    constructor(cardListScreenDefinition: CardListScreenDefinition) {
+        this.cardListScreenDefinition = cardListScreenDefinition;
     }
 
     public getResponseButtons(): {id: string; label: string}[] {
-        if (!this.customScreenDefinition.responseButtons) {
+        if (!this.cardListScreenDefinition.responseButtons) {
             return [];
         }
-        return this.customScreenDefinition.responseButtons.map((button: ResponseButton) => {
+        return this.cardListScreenDefinition.responseButtons.map((button: ResponseButton) => {
             return {
                 id: button.id,
                 label: button.label
@@ -39,7 +39,7 @@ export class ButtonActions {
         buttonId: string,
         responsesData: Map<string, unknown>
     ): Promise<boolean> {
-        const button = this.customScreenDefinition.responseButtons.find(
+        const button = this.cardListScreenDefinition.responseButtons.find(
             (button: ResponseButton) => button.id === buttonId
         );
         if (button) {
@@ -87,7 +87,7 @@ export class ButtonActions {
     }
 
     public isAcknowledgmentButtonVisible(): boolean {
-        return this.customScreenDefinition.showAcknowledgmentButton;
+        return this.cardListScreenDefinition.showAcknowledgmentButton;
     }
 
     public sendAcknowledgments(cardIds: string[]) {

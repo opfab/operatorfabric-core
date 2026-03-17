@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,35 +7,35 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {Card} from 'app/model/Card';
 import {TableRowBuilder} from './TableRowBuilder';
 import {FilterValues} from '../FilterValues';
 import {CardFilter} from './CardFilter';
 import {ResultTableExport} from './ResultTableExport';
 import {getColumnsDefinitionForAgGrid} from './ColumnDefinitions';
+import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 export class ResultTable {
-    private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly cardListScreenDefinition: CardListScreenDefinition;
     private readonly tableRowsBuilder: TableRowBuilder;
     private readonly cardFilter: CardFilter;
 
     private results: Array<any> = [];
 
-    constructor(customScreenDefinition: CustomScreenDefinition) {
-        this.customScreenDefinition = customScreenDefinition;
-        this.tableRowsBuilder = new TableRowBuilder(customScreenDefinition);
+    constructor(cardListScreenDefinition: CardListScreenDefinition) {
+        this.cardListScreenDefinition = cardListScreenDefinition;
+        this.tableRowsBuilder = new TableRowBuilder(cardListScreenDefinition);
         this.cardFilter = new CardFilter();
     }
 
     public setFilters(filtersValue: FilterValues) {
         // statesToExcludeFilter and includeOnlyCardsEmittedByCurrentUserEntities are not set by the user
         //  but by the custom screen definition
-        filtersValue.statesToExcludeFilter = this.customScreenDefinition?.statesToExclude;
+        filtersValue.statesToExcludeFilter = this.cardListScreenDefinition?.statesToExclude;
         filtersValue.includeOnlyCardsEmittedByCurrentUserEntities =
-            this.customScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
+            this.cardListScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
         filtersValue.excludeCardsEmittedByCurrentUserEntities =
-            this.customScreenDefinition?.excludeCardsEmittedByCurrentUserEntities;
+            this.cardListScreenDefinition?.excludeCardsEmittedByCurrentUserEntities;
         this.cardFilter.setFilters(filtersValue);
     }
 
@@ -46,7 +46,7 @@ export class ResultTable {
                 const data = this.tableRowsBuilder.getRowFromCard(
                     card,
                     childCards.get(card.id),
-                    this.customScreenDefinition.results.columns
+                    this.cardListScreenDefinition.results.columns
                 );
                 dataArray.push(data);
             }
@@ -57,8 +57,8 @@ export class ResultTable {
 
     public getDataForExport(): Array<any> {
         return new ResultTableExport(
-            this.customScreenDefinition,
-            getColumnsDefinitionForAgGrid(this.customScreenDefinition)
+            this.cardListScreenDefinition,
+            getColumnsDefinitionForAgGrid(this.cardListScreenDefinition)
         ).getDataForExport(this.results);
     }
 }

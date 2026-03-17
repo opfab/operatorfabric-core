@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,7 +11,7 @@ import {ReadAndAckEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from 'app/model/Card';
 import {FilterValues} from '../FilterValues';
-import {StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {StateExclusion} from '@ofServices/customScreen/model/CardListScreenDefinition';
 import {UsersService} from '@ofServices/users/UsersService';
 import {PublisherType} from 'app/model/PublisherType';
 

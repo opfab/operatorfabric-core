@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,6 @@
  */
 
 import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
-import {Column, CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {DateTimeFormatterService} from '@ofServices/dateTimeFormatter/DateTimeFormatterService';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {TypeOfStateEnum} from '@ofServices/processes/model/Processes';
@@ -21,13 +20,14 @@ import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
 import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';
 import {ResultTableCell} from './ResultTableCell';
+import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 export class TableRowBuilder {
-    private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly cardListScreenDefinition: CardListScreenDefinition;
     private readonly typeOfStateTranslation = new Map<string, string>();
 
-    constructor(customScreenDefinition: CustomScreenDefinition) {
-        this.customScreenDefinition = customScreenDefinition;
+    constructor(cardListScreenDefinition: CardListScreenDefinition) {
+        this.cardListScreenDefinition = cardListScreenDefinition;
 
         // for performance reasons, we store the translation of the type of state in a map
         // this is to avoid calling the translation service for each row in the table
@@ -105,9 +105,9 @@ export class TableRowBuilder {
             }
         });
         data['cardId'] = card.id;
-        if (this.customScreenDefinition.showAcknowledgmentButton)
+        if (this.cardListScreenDefinition.showAcknowledgmentButton)
             data['isAcknowledgmentPossible'] = this.isAcknowledgmentPossibleForCard(card);
-        if (this.customScreenDefinition.responseButtons?.length > 0)
+        if (this.cardListScreenDefinition.responseButtons?.length > 0)
             data['isResponsePossible'] = this.isResponsePossibleForCard(card);
         return data;
     }
@@ -241,7 +241,7 @@ export class TableRowBuilder {
     }
 
     private getColoredCircleCell(card: Card, field: string): ResultTableCell {
-        const value = this.customScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
+        const value = this.cardListScreenDefinition.results.columns.find((col) => col.field === field).getValue(card);
         return {value: value.numericalValue, color: value.color};
     }
 
@@ -309,7 +309,7 @@ export class TableRowBuilder {
             card,
             ProcessesService.getProcess(card.process)
         );
-        if (this.customScreenDefinition.responseOnlyAllowedForEntitiesRequiredToRespond) {
+        if (this.cardListScreenDefinition.responseOnlyAllowedForEntitiesRequiredToRespond) {
             return (
                 isUserAllowed &&
                 card.entitiesRequiredToRespond?.some((entity) =>
@@ -322,9 +322,9 @@ export class TableRowBuilder {
     }
 
     private isResponsePossibleForProcessState(card: Card): boolean {
-        if (!this.customScreenDefinition.responsePossibleOnlyForProcessStates) return true;
+        if (!this.cardListScreenDefinition.responsePossibleOnlyForProcessStates) return true;
 
-        const processStates = this.customScreenDefinition.responsePossibleOnlyForProcessStates.find(
+        const processStates = this.cardListScreenDefinition.responsePossibleOnlyForProcessStates.find(
             (item) => item.process === card.process
         );
         if (!processStates) return false;

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {
     getOneLightCard,
@@ -31,11 +31,13 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ButtonActions} from './ButtonActions';
+import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
-function getCustomScreenDefinitionExample(): CustomScreenDefinition {
+function getCustomScreenDefinitionExample(): CardListScreenDefinition {
     return {
         id: 'testId',
         name: 'name',
+        type: ScreenType.CARD_LIST,
         processIds: [],
         headerFilters: [],
         results: {
@@ -154,7 +156,7 @@ describe('CustomCardListView - Button actions - Responses', () => {
             ]);
         });
         it('should get empty button list if no button list defined', () => {
-            const noButtonsCustomScreenDefinition = new CustomScreenDefinition();
+            const noButtonsCustomScreenDefinition = new CardListScreenDefinition();
             noButtonsCustomScreenDefinition.id = 'testId';
             const buttonActions = new ButtonActions(noButtonsCustomScreenDefinition);
 

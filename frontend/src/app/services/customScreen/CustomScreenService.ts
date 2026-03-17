@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition} from './model/CustomScreenDefinition';
+import {ScreenDefinition} from './model/ScreenDefinition';
 
 export class CustomScreenService {
-    private static readonly customScreenDefinitions = new Map<string, CustomScreenDefinition>();
+    private static readonly customScreenDefinitions = new Map<string, ScreenDefinition>();
 
-    public static addCustomScreenDefinition(customScreenDefinition: CustomScreenDefinition) {
+    public static addCustomScreenDefinition(customScreenDefinition: ScreenDefinition) {
         CustomScreenService.customScreenDefinitions.set(customScreenDefinition.id, customScreenDefinition);
     }
-    public static getCustomScreenDefinition(customScreenId: string): CustomScreenDefinition {
+    public static getCustomScreenDefinition(customScreenId: string): ScreenDefinition {
         return CustomScreenService.customScreenDefinitions.get(customScreenId);
     }
     public static clearCustomScreenDefinitions() {

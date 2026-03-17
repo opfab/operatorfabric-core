@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {StateExclusion} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 export class FilterValues {
     public startDate: number;

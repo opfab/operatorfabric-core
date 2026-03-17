@@ -21,7 +21,8 @@ import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {AcknowledgmentAllowedEnum, Process, State} from '@ofServices/processes/model/Processes';
 import {ResultTable} from './ResultTable';
 import {Card} from 'app/model/Card';
-import {FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
+import {FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 describe('CustomCardListView - Result Array - Acknowledgment', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();
@@ -61,6 +62,7 @@ describe('CustomCardListView - Result Array - Acknowledgment', () => {
         resultTable = new ResultTable({
             id: 'testId',
             name: 'name',
+            type: ScreenType.CARD_LIST,
             processIds: [],
             headerFilters: [],
             results: {

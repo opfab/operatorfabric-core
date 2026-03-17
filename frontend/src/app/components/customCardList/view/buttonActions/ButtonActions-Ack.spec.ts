@@ -14,6 +14,7 @@ import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {ButtonActions} from './ButtonActions';
+import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
 
 describe('CustomCardListView - Button actions', () => {
     beforeEach(async () => {
@@ -35,9 +36,10 @@ describe('CustomCardListView - Button actions', () => {
             }
         });
     });
-    const customScreenDefinition = {
+    const cardListScreenDefinition = {
         id: 'testId',
         name: 'name',
+        type: ScreenType.CARD_LIST,
         processIds: [],
         headerFilters: [],
         results: {
@@ -48,7 +50,7 @@ describe('CustomCardListView - Button actions', () => {
     it('Should acknowledge cards', async () => {
         const acknowledgmentsServerMock = new AcknowledgeServerMock();
         AcknowledgeService.setAcknowledgeServer(acknowledgmentsServerMock);
-        const buttonActions = new ButtonActions(customScreenDefinition);
+        const buttonActions = new ButtonActions(cardListScreenDefinition);
         const cards = [
             getOneCard({
                 publisher: 'entity0',

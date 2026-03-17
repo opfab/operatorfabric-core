@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,18 +20,18 @@
  *  - For input data containing a response field:
  *     - Adds a field listing entities that have responded.
  *     - Adds a field listing entities that have not responded.
- *     - If responseSeverityColumnLabelsForExportFile is defined in customScreenDefinition, for each severity,
+ *     - If responseSeverityColumnLabelsForExportFile is defined in cardListScreenDefinition, for each severity,
  *       adds a field listing entities whose response matches the severity.
  *       The field name depends on the severity and the mapping defined in responseSeverityColumnLabelsForExportFile.
  *       Since the input data contains only color (for UI purposes) and not severity,
  *       a mapping from color to severity is required.
  */
 
-import {CustomScreenDefinition} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {TranslationService} from '@ofServices/translation/TranslationService';
+import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 export class ResultTableExport {
-    private readonly customScreenDefinition: CustomScreenDefinition;
+    private readonly cardListScreenDefinition: CardListScreenDefinition;
     private readonly agGridColumnsDefinition: any[];
 
     private readonly NOT_ANSWERED = TranslationService.getTranslation('customCardList.notAnswered');
@@ -45,8 +45,8 @@ export class ResultTableExport {
         blue: 'INFORMATION'
     };
 
-    constructor(customScreenDefinition: CustomScreenDefinition, agGridColumnsDefinition: any[]) {
-        this.customScreenDefinition = customScreenDefinition;
+    constructor(cardListScreenDefinition: CardListScreenDefinition, agGridColumnsDefinition: any[]) {
+        this.cardListScreenDefinition = cardListScreenDefinition;
         this.agGridColumnsDefinition = agGridColumnsDefinition;
     }
 
@@ -90,7 +90,7 @@ export class ResultTableExport {
         responses: {color: string; entityName: string}[],
         row: {}
     ) {
-        const responseColumnLabels = this.customScreenDefinition.responseSeverityColumnLabelsForExportFile;
+        const responseColumnLabels = this.cardListScreenDefinition.responseSeverityColumnLabelsForExportFile;
         const respondedByType = {};
         const responded = [];
         const notResponded = [];

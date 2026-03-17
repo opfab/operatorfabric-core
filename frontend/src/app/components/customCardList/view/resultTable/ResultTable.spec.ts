@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
 import {
     getOneLightCard,
@@ -21,14 +20,15 @@ import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Proce
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable', () => {
-    const getResultTable = (customScreenDefinitionResults: any) => {
-        const customScreenDefinition = new CustomScreenDefinition();
-        customScreenDefinition.id = 'testId';
-        customScreenDefinition.name = 'testName';
-        customScreenDefinition.results = customScreenDefinitionResults;
-        return new ResultTable(customScreenDefinition);
+    const getResultTable = (cardListScreenDefinitionResults: any) => {
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
+        cardListScreenDefinition.results = cardListScreenDefinitionResults;
+        return new ResultTable(cardListScreenDefinition);
     };
 
     const emptyChildCardsList = new Map<string, Array<Card>>();

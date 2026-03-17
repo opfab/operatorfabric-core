@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CustomScreenDefinition, FieldType, StateExclusion} from '@ofServices/customScreen/model/CustomScreenDefinition';
 import {ResultTable} from './ResultTable';
 import {
     getOneLightCard,
@@ -23,6 +22,11 @@ import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
 import {FilterValues} from '../FilterValues';
 import {PublisherType} from 'app/model/PublisherType';
+import {
+    CardListScreenDefinition,
+    FieldType,
+    StateExclusion
+} from '@ofServices/customScreen/model/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable - Should Filter card', () => {
     const getResultTable = (options?: {
@@ -30,21 +34,21 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
         includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
         excludeCardsEmittedByCurrentUserEntities?: boolean;
     }) => {
-        const customScreenDefinition = new CustomScreenDefinition();
-        customScreenDefinition.id = 'testId';
-        customScreenDefinition.name = 'testName';
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
         if (options?.statesToExcludeFilter) {
-            customScreenDefinition.statesToExclude = options.statesToExcludeFilter;
+            cardListScreenDefinition.statesToExclude = options.statesToExcludeFilter;
         }
         if (options?.includeOnlyCardsEmittedByCurrentUserEntities !== undefined) {
-            customScreenDefinition.includeOnlyCardsEmittedByCurrentUserEntities =
+            cardListScreenDefinition.includeOnlyCardsEmittedByCurrentUserEntities =
                 options.includeOnlyCardsEmittedByCurrentUserEntities;
         }
         if (options?.excludeCardsEmittedByCurrentUserEntities !== undefined) {
-            customScreenDefinition.excludeCardsEmittedByCurrentUserEntities =
+            cardListScreenDefinition.excludeCardsEmittedByCurrentUserEntities =
                 options.excludeCardsEmittedByCurrentUserEntities;
         }
-        customScreenDefinition.results = {
+        cardListScreenDefinition.results = {
             columns: [
                 {
                     field: 'testField',
@@ -54,7 +58,7 @@ describe('CustomScreenView - ResultTable - Should Filter card', () => {
                 }
             ]
         };
-        return new ResultTable(customScreenDefinition);
+        return new ResultTable(cardListScreenDefinition);
     };
 
     const emptyChildCardsList = new Map<string, Array<Card>>();
