@@ -13,13 +13,16 @@ import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/Use
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {getOneLightCard, loadWebUIConf, resetServices, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
+import {getOneLightCard, resetServices, setProcessConfiguration, setUserPerimeter} from '@tests/helpers';
 import {firstValueFrom, skip} from 'rxjs';
 import {Severity} from 'app/model/Severity';
 import {Utilities} from '../../../utils/Utilities';
 import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../store/OpfabStore';
+import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
+import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
 
 async function initProcesses() {
     await setProcessConfiguration([
@@ -60,6 +63,7 @@ describe('Dashboard', () => {
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
         OpfabStore.reset();
         filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+        CustomScreenService.clearCustomScreenDefinitions();
     });
 
     afterEach(() => {
@@ -113,25 +117,27 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN a process with custom screen links in config WHEN get dashboard THEN dashboard contains links', async () => {
-        await loadWebUIConf({
-            dashboard: {
-                processCustomLinks: [
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processCustomLinks = [
+            {
+                processId: 'process1',
+                customLinks: [
                     {
-                        processId: 'process1',
-                        customLinks: [
-                            {
-                                customScreenId: 'testId',
-                                label: 'My link'
-                            },
-                            {
-                                customScreenId: 'testId2',
-                                label: 'My Link 2'
-                            }
-                        ]
+                        customScreenId: 'testId',
+                        label: 'My link'
+                    },
+                    {
+                        customScreenId: 'testId2',
+                        label: 'My Link 2'
                     }
                 ]
             }
-        });
+        ];
+        dashboardScreenDefinition.processStateRedirects = [];
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
 
@@ -160,25 +166,27 @@ describe('Dashboard', () => {
     // The two following tests verify that this behavior works as intended.
 
     it('GIVEN a process with custom screen links in config and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains links', async () => {
-        await loadWebUIConf({
-            dashboard: {
-                processCustomLinks: [
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processCustomLinks = [
+            {
+                processId: 'processWithOnlyChildState',
+                customLinks: [
                     {
-                        processId: 'processWithOnlyChildState',
-                        customLinks: [
-                            {
-                                customScreenId: 'testId',
-                                label: 'My link'
-                            },
-                            {
-                                customScreenId: 'testId2',
-                                label: 'My Link 2'
-                            }
-                        ]
+                        customScreenId: 'testId',
+                        label: 'My link'
+                    },
+                    {
+                        customScreenId: 'testId2',
+                        label: 'My Link 2'
                     }
                 ]
             }
-        });
+        ];
+        dashboardScreenDefinition.processStateRedirects = [];
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
 
@@ -201,11 +209,14 @@ describe('Dashboard', () => {
     });
 
     it('Given a process with no custom screen links and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains no process', async () => {
-        await loadWebUIConf({
-            dashboard: {
-                processCustomLinks: []
-            }
-        });
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processCustomLinks = [];
+        dashboardScreenDefinition.processStateRedirects = [];
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
         await initProcesses();
         const computedPerimeters = [
             new ComputedPerimeter('processWithOnlyChildState', 'state1', RightEnum.Receive, true)

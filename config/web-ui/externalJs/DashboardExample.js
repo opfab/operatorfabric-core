@@ -1,0 +1,48 @@
+/* Copyright (c) 2026, RTE (http://www.rte-france.com)
+ * See AUTHORS.txt
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ * This file is part of the OperatorFabric project.
+ */
+
+{
+    console.log(new Date().toISOString(), 'INFO Dashboard example loaded');
+    const dashboardExample = {
+        "id": "dashboard",
+        "name": "Dashboard",
+        "type": "DASHBOARD",
+        "processCustomLinks": [
+            {
+                "processId": "defaultProcess",
+                "customLinks": [
+                    {
+                        "label": "Custom screen",
+                        "customScreenId": "testId"
+                    },
+                    {
+                        "label": "Custom screen 2",
+                        "customScreenId": "testId2"
+                    }
+                ]
+            }
+        ],
+        "processStateRedirects": [
+            {
+                "processId": "defaultProcess",
+                "stateId": "chartLineState",
+                "menuId": "uid_test_0",
+                "urlExtension": "?search=chart&fulltext=1"
+            },
+            {
+                "processId": "defaultProcess",
+                "stateId": "questionState",
+                "screenId": "testId"
+            }
+        ]
+    };
+
+    opfab.businessconfig.registerCustomScreen(dashboardExample);
+
+}

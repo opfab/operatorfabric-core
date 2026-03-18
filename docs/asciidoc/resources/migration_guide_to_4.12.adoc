@@ -250,3 +250,95 @@ These endpoints are used internally by the OperatorFabric web UI and are not typ
 === Impact on custom integrations
 
 If you have custom code or scripts calling these endpoints directly, you must update them to use the new request format. The OperatorFabric web UI, CLI, and internal services have all been updated to use the new format.
+
+
+== Dashboard configuration 
+
+In previous versions, dashboard configuration was managed via the `web-ui.json` config file. Starting from version 4.12, it is now handled programmatically using the `opfab.businessconfig.registerCustomScreen` method.
+
+For example, instead of the following configuration in `web-ui.json`:
+
+```
+  "dashboard": {
+        "processCustomLinks": [
+            {
+            "processId": "defaultProcess",
+            "customLinks": [
+                    {
+                        "label": "Custom screen",
+                        "customScreenId": "testId"
+                    },
+                    {
+                        "label": "Custom screen 2",
+                        "customScreenId": "testId2"
+                    }
+                ]
+            }
+        ],
+        "processStateRedirects": [
+            {
+            "processId": "defaultProcess",
+            "stateId": "chartLineState",
+            "menuId": "uid_test_0",
+            "urlExtension": "?search=chart&fulltext=1"
+            },
+            {
+            "processId": "defaultProcess",
+            "stateId": "questionState",
+            "screenId": "testId"
+            }
+        ]
+  }
+```
+
+You now need to create a JavaScript file like this:
+
+```
+{
+    const dashboardExample = {
+        "id": "dashboard",
+        "name": "Dashboard",
+        "type": "DASHBOARD",
+        "processCustomLinks": [
+            {
+                "processId": "defaultProcess",
+                "customLinks": [
+                    {
+                        "label": "Custom screen",
+                        "customScreenId": "testId"
+                    },
+                    {
+                        "label": "Custom screen 2",
+                        "customScreenId": "testId2"
+                    }
+                ]
+            }
+        ],
+        "processStateRedirects": [
+            {
+                "processId": "defaultProcess",
+                "stateId": "chartLineState",
+                "menuId": "uid_test_0",
+                "urlExtension": "?search=chart&fulltext=1"
+            },
+            {
+                "processId": "defaultProcess",
+                "stateId": "questionState",
+                "screenId": "testId"
+            }
+        ]
+    };
+
+    opfab.businessconfig.registerCustomScreen(dashboardExample);
+
+}
+```  
+
+Then, load this file at startup by declaring it in `web-ui.json`, for example:
+
+```
+  "customJsToLoad": [
+        "/externalJs/DashboardExample.js",
+        ....]
+```
+

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,6 +18,8 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgClass} from '@angular/common';
 import {CardComponent} from '../card/CardComponent';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
+import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
+import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
 
 declare const opfab: any;
 
@@ -50,7 +52,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
         this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
-        this.processStateRedirects = ConfigService.getConfigValue('dashboard.processStateRedirects', []);
+        const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
+            'dashboard'
+        ) as DashboardScreenDefinition;
+        this.processStateRedirects = dashboardScreenDefinition?.processStateRedirects ?? [];
     }
 
     ngOnDestroy() {
