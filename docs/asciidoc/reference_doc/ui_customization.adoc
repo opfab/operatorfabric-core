@@ -718,6 +718,136 @@ results: {
 For each configured severity, a column will be exported (but not shown in the UI) with the entities that responded with that severity.These columns are only present in the export, not in the UI.
 
 
+== Dashboard screen
+
+The dashboard screen presents the number of cards per process and state. To the right of each state, bubbles display the number of visible cards by severity.
+
+An optional configuration can be loaded via a call to the `opfab.businessconfig.registerCustomScreen` method, to be defined in a JavaScript file loaded at startup.
+
+Two types of configuration are available for the dashboard:
+
+=== processStateRedirects
+
+This configuration allows you to define custom redirections when clicking on a state in the dashboard. If not specified, clicking on a state redirects to the card feed filtered by the selected process and state.
+
+You can redirect to:
+
+* A custom menu (URL-based link) using `menuId` and optionally `urlExtension`
+* A custom screen using `screenId`
+
+The IDs declared must match those defined in the UI menu configuration.
+
+.Example with redirections to a custom menu and a custom screen
+[source, json]
+----
+"processStateRedirects": [
+  {
+    "processId": "defaultProcess",
+    "stateId": "chartLineState",
+    "menuId": "uid_test_0",
+    "urlExtension": "?search=chart&fulltext=1"
+  },
+  {
+    "processId": "defaultProcess",
+    "stateId": "questionState",
+    "screenId": "testId"
+  }
+]
+----
+
+=== processCustomLinks
+
+This configuration allows you to define custom links that appear below the states for each process in the dashboard. These links typically point to custom screens.
+
+Each link requires:
+
+* `label`: The text displayed for the link
+* `customScreenId`: The ID of the custom screen to open
+
+.Example with two custom screen links
+[source, json]
+----
+"processCustomLinks": [
+  {
+    "processId": "defaultProcess",
+    "customLinks": [
+      {
+        "label": "Custom screen",
+        "customScreenId": "testId"
+      },
+      {
+        "label": "Custom screen 2",
+        "customScreenId": "testId2"
+      }
+    ]
+  }
+]
+----
+
+=== Loading the configuration
+
+To apply the dashboard configuration, you need to:
+
+1. Create a JavaScript file containing your dashboard definition
+2. Register it using the `opfab.businessconfig.registerCustomScreen` method
+3. Load this file at application startup
+
+.Complete example combining both processCustomLinks and processStateRedirects
+[source, javascript]
+----
+{
+    const dashboardExample = {
+        id: "dashboard",
+        name: "Dashboard",
+        type: "DASHBOARD",
+        processCustomLinks: [
+            {
+                processId: "defaultProcess",
+                customLinks: [
+                    {
+                        label: "Custom screen",
+                        customScreenId: "testId"
+                    },
+                    {
+                        label: "Custom screen 2",
+                        customScreenId: "testId2"
+                    }
+                ]
+            }
+        ],
+        processStateRedirects: [
+            {
+                processId: "defaultProcess",
+                stateId: "chartLineState",
+                menuId: "uid_test_0",
+                urlExtension: "?search=chart&fulltext=1"
+            },
+            {
+                processId: "defaultProcess",
+                stateId: "questionState",
+                screenId: "testId"
+            }
+        ]
+    };
+
+    opfab.businessconfig.registerCustomScreen(dashboardExample);
+}
+----
+
+Then, declare this file in `web-ui.json` to load it at startup:
+
+[source, json]
+----
+{
+  "customJsToLoad": [
+    "/externalJs/DashboardExample.js"
+  ]
+}
+----
+
+NOTE: The custom screen IDs referenced in `processCustomLinks` and `processStateRedirects` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.
+
+
 == Customizing browser notification sounds
 
 The sounds used by default by the browser to signal a card of a given severity

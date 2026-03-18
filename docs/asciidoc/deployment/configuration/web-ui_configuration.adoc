@@ -72,47 +72,6 @@ For example adding `Keycloak` application, with `'Keycloak'` as `name`, `1` as `
 
 |customJsToLoad||no|List of URLs of javascript files to be loaded at startup
 
-|dashboard.processStateRedirects||no| Declares if a state when clicked in the dashboard should redirect to a custom menu or custom screen. If nothing is specified the redirection is pointing to the card feed. Here is a declaration with one redirection to a custom menu and one to a custom screen. The ids declared should match the ones in the ui-menu config.
-[source, json]
-----
-"dashboard": {
-    "processStateRedirects": [
-      {
-        "processId": "defaultProcess",
-        "stateId": "chartLineState",
-        "menuId": "uid_test_0",
-        "urlExtension": "?search=chart&fulltext=1"
-      },
-      {
-        "processId": "defaultProcess",
-        "stateId": "questionState",
-        "screenId": "testId"
-      }
-    ]
-  }
-----
-
-|dashboard.processCustomLinks||no| Declares a list of link to show under the states of processes.Here is a declaration with two links  to custom screens.
-[source, json]
-----
-  "dashboard": {
-        "processCustomLinks": [
-            { 
-            "processId": "defaultProcess",
-            "customLinks": [
-                    {
-                        "label": "Custom screen",
-                        "customScreenId": "testId"
-                    },
-                    {
-                        "label": "Custom screen 2",
-                        "customScreenId": "testId2"
-                    }
-                ]
-            }
-        ]
-  }
-----
 |dateRangePickerConfig|default|no|Specifies the mode for the date range picker configuration. The default mode can be changed to "ahead", which displays three predefined periods: W-1 (Week ahead), M-1 (Month ahead), and Y-1 (Year ahead) for the date range picker across all screens.
 |defaultEntryPage|feed|no|This configuration determines the default page that will be displayed after a user logs in. The possible values include all core menus, with the exception of 'usercard' and 'about'. Additionally, you can set a custom application as the entry page by using 'businessconfigparty/menuId' as the value.
 |environmentColor|blue|no| Color of the background of the environment name. The format of color is css, for example : `red` , `#4052FF`

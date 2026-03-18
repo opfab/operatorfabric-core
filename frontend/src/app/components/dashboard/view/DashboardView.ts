@@ -23,7 +23,8 @@ import {
 import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
-import {ConfigService} from '@ofServices/config/ConfigService';
+import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
+import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
 import {Card} from 'app/model/Card';
 
 export class Dashboard {
@@ -35,7 +36,10 @@ export class Dashboard {
     private readonly processesCustomScreenLinks: any;
 
     constructor() {
-        this.processesCustomScreenLinks = ConfigService.getConfigValue('dashboard.processCustomLinks', []);
+        const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
+            'dashboard'
+        ) as DashboardScreenDefinition;
+        this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.loadProcesses();
         this.processLightCards();
