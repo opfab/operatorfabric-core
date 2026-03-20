@@ -169,7 +169,7 @@ export default class OutgoingEmailsService {
             0,
             0
         );
-        let millisUntilConfigTime = 0;
+        let millisUntilConfigTime: number;
         switch (mode) {
             case 'daily':
                 millisUntilConfigTime = configTime.getTime() - now.getTime();

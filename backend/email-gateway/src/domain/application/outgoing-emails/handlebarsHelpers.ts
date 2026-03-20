@@ -154,7 +154,7 @@ export class HandlebarsHelper {
             }
             const value = args[0];
             const from = args[1];
-            let to = null;
+            let to;
             if (args.length >= 3) {
                 to = args[2];
                 return value.slice(from, to);
