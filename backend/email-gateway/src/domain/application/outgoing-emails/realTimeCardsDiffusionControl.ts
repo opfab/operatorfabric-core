@@ -182,13 +182,11 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
         emailToPlainText: boolean,
         timezone: string
     ): Promise<void> {
-        let body = '';
-        let attachment = [];
-
         let cardConfig;
         let stateName;
 
         try {
+            let body: string;
             const card = await this.emailGatewayDatabaseService.getCard(cardUid);
             if (!card) {
                 this.logger.info('Impossible to load card ' + cardUid + ' from database');
@@ -203,7 +201,7 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 card.processVersion
             );
             body = await this.processEmailTemplate(card, cardConfig, timezone);
-            attachment = await this.processAttachmentTemplate(card, cardConfig);
+            const attachment = await this.processAttachmentTemplate(card, cardConfig);
 
             if (cardConfig?.states?.[stateName]?.email?.cardFieldUsedForSubject) {
                 subject = this.getValueByPath(

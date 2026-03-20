@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {Frequency, Weekday, RRule} from 'rrule';
 const NB_MILLISECONDS_IN_ONE_MINUTE = 60000; // 1 minute
 
 export function getNextTimeForRepeating(card: Card, startingDate?: number): number {
-    let nextTime = -1;
+    let nextTime: number;
     startingDate ??= Date.now();
     if (card.timeSpans != null && card.timeSpans.length > 0) nextTime = -1;
     else if (startingDate > card.startDate) {
