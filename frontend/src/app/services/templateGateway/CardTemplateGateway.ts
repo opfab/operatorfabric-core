@@ -137,8 +137,12 @@ export class CardTemplateGateway {
 
     public static sendDestroyToTemplate() {
         if (CardTemplateGateway._functionToSendDestroyToTemplate) {
-            CardTemplateGateway._functionToSendDestroyToTemplate();
-            // Avoid calling destroy multiple times
+            try {
+                CardTemplateGateway._functionToSendDestroyToTemplate();
+            } catch (err) {
+                logger.error(`Error when calling destroy template method ${err}`);
+            }
+            // avoid multiple destroy calls
             CardTemplateGateway._functionToSendDestroyToTemplate = () => {};
         }
     }
