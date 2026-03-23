@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -73,9 +73,10 @@ export class MessageOrQuestionListUserCardTemplate extends BaseUserCardTemplate 
         const messageSelectListener = () => {
             this.fillTextAndRecipientFields();
         };
-        document.querySelector('#message-select').addEventListener('change', messageSelectListener);
+        const messageSelectElement = document.querySelector('#message-select');
+        messageSelectElement.addEventListener('change', messageSelectListener);
         opfab.currentUserCard.listenToDestroy(() => {
-            document.querySelector('#message-select').removeEventListener('change', messageSelectListener);
+            messageSelectElement.removeEventListener('change', messageSelectListener);
         });
     }
 
