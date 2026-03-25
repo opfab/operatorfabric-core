@@ -34,6 +34,7 @@ Feature: Bundle
     And match response.states.messageState.email.hideDefaultBodyPrefixAndPostfix == true
     And match response.states.messageState.email.sender == 'senderOfMail@opfab.com'
     And match response.states.messageState.email.cardFieldUsedForSubject == 'data.mailTitle'
+    And match response.states.messageState.email.bodyInPlainText == true
     And match response.states.messageState.editCardEnabledOnUserInterface == false
     And match response.states.messageState.copyCardEnabledOnUserInterface == false
     And match response.states.messageState.showAcknowledgmentFooter == 'OnlyForEmittingEntity'

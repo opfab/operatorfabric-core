@@ -228,6 +228,127 @@ describe('Cards external diffusion', function () {
         );
     });
 
+    it('Should send email with body as plain text if email.bodyInPlainText is set to true in state config', async function () {
+        const publishDate = Date.now();
+        setup();
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail',
+                        bodyInPlainText: true
+                    }
+                }
+            }
+        };
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}} {{config.customParam1}}';
+
+        realTimeCardsDiffusionControl.setForceEmailsInPlainText(false);
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
+        expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
+
+        expect(mailService.sent[0].body).toEqual(
+            `Prefix Title1 ` +
+                `[ http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ]` +
+                '\nTitle1 Param1\n\nPostfix'
+        );
+    });
+
+    it('Should send email as HTML when email.bodyInPlainText is not set', async function () {
+        const publishDate = Date.now();
+        setup();
+
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        bodyTemplate: 'testTemplateMail'
+                    }
+                }
+            }
+        };
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.template = '{{card.titleTranslated}} {{config.customParam1}}';
+
+        realTimeCardsDiffusionControl.setForceEmailsInPlainText(false);
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual(
+            `Prefix <a href=" http://localhost/#/feed/cards/ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE ">Title1</a> <br> Title1 Param1 <br><br>Postfix`
+        );
+    });
+
     it('Body of email should contain publisherEntityPrefix when publisher is an entity', async function () {
         const publishDate = Date.now();
         setup();
