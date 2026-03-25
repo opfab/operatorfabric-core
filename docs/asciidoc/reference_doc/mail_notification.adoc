@@ -32,7 +32,9 @@ This template can use handlebars helpers for formatting but can't run javascript
 is sent with just the link to the card in the body. +
 In the state definition, you can also set `email.hideDefaultBodyPrefixAndPostfix` to true if you don't want to display the
 default body prefix and postfix. +
+
 You can override the default mail sender using `email.sender` in the state definition. +
+
 You can override the mail subject using `email.cardFieldUsedForSubject`, which references a field in the card, for example:
 ....
 email : {
@@ -45,6 +47,20 @@ email : {
     cardFieldUsedForSubject:"titleTranslated"
 }
 ....
+
+You can force the email body to be sent as plain text instead of HTML by using the `email.bodyInPlainText` parameter in the state definition.
+
+When this parameter is set to `true`, the email body is converted to plain text for this specific state.
+If the parameter is absent or set to `false`, the email is sent using the default HTML format.
+
+Example:
+....
+email: {
+    bodyTemplate: "myTemplate",
+    bodyInPlainText: true
+}
+....
+
 === Email templates
 In email handlebars templates it is possible to refer card fields by prefixing with "card" prefix. For example:
 

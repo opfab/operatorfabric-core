@@ -12,7 +12,10 @@ package org.opfab.businessconfig.model;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
-public record Email(String bodyTemplate, Boolean hideDefaultBodyPrefixAndPostfix, String sender,
-                    String cardFieldUsedForSubject) {
+public record Email(String bodyTemplate,
+                    Boolean hideDefaultBodyPrefixAndPostfix,
+                    String sender,
+                    String cardFieldUsedForSubject,
+                    Boolean bodyInPlainText) {
 
 }

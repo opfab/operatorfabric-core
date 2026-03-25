@@ -210,14 +210,17 @@ export default class RealTimeCardsDiffusionControl extends CardsDiffusionControl
                 ) as string;
             }
 
-            if (emailToPlainText) {
+            const stateEmailPlainText = cardConfig?.states?.[stateName]?.email?.bodyInPlainText === true;
+            const sendAsPlainText = emailToPlainText || stateEmailPlainText;
+
+            if (sendAsPlainText) {
                 body = htmlToText(body, {wordwrap: false, selectors: [{selector: 'table', format: 'dataTable'}]});
             }
 
             try {
                 const from = cardConfig?.states?.[stateName]?.email?.sender ?? this.from;
 
-                await this.mailService.sendMail(subject, body, attachment, from, to, emailToPlainText);
+                await this.mailService.sendMail(subject, body, attachment, from, to, sendAsPlainText);
                 this.registerNewSending(to);
                 await this.emailGatewayDatabaseService.persistSentMail(card.uid, to);
             } catch (e) {

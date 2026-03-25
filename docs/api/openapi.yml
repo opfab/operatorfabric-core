@@ -5631,6 +5631,7 @@
                   "hideDefaultBodyPrefixAndPostfix": { "type": "boolean" },
                   "sender": { "type": "string" },
                   "cardFieldUsedForSubject": { "type": "string" },
+                  "bodyInPlainText": { "type": "boolean" }
                 },
             },
         },

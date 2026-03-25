@@ -14,7 +14,8 @@
 				"bodyTemplate" : "email_template",
 				"hideDefaultBodyPrefixAndPostfix" : true,
 				"sender" : "senderOfMail@opfab.com",
-				"cardFieldUsedForSubject" : "data.mailTitle"
+				"cardFieldUsedForSubject" : "data.mailTitle",
+				"bodyInPlainText" : true
 			},
 			"editCardEnabledOnUserInterface": false,
 			"copyCardEnabledOnUserInterface": false,
