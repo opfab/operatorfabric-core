@@ -31,7 +31,7 @@ Feature: Bundle
     And match response.states.questionState.showAcknowledgmentFooter == 'OnlyForUsersAllowedToEdit'
     And match response.states.messageState.type == 'CANCELED'
     And match response.states.messageState.email.bodyTemplate == 'email_template'
-    And match response.states.messageState.email.hideDefaultBodyPrefixAndPostfix == true
+    And match response.states.messageState.email.useOnlyTemplateForBodyRendering == true
     And match response.states.messageState.email.sender == 'senderOfMail@opfab.com'
     And match response.states.messageState.email.cardFieldUsedForSubject == 'data.mailTitle'
     And match response.states.messageState.email.bodyInPlainText == true

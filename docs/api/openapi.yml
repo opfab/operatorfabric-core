@@ -5628,7 +5628,7 @@
               "properties":
                 {
                   "bodyTemplate": { "type": "string" },
-                  "hideDefaultBodyPrefixAndPostfix": { "type": "boolean" },
+                  "useOnlyTemplateForBodyRendering": { "type": "boolean" },
                   "sender": { "type": "string" },
                   "cardFieldUsedForSubject": { "type": "string" },
                   "bodyInPlainText": { "type": "boolean" }
