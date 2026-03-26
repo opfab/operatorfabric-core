@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 public record Email(String bodyTemplate,
-                    Boolean hideDefaultBodyPrefixAndPostfix,
+                    Boolean useOnlyTemplateForBodyRendering,
                     String sender,
                     String cardFieldUsedForSubject,
                     Boolean bodyInPlainText) {

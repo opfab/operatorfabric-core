@@ -122,6 +122,40 @@ operatorfabric:
         # ... other email config
 ----
 
+=== Email body rendering parameter renamed
+
+The email body rendering parameter has been renamed in state configuration.
+
+Replace the deprecated parameter:
+----
+email: {
+  hideDefaultBodyPrefixAndPostfix: true
+}
+----
+
+With
+
+----
+email: {
+useOnlyTemplateForBodyRendering: true
+}
+----
+
+=== Behavior change
+
+The new parameter `useOnlyTemplateForBodyRendering` provides clearer behavior:
+
+* When set to `true`, only the content generated from `email.bodyTemplate` is used as the email body.
+  The default prefix, postfix, and card title/link are not included.
+
+* When set to `false` or not defined, the email body includes:
+  - the default prefix
+  - the card title and/or link
+  - the rendered template content
+  - the default postfix
+
+Make sure to update your state configurations accordingly, otherwise email content may differ from previous versions.
+
 === MongoDB collection name
 
 The MongoDB collection name has changed:

@@ -105,8 +105,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_2@opfab.com');
         expect(mailService.sent[0].subject).toEqual('Subject - Title1');
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1` +
-                '</a> <br><br>Postfix'
+            `Prefix <a href="http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}">Title1` + '</a> <br><br>Postfix'
         );
     });
 
@@ -163,7 +162,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].fromAddress).toEqual('test@opfab.com');
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1` +
+            `Prefix <a href="http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}">Title1` +
                 '</a> <br> Title1 Param1 <br><br>Postfix'
         );
     });
@@ -223,7 +222,7 @@ describe('Cards external diffusion', function () {
         expect(mailService.sent[0].toAddress).toEqual('operator_1@opfab.com');
         expect(mailService.sent[0].body).toEqual(
             `Prefix Title1 ` +
-                `[ http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ]` +
+                `[http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}]` +
                 '\nTitle1 Param1\n\nPostfix'
         );
     });
@@ -286,7 +285,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.sent[0].body).toEqual(
             `Prefix Title1 ` +
-                `[ http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ]` +
+                `[http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}]` +
                 '\nTitle1 Param1\n\nPostfix'
         );
     });
@@ -345,7 +344,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE ">Title1</a> <br> Title1 Param1 <br><br>Postfix`
+            `Prefix <a href="http://localhost/#/feed/cards/ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE">Title1</a> <br> Title1 Param1 <br><br>Postfix`
         );
     });
 
@@ -401,7 +400,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 &amp; &lt;br&gt;` +
+            `Prefix <a href="http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}">Title1 &amp; &lt;br&gt;` +
                 '</a> <br> Title1 &amp; &lt;br&gt; <br><br>Sent by ENTITY2 name. <br><br>Postfix'
         );
     });
@@ -457,7 +456,7 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID} ">Title1 &amp; &lt;br&gt;` +
+            `Prefix <a href="http://localhost/#/feed/cards/${BASE64URL_ENCODED_CARDID}">Title1 &amp; &lt;br&gt;` +
                 '</a> <br> Title1 &amp; &lt;br&gt; <br><br>Postfix'
         );
     });
@@ -628,12 +627,12 @@ describe('Cards external diffusion', function () {
 
         expect(mailService.numberOfMailsSent).toEqual(1);
         expect(mailService.sent[0].body).toEqual(
-            `Prefix <a href=" http://localhost/#/feed/cards/ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE "></a> ` +
+            `Prefix <a href="http://localhost/#/feed/cards/ZGVmYXVsdFByb2Nlc3MucHJvY2VzczE"></a> ` +
                 '<br> card template <br><br>Postfix'
         );
     });
 
-    it('Body of email should not contain header and footer when hideDefaultBodyPrefixAndPostfix is set to true', async function () {
+    it('Body of email should not contain header and footer when useOnlyTemplateForBodyRendering is set to true', async function () {
         const publishDate = Date.now();
         setup();
         realTimeCardsDiffusionControl.setShowCardUrls(false);
@@ -657,7 +656,7 @@ describe('Cards external diffusion', function () {
                 processState: {
                     email: {
                         bodyTemplate: 'testTemplateMail',
-                        hideDefaultBodyPrefixAndPostfix: true
+                        useOnlyTemplateForBodyRendering: true
                     }
                 }
             }
@@ -685,10 +684,10 @@ describe('Cards external diffusion', function () {
         await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(mailService.numberOfMailsSent).toEqual(1);
-        expect(mailService.sent[0].body).toEqual(`Title1 &amp; &lt;br&gt; ` + '<br> Title1 &amp; &lt;br&gt;');
+        expect(mailService.sent[0].body).toEqual(`Title1 &amp; &lt;br&gt;`);
     });
 
-    it('Body of email should contain header and footer when hideDefaultBodyPrefixAndPostfix is set to false', async function () {
+    it('Body of email should contain header and footer when useOnlyTemplateForBodyRendering is set to false', async function () {
         const publishDate = Date.now();
         setup();
         realTimeCardsDiffusionControl.setShowCardUrls(false);
@@ -712,7 +711,7 @@ describe('Cards external diffusion', function () {
                 processState: {
                     email: {
                         bodyTemplate: 'testTemplateMail',
-                        hideDefaultBodyPrefixAndPostfix: false
+                        useOnlyTemplateForBodyRendering: false
                     }
                 }
             }
@@ -745,7 +744,7 @@ describe('Cards external diffusion', function () {
         );
     });
 
-    it('Body of email should contain header and footer when hideDefaultBodyPrefixAndPostfix is not in the config', async function () {
+    it('Body of email should contain header and footer when useOnlyTemplateForBodyRendering is not in the config', async function () {
         const publishDate = Date.now();
         setup();
         realTimeCardsDiffusionControl.setShowCardUrls(false);
@@ -801,6 +800,58 @@ describe('Cards external diffusion', function () {
         );
     });
 
+    it('Body of email should be empty when useOnlyTemplateForBodyRendering is true and no template is provided', async function () {
+        const publishDate = Date.now();
+        setup();
+
+        opfabServicesInterfaceStub.allUsers = [{login: 'operator_1', entities: ['ENTITY1']}];
+
+        opfabServicesInterfaceStub.usersWithPerimeters = [
+            {
+                userData: {login: 'operator_1', entities: ['ENTITY1']},
+                sendCardsByEmail: true,
+                emailForCardSending: 'operator_1@opfab.com',
+                processesStatesNotifiedByEmail: {defaultProcess: ['processState']},
+                computedPerimeters: perimeters
+            }
+        ];
+
+        opfabBusinessConfigServicesInterfaceStub.config = {
+            id: 'defaultProcess',
+            name: 'Process example',
+            version: '1',
+            states: {
+                processState: {
+                    email: {
+                        useOnlyTemplateForBodyRendering: true
+                    }
+                }
+            }
+        };
+
+        databaseServiceStub.cards = [
+            {
+                uid: '1001',
+                id: 'defaultProcess.process1',
+                publisher: 'publisher1',
+                publishDate,
+                startDate: publishDate,
+                titleTranslated: 'Title1',
+                summaryTranslated: 'Summary1',
+                process: 'defaultProcess',
+                state: 'processState',
+                entityRecipients: ['ENTITY1'],
+                processVersion: '1'
+            }
+        ];
+
+        await realTimeCardsDiffusionControl.checkCardsNeedToBeSent();
+        await new Promise((resolve) => setTimeout(resolve, 1));
+
+        expect(mailService.numberOfMailsSent).toEqual(1);
+        expect(mailService.sent[0].body).toEqual('');
+    });
+
     it('Sender of email should be the one of the state when sender is defined in the state', async function () {
         const publishDate = Date.now();
         setup();
@@ -825,7 +876,7 @@ describe('Cards external diffusion', function () {
                 processState: {
                     email: {
                         bodyTemplate: 'testTemplateMail',
-                        hideDefaultBodyPrefixAndPostfix: true,
+                        useOnlyTemplateForBodyRendering: true,
                         sender: 'senderForTheState@test.com'
                     }
                 }
@@ -881,7 +932,7 @@ describe('Cards external diffusion', function () {
                 processState: {
                     email: {
                         bodyTemplate: 'testTemplateMail',
-                        hideDefaultBodyPrefixAndPostfix: true,
+                        useOnlyTemplateForBodyRendering: true,
                         sender: 'senderForTheState@test.com',
                         cardFieldUsedForSubject: 'titleTranslated'
                     }
@@ -938,7 +989,7 @@ describe('Cards external diffusion', function () {
                 processState: {
                     email: {
                         bodyTemplate: 'testTemplateMail',
-                        hideDefaultBodyPrefixAndPostfix: true,
+                        useOnlyTemplateForBodyRendering: true,
                         sender: 'senderForTheState@test.com',
                         cardFieldUsedForSubject: 'data.mailTitle'
                     }

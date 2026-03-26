@@ -30,8 +30,25 @@ The email body contains a link to the card details in OpFab. In the config.json 
 the `email.bodyTemplate` field allows defining a template specific to the email body content.
 This template can use handlebars helpers for formatting but can't run javascript. If no template is specified, the mail
 is sent with just the link to the card in the body. +
-In the state definition, you can also set `email.hideDefaultBodyPrefixAndPostfix` to true if you don't want to display the
-default body prefix and postfix. +
+
+In the state definition, you can control how the email body is rendered using the `email.useOnlyTemplateForBodyRendering` parameter.
+
+When set to `true`, only the content generated from the `email.bodyTemplate` is used as the email body.
+The default header (prefix), footer (postfix), and card title/link are not included.
+
+When set to `false` or not defined, the email body is composed of:
+- the default body prefix
+- the card title and/or link (depending on configuration)
+- the content generated from the `email.bodyTemplate`
+- the default body postfix
+
+Example:
+....
+email : {
+    bodyTemplate: "myTemplate",
+    useOnlyTemplateForBodyRendering: true
+}
+....
 
 You can override the default mail sender using `email.sender` in the state definition. +
 
