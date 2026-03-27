@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2023-2025, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2023-2026, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -10,28 +10,31 @@
     <of-timeline-buttons [displayBusinessPeriodAndArrows]="true" #timelineButtons> </of-timeline-buttons>
 </div>
 
-@if (dashboardPage.processes.length > 0) {
+@if (dashboardPage.tiles.length > 0) {
 <div class="opfab-dashboard">
-    @for (process of dashboardPage.processes; track process.id) {
+    @for (tile of dashboardPage.tiles; track tile.id) {
     <div>
-        <div class="opfab-dashboard-process">
+        <div class="opfab-dashboard-tile">
             <div
                 style="margin-bottom: 10px"
-                [ngClass]="{'opfab-feed-link': !hideProcessFilter}"
-                (click)="onProcessClick(process.id)">
-                <b style="font-size: 16px">{{ process.name }}</b>
+                [ngClass]="{'opfab-cell-link': !hideProcessFilter}"
+                (click)="onTileTitleClick(tile.id)">
+                <b style="font-size: 16px">{{ tile.label }}</b>
             </div>
 
-            @for (state of process.states; track state.id) {
+            @for (cell of tile.cells; track cell.id) {
             <div class="opfab-dashboard-cell">
-                @for (circle of state.circles; track $index; let index = $index) {
+                @if(!cell.circles) {<em
+                    class="fas fa-circle-chevron-right"
+                    style="font-size: 1.5em; margin-right: -3px"></em
+                >} @for (circle of cell.circles; track $index; let index = $index) {
                 <span>
                     @if (!!circle.severity) {
                     <svg
                         height="20"
                         [attr.width]="2 * circle.width + 1"
                         type="button"
-                        [id]="'opfab-dashboardCircle-' + state.id + index"
+                        [id]="'opfab-dashboardCircle-' + cell.id + index"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink"
                         style="max-height: 500px; overflow: auto; overflow-x: hidden; margin-top: 0; margin-bottom: 0">
@@ -65,7 +68,7 @@
                     <svg
                         height="20"
                         width="21"
-                        [id]="'opfab-dashboardCircle-' + state.id + index"
+                        [id]="'opfab-dashboardCircle-' + cell.id + index"
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink">
                         <g>
@@ -85,19 +88,11 @@
                 </span>
                 }
                 <span
-                    [ngClass]="{'opfab-feed-link': !hideProcessFilter && !hideStateFilter}"
-                    (click)="onStateClick(process.id, state.id)">
-                    {{ state.name }}</span
+                    [ngClass]="{'opfab-cell-link': (!hideProcessFilter && !hideStateFilter) || (cell.type === 'customScreenLink')}"
+                    (click)="onCellClick(tile.id, cell)">
+                    {{ cell.label }}</span
                 >
                 <br />
-            </div>
-            } @for (links of process.customScreenLinks; track links.customScreenId) {
-            <div
-                class="opfab-dashboard-cell"
-                style="align-items: center; display: flex; cursor: pointer"
-                (click)="onCustomScreenLinkClick(links.customScreenId)">
-                <em class="fas fa-circle-chevron-right" style="font-size: 1.5em"></em>
-                <span style="margin-left: 5px"> {{ links.label }} </span>
             </div>
             }
         </div>

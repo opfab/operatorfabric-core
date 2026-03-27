@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,27 +9,21 @@
 
 import {Severity} from 'app/model/Severity';
 
-export class CardForDashboard {
-    id: string;
-    publishDate: string;
-    title: string;
-}
-
-export class StateContent {
-    id: string;
-    name: string;
-    circles: DashboardCircle[];
-}
-
-export class ProcessContent {
-    id: string;
-    name: string;
-    states: StateContent[];
-    customScreenLinks?: CustomScreenLink[];
-}
-
 export class DashboardPage {
-    processes: ProcessContent[];
+    tiles: Tile[];
+}
+
+export class Tile {
+    id: string;
+    label: string;
+    cells: TileCell[];
+}
+
+export class TileCell {
+    id: string;
+    label: string;
+    type: 'state' | 'customScreenLink';
+    circles: DashboardCircle[];
 }
 
 export class DashboardCircle {
@@ -40,7 +34,8 @@ export class DashboardCircle {
     cards: CardForDashboard[];
 }
 
-export class CustomScreenLink {
-    label: string;
-    customScreenId: string;
+export class CardForDashboard {
+    id: string;
+    publishDate: string;
+    title: string;
 }
