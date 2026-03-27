@@ -141,6 +141,7 @@
         name: 'testName',
         headerFilters: ['PROCESS'],
         initialBusinessPeriod: 'FROM_TODAY_TO_YEAR_END',
+        showBackButton: true,
         results: {
             columns: [
                 {

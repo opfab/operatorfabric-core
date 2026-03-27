@@ -12,6 +12,18 @@
 <div [formGroup]="headerForm" style="overflow: hidden">
     <div class="opfab-custom-screen-header">
         <div style="display: flex">
+            @if (showBackButton) {
+            <div style="margin-right: 20px; display: flex; align-items: center">
+                <button
+                    id="opfab-back-button"
+                    class="opfab-btn"
+                    (click)="goBack()"
+                    style="margin-top: -12px; min-width: 40px">
+                    <em class="fas fa-arrow-left"></em>
+                </button>
+            </div>
+            }
+
             <div
                 class="opfab-date-range-input opfab-input"
                 style="margin-top: 28px; margin-bottom: 28px; width: 260px; height: 49px">

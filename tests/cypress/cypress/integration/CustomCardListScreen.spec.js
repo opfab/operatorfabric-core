@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -147,6 +147,20 @@ describe('Custom Card List Screen', function () {
 
             // Check the number of acknowledged icons in the column
             cy.get(`[col-id="hasBeenAcknowledged"] .fa-check`).should('have.length', 5);
+        });
+    });
+
+    describe('Back button behavior', function () {
+        it('should display back button and navigate back when clicked', function () {
+            opfab.loginWithUser('operator1_fr');
+
+            opfab.navigateToFeed();
+
+            opfab.navigateToCustomScreen2();
+
+            cy.get('#opfab-back-button').should('exist').and('be.visible');
+            cy.get('#opfab-back-button').click();
+            cy.url().should('include', '/feed');
         });
     });
 });

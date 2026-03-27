@@ -27,6 +27,7 @@ export class CardListScreenDefinition extends ScreenDefinition {
     includeOnlyCardsEmittedByCurrentUserEntities?: boolean;
     excludeCardsEmittedByCurrentUserEntities?: boolean;
     initialBusinessPeriod?: string;
+    showBackButton?: boolean;
 }
 
 export class Column {

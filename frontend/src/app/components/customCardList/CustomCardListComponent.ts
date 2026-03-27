@@ -167,6 +167,8 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe$ = new Subject<void>();
     private inputMode$ = new Subject<void>();
 
+    showBackButton = false;
+
     loadingInProgress = false;
 
     constructor() {
@@ -183,6 +185,7 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
         this.initialEndDate = this.customCardListView.getBusinessPeriod().endDate;
         this.typeOfStateSelected = this.customCardListView.getDefaultSelectedTypeOfState();
         this.readAndAckSelected = this.customCardListView.getDefaultSelectedReadAndAck();
+        this.showBackButton = this.customCardListView.shouldShowBackButton();
 
         const savedPageSize = UserPreferencesService.getPreference('opfab.customScreens.page.size');
         if (savedPageSize) this.pageSize = Number.parseInt(savedPageSize);
@@ -494,6 +497,10 @@ export class CustomCardListComponent implements OnInit, OnDestroy {
 
     export(): void {
         ExcelExport.exportJsonToExcelFile(this.customCardListView.getDataForExport(), 'Custom');
+    }
+
+    goBack() {
+        globalThis.history.back();
     }
 
     ngOnDestroy() {
