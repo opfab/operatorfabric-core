@@ -343,6 +343,7 @@ const customScreenExample = {
     statesToExclude: [{processId: 'processId0', stateIds: ['stateId0', 'stateId1']}],
     headerFilters: ['PROCESS', 'TYPE_OF_STATE'],
     showAcknowledgmentButton: false,
+    showBackButton: true,
     defaultSelectedTypeOfState: [
         'INPROGRESS',
         'FINISHED'
@@ -503,6 +504,10 @@ Sometimes columns are not wide enough to display all the content. In this case, 
 === Acknowledgment 
 
 It is possible to define a custom screen with an acknowledgment button allowing the user to acknowledge multiple cards at once. This is possible by setting the `showAcknowledgmentButton` field to `true` in the custom screen object.
+
+=== Back button
+
+A back button can be displayed in the top-left corner of the screen by setting `showBackButton` to `true` (default is `false`). When clicked, it behaves like the browser's back button and navigates to the previous page.
 
 === Response buttons 
 

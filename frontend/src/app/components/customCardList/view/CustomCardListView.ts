@@ -116,6 +116,10 @@ export class CustomCardListView {
         return this.cardListScreenDefinition.headerFilters?.includes(filter);
     }
 
+    public shouldShowBackButton(): boolean {
+        return this.cardListScreenDefinition?.showBackButton === true;
+    }
+
     private getProcessList(processIds: string[]): string[] {
         if (processIds?.length > 0 || !this.cardListScreenDefinition) return processIds;
         return this.cardListScreenDefinition.processIds ?? [];
