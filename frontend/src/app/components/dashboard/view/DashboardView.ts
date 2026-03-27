@@ -12,14 +12,7 @@ import {Utilities} from '../../../utils/Utilities';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {combineLatest, Observable, ReplaySubject, Subject, takeUntil} from 'rxjs';
-import {
-    DashboardPage,
-    ProcessContent,
-    StateContent,
-    CardForDashboard,
-    DashboardCircle,
-    CustomScreenLink
-} from './DashboardPage';
+import {DashboardPage, Tile, TileCell, CardForDashboard, DashboardCircle} from './DashboardPage';
 import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
@@ -29,7 +22,7 @@ import {Card} from 'app/model/Card';
 
 export class Dashboard {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
-    private dashboardPage;
+    private dashboardPage: DashboardPage;
     public noSeverityColor = '#717274';
     private readonly ngUnsubscribe$ = new Subject<void>();
     private readonly filteredLightCardStore: FilteredLightCardsStore;
@@ -41,65 +34,58 @@ export class Dashboard {
         ) as DashboardScreenDefinition;
         this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
-        this.loadProcesses();
+        this.buildTiles();
         this.processLightCards();
         this.dashboardSubject.next(this.dashboardPage);
     }
 
-    private loadProcesses() {
+    private buildTiles() {
         this.dashboardPage = new DashboardPage();
-        this.dashboardPage.processes = new Array();
+        this.dashboardPage.tiles = new Array();
         ProcessesService.getAllProcesses().forEach((process) => {
-            const statesContent = new Array<StateContent>();
-            let hasChildstate = false;
+            const cells = new Array<TileCell>();
             process.states.forEach((state, key) => {
                 if (
                     UsersService.isReceiveRightsForProcessAndState(process.id, key) &&
                     this.isStateNotified(process.id, key)
                 ) {
-                    if (state.isOnlyAChildState) {
-                        hasChildstate = true;
-                    } else {
-                        const stateContent = new StateContent();
-                        stateContent.id = key;
-                        stateContent.circles = new Array();
-                        stateContent.name = state.name;
+                    if (!state.isOnlyAChildState) {
+                        const cell = new TileCell();
+                        cell.id = key;
+                        cell.type = 'state';
+                        cell.circles = new Array();
+                        cell.label = state.name;
 
                         const circle = new DashboardCircle();
                         circle.color = this.noSeverityColor;
                         circle.numberOfCards = 0;
                         circle.width = 10;
-                        stateContent.circles.push(circle);
-                        statesContent.push(stateContent);
+                        cell.circles.push(circle);
+                        cells.push(cell);
                     }
                 }
             });
-            const processContent = new ProcessContent();
-            processContent.id = process.id;
-            processContent.name = process.name;
-            statesContent.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
-            processContent.states = statesContent;
-            this.addCustomScreenLinks(processContent);
+            const tile = new Tile();
+            tile.id = process.id;
+            tile.label = process.name;
+            cells.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
+            tile.cells = cells;
+            this.addCustomScreenLinks(tile);
 
-            // Show the process if it has visible states,
-            // or if it only has only child states but includes custom screen links (Special case: we want to show custom screen links even if there are no visible states)
-            if (processContent.states.length > 0 || (hasChildstate && processContent.customScreenLinks?.length > 0))
-                this.dashboardPage.processes.push(processContent);
+            if (tile.cells.length > 0) this.dashboardPage.tiles.push(tile);
         });
-        this.dashboardPage.processes.sort((obj1, obj2) => Utilities.compareObj(obj1.name, obj2.name));
+        this.dashboardPage.tiles.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
     }
 
-    private addCustomScreenLinks(processContent: ProcessContent) {
+    private addCustomScreenLinks(tile: Tile) {
         this.processesCustomScreenLinks.forEach((processCustomScreenLinks) => {
-            if (processCustomScreenLinks.processId === processContent.id) {
+            if (processCustomScreenLinks.processId === tile.id) {
                 processCustomScreenLinks.customLinks?.forEach((processCustomScreenLink) => {
-                    const customScreenLink = new CustomScreenLink();
-                    customScreenLink.label = processCustomScreenLink.label;
-                    customScreenLink.customScreenId = processCustomScreenLink.customScreenId;
-                    if (!processContent.customScreenLinks) {
-                        processContent.customScreenLinks = [];
-                    }
-                    processContent.customScreenLinks.push(customScreenLink);
+                    const cell = new TileCell();
+                    cell.type = 'customScreenLink';
+                    cell.label = processCustomScreenLink.label;
+                    cell.id = processCustomScreenLink.customScreenId;
+                    tile.cells.push(cell);
                 });
             }
         });
@@ -113,7 +99,7 @@ export class Dashboard {
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {
                 const cards = results[1].filter((card) => results[0].applyFilter(card));
-                this.loadProcesses();
+                this.buildTiles();
                 cards.forEach((lightCard) => {
                     this.processOneLightCard(lightCard);
                 });
@@ -126,9 +112,9 @@ export class Dashboard {
         dashboardCard.title = lightCard.titleTranslated;
         dashboardCard.id = lightCard.id;
         dashboardCard.publishDate = format(lightCard.publishDate, 'dd/MM - HH:mm :');
-        this.dashboardPage.processes.forEach((processContent) => {
-            if (processContent.id === lightCard.process) {
-                processContent.states.forEach((stateContent) => {
+        this.dashboardPage.tiles.forEach((tile) => {
+            if (tile.id === lightCard.process) {
+                tile.cells.forEach((stateContent) => {
                     if (stateContent.id === lightCard.state && !lightCard.hasBeenAcknowledged) {
                         this.updateCircle(stateContent, lightCard.severity, dashboardCard);
                     }
@@ -137,7 +123,7 @@ export class Dashboard {
         });
     }
 
-    private updateCircle(stateContent: StateContent, severity: Severity, dashboardCard): any {
+    private updateCircle(stateContent: TileCell, severity: Severity, dashboardCard): any {
         let noCircle = true;
 
         stateContent.circles.forEach((circle) => {

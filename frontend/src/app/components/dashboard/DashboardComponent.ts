@@ -9,7 +9,7 @@
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {Dashboard} from 'app/components/dashboard/view/DashboardView';
-import {DashboardPage} from 'app/components/dashboard/view/DashboardPage';
+import {DashboardPage, TileCell} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -107,13 +107,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         clearTimeout(this.popoverTimeOut);
     }
 
-    onProcessClick(processId: string) {
-        if (!this.hideProcessFilter) NavigationService.navigateToFeedWithProcessStateFilter(processId, undefined);
+    onTileTitleClick(tileId: string) {
+        if (!this.hideProcessFilter) NavigationService.navigateToFeedWithProcessStateFilter(tileId, undefined);
     }
 
-    onStateClick(processId: string, stateId: string) {
+    onCellClick(tileId: string, cell: TileCell) {
+        if (cell.type === 'customScreenLink') {
+            NavigationService.navigateTo('customscreen/' + cell.id);
+            return;
+        }
+
         const redirect = this.processStateRedirects.filter(
-            (redirect) => redirect.processId === processId && redirect.stateId === stateId
+            (redirect) => redirect.processId === tileId && redirect.stateId === cell.id
         );
         if (redirect?.length > 0) {
             if (redirect[0]?.screenId) {
@@ -122,13 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
             }
         } else if (!this.hideProcessFilter && !this.hideStateFilter) {
-            NavigationService.navigateToFeedWithProcessStateFilter(processId, stateId);
-        }
-    }
-
-    onCustomScreenLinkClick(customScreenId: string) {
-        if (customScreenId) {
-            NavigationService.navigateTo('customscreen/' + customScreenId);
+            NavigationService.navigateToFeedWithProcessStateFilter(tileId, cell.id);
         }
     }
 }

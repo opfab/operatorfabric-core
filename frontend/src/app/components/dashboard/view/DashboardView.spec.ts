@@ -76,7 +76,7 @@ describe('Dashboard', () => {
         await setUserPerimeter(userWithPerimeters);
         dashboard = new Dashboard();
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes).toHaveSize(0);
+        expect(result.tiles).toHaveSize(0);
     });
 
     it('GIVEN a process list and user has no perimeters WHEN get dashboard THEN dashboard is empty', async () => {
@@ -87,7 +87,7 @@ describe('Dashboard', () => {
 
         dashboard = new Dashboard();
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes.length).toEqual(0);
+        expect(result.tiles.length).toEqual(0);
     });
 
     it('GIVEN a process list WHEN get dashboard THEN dashboard contains processes', async () => {
@@ -104,16 +104,17 @@ describe('Dashboard', () => {
         dashboard = new Dashboard();
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes.length).toEqual(2);
-        expect(result.processes[0].id).toEqual('process1');
-        expect(result.processes[0].name).toEqual('process name');
-        expect(result.processes[0].states[0].id).toEqual('state1');
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.processes[1].id).toEqual('process2');
-        expect(result.processes[1].name).toEqual('process name 2');
-        expect(result.processes[1].states.length).toEqual(2);
+        expect(result.tiles.length).toEqual(2);
+        expect(result.tiles[0].id).toEqual('process1');
+        expect(result.tiles[0].label).toEqual('process name');
+        expect(result.tiles[0].cells[0].type).toEqual('state');
+        expect(result.tiles[0].cells[0].id).toEqual('state1');
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+        expect(result.tiles[1].id).toEqual('process2');
+        expect(result.tiles[1].label).toEqual('process name 2');
+        expect(result.tiles[1].cells.length).toEqual(2);
     });
 
     it('GIVEN a process with custom screen links in config WHEN get dashboard THEN dashboard contains links', async () => {
@@ -149,12 +150,17 @@ describe('Dashboard', () => {
         dashboard = new Dashboard();
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes[0].id).toEqual('process1');
-        expect(result.processes[0].name).toEqual('process name');
-        expect(result.processes[0].customScreenLinks[0].label).toEqual('My link');
-        expect(result.processes[0].customScreenLinks[0].customScreenId).toEqual('testId');
-        expect(result.processes[0].customScreenLinks[1].label).toEqual('My Link 2');
-        expect(result.processes[0].customScreenLinks[1].customScreenId).toEqual('testId2');
+        expect(result.tiles[0].id).toEqual('process1');
+        expect(result.tiles[0].label).toEqual('process name');
+        expect(result.tiles[0].cells[0].type).toEqual('state');
+        expect(result.tiles[0].cells[0].label).toEqual('State 1');
+        expect(result.tiles[0].cells[0].id).toEqual('state1');
+        expect(result.tiles[0].cells[1].type).toEqual('customScreenLink');
+        expect(result.tiles[0].cells[1].label).toEqual('My link');
+        expect(result.tiles[0].cells[1].id).toEqual('testId');
+        expect(result.tiles[0].cells[2].type).toEqual('customScreenLink');
+        expect(result.tiles[0].cells[2].label).toEqual('My Link 2');
+        expect(result.tiles[0].cells[2].id).toEqual('testId2');
     });
 
     // Special case: sometimes we want to show custom screen links even if there is no process state visible to the user.
@@ -200,12 +206,14 @@ describe('Dashboard', () => {
         dashboard = new Dashboard();
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes[0].id).toEqual('processWithOnlyChildState');
-        expect(result.processes[0].name).toEqual('process with only child state');
-        expect(result.processes[0].customScreenLinks[0].label).toEqual('My link');
-        expect(result.processes[0].customScreenLinks[0].customScreenId).toEqual('testId');
-        expect(result.processes[0].customScreenLinks[1].label).toEqual('My Link 2');
-        expect(result.processes[0].customScreenLinks[1].customScreenId).toEqual('testId2');
+        expect(result.tiles[0].id).toEqual('processWithOnlyChildState');
+        expect(result.tiles[0].label).toEqual('process with only child state');
+        expect(result.tiles[0].cells[0].type).toEqual('customScreenLink');
+        expect(result.tiles[0].cells[0].label).toEqual('My link');
+        expect(result.tiles[0].cells[0].id).toEqual('testId');
+        expect(result.tiles[0].cells[1].type).toEqual('customScreenLink');
+        expect(result.tiles[0].cells[1].label).toEqual('My Link 2');
+        expect(result.tiles[0].cells[1].id).toEqual('testId2');
     });
 
     it('Given a process with no custom screen links and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains no process', async () => {
@@ -226,7 +234,7 @@ describe('Dashboard', () => {
         await setUserPerimeter(userWithPerimeters);
         dashboard = new Dashboard();
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes.length).toEqual(0);
+        expect(result.tiles.length).toEqual(0);
     });
 
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
@@ -241,10 +249,10 @@ describe('Dashboard', () => {
         dashboard = new Dashboard();
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes.length).toEqual(2);
-        expect(result.processes[0].id).toEqual('process1');
-        expect(result.processes[1].id).toEqual('process2');
-        expect(result.processes[1].states.length).toEqual(1);
+        expect(result.tiles.length).toEqual(2);
+        expect(result.tiles[0].id).toEqual('process1');
+        expect(result.tiles[1].id).toEqual('process2');
+        expect(result.tiles[1].cells.length).toEqual(1);
     });
 
     it('GIVEN a process list and an action card in state1 WHEN get dashboard THEN dashboard contains 1 card in process 1 with 1 action circle ', async () => {
@@ -265,13 +273,13 @@ describe('Dashboard', () => {
         );
 
         let result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes.length).toEqual(2);
-        expect(result.processes[0].id).toEqual('process1');
-        expect(result.processes[0].name).toEqual('process name');
-        expect(result.processes[0].states[0].id).toEqual('state1');
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles.length).toEqual(2);
+        expect(result.tiles[0].id).toEqual('process1');
+        expect(result.tiles[0].label).toEqual('process name');
+        expect(result.tiles[0].cells[0].id).toEqual('state1');
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
 
         const card = getOneLightCard({
             process: 'process1',
@@ -281,13 +289,13 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(card);
 
         result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
-        expect(result.processes.length).toEqual(2);
-        expect(result.processes[0].id).toEqual('process1');
-        expect(result.processes[0].name).toEqual('process name');
-        expect(result.processes[0].states[0].id).toEqual('state1');
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.ACTION));
+        expect(result.tiles.length).toEqual(2);
+        expect(result.tiles[0].id).toEqual('process1');
+        expect(result.tiles[0].label).toEqual('process name');
+        expect(result.tiles[0].cells[0].id).toEqual('state1');
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.ACTION));
     });
 
     it('GIVEN a process list and a card in state1 WHEN add some cards of every severity THEN dashboard contains 4 circles in state 1', async () => {
@@ -345,25 +353,23 @@ describe('Dashboard', () => {
         );
 
         const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
-        expect(result.processes[0].states[0].circles.length).toEqual(4);
+        expect(result.tiles[0].cells[0].circles.length).toEqual(4);
 
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].severity).toEqual(Severity.ALARM);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.ALARM));
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.ALARM);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.ALARM));
 
-        expect(result.processes[0].states[0].circles[1].numberOfCards).toEqual(1);
-        expect(result.processes[0].states[0].circles[1].severity).toEqual(Severity.ACTION);
-        expect(result.processes[0].states[0].circles[1].color).toEqual(Utilities.getSeverityColor(Severity.ACTION));
+        expect(result.tiles[0].cells[0].circles[1].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[1].severity).toEqual(Severity.ACTION);
+        expect(result.tiles[0].cells[0].circles[1].color).toEqual(Utilities.getSeverityColor(Severity.ACTION));
 
-        expect(result.processes[0].states[0].circles[2].numberOfCards).toEqual(1);
-        expect(result.processes[0].states[0].circles[2].severity).toEqual(Severity.COMPLIANT);
-        expect(result.processes[0].states[0].circles[2].color).toEqual(Utilities.getSeverityColor(Severity.COMPLIANT));
+        expect(result.tiles[0].cells[0].circles[2].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[2].severity).toEqual(Severity.COMPLIANT);
+        expect(result.tiles[0].cells[0].circles[2].color).toEqual(Utilities.getSeverityColor(Severity.COMPLIANT));
 
-        expect(result.processes[0].states[0].circles[3].numberOfCards).toEqual(2);
-        expect(result.processes[0].states[0].circles[3].severity).toEqual(Severity.INFORMATION);
-        expect(result.processes[0].states[0].circles[3].color).toEqual(
-            Utilities.getSeverityColor(Severity.INFORMATION)
-        );
+        expect(result.tiles[0].cells[0].circles[3].numberOfCards).toEqual(2);
+        expect(result.tiles[0].cells[0].circles[3].severity).toEqual(Severity.INFORMATION);
+        expect(result.tiles[0].cells[0].circles[3].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
     });
 
     it('GIVEN an acknowledged card WHEN cards get sent THEN dashboard does not contain the card', async () => {
@@ -388,9 +394,9 @@ describe('Dashboard', () => {
         );
 
         const result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
     });
 
     it('GIVEN a card today WHEN date filter is set to the past THEN dashboard does not contain the card', async () => {
@@ -413,17 +419,15 @@ describe('Dashboard', () => {
             filteredLightCardStore.getBusinessDateFilter().status
         );
         let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(
-            Utilities.getSeverityColor(Severity.INFORMATION)
-        );
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
 
         filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
 
         result = await firstValueFrom(dashboard.getDashboardPage());
-        expect(result.processes[0].states[0].circles.length).toEqual(1);
-        expect(result.processes[0].states[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.processes[0].states[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
     });
 });
