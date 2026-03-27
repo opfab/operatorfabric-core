@@ -731,6 +731,18 @@ An optional configuration can be loaded via a call to the `opfab.businessconfig.
 
 Two types of configuration are available for the dashboard:
 
+=== processList
+
+This optional field allows you to restrict the dashboard to a specific subset of processes. When defined, only processes whose IDs are included in the list will be considered when building the visible process tiles. Processes not in the list are ignored, even if the user has receive rights for them.
+
+When `processList` is absent or empty, all processes accessible to the user are displayed (default behaviour).
+
+.Example restricting the dashboard to two processes
+[source, json]
+----
+"processList": ["process1", "process2"]
+----
+
 === processStateRedirects
 
 This configuration allows you to define custom redirections when clicking on a state in the dashboard. If not specified, clicking on a state redirects to the card feed filtered by the selected process and state.
@@ -805,6 +817,7 @@ To apply the dashboard configuration, you need to:
         id: "dashboard",
         name: "Dashboard",
         type: "DASHBOARD",
+        processList: ["process1", "process2","defaultProcess"],
         processCustomLinks: [
             {
                 processId: "defaultProcess",
