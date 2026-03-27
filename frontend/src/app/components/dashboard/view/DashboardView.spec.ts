@@ -430,4 +430,53 @@ describe('Dashboard', () => {
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
     });
+
+    it('GIVEN a processList in config with one process WHEN get dashboard THEN dashboard only contains the listed process', async () => {
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processList = ['process1'];
+        dashboardScreenDefinition.processCustomLinks = [];
+        dashboardScreenDefinition.processStateRedirects = [];
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        await initProcesses();
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
+        ];
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboard = new Dashboard();
+
+        const result = await firstValueFrom(dashboard.getDashboardPage());
+        expect(result.tiles.length).toEqual(1);
+        expect(result.tiles[0].id).toEqual('process1');
+    });
+
+    it('GIVEN a processList in config WHEN user has no rights on a listed process THEN that process is not shown', async () => {
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processList = ['process1', 'process2'];
+        dashboardScreenDefinition.processCustomLinks = [];
+        dashboardScreenDefinition.processStateRedirects = [];
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        await initProcesses();
+        // User only has rights on process1, not on process2
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboard = new Dashboard();
+
+        const result = await firstValueFrom(dashboard.getDashboardPage());
+        expect(result.tiles.length).toEqual(1);
+        expect(result.tiles[0].id).toEqual('process1');
+    });
 });

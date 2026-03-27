@@ -27,12 +27,14 @@ export class Dashboard {
     private readonly ngUnsubscribe$ = new Subject<void>();
     private readonly filteredLightCardStore: FilteredLightCardsStore;
     private readonly processesCustomScreenLinks: any;
+    private readonly processList: string[];
 
     constructor() {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
             'dashboard'
         ) as DashboardScreenDefinition;
         this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
+        this.processList = dashboardScreenDefinition?.processList ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.buildTiles();
         this.processLightCards();
@@ -43,6 +45,9 @@ export class Dashboard {
         this.dashboardPage = new DashboardPage();
         this.dashboardPage.tiles = new Array();
         ProcessesService.getAllProcesses().forEach((process) => {
+            if (this.processList.length > 0 && !this.processList.includes(process.id)) {
+                return;
+            }
             const cells = new Array<TileCell>();
             process.states.forEach((state, key) => {
                 if (
