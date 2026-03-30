@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -35,6 +35,11 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     @Input()
     public displayBusinessPeriodAndArrows: boolean;
+
+    // in rest of year mode , when user click on year button, we set the domain from now to end of year
+    @Input()
+    public restOfYearMode: boolean;
+    public restOfYear: boolean = false;
 
     @Output()
     public domainChange: EventEmitter<any> = new EventEmitter();
@@ -97,14 +102,31 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         }
 
         const buttonToActivate = this.buttonList.find((b) => b.domainId === currentDomain);
-        this.changeGraphConf(buttonToActivate);
+        if (buttonToActivate.domainId === 'Y' && this.restOfYearMode) this.setDomainInRestOfYearMode();
+        else this.setDomain(buttonToActivate);
     }
 
-    /**
-     * Call when click on a zoom button
-     * @param conf button clicked
-     */
-    changeGraphConf(conf: any): void {
+    setDomainInRestOfYearMode() {
+        this.restOfYear = true;
+
+        logger.info('Set timeline domain to restOfYearMode', LogOption.REMOTE);
+        this.selectedButtonTitle = 'timeline.buttonTitle.Y';
+        this.selectZoomButton(this.selectedButtonTitle);
+        RealTimeDomainService.setStartAndEndPeriod(
+            Date.now().valueOf(),
+            new Date(new Date().setMonth(11, 31)).valueOf()
+        );
+        this.currentDomain = RealTimeDomainService.getCurrentDomain();
+        this.currentDomainId = 'Y';
+        this.startDateForBusinessPeriodDisplay = DateTimeFormatterService.getFormattedDate(
+            this.currentDomain.startDate
+        );
+        this.endDateForBusinessPeriodDisplay = DateTimeFormatterService.getFormattedDate(this.currentDomain.endDate);
+        this.domainChange.emit(true);
+    }
+
+    setDomain(conf: any): void {
+        this.restOfYear = false;
         if (conf.buttonTitle) {
             this.selectedButtonTitle = conf.buttonTitle;
             logger.info('Set timeline domain to ' + conf.domainId, LogOption.REMOTE);
@@ -112,11 +134,19 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
         this.selectZoomButton(conf.buttonTitle);
         this.currentDomainId = conf.domainId;
-        RealTimeDomainService.setDomainId(this.currentDomainId);
+        RealTimeDomainService.setDomainId(conf.domainId);
         this.currentDomain = RealTimeDomainService.getCurrentDomain();
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
         this.domainChange.emit(true);
+    }
+
+    userClickOnDomainButton(conf: any): void {
+        if (conf.domainId === 'Y' && this.restOfYearMode) {
+            this.setDomainInRestOfYearMode();
+        } else {
+            this.setDomain(conf);
+        }
     }
 
     selectZoomButton(buttonTitle) {
@@ -160,10 +190,10 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
             if (this.buttonList[i].buttonTitle === this.selectedButtonTitle) {
                 if (direction === 'in') {
                     if (i !== 0) {
-                        this.changeGraphConf(this.buttonList[i - 1]);
+                        this.setDomain(this.buttonList[i - 1]);
                     }
                 } else if (i !== this.buttonList.length - 1) {
-                    this.changeGraphConf(this.buttonList[i + 1]);
+                    this.setDomain(this.buttonList[i + 1]);
                 }
                 return;
             }
@@ -191,6 +221,15 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     moveDomain(moveForward: boolean): void {
+        if (this.restOfYear) {
+            // In rest of year mode
+            // if going forward, we go form  period "now - end of current year" to "start of next year - end of next year"
+            // if going backward , we go form  period "now - end of current year" to "start of current year - end of current year"
+
+            this.setDomain(this.buttonList.find((b) => b.domainId === 'Y')); // set domain to Year
+            if (!moveForward) return;
+        }
+
         this.currentDomain = RealTimeDomainService.moveDomain(moveForward);
         this.startDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.startDate);
         this.endDateForBusinessPeriodDisplay = this.getDateFormatting(this.currentDomain.endDate);
@@ -198,7 +237,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     }
 
     private shiftTimeLineIfNecessary() {
-        if (!RealTimeDomainService.isTimelineLocked()) {
+        if (!RealTimeDomainService.isTimelineLocked() && !this.restOfYear) {
             RealTimeDomainService.shiftIfNecessaryDomainUsingOverlap();
 
             this.currentDomain = RealTimeDomainService.getCurrentDomain();

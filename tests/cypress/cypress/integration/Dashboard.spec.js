@@ -69,9 +69,11 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         hoverNthCircle('kitchenSink', 1);
         cy.get('.popover-body').find('button').should('have.length', 2);
 
-        // When the timeline is set to next year, there should only be grey bubbles
+        // When the timeline is set to previous year, there should only be grey bubbles
         setTimeLineDomain('Y');
-        moveLeft();
+        moveLeft(); // move from rest of year to current year
+        cy.wait(100); // Avoid changing period too fast to avoid edge cases that never happen in real life
+        moveLeft(); // move to previous year
         cy.get('of-dashboard').find('ellipse').should('have.length', 36);
         checkNthCircleContains('kitchenSink', 0, '0');
     });
