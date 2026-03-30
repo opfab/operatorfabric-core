@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerServic
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
 import {ServerResponse} from 'app/server/ServerResponse';
 import {EventSourcePolyfill} from 'ng-event-source';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, retry} from 'rxjs';
 import packageInfo from '../../../../../package.json';
 import {AngularServer} from '../../../server/AngularServer';
 import {CurrentUserStore} from '../../../store/CurrentUserStore';
@@ -147,7 +147,9 @@ export class AngularOpfabEventStreamServer extends AngularServer implements Opfa
     }
     public setBusinessPeriod(startDate: number, endDate: number): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
-            this.httpClient.post<any>(`${this.eventStreamUrl}`, {rangeStart: startDate, rangeEnd: endDate})
+            this.httpClient
+                .post<any>(`${this.eventStreamUrl}`, {rangeStart: startDate, rangeEnd: endDate})
+                .pipe(retry({delay: 2000, count: 2})) // add retry as it is a critical request.
         );
     }
 }

@@ -20,8 +20,8 @@ export class OpfabEventStreamService {
     public static readonly loadingInProgress = new ReplaySubject<boolean>();
     private static numberOfLoadingInProgress = 0;
 
-    private static startOfAlreadyLoadedPeriod: number;
-    private static endOfAlreadyLoadedPeriod: number;
+    private static startOfLoadedPeriod: number;
+    private static endOfLoadedPeriod: number;
 
     private static currentPeriod: {start: number; end: number};
 
@@ -110,8 +110,8 @@ export class OpfabEventStreamService {
     }
 
     public static resetAlreadyLoadingPeriod() {
-        OpfabEventStreamService.startOfAlreadyLoadedPeriod = null;
-        OpfabEventStreamService.endOfAlreadyLoadedPeriod = null;
+        OpfabEventStreamService.startOfLoadedPeriod = null;
+        OpfabEventStreamService.endOfLoadedPeriod = null;
         OpfabEventStreamService.currentPeriod = null;
     }
 
@@ -128,24 +128,21 @@ export class OpfabEventStreamService {
             'EventStreamService - Set subscription date' + new Date(start) + ' -' + new Date(end),
             LogOption.LOCAL_AND_REMOTE
         );
-        if (!OpfabEventStreamService.startOfAlreadyLoadedPeriod) {
+        if (!OpfabEventStreamService.startOfLoadedPeriod) {
             // First loading , no card loaded yet
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (
-            start < OpfabEventStreamService.startOfAlreadyLoadedPeriod &&
-            end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
-        ) {
+        if (start < OpfabEventStreamService.startOfLoadedPeriod && end > OpfabEventStreamService.endOfLoadedPeriod) {
             OpfabEventStreamService.askCardsForPeriod(start, end);
             return;
         }
-        if (start < OpfabEventStreamService.startOfAlreadyLoadedPeriod) {
-            OpfabEventStreamService.askCardsForPeriod(start, OpfabEventStreamService.startOfAlreadyLoadedPeriod);
+        if (start < OpfabEventStreamService.startOfLoadedPeriod) {
+            OpfabEventStreamService.askCardsForPeriod(start, OpfabEventStreamService.startOfLoadedPeriod);
             return;
         }
-        if (end > OpfabEventStreamService.endOfAlreadyLoadedPeriod) {
-            OpfabEventStreamService.askCardsForPeriod(OpfabEventStreamService.endOfAlreadyLoadedPeriod, end);
+        if (end > OpfabEventStreamService.endOfLoadedPeriod) {
+            OpfabEventStreamService.askCardsForPeriod(OpfabEventStreamService.endOfLoadedPeriod, end);
             return;
         }
         logger.info('EventStreamService - Card already loaded for the chosen period', LogOption.LOCAL_AND_REMOTE);
@@ -157,26 +154,34 @@ export class OpfabEventStreamService {
             LogOption.LOCAL_AND_REMOTE
         );
         OpfabEventStreamService.addALoadingInProgress();
+
+        // We set the period as loaded before asking cards to avoid asking several time the same period
+        // It can happen when user change quickly the period with a bad network for example,
+        // or when internal state switch period to a new one before receiving the response of the previous one.
+        if (!OpfabEventStreamService.startOfLoadedPeriod || start < OpfabEventStreamService.startOfLoadedPeriod)
+            OpfabEventStreamService.startOfLoadedPeriod = start;
+        if (!OpfabEventStreamService.endOfLoadedPeriod || end > OpfabEventStreamService.endOfLoadedPeriod)
+            OpfabEventStreamService.endOfLoadedPeriod = end;
         OpfabEventStreamService.opfabEventStreamServer
             .setBusinessPeriod(start, end)
             .subscribe((serverResponse: ServerResponse<any>) => {
-                if (serverResponse.status !== ServerResponseStatus.OK) {
+                if (serverResponse.status === ServerResponseStatus.OK) {
+                    logger.info(
+                        'EventStreamService - Period set on backend for subscription ' +
+                            new Date(start) +
+                            ' -' +
+                            new Date(end)
+                    );
+                } else {
                     logger.error(
                         'EventStreamService - Error while asking cards for period ' + serverResponse.statusMessage
                     );
                     OpfabEventStreamService.removeALoadingInProgress();
-                    return;
+                    // Send a message to user to reload the application as we do not manage to set the period which is
+                    // a critical error for the application to work properly, it is better to ask user
+                    // to reload the application to try to recover a correct state
+                    OpfabEventStreamService.reloadRequest.next();
                 }
-                if (
-                    !OpfabEventStreamService.startOfAlreadyLoadedPeriod ||
-                    start < OpfabEventStreamService.startOfAlreadyLoadedPeriod
-                )
-                    OpfabEventStreamService.startOfAlreadyLoadedPeriod = start;
-                if (
-                    !OpfabEventStreamService.endOfAlreadyLoadedPeriod ||
-                    end > OpfabEventStreamService.endOfAlreadyLoadedPeriod
-                )
-                    OpfabEventStreamService.endOfAlreadyLoadedPeriod = end;
             });
     }
 
