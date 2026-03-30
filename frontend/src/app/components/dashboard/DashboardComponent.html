@@ -7,7 +7,8 @@
 <!-- This file is part of the OperatorFabric project.                      -->
 
 <div class="opfab-dashboard-timeline" style="padding-right: 60px">
-    <of-timeline-buttons [displayBusinessPeriodAndArrows]="true" #timelineButtons> </of-timeline-buttons>
+    <of-timeline-buttons [displayBusinessPeriodAndArrows]="true" [restOfYearMode]="true" #timelineButtons>
+    </of-timeline-buttons>
 </div>
 
 @if (dashboardPage.tiles.length > 0) {

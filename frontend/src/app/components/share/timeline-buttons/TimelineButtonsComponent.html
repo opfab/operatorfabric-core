@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)              -->
+<!-- Copyright (c) 2022-2026, RTE (http://www.rte-france.com)              -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -9,8 +9,8 @@
 <div class="opfab-menu-timeline">
     @if (hideTimeLine || displayBusinessPeriodAndArrows) {
     <div class="opfab-business-period">
-        <span translate>timeline.businessPeriod</span> : {{ startDateForBusinessPeriodDisplay }}@if (currentDomainId !==
-        'D') {
+        <span translate>timeline.businessPeriod</span> : {{ startDateForBusinessPeriodDisplay }} @if (currentDomainId
+        !=='D') {
         <span> &#45;&#45; {{ endDateForBusinessPeriodDisplay }} </span>
         }
     </div>
@@ -26,7 +26,7 @@
                 <a
                     id="opfab-timeline-link-period-{{ button.domainId }}"
                     [ngClass]="button.selected ? 'link-selected' : 'link-unselect'"
-                    (click)="changeGraphConf(button)"
+                    (click)="userClickOnDomainButton(button)"
                     translate>
                     {{ button.buttonTitle }}
                 </a>
