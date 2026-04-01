@@ -727,9 +727,80 @@ For each configured severity, a column will be exported (but not shown in the UI
 
 The dashboard screen presents the number of cards per process and state. To the right of each state, bubbles display the number of visible cards by severity.
 
-An optional configuration can be loaded via a call to the `opfab.businessconfig.registerCustomScreen` method, to be defined in a JavaScript file loaded at startup.
+=== Declaring a dashboard
 
-Two types of configuration are available for the dashboard:
+In OperatorFabric, a dashboard is declared as a custom screen with type `DASHBOARD`.
+
+It must be defined in a JavaScript file loaded at application startup and registered using the `opfab.businessconfig.registerCustomScreen` method.
+
+A dashboard requires at least the following fields:
+
+- `id`: unique identifier of the dashboard
+- `name`: name displayed in the UI
+- `type`: must be set to `"DASHBOARD"`
+
+.Minimal example
+[source, javascript]
+----
+{
+    const myDashboard = {
+        id: "my-dashboard",
+        name: "My Dashboard",
+        type: "DASHBOARD"
+    };
+
+    opfab.businessconfig.registerCustomScreen(myDashboard);
+}
+----
+
+=== Adding a dashboard to the menu
+
+A dashboard registered via registerCustomScreen is not automatically displayed in the navigation bar.
+To make it accessible to users, you must declare a corresponding menu entry in the UI menu configuration (uimenu.json).
+
+Once your dashboard is declared, you need to create a menu entry that references it using its customScreenId.
+
+Example :
+
+If your dashboard is declared with:
+----
+id: "dashboard2"
+----
+
+You can add it to any existing menu, for example:
+
+----
+{
+  "id": "menu2",
+  "label": "title.multi",
+  "entries": [
+    {
+      "customMenuId": "uid_test_6",
+      "customScreenId": "dashboard2",
+      "label": "entry.dashboard2"
+    }
+  ]
+}
+----
+
+=== Loading the configuration
+
+To apply the dashboard configuration, you need to:
+
+1. Create a JavaScript file containing your dashboard definition
+2. Register it using the `opfab.businessconfig.registerCustomScreen` method
+3. Load this file at application startup
+
+Then, declare this file in `web-ui.json` to load it at startup:
+
+[source, json]
+----
+{
+  "customJsToLoad": [
+    "/externalJs/DashboardExample.js"
+  ]
+}
+----
 
 === processList
 
@@ -799,68 +870,6 @@ Each link requires:
     ]
   }
 ]
-----
-
-=== Loading the configuration
-
-To apply the dashboard configuration, you need to:
-
-1. Create a JavaScript file containing your dashboard definition
-2. Register it using the `opfab.businessconfig.registerCustomScreen` method
-3. Load this file at application startup
-
-.Complete example combining both processCustomLinks and processStateRedirects
-[source, javascript]
-----
-{
-    const dashboardExample = {
-        id: "dashboard",
-        name: "Dashboard",
-        type: "DASHBOARD",
-        processList: ["process1", "process2","defaultProcess"],
-        processCustomLinks: [
-            {
-                processId: "defaultProcess",
-                customLinks: [
-                    {
-                        label: "Custom screen",
-                        customScreenId: "testId"
-                    },
-                    {
-                        label: "Custom screen 2",
-                        customScreenId: "testId2"
-                    }
-                ]
-            }
-        ],
-        processStateRedirects: [
-            {
-                processId: "defaultProcess",
-                stateId: "chartLineState",
-                menuId: "uid_test_0",
-                urlExtension: "?search=chart&fulltext=1"
-            },
-            {
-                processId: "defaultProcess",
-                stateId: "questionState",
-                screenId: "testId"
-            }
-        ]
-    };
-
-    opfab.businessconfig.registerCustomScreen(dashboardExample);
-}
-----
-
-Then, declare this file in `web-ui.json` to load it at startup:
-
-[source, json]
-----
-{
-  "customJsToLoad": [
-    "/externalJs/DashboardExample.js"
-  ]
-}
 ----
 
 NOTE: The custom screen IDs referenced in `processCustomLinks` and `processStateRedirects` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.

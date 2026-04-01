@@ -6,6 +6,8 @@
 <!-- SPDX-License-Identifier: MPL-2.0                                      -->
 <!-- This file is part of the OperatorFabric project.                      -->
 
-@if (displayComponent) {
-<of-custom-card-list-screen [customScreenId]="customScreenId"></of-custom-card-list-screen>
-}
+@if (displayComponent) { @if (isDashboard) {
+<of-dashboard [customScreenId]="customScreenId"></of-dashboard>
+} @if (!isDashboard) {
+<of-custom-card-list-screen [customScreenId]="customScreenId"> </of-custom-card-list-screen>
+} }

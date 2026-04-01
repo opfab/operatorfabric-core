@@ -29,9 +29,9 @@ export class Dashboard {
     private readonly processesCustomScreenLinks: any;
     private readonly processList: string[];
 
-    constructor() {
+    constructor(private readonly customScreenId: string) {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
-            'dashboard'
+            this.customScreenId
         ) as DashboardScreenDefinition;
         this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
         this.processList = dashboardScreenDefinition?.processList ?? [];

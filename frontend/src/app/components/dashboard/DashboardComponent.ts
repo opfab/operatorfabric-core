@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, Input} from '@angular/core';
 import {Dashboard} from 'app/components/dashboard/view/DashboardView';
 import {DashboardPage, TileCell} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -43,17 +43,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private hideProcessFilter: boolean;
     private hideStateFilter: boolean;
     private processStateRedirects: any;
-
-    constructor() {
-        this.dashboard = new Dashboard();
-    }
+    @Input() customScreenId: string;
 
     ngOnInit(): void {
+        this.dashboard = new Dashboard(this.customScreenId);
         this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
         this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
-            'dashboard'
+            this.customScreenId
         ) as DashboardScreenDefinition;
         this.processStateRedirects = dashboardScreenDefinition?.processStateRedirects ?? [];
     }

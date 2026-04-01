@@ -7,7 +7,15 @@
       "opfabCoreMenuId": "archives"
     },
     {
-      "opfabCoreMenuId": "dashboard"
+      "id": "dashboard",
+      "label": "entry.dashboard",
+      "entries": [
+        {
+          "customMenuId": "dashboard1",
+          "customScreenId": "dashboard",
+          "label": "entry.dashboard"
+        }
+      ]
     },
     {
       "opfabCoreMenuId": "processmonitoring",
@@ -60,7 +68,13 @@
           "url": "http://localhost:2002/external/appExample/",
           "label": "entry.entry3",
           "linkType": "BOTH"
-        }            ]
+        },
+        {
+          "customMenuId": "uid_test_6",
+          "customScreenId": "dashboard2",
+          "label": "entry.dashboard2"
+        }
+      ]
     },
     {
       "id": "adminmenu",
@@ -151,7 +165,9 @@
           "admin": "Admin menu entry",
           "custom": "Custom screen",
           "custom2": "Custom screen 2",
-          "custom3": "Custom screen 3"
+          "custom3": "Custom screen 3",
+          "dashboard": "Dashboard",
+          "dashboard2": "Dashboard 2"
         }
       }
     },
@@ -170,7 +186,9 @@
           "admin": "Menu admin élément",
           "custom": "Écran personnalisé",
           "custom2": "Écran personnalisé 2",
-          "custom3": "Écran personnalisé 3"
+          "custom3": "Écran personnalisé 3",
+          "dashboard": "Dashboard",
+          "dashboard2": "Dashboard 2"
         }
       }
     },
@@ -189,7 +207,9 @@
           "admin": "Admin menu-item",
           "custom": "Aangepast scherm",
           "custom2": "Aangepast scherm 2",
-          "custom3": "Aangepast scherm 3"
+          "custom3": "Aangepast scherm 3",
+          "dashboard": "Dashboard",
+          "dashboard2": "Dashboard 2"
         }
       }
     }
