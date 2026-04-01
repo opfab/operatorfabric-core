@@ -43,6 +43,27 @@
         ]
     };
 
+    const dashboardExample2 = {
+        "id": "dashboard2",
+        "name": "Dashboard 2",
+        "type": "DASHBOARD",
+        processList: ["defaultProcess"],
+        "processStateRedirects": [
+            {
+                "processId": "defaultProcess",
+                "stateId": "chartLineState",
+                "menuId": "uid_test_0",
+                "urlExtension": "?search=chart&fulltext=1"
+            },
+            {
+                "processId": "defaultProcess",
+                "stateId": "questionState",
+                "screenId": "testId"
+            }
+        ]
+    };
+
     opfab.businessconfig.registerCustomScreen(dashboardExample);
+    opfab.businessconfig.registerCustomScreen(dashboardExample2);
 
 }

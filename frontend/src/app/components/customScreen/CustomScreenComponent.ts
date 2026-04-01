@@ -11,11 +11,13 @@ import {Component, OnDestroy, OnInit, inject} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomCardListComponent} from '../customCardList/CustomCardListComponent';
+import {DashboardComponent} from '../dashboard/DashboardComponent';
+import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 
 @Component({
     selector: 'of-custom-screen',
     templateUrl: './CustomScreenComponent.html',
-    imports: [CustomCardListComponent]
+    imports: [CustomCardListComponent, DashboardComponent]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
@@ -25,9 +27,14 @@ export class CustomScreenComponent implements OnInit, OnDestroy {
 
     private readonly ngUnsubscribe$ = new Subject<void>();
 
+    isDashboard = false;
+
     ngOnInit(): void {
         this.route.paramMap.pipe(takeUntil(this.ngUnsubscribe$)).subscribe((params) => {
             this.customScreenId = params.get('id');
+
+            const screen = CustomScreenService.getCustomScreenDefinition(this.customScreenId);
+            this.isDashboard = screen?.type === 'DASHBOARD';
 
             // the following hack is needed to have the CustomCardListComponent
             // destroyed and recreated when the route changes

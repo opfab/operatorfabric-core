@@ -376,3 +376,31 @@ Then, load this file at startup by declaring it in `web-ui.json`, for example:
         ....]
 ```
 
+A dashboard registered via registerCustomScreen is not automatically displayed in the navigation bar.
+To make it accessible to users, you must declare a corresponding menu entry in the UI menu configuration (uimenu.json).
+
+Once your dashboard is declared, you need to create a menu entry that references it using its customScreenId.
+
+Example :
+
+If your dashboard is declared with:
+----
+id: "dashboard2"
+----
+
+You can add it to any existing menu, for example:
+
+----
+{
+  "id": "menu2",
+  "label": "title.multi",
+  "entries": [
+    {
+      "customMenuId": "uid_test_6",
+      "customScreenId": "dashboard2",
+      "label": "entry.dashboard2"
+    }
+  ]
+}
+----
+
