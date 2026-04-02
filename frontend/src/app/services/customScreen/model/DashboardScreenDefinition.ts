@@ -12,7 +12,6 @@ import {ScreenDefinition} from './ScreenDefinition';
 export class DashboardScreenDefinition extends ScreenDefinition {
     processList: string[];
     processCustomLinks: ProcessCustomLink[];
-    processStateRedirects: ProcessStateRedirect[];
 }
 
 export interface ProcessCustomLink {

@@ -27,19 +27,6 @@
                     }
                 ]
             }
-        ],
-        "processStateRedirects": [
-            {
-                "processId": "defaultProcess",
-                "stateId": "chartLineState",
-                "menuId": "uid_test_0",
-                "urlExtension": "?search=chart&fulltext=1"
-            },
-            {
-                "processId": "defaultProcess",
-                "stateId": "questionState",
-                "screenId": "testId"
-            }
         ]
     };
 

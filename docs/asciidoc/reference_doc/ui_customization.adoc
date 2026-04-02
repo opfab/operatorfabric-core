@@ -814,35 +814,6 @@ When `processList` is absent or empty, all processes accessible to the user are 
 "processList": ["process1", "process2"]
 ----
 
-=== processStateRedirects
-
-This configuration allows you to define custom redirections when clicking on a state in the dashboard. If not specified, clicking on a state redirects to the card feed filtered by the selected process and state.
-
-You can redirect to:
-
-* A custom menu (URL-based link) using `menuId` and optionally `urlExtension`
-* A custom screen using `screenId`
-
-The IDs declared must match those defined in the UI menu configuration.
-
-.Example with redirections to a custom menu and a custom screen
-[source, json]
-----
-"processStateRedirects": [
-  {
-    "processId": "defaultProcess",
-    "stateId": "chartLineState",
-    "menuId": "uid_test_0",
-    "urlExtension": "?search=chart&fulltext=1"
-  },
-  {
-    "processId": "defaultProcess",
-    "stateId": "questionState",
-    "screenId": "testId"
-  }
-]
-----
-
 === processCustomLinks
 
 This configuration allows you to define custom links that appear below the states for each process in the dashboard. These links typically point to custom screens.
@@ -872,7 +843,7 @@ Each link requires:
 ]
 ----
 
-NOTE: The custom screen IDs referenced in `processCustomLinks` and `processStateRedirects` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.
+NOTE: The custom screen IDs referenced in `processCustomLinks` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.
 
 
 == Customizing browser notification sounds

@@ -18,8 +18,6 @@ import {TranslateModule} from '@ngx-translate/core';
 import {NgClass} from '@angular/common';
 import {CardComponent} from '../card/CardComponent';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
-import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
 
 declare const opfab: any;
 
@@ -42,7 +40,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public popoverTimeOut;
     private hideProcessFilter: boolean;
     private hideStateFilter: boolean;
-    private processStateRedirects: any;
     @Input() customScreenId: string;
 
     ngOnInit(): void {
@@ -50,10 +47,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
         this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
-        const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
-            this.customScreenId
-        ) as DashboardScreenDefinition;
-        this.processStateRedirects = dashboardScreenDefinition?.processStateRedirects ?? [];
     }
 
     ngOnDestroy() {
@@ -115,16 +108,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const redirect = this.processStateRedirects.filter(
-            (redirect) => redirect.processId === tileId && redirect.stateId === cell.id
-        );
-        if (redirect?.length > 0) {
-            if (redirect[0]?.screenId) {
-                NavigationService.navigateTo('customscreen/' + redirect[0].screenId);
-            } else if (redirect[0]?.menuId) {
-                opfab.navigate.redirectToBusinessMenu(redirect[0].menuId, redirect[0].urlExtension);
-            }
-        } else if (!this.hideProcessFilter && !this.hideStateFilter) {
+        if (!this.hideProcessFilter && !this.hideStateFilter) {
             NavigationService.navigateToFeedWithProcessStateFilter(tileId, cell.id);
         }
     }

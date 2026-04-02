@@ -139,7 +139,6 @@ describe('Dashboard', () => {
                 ]
             }
         ];
-        dashboardScreenDefinition.processStateRedirects = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -193,7 +192,6 @@ describe('Dashboard', () => {
                 ]
             }
         ];
-        dashboardScreenDefinition.processStateRedirects = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -224,7 +222,6 @@ describe('Dashboard', () => {
         dashboardScreenDefinition.name = 'Dashboard';
         dashboardScreenDefinition.type = ScreenType.DASHBOARD;
         dashboardScreenDefinition.processCustomLinks = [];
-        dashboardScreenDefinition.processStateRedirects = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -440,7 +437,6 @@ describe('Dashboard', () => {
         dashboardScreenDefinition.type = ScreenType.DASHBOARD;
         dashboardScreenDefinition.processList = ['process1'];
         dashboardScreenDefinition.processCustomLinks = [];
-        dashboardScreenDefinition.processStateRedirects = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -466,7 +462,6 @@ describe('Dashboard', () => {
         dashboardScreenDefinition.type = ScreenType.DASHBOARD;
         dashboardScreenDefinition.processList = ['process1', 'process2'];
         dashboardScreenDefinition.processCustomLinks = [];
-        dashboardScreenDefinition.processStateRedirects = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
