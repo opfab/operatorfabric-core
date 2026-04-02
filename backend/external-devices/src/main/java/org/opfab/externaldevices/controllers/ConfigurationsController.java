@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -67,6 +67,16 @@ public class ConfigurationsController {
             @Valid @RequestBody DeviceConfiguration deviceConfiguration) {
 
         String id = deviceConfiguration.id;
+        // Before saving the configuration, we need to disable the device.
+        // If the port or IP address is changed, this might be the last device using the
+        // old IP or port. In such cases, the watchdog associated with the old
+        // configuration must be disabled. Calling disableDevice before saving the new
+        // configuration ensures proper cleanup.
+        try {
+            devicesService.disableDevice(id);
+        } catch (Exception exc) {
+            log.warn("Impossible to disable driver {} ", id, exc);
+        }
         configService.saveDeviceConfiguration(deviceConfiguration);
         if (Boolean.TRUE.equals(deviceConfiguration.isEnabled)) {
             try {
