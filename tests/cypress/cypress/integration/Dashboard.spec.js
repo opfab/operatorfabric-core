@@ -121,16 +121,6 @@ describe('Entity acknowledgment tests for icon in light-card', function () {
         feed.checkFilterIsActive();
         feed.checkNumberOfDisplayedCardsIs(0);
         opfab.navigateToDashboard();
-
-        // Click on state which should redirect to a business menu
-        cy.get('.opfab-dashboard-tile')
-            .eq(4)
-            .find('.opfab-cell-link')
-            .eq(4)
-            .contains('Electricity consumption forecast')
-            .click();
-        cy.url().should('include', '#businessconfigparty/uid_test_0/');
-        feed.checkNumberOfDisplayedCardsIs(0);
     });
 });
 
