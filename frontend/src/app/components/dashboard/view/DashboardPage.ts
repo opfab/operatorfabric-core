@@ -17,6 +17,7 @@ export class Tile {
     id: string;
     label: string;
     cells: TileCell[];
+    isCustomTile?: boolean;
 }
 
 export class TileCell {

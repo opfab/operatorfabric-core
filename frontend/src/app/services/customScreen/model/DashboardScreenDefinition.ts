@@ -12,6 +12,7 @@ import {ScreenDefinition} from './ScreenDefinition';
 export class DashboardScreenDefinition extends ScreenDefinition {
     processList: string[];
     processCustomLinks: ProcessCustomLink[];
+    customTiles?: CustomTile[];
 }
 
 export interface ProcessCustomLink {
@@ -24,10 +25,12 @@ export interface CustomLink {
     customScreenId: string;
 }
 
-export interface ProcessStateRedirect {
-    processId: string;
-    stateId: string;
-    menuId?: string;
-    urlExtension?: string;
-    screenId?: string;
+export interface CustomTile {
+    title: string;
+    cells: CustomTileCell[];
+}
+
+export interface CustomTileCell {
+    label: string;
+    customScreenId: string;
 }

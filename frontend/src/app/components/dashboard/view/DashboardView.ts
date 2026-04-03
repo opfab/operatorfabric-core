@@ -17,10 +17,10 @@ import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightca
 import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
+import {DashboardScreenDefinition, CustomTile} from '@ofServices/customScreen/model/DashboardScreenDefinition';
 import {Card} from 'app/model/Card';
 
-export class Dashboard {
+export class DashboardView {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
     private dashboardPage: DashboardPage;
     public noSeverityColor = '#717274';
@@ -28,6 +28,7 @@ export class Dashboard {
     private readonly filteredLightCardStore: FilteredLightCardsStore;
     private readonly processesCustomScreenLinks: any;
     private readonly processList: string[];
+    private readonly customTiles: CustomTile[];
 
     constructor(private readonly customScreenId: string) {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
@@ -35,6 +36,7 @@ export class Dashboard {
         ) as DashboardScreenDefinition;
         this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
         this.processList = dashboardScreenDefinition?.processList ?? [];
+        this.customTiles = dashboardScreenDefinition?.customTiles ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.buildTiles();
         this.processLightCards();
@@ -80,6 +82,8 @@ export class Dashboard {
             if (tile.cells.length > 0) this.dashboardPage.tiles.push(tile);
         });
         this.dashboardPage.tiles.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
+
+        this.addCustomTiles();
     }
 
     private addCustomScreenLinks(tile: Tile) {
@@ -179,6 +183,31 @@ export class Dashboard {
             return UsersService.getCurrentUserWithPerimeters().processesStatesNotNotified.get(id).indexOf(name) <= -1;
         }
         return true;
+    }
+
+    private addCustomTiles() {
+        this.customTiles.forEach((customTile, index) => {
+            const tile = new Tile();
+
+            tile.id = `custom_${index}`;
+            tile.label = customTile.title;
+            tile.isCustomTile = true;
+
+            const cells: TileCell[] = [];
+
+            (customTile.cells ?? []).forEach((cellDef) => {
+                const cell = new TileCell();
+                cell.type = 'customScreenLink';
+                cell.label = cellDef.label;
+                cell.id = cellDef.customScreenId;
+                cell.circles = [];
+                cells.push(cell);
+            });
+
+            tile.cells = cells;
+
+            this.dashboardPage.tiles.push(tile);
+        });
     }
 
     public getDashboardPage(): Observable<DashboardPage> {

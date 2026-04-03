@@ -845,6 +845,62 @@ Each link requires:
 
 NOTE: The custom screen IDs referenced in `processCustomLinks` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.
 
+=== customTiles
+
+Custom tiles can be added to a dashboard to provide access to custom screens.
+They are configured in the dashboard JavaScript configuration object registered at application startup.
+
+Each custom tile contains:
+
+- a `title`: displayed as the tile title
+- a list of `cells`: each cell defines a link to a custom screen
+
+Each cell has the same structure as `processCustomLinks`:
+
+- `label`: text displayed in the cell
+- `customScreenId`: identifier of the custom screen to open
+
+.Example
+[source, javascript]
+----
+{
+    const dashboardExample = {
+        id: "dashboard",
+        name: "Dashboard",
+        type: "DASHBOARD",
+        customTiles: [
+            {
+                title: "My custom tile 1",
+                cells: [
+                    {
+                        label: "Custom screen",
+                        customScreenId: "testId"
+                    },
+                    {
+                        label: "Custom screen 2",
+                        customScreenId: "testId2"
+                    }
+                ]
+            },
+            {
+                title: "My custom tile 2",
+                cells: [
+                    {
+                        label: "Custom screen",
+                        customScreenId: "testId"
+                    }
+                ]
+            }
+        ]
+    };
+
+    opfab.businessconfig.registerCustomScreen(dashboardExample);
+}
+----
+
+Clicking on the title of a custom tile does not trigger any navigation.
+Navigation is only available through the cells, which open the associated custom screens.
+
 
 == Customizing browser notification sounds
 
