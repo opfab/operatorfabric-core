@@ -8,8 +8,8 @@
  */
 
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, Input} from '@angular/core';
-import {Dashboard} from 'app/components/dashboard/view/DashboardView';
-import {DashboardPage, TileCell} from 'app/components/dashboard/view/DashboardPage';
+import {DashboardView} from 'app/components/dashboard/view/DashboardView';
+import {DashboardPage, Tile, TileCell} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     @ViewChild('cardDetail') cardDetailTemplate: ElementRef;
 
     public dashboardPage: DashboardPage;
-    public dashboard: Dashboard;
+    public dashboardView: DashboardView;
     public modalRef: NgbModalRef;
     public openPopover: NgbPopover;
     public currentCircleHovered;
@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     @Input() customScreenId: string;
 
     ngOnInit(): void {
-        this.dashboard = new Dashboard(this.customScreenId);
-        this.dashboard.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
+        this.dashboardView = new DashboardView(this.customScreenId);
+        this.dashboardView.getDashboardPage().subscribe((dashboardPage) => (this.dashboardPage = dashboardPage));
         this.hideProcessFilter = ConfigService.getConfigValue('feed.card.hideProcessFilter', false);
         this.hideStateFilter = ConfigService.getConfigValue('feed.card.hideStateFilter', false);
     }
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (this.modalRef) {
             this.modalRef.close();
         }
-        this.dashboard.destroy();
+        this.dashboardView.destroy();
     }
 
     selectCard(info) {
@@ -98,8 +98,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         clearTimeout(this.popoverTimeOut);
     }
 
-    onTileTitleClick(tileId: string) {
-        if (!this.hideProcessFilter) NavigationService.navigateToFeedWithProcessStateFilter(tileId, undefined);
+    onTileTitleClick(tile: Tile) {
+        if (tile.isCustomTile || this.hideProcessFilter) {
+            return;
+        }
+        NavigationService.navigateToFeedWithProcessStateFilter(tile.id, undefined);
     }
 
     onCellClick(tileId: string, cell: TileCell) {

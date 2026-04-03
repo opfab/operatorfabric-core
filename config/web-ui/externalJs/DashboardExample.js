@@ -35,17 +35,28 @@
         "name": "Dashboard 2",
         "type": "DASHBOARD",
         processList: ["defaultProcess"],
-        "processStateRedirects": [
+        "customTiles": [
             {
-                "processId": "defaultProcess",
-                "stateId": "chartLineState",
-                "menuId": "uid_test_0",
-                "urlExtension": "?search=chart&fulltext=1"
+                "title": "My custom tile 1",
+                "cells": [
+                    {
+                        "label": "Custom screen",
+                        "customScreenId": "testId"
+                    },
+                    {
+                        "label": "Custom screen 2",
+                        "customScreenId": "testId2"
+                    }
+                ]
             },
             {
-                "processId": "defaultProcess",
-                "stateId": "questionState",
-                "screenId": "testId"
+                "title": "My custom tile 2",
+                "cells": [
+                    {
+                        "label": "Custom screen",
+                        "customScreenId": "testId"
+                    }
+                ]
             }
         ]
     };

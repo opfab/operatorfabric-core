@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Dashboard} from './DashboardView';
+import {DashboardView} from './DashboardView';
 import {State} from '@ofServices/processes/model/Processes';
 import {ComputedPerimeter, UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
@@ -54,7 +54,7 @@ async function initProcesses() {
 }
 
 describe('Dashboard', () => {
-    let dashboard: Dashboard;
+    let dashboardView: DashboardView;
     let filteredLightCardStore: FilteredLightCardsStore;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
 
@@ -69,15 +69,15 @@ describe('Dashboard', () => {
     });
 
     afterEach(() => {
-        dashboard.destroy();
+        dashboardView.destroy();
     });
 
     it('GIVEN an empty process list WHEN get dashboard THEN dashboard is empty', async () => {
         await setProcessConfiguration([]);
         const userWithPerimeters = new UserWithPerimeters(null, new Array(), null, new Map());
         await setUserPerimeter(userWithPerimeters);
-        dashboard = new Dashboard(DASHBOARD_ID);
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        dashboardView = new DashboardView(DASHBOARD_ID);
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles).toHaveSize(0);
     });
 
@@ -87,8 +87,8 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        dashboardView = new DashboardView(DASHBOARD_ID);
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(0);
     });
 
@@ -103,16 +103,16 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(2);
         expect(result.tiles[0].id).toEqual('process1');
         expect(result.tiles[0].label).toEqual('process name');
         expect(result.tiles[0].cells[0].type).toEqual('state');
         expect(result.tiles[0].cells[0].id).toEqual('state1');
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
-        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
         expect(result.tiles[1].id).toEqual('process2');
         expect(result.tiles[1].label).toEqual('process name 2');
@@ -148,9 +148,9 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles[0].id).toEqual('process1');
         expect(result.tiles[0].label).toEqual('process name');
         expect(result.tiles[0].cells[0].type).toEqual('state');
@@ -203,9 +203,9 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles[0].id).toEqual('processWithOnlyChildState');
         expect(result.tiles[0].label).toEqual('process with only child state');
         expect(result.tiles[0].cells[0].type).toEqual('customScreenLink');
@@ -231,8 +231,8 @@ describe('Dashboard', () => {
 
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
-        dashboard = new Dashboard(DASHBOARD_ID);
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        dashboardView = new DashboardView(DASHBOARD_ID);
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(0);
     });
 
@@ -245,9 +245,9 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(2);
         expect(result.tiles[0].id).toEqual('process1');
         expect(result.tiles[1].id).toEqual('process2');
@@ -264,21 +264,21 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
         filteredLightCardStore.updateFilter(
             FilterType.BUSINESSDATE_FILTER,
             true,
             filteredLightCardStore.getBusinessDateFilter().status
         );
 
-        let result = await firstValueFrom(dashboard.getDashboardPage());
+        let result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(2);
         expect(result.tiles[0].id).toEqual('process1');
         expect(result.tiles[0].label).toEqual('process name');
         expect(result.tiles[0].cells[0].id).toEqual('state1');
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
 
         const card = getOneLightCard({
             process: 'process1',
@@ -287,7 +287,7 @@ describe('Dashboard', () => {
         });
         opfabEventStreamServerMock.sendLightCard(card);
 
-        result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
+        result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
         expect(result.tiles.length).toEqual(2);
         expect(result.tiles[0].id).toEqual('process1');
         expect(result.tiles[0].label).toEqual('process name');
@@ -307,7 +307,7 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
         const infoCard = getOneLightCard({
             process: 'process1',
@@ -351,7 +351,7 @@ describe('Dashboard', () => {
             filteredLightCardStore.getBusinessDateFilter().status
         );
 
-        const result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
+        const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
         expect(result.tiles[0].cells[0].circles.length).toEqual(4);
 
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
@@ -377,7 +377,7 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
         const infoCard = getOneLightCard({
             process: 'process1',
@@ -392,10 +392,10 @@ describe('Dashboard', () => {
             filteredLightCardStore.getBusinessDateFilter().status
         );
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
     });
 
     it('GIVEN a card today WHEN date filter is set to the past THEN dashboard does not contain the card', async () => {
@@ -404,7 +404,7 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
         const infoCard = getOneLightCard({
             process: 'process1',
@@ -417,17 +417,17 @@ describe('Dashboard', () => {
             true,
             filteredLightCardStore.getBusinessDateFilter().status
         );
-        let result = await firstValueFrom(dashboard.getDashboardPage().pipe(skip(1)));
+        let result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
 
         filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
 
-        result = await firstValueFrom(dashboard.getDashboardPage());
+        result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
-        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboard.noSeverityColor);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
     });
 
     it('GIVEN a processList in config with one process WHEN get dashboard THEN dashboard only contains the listed process', async () => {
@@ -448,9 +448,9 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(1);
         expect(result.tiles[0].id).toEqual('process1');
     });
@@ -470,10 +470,127 @@ describe('Dashboard', () => {
         const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
-        dashboard = new Dashboard(DASHBOARD_ID);
+        dashboardView = new DashboardView(DASHBOARD_ID);
 
-        const result = await firstValueFrom(dashboard.getDashboardPage());
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles.length).toEqual(1);
         expect(result.tiles[0].id).toEqual('process1');
+    });
+
+    it('GIVEN a dashboard with custom tiles WHEN get dashboard THEN dashboard contains custom tiles', async () => {
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+
+        dashboardScreenDefinition.customTiles = [
+            {
+                title: 'My custom tile 1',
+                cells: [
+                    {
+                        label: 'Custom screen',
+                        customScreenId: 'testId'
+                    },
+                    {
+                        label: 'Custom screen 2',
+                        customScreenId: 'testId2'
+                    }
+                ]
+            }
+        ];
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        await initProcesses();
+
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
+
+        const customTile = result.tiles.find((t) => t.label === 'My custom tile 1');
+
+        expect(customTile).toBeDefined();
+        expect(customTile.cells.length).toEqual(2);
+        expect(customTile.cells[0].type).toEqual('customScreenLink');
+        expect(customTile.cells[0].id).toEqual('testId');
+    });
+
+    it('GIVEN only custom tiles WHEN get dashboard THEN dashboard contains only custom tiles', async () => {
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+
+        dashboardScreenDefinition.customTiles = [
+            {
+                title: 'Only custom tile',
+                cells: [
+                    {
+                        label: 'Custom screen',
+                        customScreenId: 'testId'
+                    }
+                ]
+            }
+        ];
+
+        dashboardScreenDefinition.processCustomLinks = [];
+        dashboardScreenDefinition.processList = [];
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        await setProcessConfiguration([]);
+
+        const userWithPerimeters = new UserWithPerimeters(null, [], null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
+
+        expect(result.tiles.length).toEqual(1);
+        expect(result.tiles[0].label).toEqual('Only custom tile');
+    });
+
+    it('GIVEN process tiles and custom tiles WHEN get dashboard THEN both are displayed', async () => {
+        await initProcesses();
+
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+
+        dashboardScreenDefinition.customTiles = [
+            {
+                title: 'Custom tile',
+                cells: [
+                    {
+                        label: 'Custom screen',
+                        customScreenId: 'testId'
+                    }
+                ]
+            }
+        ];
+
+        dashboardScreenDefinition.processCustomLinks = [];
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const result = await firstValueFrom(dashboardView.getDashboardPage());
+
+        expect(result.tiles.length).toBeGreaterThanOrEqual(2);
+
+        expect(result.tiles.some((t) => t.id === 'process1')).toBeTrue();
+        expect(result.tiles.some((t) => t.label === 'Custom tile')).toBeTrue();
     });
 });
