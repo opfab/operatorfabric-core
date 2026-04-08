@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {SignalMappingsCellRendererComponent} from 'app/components/admin/components/cell-renderers/SignalMappingsCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
+import {ExcelExport} from '../../../utils/ExcelExport';
 
 @Directive()
 @Injectable()
@@ -55,6 +56,7 @@ export abstract class ExternalDevicesConfigurationDirective {
     private isLoadingData = true;
     protected waitingDeviceResponse: boolean;
     protected showSpinner: boolean;
+    protected tableType: string;
 
     constructor() {
         ModuleRegistry.registerModules([AllCommunityModule]);
@@ -122,7 +124,11 @@ export abstract class ExternalDevicesConfigurationDirective {
     }
     public localizeHeader(parameters: ICellRendererParams): string {
         const headerIdentifier = parameters.colDef.headerName;
-        return this.translateService.instant(this.i18NPrefix + headerIdentifier);
+        const type = parameters.colDef.type;
+        if (type === FieldType.ACTION_COLUMN) {
+            return this.translateService.instant(this.i18NPrefix + headerIdentifier);
+        }
+        return this.translateService.instant(this.i18NPrefix + this.tableType + '.' + headerIdentifier);
     }
 
     onGridReady(params) {
@@ -242,11 +248,50 @@ export abstract class ExternalDevicesConfigurationDirective {
     protected displayMessage(i18nKey: string, msg: string, severity: MessageLevel = MessageLevel.ERROR) {
         AlertMessageService.sendAlertMessage({message: msg, level: severity, i18n: {key: i18nKey}});
     }
+
+    export(): void {
+        const exportData = this.getDataForExportFile();
+        ExcelExport.exportJsonToExcelFile(exportData, this.tableType);
+    }
+
+    private getDataForExportFile(): Array<any> {
+        const exportData = [];
+
+        this.gridApi.forEachNode((line) => {
+            if (line) {
+                const item = {};
+                this.fields.forEach((field) => {
+                    if (field.type !== FieldType.ACTION_COLUMN) {
+                        const value = line.data[field.name];
+
+                        if (Array.isArray(value)) {
+                            item[this.getTranslatedHeaderName(field.name)] = value.join(', ');
+                        } else if (value !== null && typeof value === 'object') {
+                            item[this.getTranslatedHeaderName(field.name)] = JSON.stringify(value);
+                        } else {
+                            item[this.getTranslatedHeaderName(field.name)] =
+                                field.valueFormatter?.name === 'translateValue'
+                                    ? this.translateService.instant(this.i18NPrefix + this.tableType + '.' + value)
+                                    : value;
+                        }
+                    }
+                });
+                exportData.push(item);
+            }
+        });
+
+        return exportData;
+    }
+
+    private getTranslatedHeaderName(header: string): string {
+        return this.translateService.instant(this.i18NPrefix + this.tableType + '.' + header).toUpperCase();
+    }
 }
 
 export class Field {
     public name: string;
     public type: string;
+    public valueFormatter: any;
 
     /**
      * @param name: should match the property name in the underlying row data. Will be used as key to find i18n label for the column header.

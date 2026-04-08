@@ -713,20 +713,24 @@
             "errorWhenEnablingDevice": "Une erreur est survenue en essayant d'activer ce périphérique. Veuillez réessayer plus tard.",
             "errorWhenDisablingDevice": "Une erreur est survenue en essayant de désactiver ce périphérique. Veuillez réessayer plus tard."
         },
+        "devices": {
+            "id": "PÉRIPHÉRIQUES",
+            "isEnabled": "EST ACTIVÉ"
+        },
+        "users": {
+            "userLogin": "IDENTIFIANT UTILISATEUR",
+            "externalDeviceIds": "PÉRIPHÉRIQUES"
+        },
         "signalMappings": {
             "id": "ID",
             "supportedSignals": "SIGNAUX SUPPORTÉS"
         },
-        "userLogin": "IDENTIFIANT UTILISATEUR",
-        "externalDeviceIds": "PÉRIPHÉRIQUES",
         "edit": "ÉDITER",
         "delete": "SUPPRIMER",
-        "id": "PÉRIPHÉRIQUES",
         "deviceId": "ID",
         "host": "SERVEUR",
         "port": "PORT",
-        "signalMapping": "MAPPINGS DE SIGNAUX",
-        "isEnabled": "EST ACTIVÉ"
+        "signalMapping": "MAPPINGS DE SIGNAUX"
     },
     "useractionlogs": {
         "title": "TRACES DES ACTIONS UTILISATEURS",

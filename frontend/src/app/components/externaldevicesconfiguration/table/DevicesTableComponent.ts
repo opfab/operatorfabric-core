@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,6 +28,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     imports: [TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {
+    tableType = 'devices';
     fields = [
         new Field('id'),
         new Field('isEnabled', FieldType.CHECKBOX_COLUMN),

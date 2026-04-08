@@ -712,20 +712,24 @@
             "errorWhenEnablingDevice": "Er is een fout opgetreden bij het inschakelen van dit apparaat. Probeer het later nog eens.",
             "errorWhenDisablingDevice": "Er is een fout opgetreden bij het uitschakelen van dit apparaat. Probeer het later nog eens."
         },
+        "devices": {
+            "id": "APPARATEN",
+            "isEnabled": "IS INGESCHAKELD"
+        },
+        "users": {
+            "userLogin": "GEBRUIKERSNAAM",
+            "externalDeviceIds": "APPARATEN"
+        },
         "signalMappings": {
             "id": "ID",
             "supportedSignals": "ONDERSTEUNDE SIGNALEN"
         },
-        "userLogin": "GEBRUIKERSNAAM",
-        "externalDeviceIds": "APPARATEN",
         "edit": "WIJZIGEN",
         "delete": "VERWIJDEREN",
-        "id": "APPARATEN",
         "deviceId": "ID",
         "host": "HOST",
         "port": "PORT",
-        "signalMapping": "SIGNAALTOEWIJZINGEN",
-        "isEnabled": "IS INGESCHAKELD"
+        "signalMapping": "SIGNAALTOEWIJZINGEN"
     },
     "useractionlogs": {
         "title": "LOGBOEKEN VAN GEBRUIKERSACTIES",
