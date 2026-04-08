@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2022-2025, RTE (http://www.rte-france.com)                   -->
+<!-- Copyright (c) 2022-2026, RTE (http://www.rte-france.com)                   -->
 <!-- See AUTHORS.txt                                                       -->
 <!-- This Source Code Form is subject to the terms of the Mozilla Public   -->
 <!-- License, v. 2.0. If a copy of the MPL was not distributed with this   -->
@@ -46,6 +46,13 @@
                 [rotate]="true">
             </ngb-pagination>
             }
+        </div>
+
+        <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 10px; margin-right: 20px">
+            <div id="opfab-externaldevices-btn-exportToExcel" style="cursor: pointer" (click)="export()">
+                <span class="opfab-icon-export-data"></span>
+                <span style="font-weight: bold" translate>shared.exportToExcel</span>
+            </div>
         </div>
     </div>
     }

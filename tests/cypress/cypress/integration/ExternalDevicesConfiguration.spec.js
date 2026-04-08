@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,13 +7,11 @@
  * This file is part of the OperatorFabric project.
  */
 
-
-import {OpfabGeneralCommands} from "../support/opfabGeneralCommands"
-import {AgGridCommands} from "../support/agGridCommands";
-import {ScriptCommands} from "../support/scriptCommands";
+import {OpfabGeneralCommands} from '../support/opfabGeneralCommands';
+import {AgGridCommands} from '../support/agGridCommands';
+import {ScriptCommands} from '../support/scriptCommands';
 
 describe('ExternalDevicesconfigurationPage', () => {
-
     const opfab = new OpfabGeneralCommands();
     const agGrid = new AgGridCommands();
     const script = new ScriptCommands();
@@ -48,7 +46,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         checkNthDeviceIsDisabled(0);
         checkNthDeviceIsEnabled(1);
         checkNthDeviceIsEnabled(2);
-        
+
         // Check that the changes are saved when we change screen
         cy.get('#opfab-navbar-menu-feed').click();
         opfab.openExternalDevices();
@@ -61,8 +59,7 @@ describe('ExternalDevicesconfigurationPage', () => {
 
         // Enable CDS_1 to clean test environment
         clickOnNthDevice(0);
-    })
-
+    });
 
     it('Add/edit new external device', () => {
         opfab.loginWithUser('admin');
@@ -81,7 +78,6 @@ describe('ExternalDevicesconfigurationPage', () => {
 
         cy.get('#opfab-admin-edit-btn-add').should('be.disabled');
         cy.get('#opfab-port').type('1234');
-
 
         cy.get('#opfab-signalMappingDropdownList').click();
         cy.get('#opfab-signalMappingDropdownList').find('.vscomp-option-text').eq(1).click({force: true});
@@ -129,7 +125,7 @@ describe('ExternalDevicesconfigurationPage', () => {
 
         cy.get('#opfab-admin-edit-btn-cancel').click();
         cy.get('of-externaldevices-modal').should('not.exist');
-    })
+    });
 
     it('Add new signal mapping', () => {
         opfab.loginWithUser('admin');
@@ -161,7 +157,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-admin-edit-btn-add').click();
         cy.get('of-externaldevices-modal').should('not.exist');
         agGrid.countTableRows('ag-grid-angular', 3);
-    })
+    });
 
     it('List, add, edit, delete user device configuration', () => {
         opfab.loginWithUser('admin');
@@ -299,7 +295,7 @@ describe('ExternalDevicesconfigurationPage', () => {
         cy.get('#opfab-admin-edit-btn-add').should('be.visible').click({force: true});
         agGrid.countTableRows('#opfab-externaldevices-table-grid', 5);
 
-        agGrid.cellShould('#opfab-externaldevices-table-grid',4,1,'contain','CDS_3,CDS_4');
+        agGrid.cellShould('#opfab-externaldevices-table-grid', 4, 1, 'contain', 'CDS_3,CDS_4');
 
         // Go to the device configuration screen
         cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').click();
@@ -316,8 +312,134 @@ describe('ExternalDevicesconfigurationPage', () => {
         agGrid.clickCell('#opfab-externaldevices-table-grid', 4, 3, 'of-action-cell-renderer');
 
         cy.get('#opfab-btn-ok').click();
+    });
 
+    describe('Check export external devices', function () {
+        before('Clean export directory', function () {
+            script.cleanDownloadsDir();
+        });
 
+        afterEach('Clean export directory', function () {
+            script.cleanDownloadsDir();
+        });
+
+        it('Check devices export', function () {
+            opfab.loginWithUser('admin');
+            opfab.openExternalDevices();
+
+            cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-devices-tab').click();
+
+            cy.get('.opfab-pagination').should('contain.text', 'Results number');
+
+            cy.get('#opfab-externaldevices-btn-exportToExcel').click();
+
+            cy.waitDefaultTime();
+
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+                expect(files.length).to.equal(1);
+
+                expect(files[0]).to.match(/^devices_export_\d*\.xlsx/);
+
+                cy.task('readXlsx', {
+                    file: './cypress/downloads/' + files[0],
+                    sheet: 'data'
+                }).then((rows) => {
+                    expect(Object.keys(rows[0])).to.have.length(2);
+                    expect(rows[0]).to.have.property('DEVICES');
+                    expect(rows[0]).to.have.property('IS ENABLED');
+
+                    expect(rows.length).to.equal(3);
+                    expect(rows[0].DEVICES).to.equal('CDS_1');
+                    expect(rows[0]['IS ENABLED']).to.equal('TRUE');
+                    expect(rows[1].DEVICES).to.equal('CDS_2');
+                    expect(rows[1]['IS ENABLED']).to.equal('TRUE');
+                    expect(rows[2].DEVICES).to.equal('CDS_3');
+                    expect(rows[2]['IS ENABLED']).to.equal('TRUE');
+                });
+            });
+        });
+
+        it('Check users configuration export', function () {
+            opfab.loginWithUser('admin');
+            opfab.openExternalDevices();
+
+            cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-users-tab').click();
+
+            cy.get('.opfab-pagination').should('contain.text', 'Results number');
+
+            cy.get('#opfab-externaldevices-btn-exportToExcel').click();
+
+            cy.waitDefaultTime();
+
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+                expect(files.length).to.equal(1);
+
+                expect(files[0]).to.match(/^users_export_\d*\.xlsx/);
+
+                cy.task('readXlsx', {
+                    file: './cypress/downloads/' + files[0],
+                    sheet: 'data'
+                }).then((rows) => {
+                    expect(Object.keys(rows[0])).to.have.length(2);
+                    expect(rows[0]).to.have.property('USER LOGIN');
+                    expect(rows[0]).to.have.property('DEVICES');
+
+                    expect(rows.length).to.equal(4);
+                    expect(rows[0]['USER LOGIN']).to.equal('operator1_fr');
+                    expect(rows[0]['DEVICES']).to.equal('CDS_1');
+                    expect(rows[1]['USER LOGIN']).to.equal('operator2_fr');
+                    expect(rows[1]['DEVICES']).to.equal('CDS_2');
+                    expect(rows[2]['USER LOGIN']).to.equal('operator3_fr');
+                    expect(rows[2]['DEVICES']).to.equal('CDS_3');
+                    expect(rows[3]['USER LOGIN']).to.equal('operator4_fr');
+                    expect(rows[3]['DEVICES']).to.equal('CDS_1');
+                });
+            });
+        });
+
+        it('Check signal mappings export', function () {
+            opfab.loginWithUser('admin');
+            opfab.openExternalDevices();
+
+            cy.get('#opfab-externaldevices-tabs').find('#opfab-externaldevices-signal-mapping-tab').click();
+
+            cy.get('.opfab-pagination').should('contain.text', 'Results number');
+
+            cy.get('#opfab-externaldevices-btn-exportToExcel').click();
+
+            cy.waitDefaultTime();
+
+            cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+                expect(files.length).to.equal(1);
+
+                expect(files[0]).to.match(/^signalMappings_export_\d*\.xlsx/);
+
+                cy.task('readXlsx', {
+                    file: './cypress/downloads/' + files[0],
+                    sheet: 'data'
+                }).then((rows) => {
+                    expect(Object.keys(rows[0])).to.have.length(2);
+                    expect(rows[0]).to.have.property('ID');
+                    expect(rows[0]).to.have.property('SUPPORTED SIGNALS');
+
+                    expect(rows.length).to.equal(3);
+                    expect(rows[0].ID).to.equal('default_CDS_mapping');
+                    expect(rows[0]['SUPPORTED SIGNALS']).to.equal(
+                        '{"ALARM":1,"ACTION":2,"COMPLIANT":3,"INFORMATION":4}'
+                    );
+
+                    expect(rows[1].ID).to.equal('exotic_CDS_mapping');
+                    expect(rows[1]['SUPPORTED SIGNALS']).to.equal(
+                        '{"ALARM":5,"ACTION":6,"COMPLIANT":7,"INFORMATION":8}'
+                    );
+
+                    expect(rows[2].ID).to.equal('test_signal_mapping');
+                    expect(rows[2]['SUPPORTED SIGNALS']).to.equal(
+                        '{"ALARM":1,"ACTION":2,"INFORMATION":3,"COMPLIANT":4}'
+                    );
+                });
+            });
+        });
     });
 
     function clickOnNthDeviceInDropdown(index) {
@@ -343,5 +465,4 @@ describe('ExternalDevicesconfigurationPage', () => {
     function checkNthDeviceIsDisabled(index) {
         agGrid.cellElementShould('ag-grid-angular', index, 1, 'input', 'not.be.checked');
     }
-
 });

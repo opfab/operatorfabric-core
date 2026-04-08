@@ -712,18 +712,22 @@
             "errorWhenEnablingDevice": "An error occurred when trying to enable this device. Please try again later.",
             "errorWhenDisablingDevice": "An error occurred when trying to disable this device. Please try again later."
         },
+        "devices": {
+            "id": "DEVICES",
+            "isEnabled": "IS ENABLED"
+        },
+        "users": {
+            "userLogin": "USER LOGIN",
+            "externalDeviceIds": "DEVICES"
+        },
         "signalMappings": {
             "id": "ID",
             "supportedSignals": "SUPPORTED SIGNALS"
         },
-        "userLogin": "USER LOGIN",
-        "externalDeviceIds": "DEVICES",
-        "id": "DEVICES",
         "deviceId": "ID",
         "host": "HOST",
         "port": "PORT",
         "signalMapping": "SIGNAL MAPPINGS",
-        "isEnabled": "IS ENABLED",
         "edit": "EDIT",
         "delete": "DELETE"
     },
