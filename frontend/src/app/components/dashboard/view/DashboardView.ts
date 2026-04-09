@@ -26,7 +26,6 @@ export class DashboardView {
     public noSeverityColor = '#717274';
     private readonly ngUnsubscribe$ = new Subject<void>();
     private readonly filteredLightCardStore: FilteredLightCardsStore;
-    private readonly processesCustomScreenLinks: any;
     private readonly processList: string[];
     private readonly customTiles: CustomTile[];
 
@@ -34,7 +33,6 @@ export class DashboardView {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
             this.customScreenId
         ) as DashboardScreenDefinition;
-        this.processesCustomScreenLinks = dashboardScreenDefinition?.processCustomLinks ?? [];
         this.processList = dashboardScreenDefinition?.processList ?? [];
         this.customTiles = dashboardScreenDefinition?.customTiles ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
@@ -77,27 +75,12 @@ export class DashboardView {
             tile.label = process.name;
             cells.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
             tile.cells = cells;
-            this.addCustomScreenLinks(tile);
 
             if (tile.cells.length > 0) this.dashboardPage.tiles.push(tile);
         });
         this.dashboardPage.tiles.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
 
         this.addCustomTiles();
-    }
-
-    private addCustomScreenLinks(tile: Tile) {
-        this.processesCustomScreenLinks.forEach((processCustomScreenLinks) => {
-            if (processCustomScreenLinks.processId === tile.id) {
-                processCustomScreenLinks.customLinks?.forEach((processCustomScreenLink) => {
-                    const cell = new TileCell();
-                    cell.type = 'customScreenLink';
-                    cell.label = processCustomScreenLink.label;
-                    cell.id = processCustomScreenLink.customScreenId;
-                    tile.cells.push(cell);
-                });
-            }
-        });
     }
 
     private processLightCards() {

@@ -12,22 +12,7 @@
     const dashboardExample = {
         "id": "dashboard",
         "name": "Dashboard",
-        "type": "DASHBOARD",
-        "processCustomLinks": [
-            {
-                "processId": "defaultProcess",
-                "customLinks": [
-                    {
-                        "label": "Custom screen",
-                        "customScreenId": "testId"
-                    },
-                    {
-                        "label": "Custom screen 2",
-                        "customScreenId": "testId2"
-                    }
-                ]
-            }
-        ]
+        "type": "DASHBOARD"
     };
 
     const dashboardExample2 = {
