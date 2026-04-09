@@ -298,6 +298,16 @@ This feature has been removed and is no longer available.
 
 If you were using `processStateRedirects`, you need to remove this configuration.
 
+=== Removal of processCustomLinks
+
+The `processCustomLinks` configuration is no longer supported starting from version 4.12.
+
+In previous versions, this parameter allowed defining custom links associated to a process in the dashboard.
+
+This feature has been removed and is no longer available.
+
+If you used it to expose custom screen links, migrate to `customTiles` in the dashboard definition.
+
 === Dashboard configuration
 
 In previous versions, dashboard configuration was managed via the `web-ui.json` config file. Starting from version 4.12, it is now handled programmatically using the `opfab.businessconfig.registerCustomScreen` method.
@@ -337,29 +347,15 @@ For example, instead of the following configuration in `web-ui.json`:
   }
 ```
 
-You now need to create a JavaScript file like this (note that `processStateRedirects` is no longer supported) :
+You now need to create a JavaScript file like this (note that `processStateRedirects` and `processCustomLinks` are no
+longer supported) :
 
 ```
 {
     const dashboardExample = {
         "id": "dashboard",
         "name": "Dashboard",
-        "type": "DASHBOARD",
-        "processCustomLinks": [
-            {
-                "processId": "defaultProcess",
-                "customLinks": [
-                    {
-                        "label": "Custom screen",
-                        "customScreenId": "testId"
-                    },
-                    {
-                        "label": "Custom screen 2",
-                        "customScreenId": "testId2"
-                    }
-                ]
-            }
-        ]
+        "type": "DASHBOARD"
     };
 
     opfab.businessconfig.registerCustomScreen(dashboardExample);

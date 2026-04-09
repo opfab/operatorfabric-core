@@ -11,7 +11,6 @@ import {ScreenDefinition} from './ScreenDefinition';
 
 export class DashboardScreenDefinition extends ScreenDefinition {
     processList: string[];
-    processCustomLinks: ProcessCustomLink[];
     customTiles?: CustomTile[];
 }
 

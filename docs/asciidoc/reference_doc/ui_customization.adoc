@@ -814,37 +814,6 @@ When `processList` is absent or empty, all processes accessible to the user are 
 "processList": ["process1", "process2"]
 ----
 
-=== processCustomLinks
-
-This configuration allows you to define custom links that appear below the states for each process in the dashboard. These links typically point to custom screens.
-
-Each link requires:
-
-* `label`: The text displayed for the link
-* `customScreenId`: The ID of the custom screen to open
-
-.Example with two custom screen links
-[source, json]
-----
-"processCustomLinks": [
-  {
-    "processId": "defaultProcess",
-    "customLinks": [
-      {
-        "label": "Custom screen",
-        "customScreenId": "testId"
-      },
-      {
-        "label": "Custom screen 2",
-        "customScreenId": "testId2"
-      }
-    ]
-  }
-]
-----
-
-NOTE: The custom screen IDs referenced in `processCustomLinks` must match the IDs of custom screens registered via `opfab.businessconfig.registerCustomScreen` or custom menu IDs defined in the UI menu configuration.
-
 === customTiles
 
 Custom tiles can be added to a dashboard to provide access to custom screens.
@@ -855,7 +824,7 @@ Each custom tile contains:
 - a `title`: displayed as the tile title
 - a list of `cells`: each cell defines a link to a custom screen
 
-Each cell has the same structure as `processCustomLinks`:
+Each cell has this structure :
 
 - `label`: text displayed in the cell
 - `customScreenId`: identifier of the custom screen to open

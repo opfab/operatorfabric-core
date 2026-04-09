@@ -119,123 +119,6 @@ describe('Dashboard', () => {
         expect(result.tiles[1].cells.length).toEqual(2);
     });
 
-    it('GIVEN a process with custom screen links in config WHEN get dashboard THEN dashboard contains links', async () => {
-        const dashboardScreenDefinition = new DashboardScreenDefinition();
-        dashboardScreenDefinition.id = 'dashboard';
-        dashboardScreenDefinition.name = 'Dashboard';
-        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
-        dashboardScreenDefinition.processCustomLinks = [
-            {
-                processId: 'process1',
-                customLinks: [
-                    {
-                        customScreenId: 'testId',
-                        label: 'My link'
-                    },
-                    {
-                        customScreenId: 'testId2',
-                        label: 'My Link 2'
-                    }
-                ]
-            }
-        ];
-        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
-
-        await initProcesses();
-
-        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
-
-        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        await setUserPerimeter(userWithPerimeters);
-
-        dashboardView = new DashboardView(DASHBOARD_ID);
-
-        const result = await firstValueFrom(dashboardView.getDashboardPage());
-        expect(result.tiles[0].id).toEqual('process1');
-        expect(result.tiles[0].label).toEqual('process name');
-        expect(result.tiles[0].cells[0].type).toEqual('state');
-        expect(result.tiles[0].cells[0].label).toEqual('State 1');
-        expect(result.tiles[0].cells[0].id).toEqual('state1');
-        expect(result.tiles[0].cells[1].type).toEqual('customScreenLink');
-        expect(result.tiles[0].cells[1].label).toEqual('My link');
-        expect(result.tiles[0].cells[1].id).toEqual('testId');
-        expect(result.tiles[0].cells[2].type).toEqual('customScreenLink');
-        expect(result.tiles[0].cells[2].label).toEqual('My Link 2');
-        expect(result.tiles[0].cells[2].id).toEqual('testId2');
-    });
-
-    // Special case: sometimes we want to show custom screen links even if there is no process state visible to the user.
-    // However, these links should still be displayed based on the user's permissions.
-    //
-    // To achieve this, we use a workaround: we add a process with a single child state that is not visible to the user.
-    // This process includes custom screen links in its configuration, and we control link visibility by defining access rights for the user to the child state.
-    //
-    // The two following tests verify that this behavior works as intended.
-
-    it('GIVEN a process with custom screen links in config and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains links', async () => {
-        const dashboardScreenDefinition = new DashboardScreenDefinition();
-        dashboardScreenDefinition.id = 'dashboard';
-        dashboardScreenDefinition.name = 'Dashboard';
-        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
-        dashboardScreenDefinition.processCustomLinks = [
-            {
-                processId: 'processWithOnlyChildState',
-                customLinks: [
-                    {
-                        customScreenId: 'testId',
-                        label: 'My link'
-                    },
-                    {
-                        customScreenId: 'testId2',
-                        label: 'My Link 2'
-                    }
-                ]
-            }
-        ];
-        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
-
-        await initProcesses();
-
-        const computedPerimeters = [
-            new ComputedPerimeter('processWithOnlyChildState', 'state1', RightEnum.Receive, true)
-        ];
-
-        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        await setUserPerimeter(userWithPerimeters);
-
-        dashboardView = new DashboardView(DASHBOARD_ID);
-
-        const result = await firstValueFrom(dashboardView.getDashboardPage());
-        expect(result.tiles[0].id).toEqual('processWithOnlyChildState');
-        expect(result.tiles[0].label).toEqual('process with only child state');
-        expect(result.tiles[0].cells[0].type).toEqual('customScreenLink');
-        expect(result.tiles[0].cells[0].label).toEqual('My link');
-        expect(result.tiles[0].cells[0].id).toEqual('testId');
-        expect(result.tiles[0].cells[1].type).toEqual('customScreenLink');
-        expect(result.tiles[0].cells[1].label).toEqual('My Link 2');
-        expect(result.tiles[0].cells[1].id).toEqual('testId2');
-    });
-
-    it('Given a process with no custom screen links and only a state with isOnlyAChildState = true  WHEN get dashboard THEN dashboard contains no process', async () => {
-        const dashboardScreenDefinition = new DashboardScreenDefinition();
-        dashboardScreenDefinition.id = 'dashboard';
-        dashboardScreenDefinition.name = 'Dashboard';
-        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
-        dashboardScreenDefinition.processCustomLinks = [];
-        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
-
-        await initProcesses();
-        const computedPerimeters = [
-            new ComputedPerimeter('processWithOnlyChildState', 'state1', RightEnum.Receive, true)
-        ];
-
-        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
-        await setUserPerimeter(userWithPerimeters);
-        dashboardView = new DashboardView(DASHBOARD_ID);
-        const result = await firstValueFrom(dashboardView.getDashboardPage());
-        expect(result.tiles.length).toEqual(0);
-    });
-
     it('GIVEN a process list and a restricted user perimeter WHEN get dashboard THEN dashboard contains restricted processes ', async () => {
         await initProcesses();
         const computedPerimeters = [
@@ -436,7 +319,6 @@ describe('Dashboard', () => {
         dashboardScreenDefinition.name = 'Dashboard';
         dashboardScreenDefinition.type = ScreenType.DASHBOARD;
         dashboardScreenDefinition.processList = ['process1'];
-        dashboardScreenDefinition.processCustomLinks = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -461,7 +343,6 @@ describe('Dashboard', () => {
         dashboardScreenDefinition.name = 'Dashboard';
         dashboardScreenDefinition.type = ScreenType.DASHBOARD;
         dashboardScreenDefinition.processList = ['process1', 'process2'];
-        dashboardScreenDefinition.processCustomLinks = [];
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
         await initProcesses();
@@ -537,7 +418,6 @@ describe('Dashboard', () => {
             }
         ];
 
-        dashboardScreenDefinition.processCustomLinks = [];
         dashboardScreenDefinition.processList = [];
 
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
@@ -574,8 +454,6 @@ describe('Dashboard', () => {
                 ]
             }
         ];
-
-        dashboardScreenDefinition.processCustomLinks = [];
 
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
