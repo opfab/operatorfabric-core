@@ -14,7 +14,7 @@ import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {I18n} from 'app/model/I18n';
-import {CardListScreenDefinition, ResponseButton} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, ResponseButton} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class ButtonActions {
     private readonly cardListScreenDefinition: CardListScreenDefinition;

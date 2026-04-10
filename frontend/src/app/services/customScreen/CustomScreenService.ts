@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ScreenDefinition} from './model/ScreenDefinition';
+import {ScreenDefinition} from './ScreenDefinition';
 
 export class CustomScreenService {
     private static readonly customScreenDefinitions = new Map<string, ScreenDefinition>();

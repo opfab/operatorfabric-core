@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 import {Utilities} from 'app/utils/Utilities';
 
 // See AgGrid documentation for column definitions

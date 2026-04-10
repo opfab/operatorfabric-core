@@ -8,7 +8,7 @@
  */
 
 import {Card} from 'app/model/Card';
-import {ScreenDefinition} from './ScreenDefinition';
+import {ScreenDefinition, ScreenType} from '../ScreenDefinition';
 
 export class CardListScreenDefinition extends ScreenDefinition {
     processIds: string[];
@@ -28,6 +28,7 @@ export class CardListScreenDefinition extends ScreenDefinition {
     excludeCardsEmittedByCurrentUserEntities?: boolean;
     initialBusinessPeriod?: string;
     showBackButton?: boolean;
+    type = ScreenType.CARD_LIST;
 }
 
 export class Column {

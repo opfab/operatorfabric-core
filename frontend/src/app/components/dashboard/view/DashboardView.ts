@@ -17,8 +17,12 @@ import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightca
 import {OpfabStore} from '../../../store/OpfabStore';
 import {format} from 'date-fns';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {DashboardScreenDefinition, CustomTile} from '@ofServices/customScreen/model/DashboardScreenDefinition';
+import {DashboardScreenDefinition, CustomTile} from '@ofServices/customScreen/dashboard/DashboardScreenDefinition';
 import {Card} from 'app/model/Card';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
+import {CardFilter} from '@ofServices/customScreen/cardList/CardFilter';
+import {FilterValues} from '@ofServices/customScreen/cardList/FilterValues';
+import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class DashboardView {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -28,12 +32,13 @@ export class DashboardView {
     private readonly filteredLightCardStore: FilteredLightCardsStore;
     private readonly processList: string[];
     private readonly customTiles: CustomTile[];
+    private readonly customCardListFilters = new Map<string, CardFilter>();
 
     constructor(private readonly customScreenId: string) {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
             this.customScreenId
         ) as DashboardScreenDefinition;
-        this.processList = dashboardScreenDefinition?.processList ?? [];
+        this.processList = dashboardScreenDefinition?.processList;
         this.customTiles = dashboardScreenDefinition?.customTiles ?? [];
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
         this.buildTiles();
@@ -44,41 +49,43 @@ export class DashboardView {
     private buildTiles() {
         this.dashboardPage = new DashboardPage();
         this.dashboardPage.tiles = new Array();
-        ProcessesService.getAllProcesses().forEach((process) => {
-            if (this.processList.length > 0 && !this.processList.includes(process.id)) {
-                return;
-            }
-            const cells = new Array<TileCell>();
-            process.states.forEach((state, key) => {
-                if (
-                    UsersService.isReceiveRightsForProcessAndState(process.id, key) &&
-                    this.isStateNotified(process.id, key)
-                ) {
-                    if (!state.isOnlyAChildState) {
-                        const cell = new TileCell();
-                        cell.id = key;
-                        cell.type = 'state';
-                        cell.circles = new Array();
-                        cell.label = state.name;
-
-                        const circle = new DashboardCircle();
-                        circle.color = this.noSeverityColor;
-                        circle.numberOfCards = 0;
-                        circle.width = 10;
-                        cell.circles.push(circle);
-                        cells.push(cell);
-                    }
+        if (!this.processList || this.processList.length > 0) {
+            ProcessesService.getAllProcesses().forEach((process) => {
+                if (this.processList && !this.processList.includes(process.id)) {
+                    return;
                 }
-            });
-            const tile = new Tile();
-            tile.id = process.id;
-            tile.label = process.name;
-            cells.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
-            tile.cells = cells;
+                const cells = new Array<TileCell>();
+                process.states.forEach((state, key) => {
+                    if (
+                        UsersService.isReceiveRightsForProcessAndState(process.id, key) &&
+                        this.isStateNotified(process.id, key)
+                    ) {
+                        if (!state.isOnlyAChildState) {
+                            const cell = new TileCell();
+                            cell.id = key;
+                            cell.type = 'state';
+                            cell.circles = new Array();
+                            cell.label = state.name;
 
-            if (tile.cells.length > 0) this.dashboardPage.tiles.push(tile);
-        });
-        this.dashboardPage.tiles.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
+                            const circle = new DashboardCircle();
+                            circle.color = this.noSeverityColor;
+                            circle.numberOfCards = 0;
+                            circle.width = 10;
+                            cell.circles.push(circle);
+                            cells.push(cell);
+                        }
+                    }
+                });
+                const tile = new Tile();
+                tile.id = process.id;
+                tile.label = process.name;
+                cells.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
+                tile.cells = cells;
+
+                if (tile.cells.length > 0) this.dashboardPage.tiles.push(tile);
+            });
+            this.dashboardPage.tiles.sort((obj1, obj2) => Utilities.compareObj(obj1.label, obj2.label));
+        }
 
         this.addCustomTiles();
     }
@@ -107,23 +114,29 @@ export class DashboardView {
         dashboardCard.id = lightCard.id;
         dashboardCard.publishDate = format(lightCard.publishDate, 'dd/MM - HH:mm :');
         this.dashboardPage.tiles.forEach((tile) => {
-            if (tile.id === lightCard.process) {
-                tile.cells.forEach((stateContent) => {
-                    if (stateContent.id === lightCard.state && !lightCard.hasBeenAcknowledged) {
-                        this.updateCircle(stateContent, lightCard.severity, dashboardCard);
+            if (tile.isCustomTile) {
+                tile.cells.forEach((cell) => {
+                    if (!this.isCardFilteredOnCustomCardListScreen(lightCard, cell.id)) {
+                        this.updateCircle(cell, lightCard.severity, dashboardCard);
+                    }
+                });
+            } else if (tile.id === lightCard.process) {
+                tile.cells.forEach((cell) => {
+                    if (cell.id === lightCard.state && !lightCard.hasBeenAcknowledged) {
+                        this.updateCircle(cell, lightCard.severity, dashboardCard);
                     }
                 });
             }
         });
     }
 
-    private updateCircle(stateContent: TileCell, severity: Severity, dashboardCard): any {
+    private updateCircle(tileCell: TileCell, severity: Severity, dashboardCard): any {
         let noCircle = true;
 
-        stateContent.circles.forEach((circle) => {
+        tileCell.circles.forEach((circle) => {
             // Remove a potential grey circle
             if (circle.color === this.noSeverityColor) {
-                stateContent.circles.splice(stateContent.circles.indexOf(circle, 0), 1);
+                tileCell.circles.splice(tileCell.circles.indexOf(circle, 0), 1);
             }
             if (circle.severity === severity) {
                 circle.numberOfCards += 1;
@@ -141,9 +154,9 @@ export class DashboardView {
             circle.cards = new Array();
             circle.cards.push(dashboardCard);
             circle.width = 10 + 2 * this.getEllipseWidth(circle.numberOfCards);
-            stateContent.circles.push(circle);
+            tileCell.circles.push(circle);
         }
-        stateContent.circles.sort(this.severityCompare);
+        tileCell.circles.sort(this.severityCompare);
     }
 
     private severityCompare(circleA: DashboardCircle, circleB: DashboardCircle) {
@@ -185,14 +198,36 @@ export class DashboardView {
                 cell.type = 'customScreenLink';
                 cell.label = cellDef.label;
                 cell.id = cellDef.customScreenId;
-                cell.circles = [];
+                cell.circles = new Array();
+                const circle = new DashboardCircle();
+                circle.color = this.noSeverityColor;
+                circle.numberOfCards = 0;
+                circle.width = 10;
+                cell.circles.push(circle);
                 cells.push(cell);
+                this.addCustomCardListDefinition(cell.id);
             });
 
             tile.cells = cells;
 
             this.dashboardPage.tiles.push(tile);
         });
+    }
+
+    private addCustomCardListDefinition(id: string) {
+        const def = CustomScreenService.getCustomScreenDefinition(id);
+        if (def?.type === ScreenType.CARD_LIST) {
+            const filter = new CardFilter();
+            filter.setFilters(new FilterValues(), def as CardListScreenDefinition);
+            this.customCardListFilters.set(id, filter);
+        }
+    }
+
+    private isCardFilteredOnCustomCardListScreen(card: Card, customCardListId: string): boolean {
+        const filter = this.customCardListFilters.get(customCardListId);
+        if (!filter) return true; // if no filter found, we consider that the card is filtered to avoid displaying cards on custom tiles when the definition is not correctly loaded
+        return filter.isCardFiltered(card, null); // we do not need to provide child cards here as it is only used
+        // for filter includeCardsWithResponsesFromAllEntities which is always set to true on default cards list screen
     }
 
     public getDashboardPage(): Observable<DashboardPage> {

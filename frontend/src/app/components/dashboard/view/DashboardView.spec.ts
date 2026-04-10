@@ -21,8 +21,9 @@ import {FilterType} from '@ofStore/lightcards/model/Filter';
 import {FilteredLightCardsStore} from '../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../store/OpfabStore';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
-import {DashboardScreenDefinition} from '@ofServices/customScreen/model/DashboardScreenDefinition';
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
+import {DashboardScreenDefinition} from '@ofServices/customScreen/dashboard/DashboardScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
+import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 const DASHBOARD_ID = 'dashboard';
 
@@ -401,6 +402,7 @@ describe('Dashboard', () => {
     });
 
     it('GIVEN only custom tiles WHEN get dashboard THEN dashboard contains only custom tiles', async () => {
+        await initProcesses();
         const dashboardScreenDefinition = new DashboardScreenDefinition();
         dashboardScreenDefinition.id = 'dashboard';
         dashboardScreenDefinition.name = 'Dashboard';
@@ -422,9 +424,9 @@ describe('Dashboard', () => {
 
         CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
-        await setProcessConfiguration([]);
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
 
-        const userWithPerimeters = new UserWithPerimeters(null, [], null, new Map());
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
         await setUserPerimeter(userWithPerimeters);
 
         dashboardView = new DashboardView(DASHBOARD_ID);
@@ -470,5 +472,194 @@ describe('Dashboard', () => {
 
         expect(result.tiles.some((t) => t.id === 'process1')).toBeTrue();
         expect(result.tiles.some((t) => t.label === 'Custom tile')).toBeTrue();
+    });
+
+    it('GIVEN all cards visible in custom card list screen WHEN cards get sent THEN custom tiles contains bubbles', async () => {
+        await initProcesses();
+
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processList = []; // No process tile, only custom tile
+
+        dashboardScreenDefinition.customTiles = [
+            {
+                title: 'Custom tile',
+                cells: [
+                    {
+                        label: 'Custom screen',
+                        customScreenId: 'testId'
+                    }
+                ]
+            }
+        ];
+
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+        CustomScreenService.addCustomScreenDefinition(cardListScreenDefinition);
+
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
+        ];
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const infoCard = getOneLightCard({
+            process: 'process1',
+            state: 'state1',
+            severity: Severity.INFORMATION,
+            id: 'infoCard'
+        });
+        const infoCard2 = getOneLightCard({
+            process: 'process1',
+            state: 'state1',
+            severity: Severity.INFORMATION,
+            id: 'infoCard2'
+        });
+        const compliantCard = getOneLightCard({
+            process: 'process2',
+            state: 'state1',
+            severity: Severity.COMPLIANT,
+            id: 'compliantCard'
+        });
+        const actionCard = getOneLightCard({
+            process: 'process2',
+            state: 'state1',
+            severity: Severity.ACTION,
+            id: 'actionCard'
+        });
+        const alarmCard = getOneLightCard({
+            process: 'process2',
+            state: 'state2',
+            severity: Severity.ALARM,
+            id: 'alarmCard'
+        });
+        opfabEventStreamServerMock.sendLightCard(infoCard);
+        opfabEventStreamServerMock.sendLightCard(infoCard2);
+        opfabEventStreamServerMock.sendLightCard(compliantCard);
+        opfabEventStreamServerMock.sendLightCard(actionCard);
+        opfabEventStreamServerMock.sendLightCard(alarmCard);
+
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
+
+        const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+        expect(result.tiles[0].cells[0].circles.length).toEqual(4);
+
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.ALARM);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.ALARM));
+
+        expect(result.tiles[0].cells[0].circles[1].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[1].severity).toEqual(Severity.ACTION);
+        expect(result.tiles[0].cells[0].circles[1].color).toEqual(Utilities.getSeverityColor(Severity.ACTION));
+
+        expect(result.tiles[0].cells[0].circles[2].numberOfCards).toEqual(1);
+        expect(result.tiles[0].cells[0].circles[2].severity).toEqual(Severity.COMPLIANT);
+        expect(result.tiles[0].cells[0].circles[2].color).toEqual(Utilities.getSeverityColor(Severity.COMPLIANT));
+
+        expect(result.tiles[0].cells[0].circles[3].numberOfCards).toEqual(2);
+        expect(result.tiles[0].cells[0].circles[3].severity).toEqual(Severity.INFORMATION);
+        expect(result.tiles[0].cells[0].circles[3].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
+    });
+
+    it('GIVEN some cards visible in custom card list screen WHEN cards get sent THEN custom tiles contains bubbles', async () => {
+        await initProcesses();
+
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = 'dashboard';
+        dashboardScreenDefinition.name = 'Dashboard';
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.processList = []; // No process tile, only custom tile
+
+        dashboardScreenDefinition.customTiles = [
+            {
+                title: 'Custom tile',
+                cells: [
+                    {
+                        label: 'Custom screen',
+                        customScreenId: 'testId'
+                    }
+                ]
+            }
+        ];
+
+        const cardListScreenDefinition = new CardListScreenDefinition();
+        cardListScreenDefinition.id = 'testId';
+        cardListScreenDefinition.name = 'testName';
+        cardListScreenDefinition.statesToExclude = [{processId: 'process2', stateIds: ['state1', 'state2']}];
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+        CustomScreenService.addCustomScreenDefinition(cardListScreenDefinition);
+
+        const computedPerimeters = [
+            new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state2', RightEnum.Receive, true),
+            new ComputedPerimeter('process2', 'state3', RightEnum.Receive, true)
+        ];
+        const userWithPerimeters = new UserWithPerimeters(null, computedPerimeters, null, new Map());
+        await setUserPerimeter(userWithPerimeters);
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const infoCard = getOneLightCard({
+            process: 'process1',
+            state: 'state1',
+            severity: Severity.INFORMATION,
+            id: 'infoCard'
+        });
+        const infoCard2 = getOneLightCard({
+            process: 'process1',
+            state: 'state1',
+            severity: Severity.INFORMATION,
+            id: 'infoCard2'
+        });
+        const compliantCard = getOneLightCard({
+            process: 'process2',
+            state: 'state1',
+            severity: Severity.COMPLIANT,
+            id: 'compliantCard'
+        });
+        const actionCard = getOneLightCard({
+            process: 'process2',
+            state: 'state1',
+            severity: Severity.ACTION,
+            id: 'actionCard'
+        });
+        const alarmCard = getOneLightCard({
+            process: 'process2',
+            state: 'state2',
+            severity: Severity.ALARM,
+            id: 'alarmCard'
+        });
+        opfabEventStreamServerMock.sendLightCard(infoCard);
+        opfabEventStreamServerMock.sendLightCard(infoCard2);
+        opfabEventStreamServerMock.sendLightCard(compliantCard);
+        opfabEventStreamServerMock.sendLightCard(actionCard);
+        opfabEventStreamServerMock.sendLightCard(alarmCard);
+
+        filteredLightCardStore.updateFilter(
+            FilterType.BUSINESSDATE_FILTER,
+            true,
+            filteredLightCardStore.getBusinessDateFilter().status
+        );
+
+        const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+        expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+
+        expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(2);
+        expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.INFORMATION);
+        expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
     });
 });

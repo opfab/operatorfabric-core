@@ -10,8 +10,12 @@
 import {ReadAndAckEnum} from '@ofServices/processes/model/Processes';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Card} from 'app/model/Card';
-import {FilterValues} from '../FilterValues';
-import {StateExclusion} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {FilterValues} from './FilterValues';
+import {
+    CardListScreenDefinition,
+    HeaderFilter,
+    StateExclusion
+} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 import {UsersService} from '@ofServices/users/UsersService';
 import {PublisherType} from 'app/model/PublisherType';
 
@@ -28,17 +32,34 @@ export class CardFilter {
     private includeOnlyCardsEmittedByCurrentUserEntities = false;
     private excludeCardsEmittedByCurrentUserEntities = false;
 
-    public setFilters(filterValues: FilterValues) {
+    public setFilters(filterValues: FilterValues, cardListScreenDefinition: CardListScreenDefinition) {
         this.startDate = filterValues.startDate;
         this.endDate = filterValues.endDate;
-        this.processIds = filterValues.processes;
-        this.typesOfState = filterValues.typesOfStateFilter;
-        this.statesToExclude = filterValues.statesToExcludeFilter;
-        this.setReadAndAckFilter(filterValues.readAndAckFilter);
-        this.includeCardsWithResponsesFromAllEntities = filterValues.includeCardsWithResponsesFromAllEntities;
+        this.processIds = filterValues.processes ?? [];
+        this.typesOfState =
+            filterValues.typesOfStateFilter ?? cardListScreenDefinition?.defaultSelectedTypeOfState ?? [];
+        this.setReadAndAckFilter(filterValues.readAndAckFilter ?? cardListScreenDefinition?.defaultSelectedReadAndAck);
         this.includeCardsWithResponseFromMyEntities = filterValues.includeCardsWithResponseFromMyEntities;
-        this.includeOnlyCardsEmittedByCurrentUserEntities = filterValues.includeOnlyCardsEmittedByCurrentUserEntities;
-        this.excludeCardsEmittedByCurrentUserEntities = filterValues.excludeCardsEmittedByCurrentUserEntities;
+
+        if (filterValues.includeCardsWithResponsesFromAllEntities === undefined) {
+            this.includeCardsWithResponsesFromAllEntities = true;
+        } else {
+            this.includeCardsWithResponsesFromAllEntities = filterValues.includeCardsWithResponsesFromAllEntities;
+        }
+
+        if (filterValues.includeCardsWithResponseFromMyEntities === undefined)
+            this.includeCardsWithResponseFromMyEntities = !cardListScreenDefinition?.headerFilters?.includes(
+                HeaderFilter.RESPONSE_FROM_MY_ENTITIES
+            );
+        else this.includeCardsWithResponseFromMyEntities = filterValues.includeCardsWithResponseFromMyEntities;
+
+        // the following filters are not set by the user
+        //  but by the custom screen definition
+        this.statesToExclude = cardListScreenDefinition?.statesToExclude;
+        this.includeOnlyCardsEmittedByCurrentUserEntities =
+            cardListScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
+        this.excludeCardsEmittedByCurrentUserEntities =
+            cardListScreenDefinition?.excludeCardsEmittedByCurrentUserEntities;
     }
 
     private setReadAndAckFilter(readAndAck: string[]) {
@@ -70,6 +91,7 @@ export class CardFilter {
         if (!this.includeCardsWithResponseFromMyEntities && card.hasChildCardFromCurrentUserEntity) return true;
         if (!this.includeCardsWithResponsesFromAllEntities && this.haveAllEntitiesResponded(card, childCards))
             return true;
+
         if (this.includeOnlyCardsEmittedByCurrentUserEntities && !this.isCardEmittedByCurrentUserEntity(card))
             return true;
         if (this.excludeCardsEmittedByCurrentUserEntities && this.isCardEmittedByCurrentUserEntity(card)) return true;

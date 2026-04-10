@@ -28,7 +28,7 @@
  */
 
 import {TranslationService} from '@ofServices/translation/TranslationService';
-import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class ResultTableExport {
     private readonly cardListScreenDefinition: CardListScreenDefinition;

@@ -20,7 +20,7 @@ import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Proce
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
-import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable', () => {
     const getResultTable = (cardListScreenDefinitionResults: any) => {
