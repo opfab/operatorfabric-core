@@ -9,11 +9,11 @@
 
 import {Card} from 'app/model/Card';
 import {TableRowBuilder} from './TableRowBuilder';
-import {FilterValues} from '../FilterValues';
-import {CardFilter} from './CardFilter';
+import {FilterValues} from '../../../../services/customScreen/cardList/FilterValues';
+import {CardFilter} from '../../../../services/customScreen/cardList/CardFilter';
 import {ResultTableExport} from './ResultTableExport';
 import {getColumnsDefinitionForAgGrid} from './ColumnDefinitions';
-import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class ResultTable {
     private readonly cardListScreenDefinition: CardListScreenDefinition;
@@ -29,14 +29,7 @@ export class ResultTable {
     }
 
     public setFilters(filtersValue: FilterValues) {
-        // statesToExcludeFilter and includeOnlyCardsEmittedByCurrentUserEntities are not set by the user
-        //  but by the custom screen definition
-        filtersValue.statesToExcludeFilter = this.cardListScreenDefinition?.statesToExclude;
-        filtersValue.includeOnlyCardsEmittedByCurrentUserEntities =
-            this.cardListScreenDefinition?.includeOnlyCardsEmittedByCurrentUserEntities;
-        filtersValue.excludeCardsEmittedByCurrentUserEntities =
-            this.cardListScreenDefinition?.excludeCardsEmittedByCurrentUserEntities;
-        this.cardFilter.setFilters(filtersValue);
+        this.cardFilter.setFilters(filtersValue, this.cardListScreenDefinition);
     }
 
     public getDataArrayFromCards(cards: Card[], childCards: Map<string, Array<Card>>): any[] {

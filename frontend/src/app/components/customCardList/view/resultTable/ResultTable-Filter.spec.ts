@@ -20,13 +20,13 @@ import {Process, ReadAndAckEnum, State, TypeOfStateEnum} from '@ofServices/proce
 import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Severity} from 'app/model/Severity';
-import {FilterValues} from '../FilterValues';
+import {FilterValues} from '../../../../services/customScreen/cardList/FilterValues';
 import {PublisherType} from 'app/model/PublisherType';
 import {
     CardListScreenDefinition,
     FieldType,
     StateExclusion
-} from '@ofServices/customScreen/model/CardListScreenDefinition';
+} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable - Should Filter card', () => {
     const getResultTable = (options?: {

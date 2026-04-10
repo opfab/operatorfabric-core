@@ -881,8 +881,9 @@ Each cell has this structure :
 }
 ----
 
-Clicking on the title of a custom tile does not trigger any navigation.
-Navigation is only available through the cells, which open the associated custom screens.
+Clicking on the title of a custom tile does not trigger any navigation. Navigation is only available through the cells, which open the associated custom screens.
+
+The bubbles with the number of cards per severity are still displayed on the dashboard tiles, but they take into account the list of cards that will be displayed in the custom screen linked to the cell instead of the total number of cards of the process/state.
 
 
 == Customizing browser notification sounds

@@ -14,7 +14,7 @@ import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {AcknowledgeServerMock} from '@tests/mocks/AcknowledgmentServer.mock';
 import {AcknowledgeService} from '@ofServices/acknowlegment/AcknowledgeService';
 import {ButtonActions} from './ButtonActions';
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 
 describe('CustomCardListView - Button actions', () => {
     beforeEach(async () => {

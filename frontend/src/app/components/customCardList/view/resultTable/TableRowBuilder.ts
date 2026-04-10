@@ -20,7 +20,7 @@ import {PublisherType} from 'app/model/PublisherType';
 import {Severity} from 'app/model/Severity';
 import {getTypeOfStateColor} from 'app/utils/TypeOfStateUtil';
 import {ResultTableCell} from './ResultTableCell';
-import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, Column, FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class TableRowBuilder {
     private readonly cardListScreenDefinition: CardListScreenDefinition;
