@@ -231,11 +231,21 @@ NOTE: You can also set the property `entitiesRequiredToRespond` to differentiate
 
 ....
 
-If `entitiesRequiredToRespond` is set and not empty, the card detail header will use this list instead of
-`entitiesAllowedToRespond`.
+=== Difference between entitiesAllowedToRespond and entitiesRequiredToRespond
 
-IMPORTANT: If set, `entitiesRequiredToRespond` does not have to be a subset of `entitiesAllowedToRespond`. To determine
-if a user has the right to respond, OperatorFabric consider the union of the two lists.
+The properties `entitiesAllowedToRespond` and `entitiesRequiredToRespond` serve different purposes:
+
+- `entitiesAllowedToRespond` defines all entities that are authorized to respond to the card.
+- `entitiesRequiredToRespond` defines all entities from which a response is explicitly expected.
+
+From a user interface perspective, this distinction impacts how information is displayed in the card detail header:
+
+- If only `entitiesAllowedToRespond` is defined, all these entities are displayed in the header and are considered as expected to respond.
+- If `entitiesRequiredToRespond` is defined and not empty, only these entities are displayed in the header, even if additional entities are allowed to respond.
+
+This behavior allows focusing the user’s attention on the entities whose response is truly required, while still allowing other entities to contribute if needed.
+
+IMPORTANT: The authorization to respond is determined by the union of `entitiesAllowedToRespond` and `entitiesRequiredToRespond`. An entity does not need to be present in both lists to be able to respond.
 
 
 == Integrate child cards 
