@@ -21,8 +21,8 @@ import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {AcknowledgmentAllowedEnum, Process, State} from '@ofServices/processes/model/Processes';
 import {ResultTable} from './ResultTable';
 import {Card} from 'app/model/Card';
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
-import {FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
+import {FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomCardListView - Result Array - Acknowledgment', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();

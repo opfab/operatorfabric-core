@@ -22,8 +22,8 @@ import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
 import {Process, State} from '@ofServices/processes/model/Processes';
 import {Card} from 'app/model/Card';
 import {ResultTable} from './ResultTable';
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
-import {FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
+import {FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomCardListView - Result array - Response possible', () => {
     const emptyChildCardsList = new Map<string, Array<Card>>();

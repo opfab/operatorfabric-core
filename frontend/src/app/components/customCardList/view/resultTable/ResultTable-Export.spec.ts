@@ -13,7 +13,7 @@ import {Card} from 'app/model/Card';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {Severity} from 'app/model/Severity';
-import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomScreenView - ResultTable - Export', () => {
     const getResultTable = (cardListScreenDefinitionResults: any, responseSeverityColumnLabelsForExportFile?) => {

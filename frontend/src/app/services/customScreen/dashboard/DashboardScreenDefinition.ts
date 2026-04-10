@@ -7,11 +7,12 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ScreenDefinition} from './ScreenDefinition';
+import {ScreenDefinition, ScreenType} from '../ScreenDefinition';
 
 export class DashboardScreenDefinition extends ScreenDefinition {
     processList: string[];
     customTiles?: CustomTile[];
+    type = ScreenType.DASHBOARD;
 }
 
 export interface ProcessCustomLink {

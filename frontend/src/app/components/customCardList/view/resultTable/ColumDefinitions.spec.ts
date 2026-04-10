@@ -7,9 +7,9 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 import {getColumnsDefinitionForAgGrid} from './ColumnDefinitions';
-import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, FieldType} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 function createCardListScreenDefinition(columns: any[]): CardListScreenDefinition {
     return {

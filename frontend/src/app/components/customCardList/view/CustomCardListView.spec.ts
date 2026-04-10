@@ -24,7 +24,7 @@ import {Severity} from 'app/model/Severity';
 import {Process, State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {RightEnum} from '@ofServices/perimeters/model/Perimeter';
 import {ComputedPerimeter} from '@ofServices/users/model/UserWithPerimeters';
-import {FilterValues} from './FilterValues';
+import {FilterValues} from '../../../services/customScreen/cardList/FilterValues';
 import {OpfabStore} from '@ofStore/OpfabStore';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
@@ -33,7 +33,7 @@ import {
     CardListScreenDefinition,
     FieldType,
     HeaderFilter
-} from '@ofServices/customScreen/model/CardListScreenDefinition';
+} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 describe('CustomCardListView', () => {
     const getCardListScreenDefinition = () => {

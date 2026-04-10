@@ -16,9 +16,9 @@ import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {LoggerService} from '@ofServices/logs/LoggerService';
 import {ButtonActions} from './buttonActions/ButtonActions';
-import {FilterValues} from './FilterValues';
+import {FilterValues} from '../../../services/customScreen/cardList/FilterValues';
 import {getColumnsDefinitionForAgGrid} from './resultTable/ColumnDefinitions';
-import {CardListScreenDefinition, HeaderFilter} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition, HeaderFilter} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 /**
  * This class is responsible for implementing the business logic related to the UI component.
@@ -57,12 +57,6 @@ export class CustomCardListView {
             filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
         }
 
-        filterValues.includeCardsWithResponseFromMyEntities = !this.cardListScreenDefinition?.headerFilters?.includes(
-            HeaderFilter.RESPONSE_FROM_MY_ENTITIES
-        );
-
-        filterValues.processes = [];
-        filterValues.includeCardsWithResponsesFromAllEntities = true;
         this.setFilters(filterValues);
         this.filter$.next();
     }

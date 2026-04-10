@@ -12,6 +12,7 @@
     const customScreenExample = {
         id: 'testId',
         name: 'testName',
+        type: 'CARD_LIST',
         processIds: [
             'api_test',
             'cypress',
@@ -139,6 +140,7 @@
     const customScreenExample2 = {
         id: 'testId2',
         name: 'testName',
+        type: 'CARD_LIST',
         headerFilters: ['PROCESS'],
         initialBusinessPeriod: 'FROM_TODAY_TO_YEAR_END',
         showBackButton: true,
@@ -270,6 +272,7 @@
     const customScreenExample3 = {
         id: 'testId3',
         name: 'testName',
+        type: 'CARD_LIST',
         headerFilters: ['PROCESS'],
         showAcknowledgmentButton: true,
         results: {

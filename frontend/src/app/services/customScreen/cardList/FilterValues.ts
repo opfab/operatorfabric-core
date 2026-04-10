@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {StateExclusion} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {StateExclusion} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 export class FilterValues {
     public startDate: number;

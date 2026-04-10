@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {ScreenType} from '@ofServices/customScreen/model/ScreenDefinition';
+import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService';
 import {
     getOneLightCard,
@@ -31,7 +31,7 @@ import {CardTemplateGateway} from '@ofServices/templateGateway/CardTemplateGatew
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
 import {ButtonActions} from './ButtonActions';
-import {CardListScreenDefinition} from '@ofServices/customScreen/model/CardListScreenDefinition';
+import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 
 function getCustomScreenDefinitionExample(): CardListScreenDefinition {
     return {

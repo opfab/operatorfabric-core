@@ -36,7 +36,7 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     @Input()
     public displayBusinessPeriodAndArrows: boolean;
 
-    // in rest of year mode , when user click on year button, we set the domain from now to end of year
+    // in rest of year mode , when user click on year button, we set the domain from current day to end of year
     @Input()
     public restOfYearMode: boolean;
     public restOfYear: boolean = false;
@@ -112,10 +112,12 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
         logger.info('Set timeline domain to restOfYearMode', LogOption.REMOTE);
         this.selectedButtonTitle = 'timeline.buttonTitle.Y';
         this.selectZoomButton(this.selectedButtonTitle);
-        RealTimeDomainService.setStartAndEndPeriod(
-            Date.now().valueOf(),
-            new Date(new Date().setMonth(11, 31)).valueOf()
-        );
+        const startDate = new Date();
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date();
+        endDate.setMonth(11, 31);
+        endDate.setHours(23, 59, 59, 999);
+        RealTimeDomainService.setStartAndEndPeriod(startDate.valueOf(), endDate.valueOf());
         this.currentDomain = RealTimeDomainService.getCurrentDomain();
         this.currentDomainId = 'Y';
         this.startDateForBusinessPeriodDisplay = DateTimeFormatterService.getFormattedDate(
@@ -223,8 +225,8 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
     moveDomain(moveForward: boolean): void {
         if (this.restOfYear) {
             // In rest of year mode
-            // if going forward, we go form  period "now - end of current year" to "start of next year - end of next year"
-            // if going backward , we go form  period "now - end of current year" to "start of current year - end of current year"
+            // if going forward, we go form  period "today - end of current year" to "start of next year - end of next year"
+            // if going backward , we go form  period "today - end of current year" to "start of current year - end of current year"
 
             this.setDomain(this.buttonList.find((b) => b.domainId === 'Y')); // set domain to Year
             if (!moveForward) return;
