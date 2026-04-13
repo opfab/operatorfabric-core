@@ -1,6 +1,9 @@
 {
   "scanSettings": {
-    "baseBranches": ["develop"]
+    "baseBranches": ["develop"],
+    "excludes": [
+      "migrations/**"
+    ]
   },
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "success",
