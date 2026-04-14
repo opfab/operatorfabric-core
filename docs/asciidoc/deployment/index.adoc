@@ -229,6 +229,40 @@ ifndef::single-page-doc[<</documentation/current/deployment/index.adoc#activateC
 It is also possible to reset the data of the limiter by calling the API through the "/cards/rateLimiter" endpoint (e.g.
 POST "$url:2102/cards/rateLimiter" -H "Authorization:Bearer $token").
 
+== Manual purge of cards (administration)
+
+OperatorFabric includes an automatic purge mechanism that periodically removes old cards and archived cards according to configured retention policies.
+
+It is also possible to trigger this purge manually.
+
+=== Using the REST API
+
+The purge can be triggered via the following endpoint:
+
+----
+POST "$url:2102/cards/purge" -H "Authorization:Bearer $token"
+----
+
+This endpoint executes the same purge logic as the scheduled job by calling the internal CardPurgeService.
+
+It will:
+
+* delete old cards based on `operatorfabric.cards-publication.purge.defaultDaysToKeepCardsAfterPublication`
+* delete archived cards based on `operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterPublication`
+* apply only if `operatorfabric.cards-publication.purge.activate=true`
+
+NOTE: This operation is restricted to administrators.
+
+=== Using the CLI
+
+The purge can also be triggered using the OperatorFabric CLI:
+
+----
+opfab card purge
+----
+
+This command internally calls the same REST endpoint and provides a simpler way for administrators to trigger the purge without manually constructing HTTP requests.
+
 == Restricted operations (administration)
 
 Some operations are restricted to users with administrative roles, either because they are administration

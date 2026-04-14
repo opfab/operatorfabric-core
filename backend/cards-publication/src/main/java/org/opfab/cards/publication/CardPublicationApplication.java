@@ -9,6 +9,7 @@
 
 package org.opfab.cards.publication;
 
+import org.opfab.cards.publication.configuration.CardPurgeProperties;
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
@@ -25,7 +26,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication
 @Import({ UserActionLogsConfiguration.class, RabbitEventBus.class, CardRepositoryImpl.class,
         UserActionLogRepositoryImpl.class, UserServiceCacheImpl.class, JwtConfiguration.class, MongoConfiguration.class,
-        LastUserActionRepositoryImpl.class })
+        LastUserActionRepositoryImpl.class, CardPurgeProperties.class })
 public class CardPublicationApplication {
 
     public static void main(String[] args) {

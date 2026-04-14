@@ -16,13 +16,7 @@ import org.opfab.cards.publication.repositories.CardRepository;
 import org.opfab.cards.publication.repositories.I18NRepository;
 import org.opfab.cards.publication.repositories.I18NRepositoryImpl;
 import org.opfab.cards.publication.repositories.ProcessRepositoryImpl;
-import org.opfab.cards.publication.services.CardDeletionService;
-import org.opfab.cards.publication.services.CardNotificationService;
-import org.opfab.cards.publication.services.CardProcessingService;
-import org.opfab.cards.publication.services.CardReadAndAckService;
-import org.opfab.cards.publication.services.CardTranslationService;
-import org.opfab.cards.publication.services.CardValidationService;
-import org.opfab.cards.publication.services.ExternalAppService;
+import org.opfab.cards.publication.services.*;
 import org.opfab.useractiontracing.services.UserActionLogService;
 import org.opfab.utilities.eventbus.EventBus;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,6 +39,8 @@ public class Services {
 
     private final CardValidationService cardValidationService;
 
+    private final CardPurgeService cardPurgeService;
+
     Services(
             UserActionLogService userActionLogService,
             CardRepository cardRepository,
@@ -59,7 +55,8 @@ public class Services {
             @Value("${operatorfabric.cards-publication.cardSendingLimitPeriod:3600}") int cardSendingLimitPeriod,
             @Value("${operatorfabric.cards-publication.activateCardSendingLimiter:true}") boolean activateCardSendingLimiter,
             @Value("${operatorfabric.servicesUrls.businessconfig:http://businessconfig:2100}") String businessconfigUrl,
-            CustomScreenDataFields customScreenDataFields) {
+            CustomScreenDataFields customScreenDataFields,
+            CardPurgeService cardPurgeService) {
 
         if (!i18nRepository.isPresent()) {
             this.cardTranslationService = new CardTranslationService(
@@ -81,6 +78,8 @@ public class Services {
                 authorizeToSendCardWithInvalidProcessState, cardSendingLimitCardCount, cardSendingLimitPeriod,
                 activateCardSendingLimiter);
         cardReadAndAckService = new CardReadAndAckService(cardNotificationService, cardRepository);
+
+        this.cardPurgeService = cardPurgeService;
 
     }
 
@@ -107,5 +106,7 @@ public class Services {
     public UserActionLogService getUserActionLogService() {
         return userActionLogService;
     }
+
+    public CardPurgeService getCardPurgeService() { return cardPurgeService; }
 
 }

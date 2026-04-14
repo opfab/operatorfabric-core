@@ -9,7 +9,7 @@
 
 package org.opfab.cards.publication.application;
 
-import org.opfab.cards.publication.configuration.CustomScreenDataFields;
+import org.opfab.cards.publication.configuration.*;
 import org.opfab.useractiontracing.UserActionLogsConfiguration;
 import org.opfab.useractiontracing.mongo.LastUserActionRepositoryImpl;
 import org.opfab.useractiontracing.mongo.UserActionLogRepositoryImpl;
@@ -21,9 +21,6 @@ import org.opfab.cards.publication.services.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.opfab.test.EventBusSpy;
-import org.opfab.cards.publication.configuration.Common;
-import org.opfab.cards.publication.configuration.ExternalRecipients;
-import org.opfab.cards.publication.configuration.Services;
 import org.opfab.cards.publication.controllers.CardController;
 
 import org.springframework.context.annotation.Import;
@@ -34,7 +31,8 @@ import org.springframework.context.annotation.Import;
         Common.class, CardController.class,
         ExternalRecipients.class, UserActionLogsConfiguration.class, UserActionLogRepositoryImpl.class,
         EventBusSpy.class,
-        CardRepositoryMock.class, Services.class, CustomScreenDataFields.class, LastUserActionRepositoryImpl.class })
+        CardRepositoryMock.class, Services.class, CustomScreenDataFields.class, LastUserActionRepositoryImpl.class,
+        CardPurgeService.class, CardPurgeProperties.class})
 public class UnitTestApplication {
 
     public static void main(String[] args) {
