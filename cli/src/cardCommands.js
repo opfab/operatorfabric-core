@@ -25,7 +25,8 @@ const cardCommands = {
                     choices: [
                         {title: 'Send', value: 'send'},
                         {title: 'Delete', value: 'delete'},
-                        {title: 'Reset Rate Limiter', value: 'reset-ratelimiter'}
+                        {title: 'Reset Rate Limiter', value: 'reset-ratelimiter'},
+                        {title: 'Purge', value: 'purge'}
                     ]
                 })
             ).value;
@@ -43,6 +44,9 @@ const cardCommands = {
                 break;
             case 'reset-ratelimiter':
                 await this.resetRateLimiter();
+                break;
+            case 'purge':
+                await this.purgeCards();
                 break;
             default:
                 console.log(`Unknown card action : ${action}
@@ -213,6 +217,33 @@ const cardCommands = {
         return card;
     },
 
+    async purgeCards() {
+        const url = `${config.getConfig('url')}:${config.getConfig('port')}/cards-publication/cards/purge`;
+        const token = config.getConfig('access_token');
+
+        const options = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        };
+
+        try {
+            const response = await fetch(url, options);
+
+            if (response.ok) {
+                console.log('\x1b[32m%s\x1b[0m', 'Purge triggered successfully');
+            } else {
+                const errorMsg = await utils.handleApiError(response);
+                console.error('Failed to trigger purge');
+                console.error(`Server response: ${errorMsg}`); // NOSONAR
+                process.exitCode = 1;
+            }
+        } catch (error) {
+            utils.logError('Failed to trigger purge', error, true);
+        }
+    },
+
     async printHelp() {
         console.log(`Usage: opfab card <command> <cardId|cardFileName> [<cardCustomization>]
 
@@ -223,6 +254,7 @@ Command list :
                        <cardCustomization> is a JSON-serialized string containing card fields to be overridden)
     delete             delete a card by id : opfab card delete <cardId>
     reset-ratelimiter  reset the rate limiter for sending cards : opfab card reset-ratelimiter
+    purge              trigger manual purge : opfab card purge
         
         `);
     }

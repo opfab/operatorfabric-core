@@ -203,4 +203,20 @@ public class CardRepositoryMock implements CardRepository {
     public UserBasedOperationResult deleteAcksAndReads(String cardUid) {
         return UserBasedOperationResult.cardFound().operationDone(true);
     }
+
+    @Override
+    public List<Card> deleteCardsByPublishDateBefore(Instant purgeDateLimit) {
+        // method intentionally left empty, not used in tests
+        return List.of();
+    }
+
+    @Override
+    public void deleteArchivedCardsByPublishDateBefore(Instant purgeDateLimit) {
+        // method intentionally left empty, not used in tests
+    }
+
+    @Override
+    public void updateDeletionDateForArchives(Instant deletionDateBefore) {
+        // method intentionally left empty, not used in tests
+    }
 }

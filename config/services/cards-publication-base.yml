@@ -10,6 +10,11 @@ spring:
 #
 operatorfabric:
   cards-publication:
+    purge:
+      activate: true
+      purgeTime: "03:00"
+      defaultDaysToKeepCardsAfterPublication: 30
+      defaultDaysToKeepArchivesCardsAfterPublication: 365
     external-recipients:
       recipients:
         - id: "processAction"

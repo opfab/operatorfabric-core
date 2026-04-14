@@ -23,6 +23,7 @@ import org.opfab.cards.publication.services.CardDeletionService;
 import org.opfab.cards.publication.services.CardProcessingService;
 import org.opfab.cards.publication.services.CardReadAndAckService;
 import org.opfab.cards.publication.services.CardTranslationService;
+import org.opfab.cards.publication.services.CardPurgeService;
 import org.opfab.configuration.oauth.OpFabJwtAuthenticationToken;
 import org.opfab.common.users.CurrentUserWithPerimeters;
 import org.slf4j.Logger;
@@ -54,6 +55,7 @@ public class CardController {
     private CardTranslationService cardTranslationService;
     private CardReadAndAckService cardReadAndAckService;
     private UserActionLogService userActionLogService;
+    private CardPurgeService cardPurgeService;
 
     private @Value("${operatorfabric.userActionLogActivated:true}") boolean userActionLogActivated;
 
@@ -64,6 +66,7 @@ public class CardController {
         userActionLogService = services.getUserActionLogService();
         cardProcessingService = services.getCardProcessingService();
         cardReadAndAckService = services.getCardReadAndAckService();
+        cardPurgeService = services.getCardPurgeService();
 
     }
 
@@ -394,5 +397,28 @@ public class CardController {
             String comment) {
         if (userActionLogActivated)
             userActionLogService.insertUserActionLog(login, actionType, entities, cardUid, comment);
+    }
+
+    @PostMapping("/purge")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public void triggerPurge(Principal principal) {
+
+        OpFabJwtAuthenticationToken jwtPrincipal = (OpFabJwtAuthenticationToken) principal;
+        CurrentUserWithPerimeters user = (CurrentUserWithPerimeters) jwtPrincipal.getPrincipal();
+
+        LOGGER.info("Manual purge triggered by user {}", user.getUserData().getLogin());
+
+        cardPurgeService.purgeIfNeeded();
+
+        logUserAction(
+                user.getUserData().getLogin(),
+                UserActionEnum.DELETE_CARD,
+                user.getUserData().getEntities(),
+                null,
+                "Manual purge triggered"
+        );
+
+        LOGGER.info("Manual purge completed");
     }
 }

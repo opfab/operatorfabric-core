@@ -31,7 +31,8 @@ omelette('opfab')
         card: {
             send: [],
             delete: ['#EMPTY_COMPLETION'],
-            'reset-ratelimiter': ['#EMPTY_COMPLETION']
+            'reset-ratelimiter': ['#EMPTY_COMPLETION'],
+            purge: ['#EMPTY_COMPLETION']
         },
         commands: [],
         config: {

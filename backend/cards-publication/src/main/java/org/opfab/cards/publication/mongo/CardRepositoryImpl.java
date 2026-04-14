@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -41,6 +41,8 @@ public class CardRepositoryImpl implements CardRepository {
     static final String ENTITIES_ACKS = "entitiesAcks";
     static final String USERS_READS = "usersReads";
     static final String LAST_UPDATE = "lastUpdate";
+    static final String DELETION_DATE = "deletionDate";
+    static final String PUBLISH_DATE = "publishDate";
 
     public CardRepositoryImpl(MongoTemplate template) {
         this.template = template;
@@ -77,12 +79,12 @@ public class CardRepositoryImpl implements CardRepository {
         query.addCriteria(new Criteria().andOperator(
                 where("process").is(process),
                 where("processInstanceId").is(processInstanceId),
-                where("deletionDate").isNull()));
+                where(DELETION_DATE).isNull()));
         // previous version of the code used updateFirst
         // but in certain cases it happened that multiple version of the same card do
         // not have deletionDate
         // see https://github.com/opfab/operatorfabric-core/issues/8664
-        template.updateMulti(query, Update.update("deletionDate", deletionDate),
+        template.updateMulti(query, Update.update(DELETION_DATE, deletionDate),
                 ArchivedCard.class);
     }
 
@@ -208,13 +210,50 @@ public class CardRepositoryImpl implements CardRepository {
                 .unset(USERS_READS)
                 .set(ENTITIES_ACKS, new LinkedList<String>())
                 .set(LAST_UPDATE, Instant.now())
-                .set("publishDate", Instant.now())
+                .set(PUBLISH_DATE, Instant.now())
                 .pull("actions", "NOT_NOTIFIED");
         UpdateResult updateFirst = template.updateFirst(Query.query(Criteria.where("uid").is(cardUid)),
                 update, Card.class);
         log.debug("removed {} occurence(s) of Acks and read in the card with uid: {}", updateFirst.getModifiedCount(),
                 cardUid);
         return toUserBasedOperationResult(updateFirst);
+    }
+
+    public List<Card> deleteCardsByPublishDateBefore(Instant publishDateBefore) {
+
+        Query query = new Query();
+
+        query.addCriteria(Criteria.where(PUBLISH_DATE).lt(publishDateBefore));
+        query.fields().exclude("data");
+
+        List<Card> toDelete = template.find(query, Card.class);
+        template.remove(query, Card.class);
+
+        return toDelete;
+    }
+
+    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateBefore) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where(PUBLISH_DATE).lt(publishDateBefore));
+
+        template.remove(query, ArchivedCard.class);
+    }
+
+    public void updateDeletionDateForArchives(Instant limitDate) {
+
+        Query query = new Query();
+
+        query.addCriteria(
+                new Criteria().andOperator(
+                        Criteria.where(DELETION_DATE).isNull(),
+                        Criteria.where(PUBLISH_DATE).lt(limitDate)
+                )
+        );
+
+        Update update = new Update()
+                .set(DELETION_DATE, Instant.now());
+
+        template.updateMulti(query, update, ArchivedCard.class);
     }
 
 }
