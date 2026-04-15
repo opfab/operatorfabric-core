@@ -67,8 +67,6 @@ listed groups.
 |Archives
 |archives
 
-|Dashboard
-|dashboard
 
 |Logging
 |logging
@@ -149,7 +147,7 @@ A menu entry can target a core menu id or a link. If it targets a link, it must 
 
 In the following example, the configuration file declares two additional business menus.
 The first has only one entry, which targets a link. The second business menu has three entries, one which targets the
-core menu `Dashboard` and two others which target links.
+core menu `logging` and two others which target links.
 The sample also contains the 2 top right icons (`usercard` and `calendar`), the composition of the top right menu and
 the i18n translations in English and French.
 
@@ -180,7 +178,7 @@ the i18n translations in English and French.
       "label": "title.multi",
       "entries": [
         {
-          "opfabCoreMenuId": "dashboard"
+          "opfabCoreMenuId": "logging"
         },
         {
           "customMenuId": "uid_test_1",
