@@ -1,0 +1,38 @@
+// Copyright (c) 2026 RTE (http://www.rte-france.com)
+// See AUTHORS.txt
+// This document is subject to the terms of the Creative Commons Attribution 4.0 International license.
+// If a copy of the license was not distributed with this
+// file, You can obtain one at https://creativecommons.org/licenses/by/4.0/.
+// SPDX-License-Identifier: CC-BY-4.0
+
+= Migration Guide from release 4.12.X to release 4.13.0
+
+== Custom screen: `type` field is now mandatory
+
+When registering a custom screen via `opfab.businessconfig.registerCustomScreen(...)`, the `type` field is now required.
+
+If the `type` field is not set, or if it contains an invalid value, the custom screen will not be loaded and an error will be logged to the console.
+
+=== Required action
+
+Ensure every custom screen definition includes a valid `type` value. The supported types are:
+
+* `CARD_LIST`
+* `DASHBOARD`
+
+Example of a valid custom screen definition:
+
+----
+const customScreenExample = {
+    id: 'testId',
+    name: 'testName',
+    type: 'CARD_LIST',
+    initialBusinessPeriod: 'FROM_TODAY_TO_YEAR_END',
+    processIds: [
+        'api_test',
+        'cypress',
+        'defaultProcess'
+    ]
+};
+opfab.businessconfig.registerCustomScreen(customScreenExample);
+----
