@@ -2,14 +2,20 @@ apply plugin: 'com.github.node-gradle.node'
 
 tasks.register('runCypressTests', NpxTask)  {
     description 'runs all the Cypress tests for the project'
-    dependsOn npmInstall
+    dependsOn 'cypressInstall'
     command = 'cypress'
     args = ['run', '--config', 'video=false', '--browser', 'chrome', '--headless']
 }
 
 tasks.register('runSomeCypressTests', NpxTask)  {
     description 'runs some Cypress tests for the project'
-    dependsOn npmInstall
+    dependsOn 'cypressInstall'
     command = 'cypress'
     args = ['run','-scypress/integration/' + project.properties["specFiles"] + '.spec.js', '--config', 'video=false', '--browser', 'chrome', '--headless' ]
 }
+tasks.register('cypressInstall', NpxTask) {
+    dependsOn 'npmInstall'
+    command = 'cypress'
+    args = ['install']
+}
+
