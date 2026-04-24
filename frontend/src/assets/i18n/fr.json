@@ -563,7 +563,8 @@
             "process": {
                 "id": "ID",
                 "name": "PROCESSUS",
-                "version": "VERSION ACTUELLE",
+                "version": "VERSION",
+                "currentVersion": "VERSION ACTUELLE",
                 "confirmDelete": "Voulez-vous vraiment supprimer le processus"
             },
             "user": {
