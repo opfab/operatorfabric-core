@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Process} from '@ofServices/processes/model/Processes';
 import {AdminProcessesServer} from './server/AdminProcessesServer';
@@ -34,20 +34,35 @@ export class AdminProcessesService {
     public static getAll(): Observable<any[]> {
         return AdminProcessesService.queryAllProcesses();
     }
-    private static queryAllProcesses(): Observable<Process[]> {
-        return AdminProcessesService.adminProcessesServer.queryAllProcesses().pipe(
-            map((adminProcessesResponse) => {
-                if (adminProcessesResponse.status === ServerResponseStatus.OK) {
-                    return adminProcessesResponse.data;
-                } else {
-                    LoggerService.error(`Error when getting processes :  ${adminProcessesResponse.statusMessage}`);
+
+    private static queryAllProcesses(): Observable<any[]> {
+        const latest$ = AdminProcessesService.adminProcessesServer.queryAllProcesses(false);
+        const all$ = AdminProcessesService.adminProcessesServer.queryAllProcesses(true);
+
+        return forkJoin([latest$, all$]).pipe(
+            map(([latestResponse, allResponse]) => {
+                if (
+                    latestResponse.status !== ServerResponseStatus.OK ||
+                    allResponse.status !== ServerResponseStatus.OK
+                ) {
+                    LoggerService.error('Error loading processes');
+
                     AlertMessageService.sendAlertMessage({
                         message: '',
                         i18n: {key: 'shared.error.process.gettingProcesses'},
                         level: MessageLevel.ERROR
                     });
+
                     return [];
                 }
+
+                const latest = latestResponse.data ?? [];
+                const all = allResponse.data ?? [];
+
+                return all.map((process) => ({
+                    ...process,
+                    currentVersion: latest.some((l) => l.id === process.id && l.version === process.version)
+                }));
             })
         );
     }
@@ -63,6 +78,21 @@ export class AdminProcessesService {
                     LoggerService.error(
                         `Error when deleting processes ${id} :  ${adminProcessesResponse.statusMessage}`
                     );
+                    AlertMessageService.sendAlertMessage({
+                        message: '',
+                        i18n: {key: 'shared.error.process.deleteProcess'},
+                        level: MessageLevel.ERROR
+                    });
+                }
+            })
+        );
+    }
+
+    public static deleteVersion(id: string, version: string) {
+        return AdminProcessesService.adminProcessesServer.deleteVersion(id, version).pipe(
+            map((response) => {
+                if (response.status !== ServerResponseStatus.OK) {
+                    LoggerService.error(`Error deleting process ${id} version ${version} : ${response.statusMessage}`);
                     AlertMessageService.sendAlertMessage({
                         message: '',
                         i18n: {key: 'shared.error.process.deleteProcess'},

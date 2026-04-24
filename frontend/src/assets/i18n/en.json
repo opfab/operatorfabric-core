@@ -562,7 +562,8 @@
             "process": {
                 "id": "ID",
                 "name": "PROCESS",
-                "version": "CURRENT VERSION",
+                "version": "VERSION",
+                "currentVersion": "CURRENT VERSION",
                 "confirmDelete": "Do you really want to delete process"
             },
             "user": {

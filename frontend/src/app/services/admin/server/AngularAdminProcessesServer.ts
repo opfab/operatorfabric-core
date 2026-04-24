@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,8 +28,10 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
         this.processesUrl = `${environment.url}businessconfig/processes`;
     }
 
-    queryAllProcesses(): Observable<ServerResponse<Process[]>> {
-        return this.processHttpResponse(this.httpClient.get<Process[]>(`${this.processesUrl}`));
+    queryAllProcesses(allVersions?: boolean): Observable<ServerResponse<Process[]>> {
+        const url = allVersions ? `${this.processesUrl}?allVersions=true` : `${this.processesUrl}`;
+
+        return this.processHttpResponse(this.httpClient.get<Process[]>(url));
     }
 
     update(data: any): Observable<ServerResponse<Process>> {
@@ -38,6 +40,11 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
 
     public deleteById(id: string): Observable<ServerResponse<any>> {
         const url = `${this.processesUrl}/${id}`;
+        return this.processHttpResponse(this.httpClient.delete(url));
+    }
+
+    deleteVersion(id: string, version: string): Observable<ServerResponse<any>> {
+        const url = `${this.processesUrl}/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
 }

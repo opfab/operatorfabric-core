@@ -592,29 +592,29 @@ describe('AdmininstrationPages', () => {
         cy.get('#opfab-admin-processes-tab').click();
 
         // Check the content of the first row
-        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'taskExample');
+        agGrid.cellShould('ag-grid-angular', 0, 0, 'have.text', 'api_test');
 
-        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'Task');
+        agGrid.cellShould('ag-grid-angular', 0, 1, 'have.text', 'External recipient');
 
         agGrid.cellShould('ag-grid-angular', 0, 2, 'have.text', '1');
 
-        // Check the page has 9 rows
-        agGrid.countTableRows('ag-grid-angular', 9);
+        // Check the page has 10 rows
+        agGrid.countTableRows('ag-grid-angular', 10);
 
-        // Pagination should display ' Results number  : 9 '
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+        // Pagination should display ' Results number  : 10 '
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
 
         // Delete first process
-        agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 0, 4, 'of-action-cell-renderer');
 
         cy.get('#opfab-btn-ok').click();
 
         cy.waitDefaultTime();
 
         //Check process was deleted
-        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 8');
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
-        agGrid.countTableRows('ag-grid-angular', 8);
+        agGrid.countTableRows('ag-grid-angular', 9);
     });
 
     it('List, delete businessdata', () => {

@@ -560,9 +560,10 @@
                 "add": "NIEUWE PERIMETER TOEVOEGEN"
             },
             "process": {
-                "ProcessId": "ID",
-                "ProcessName": "PROCES",
-                "ProcessVersion": "HUIDIGE VERSIE",
+                "id": "ID",
+                "name": "PROCES",
+                "version": "VERSIE",
+                "currentVersion": "HUIDIGE VERSIE",
                 "confirmDelete": "Wilt u het proces echt verwijderen"
             },
             "user": {
