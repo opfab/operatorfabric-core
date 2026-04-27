@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ const readXlsx = require("./cypress/plugins/read-xlsx");
 
 module.exports = defineConfig({
   e2e: {
+    allowCypressEnv: false,
     baseUrl: "http://localhost:2002/",
     viewportWidth: 1848,
     viewportHeight: 949,
