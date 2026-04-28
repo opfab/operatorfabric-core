@@ -31,4 +31,8 @@ export class CrudProcessesService extends CrudService {
     getCachedValues(): Array<any> {
         throw new Error('getCachedValue not implemented');
     }
+
+    downloadBundle(id: string, version: string): Observable<Blob> {
+        return AdminProcessesService.downloadBundle(id, version);
+    }
 }

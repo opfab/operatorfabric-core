@@ -38,7 +38,7 @@ export class ProcessesTableComponent extends AdminTableDirective implements OnIn
     ];
     idField = 'id';
     showAddButton = false;
-    actionButtonsDisplayed = [ActionButton.DELETE];
+    actionButtonsDisplayed = [ActionButton.DOWNLOAD, ActionButton.DELETE];
 
     ngOnInit() {
         this.gridOptions.columnTypes['versionColumn'] = {

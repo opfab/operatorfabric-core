@@ -102,4 +102,8 @@ export class AdminProcessesService {
             })
         );
     }
+
+    public static downloadBundle(id: string, version: string): Observable<Blob> {
+        return AdminProcessesService.adminProcessesServer.downloadBundle(id, version);
+    }
 }

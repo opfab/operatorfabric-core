@@ -47,4 +47,10 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
         const url = `${this.processesUrl}/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
+
+    downloadBundle(id: string, version: string): Observable<Blob> {
+        const url = `${this.processesUrl}/${encodeURIComponent(id)}/versions/${encodeURIComponent(version)}/download`;
+
+        return this.httpClient.get(url, {responseType: 'blob'});
+    }
 }

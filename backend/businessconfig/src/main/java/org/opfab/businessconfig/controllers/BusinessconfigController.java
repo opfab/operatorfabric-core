@@ -308,6 +308,30 @@ public class BusinessconfigController implements UserExtractor {
         }
     }
 
+    @GetMapping(
+            value = "/processes/{processId}/versions/{version}/download",
+            produces = "application/zip"
+    )
+    public byte[] downloadBundleVersion(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @PathVariable("processId") String processId,
+            @PathVariable("version") String version)
+            throws IOException {
+
+        processId = StringUtils.sanitize(processId);
+        version = StringUtils.sanitize(version);
+
+        Resource resource = processService.getBundleZip(processId, version);
+
+        response.addHeader(
+                "Content-Disposition",
+                "attachment; filename=\"" + processId + "-" + version + ".zip\""
+        );
+
+        return loadResource(resource);
+    }
+
     public Void uploadFile(HttpServletRequest request, HttpServletResponse response, @Valid MultipartFile file,
             String endPointName, String resourceName) {
 
