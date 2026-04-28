@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,7 +9,7 @@
 
 import {Injectable, inject} from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient, HttpUrlEncodingCodec, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '@env/environment';
 import {AngularServer} from '../../../server/AngularServer';
 import {ServerResponse} from 'app/server/ServerResponse';
@@ -22,12 +22,10 @@ export class AngularTemplateCssServer extends AngularServer implements TemplateC
     private readonly httpClient = inject(HttpClient);
 
     private readonly processesUrl;
-    private readonly urlCleaner: HttpUrlEncodingCodec;
 
     constructor() {
         super();
         this.processesUrl = `${environment.url}businessconfig/processes`;
-        this.urlCleaner = new HttpUrlEncodingCodec();
     }
 
     loadCssFile(process: string, version: string, styleFileName: string): Observable<ServerResponse<string>> {
@@ -36,8 +34,7 @@ export class AngularTemplateCssServer extends AngularServer implements TemplateC
     }
 
     computeBusinessconfigCssUrl(process: string, styleName: string, version: string): string {
-        // manage url character encoding
-        const resourceUrl = this.urlCleaner.encodeValue(`${this.processesUrl}/${process}/css/${styleName}`);
+        const resourceUrl = `${this.processesUrl}/${encodeURIComponent(process)}/css/${encodeURIComponent(styleName)}`;
         const versionParam = new HttpParams().set('version', version);
         return `${resourceUrl}?${versionParam.toString()}`;
     }

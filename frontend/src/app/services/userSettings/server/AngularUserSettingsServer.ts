@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,10 +28,14 @@ export class AngularUserSettingsServer extends AngularServer implements UserSett
     }
 
     getUserSettings(userId: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get(`${this.usersUrl}/users/${userId}/settings`));
+        return this.processHttpResponse(
+            this.httpClient.get(`${this.usersUrl}/users/${encodeURIComponent(userId)}/settings`)
+        );
     }
 
     patchUserSettings(userId: string, settings: any): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.patch(`${this.usersUrl}/users/${userId}/settings`, settings));
+        return this.processHttpResponse(
+            this.httpClient.patch(`${this.usersUrl}/users/${encodeURIComponent(userId)}/settings`, settings)
+        );
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@ export class AngularPerimetersServer extends AngularServer implements Perimeters
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {
-        const url = `${this.perimetersUrl}/${id}`;
+        const url = `${this.perimetersUrl}/${encodeURIComponent(id)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
 
@@ -44,7 +44,10 @@ export class AngularPerimetersServer extends AngularServer implements Perimeters
 
     updatePerimeter(perimeterData: Perimeter): Observable<ServerResponse<Perimeter>> {
         return this.processHttpResponse(
-            this.httpClient.put<Perimeter>(`${this.perimetersUrl}` + '/' + perimeterData.id, perimeterData)
+            this.httpClient.put<Perimeter>(
+                `${this.perimetersUrl}` + '/' + encodeURIComponent(perimeterData.id),
+                perimeterData
+            )
         );
     }
 }

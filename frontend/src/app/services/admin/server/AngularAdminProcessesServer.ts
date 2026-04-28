@@ -39,7 +39,7 @@ export class AngularAdminProcessesServer extends AngularServer implements AdminP
     }
 
     public deleteById(id: string): Observable<ServerResponse<any>> {
-        const url = `${this.processesUrl}/${id}`;
+        const url = `${this.processesUrl}/${encodeURIComponent(id)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
 

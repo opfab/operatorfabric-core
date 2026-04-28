@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -36,11 +36,11 @@ export class AngularUserServer extends AngularServer implements UsersServer {
         this.willNewSubscriptionDisconnectAnExistingSubscriptionUrl = `${environment.url}cards-consultation/willNewSubscriptionDisconnectAnExistingSubscription`;
     }
     deleteById(login: string) {
-        const url = `${this.userUrl}/users/${login}`;
+        const url = `${this.userUrl}/users/${encodeURIComponent(login)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
     getUser(user: string): Observable<ServerResponse<User>> {
-        return this.processHttpResponse(this.httpClient.get<User>(`${this.userUrl}/users/${user}`));
+        return this.processHttpResponse(this.httpClient.get<User>(`${this.userUrl}/users/${encodeURIComponent(user)}`));
     }
     synchronizeWithToken(): Observable<ServerResponse<User>> {
         return this.processHttpResponse(this.httpClient.post<User>(`${this.userUrl}/users/synchronizeWithToken`, null));

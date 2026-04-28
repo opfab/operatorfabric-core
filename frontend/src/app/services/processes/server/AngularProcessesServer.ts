@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,7 +34,7 @@ export class AngularProcessesServer extends AngularServer implements ProcessesSe
     getProcessDefinition(processId: string, processVersion: string): Observable<ServerResponse<Process>> {
         const params = new HttpParams().set('version', processVersion);
         return this.processHttpResponse(
-            this.httpClient.get(`${this.processesUrl}/${processId}`, {
+            this.httpClient.get(`${this.processesUrl}/${encodeURIComponent(processId)}`, {
                 params: params,
                 responseType: 'text'
             })

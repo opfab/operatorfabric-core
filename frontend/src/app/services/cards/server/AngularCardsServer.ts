@@ -54,7 +54,9 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     loadArchivedCard(id: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get<CardWithChildCards>(`${this.archivesUrl}/${id}`));
+        return this.processHttpResponse(
+            this.httpClient.get<CardWithChildCards>(`${this.archivesUrl}/${encodeURIComponent(id)}`)
+        );
     }
 
     fetchFilteredArchivedCards(filter: CardsFilter): Observable<ServerResponse<any>> {
@@ -85,7 +87,9 @@ export class AngularCardsServer extends AngularServer implements CardsServer {
     }
 
     deleteUserCardRead(cardUid: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.delete<void>(`${this.userCardReadUrl}?cardUid=${cardUid}`));
+        return this.processHttpResponse(
+            this.httpClient.delete<void>(`${this.userCardReadUrl}?cardUid=${encodeURIComponent(cardUid)}`)
+        );
     }
 
     postTranslateCardField(fieldToTranslate: FieldToTranslate): Observable<ServerResponse<any>> {
