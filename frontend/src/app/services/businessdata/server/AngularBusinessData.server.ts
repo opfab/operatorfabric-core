@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,11 +29,13 @@ export class AngularBusinessDataServer extends AngularServer implements Business
     }
 
     getBusinessData(resourceName: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.get(`${this.businessDataUrl}` + '/' + resourceName));
+        return this.processHttpResponse(
+            this.httpClient.get(`${this.businessDataUrl}` + '/' + encodeURIComponent(resourceName))
+        );
     }
 
     deleteById(id: string): Observable<ServerResponse<any>> {
-        const url = `${this.businessDataUrl}/${id}`;
+        const url = `${this.businessDataUrl}/${encodeURIComponent(id)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
 
@@ -42,6 +44,8 @@ export class AngularBusinessDataServer extends AngularServer implements Business
     }
 
     updateBusinessData(resourceName: string, data: FormData): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.post(`${this.businessDataUrl}` + '/' + resourceName, data));
+        return this.processHttpResponse(
+            this.httpClient.post(`${this.businessDataUrl}` + '/' + encodeURIComponent(resourceName), data)
+        );
     }
 }

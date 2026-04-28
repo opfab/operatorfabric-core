@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -50,7 +50,7 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
 
     fetchUserConfiguration(login: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
-            this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${login}`)
+            this.httpClient.get<UserConfiguration>(`${this.configurationsUrl}/users/${encodeURIComponent(login)}`)
         );
     }
 
@@ -76,18 +76,18 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
 
     enableDevice(deviceId: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
-            this.httpClient.post<string>(`${this.devicesUrl}/${deviceId}/enable`, deviceId)
+            this.httpClient.post<string>(`${this.devicesUrl}/${encodeURIComponent(deviceId)}/enable`, deviceId)
         );
     }
 
     disableDevice(deviceId: string): Observable<ServerResponse<any>> {
         return this.processHttpResponse(
-            this.httpClient.post<string>(`${this.devicesUrl}/${deviceId}/disable`, deviceId)
+            this.httpClient.post<string>(`${this.devicesUrl}/${encodeURIComponent(deviceId)}/disable`, deviceId)
         );
     }
 
     deleteByUserLogin(login: string): Observable<ServerResponse<any>> {
-        const url = `${this.configurationsUrl}/users/${login}`;
+        const url = `${this.configurationsUrl}/users/${encodeURIComponent(login)}`;
         return this.processHttpResponse(this.httpClient.delete(url));
     }
 
@@ -98,7 +98,9 @@ export class AngularExternalDevicesServer extends AngularServer implements Exter
     }
 
     deleteDevice(deviceId: string): Observable<ServerResponse<any>> {
-        return this.processHttpResponse(this.httpClient.delete<string>(`${this.devicesConfigurationsUrl}/${deviceId}`));
+        return this.processHttpResponse(
+            this.httpClient.delete<string>(`${this.devicesConfigurationsUrl}/${encodeURIComponent(deviceId)}`)
+        );
     }
 
     updateSignalMapping(mapping: SignalMapping): Observable<ServerResponse<any>> {
