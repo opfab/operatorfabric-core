@@ -42,6 +42,8 @@ import {I18n} from 'app/model/I18n';
 import {IdCellRendererComponent} from '../cell-renderers/IdCellRendererComponent';
 import {AgGrid} from 'app/utils/AgGrid';
 import {DateCellRendererComponent} from '../cell-renderers/DateCellRendererComponent';
+import {CrudProcessesService} from '@ofServices/admin/CrudProcessesService';
+import {LoggerService as logger} from '@ofServices/logs/LoggerService';
 
 export class ActionColumn {
     colId: any;
@@ -282,13 +284,41 @@ export abstract class AdminTableDirective implements OnDestroy {
             this.openDeleteConfirmationDialog(params.data);
         }
         if (columnId === 'download') {
-            const fileName = params.data[this.idField];
-            BusinessDataService.getBusinessData(fileName).then((resource) => {
-                const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
-                    type: 'application/json;charset=UTF-8'
+            if (this.tableType === AdminItemType.BUSINESSDATA) {
+                const fileName = params.data[this.idField];
+
+                BusinessDataService.getBusinessData(fileName).then((resource) => {
+                    const fileToSave = new Blob([JSON.stringify(resource, undefined, 2)], {
+                        type: 'application/json;charset=UTF-8'
+                    });
+
+                    saveAs(fileToSave, fileName);
                 });
-                saveAs(fileToSave, fileName);
-            });
+            }
+
+            if (this.tableType === AdminItemType.PROCESS) {
+                const processId = params.data.id;
+                const version = params.data.version;
+
+                (this.crudService as CrudProcessesService).downloadBundle(processId, version).subscribe({
+                    next: (blob: Blob) => {
+                        saveAs(blob, `${processId}-${version}.zip`);
+                    },
+                    error: (err) => {
+                        const errorDetails =
+                            err instanceof Error
+                                ? err.message
+                                : (() => {
+                                      try {
+                                          return JSON.stringify(err);
+                                      } catch {
+                                          return String(err);
+                                      }
+                                  })();
+                        logger.error(`Download bundle failed: ${errorDetails}`);
+                    }
+                });
+            }
         }
         if (columnId === 'update') {
             const fileName = params.data[this.idField];

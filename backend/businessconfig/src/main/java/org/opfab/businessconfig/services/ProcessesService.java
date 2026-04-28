@@ -9,6 +9,7 @@
 
 package org.opfab.businessconfig.services;
 
+import org.springframework.core.io.InputStreamResource;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
@@ -44,6 +45,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -809,6 +812,64 @@ public class ProcessesService implements ResourceLoaderAware {
         Path resourcePath = Paths.get(this.storagePath + BUSINESS_DATA_FOLDER).normalize();
         File dataDirectory = new File(resourcePath.toString());
         FileUtils.cleanDirectory(dataDirectory);
+    }
+
+    public Resource getBundleZip(String processId, String version) throws IOException {
+
+        if (!allProcessVersionsCache.contains(processId, version)) {
+            throw new FileNotFoundException(
+                    "Unable to find bundle " + processId + " version " + version);
+        }
+
+        Path bundlePath = Paths.get(this.storagePath + BUNDLE_FOLDER)
+                .resolve(processId)
+                .resolve(version)
+                .normalize();
+
+        Path tempZip = Files.createTempFile(processId + "-" + version, ".zip");
+
+        try {
+            try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(tempZip));
+                 Stream<Path> paths = Files.walk(bundlePath)) {
+                Iterator<Path> iterator = paths.filter(path -> !Files.isDirectory(path)).iterator();
+                while (iterator.hasNext()) {
+                    Path path = iterator.next();
+                    ZipEntry zipEntry = new ZipEntry(bundlePath.relativize(path).toString());
+                    zs.putNextEntry(zipEntry);
+                    Files.copy(path, zs);
+                    zs.closeEntry();
+                }
+            }
+
+            return new InputStreamResource(Files.newInputStream(tempZip)) {
+                @Override
+                public long contentLength() throws IOException {
+                    return Files.size(tempZip);
+                }
+
+                @Override
+                public String getFilename() {
+                    return tempZip.getFileName().toString();
+                }
+
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return new FilterInputStream(super.getInputStream()) {
+                        @Override
+                        public void close() throws IOException {
+                            try {
+                                super.close();
+                            } finally {
+                                Files.deleteIfExists(tempZip);
+                            }
+                        }
+                    };
+                }
+            };
+        } catch (IOException | RuntimeException e) {
+            Files.deleteIfExists(tempZip);
+            throw e;
+        }
     }
 
     private void checkInputDoesNotContainForbiddenCharacters(String inputName, String inputValue)

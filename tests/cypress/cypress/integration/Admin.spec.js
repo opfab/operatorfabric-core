@@ -605,7 +605,7 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 10');
 
         // Delete first process
-        agGrid.clickCell('ag-grid-angular', 0, 4, 'of-action-cell-renderer');
+        agGrid.clickCell('ag-grid-angular', 0, 5, 'of-action-cell-renderer');
 
         cy.get('#opfab-btn-ok').click();
 
@@ -615,6 +615,38 @@ describe('AdmininstrationPages', () => {
         cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
 
         agGrid.countTableRows('ag-grid-angular', 9);
+    });
+
+    it('Download process bundle zip', () => {
+        opfab.loginWithUser('admin');
+        opfab.navigateToAdministration();
+
+        // Clean downloads directory
+        script.cleanDownloadsDir();
+
+        // Click on "Processes Management"
+        cy.get('#opfab-admin-processes-tab').click();
+
+        // Wait for table rendering
+        cy.get('.opfab-pagination').should('contain.text', ' Results number  : 9');
+
+        // Download first bundle
+        agGrid.clickCell('ag-grid-angular', 0, 4, 'of-action-cell-renderer');
+
+        cy.waitDefaultTime();
+
+        // Check download folder contains the zip
+        cy.task('list', {dir: './cypress/downloads'}).then((files) => {
+            expect(files.length).to.equal(1);
+
+            // Check file name
+            expect(files[0]).to.match(/^conferenceAndITIncidentExample-1.*\.zip$/);
+
+            // Check file is not empty
+            cy.readFile('./cypress/downloads/' + files[0], 'binary').should((content) => {
+                expect(content.length).to.be.greaterThan(0);
+            });
+        });
     });
 
     it('List, delete businessdata', () => {
@@ -639,6 +671,9 @@ describe('AdmininstrationPages', () => {
         cy.get('#fileUploader').selectFile('cypress/fixtures/businessDataTest', {force: true});
 
         cy.waitDefaultTime();
+
+        // Clean downloads directory
+        script.cleanDownloadsDir();
 
         // Delete first business data file
         agGrid.clickCell('ag-grid-angular', 0, 3, 'of-action-cell-renderer');

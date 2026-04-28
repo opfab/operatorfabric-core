@@ -16,4 +16,5 @@ export abstract class AdminProcessesServer {
     abstract deleteVersion(id: string, version: string): Observable<ServerResponse<any>>;
     abstract queryAllProcesses(allVersions?: boolean): Observable<ServerResponse<Process[]>>;
     abstract update(processData: Process): Observable<ServerResponse<Process>>;
+    abstract downloadBundle(id: string, version: string): Observable<Blob>;
 }
