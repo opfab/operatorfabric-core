@@ -811,6 +811,31 @@
                 },
             },
         },
+      "/cards-publication/purge":
+        {
+          "post":
+            {
+              "tags": [ "cards publication" ],
+              "summary": "Trigger manual purge of cards",
+              "description": "Manually triggers the purge process. This operation deletes cards and archived cards according to internal purge rules. Only users with ADMIN role can execute this action.",
+              "operationId": "triggerPurge",
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "Purge successfully triggered"
+                    },
+                  "401":
+                    {
+                      "description": "Authentication required"
+                    },
+                  "403":
+                    {
+                      "description": "Forbidden - ADMIN role necessary"
+                    }
+                }
+            }
+        },
       "/users/users":
         {
           "get":
