@@ -3417,6 +3417,63 @@
                 },
             },
         },
+      "/businessconfig/processes/{processId}/versions/{version}/download":
+        {
+          "get":
+            {
+              "summary": "Download process configuration bundle",
+              "description": "Download a specific version of a process configuration bundle as a ZIP file.",
+              "tags": [ "processes" ],
+              "operationId": "downloadBundleVersion",
+              "parameters":
+                [
+                  {
+                    "name": "processId",
+                    "in": "path",
+                    "description": "Id of the process to download",
+                    "required": true,
+                    "schema": { "type": "string" }
+                  },
+                  {
+                    "name": "version",
+                    "in": "path",
+                    "description": "Version of the process to download",
+                    "required": true,
+                    "schema": { "type": "string" }
+                  }
+                ],
+              "responses":
+                {
+                  "200":
+                    {
+                      "description": "ZIP file containing the process bundle",
+                      "headers":
+                        {
+                          "Content-Disposition":
+                            {
+                              "description": "Attachment filename for the downloaded bundle",
+                              "schema": { "type": "string" },
+                              "example": "attachment; filename=\"my-process-v1.zip\""
+                            }
+                        },
+                      "content":
+                        {
+                          "application/zip":
+                            {
+                              "schema":
+                                {
+                                  "type": "string",
+                                  "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                  "401": { "description": "Authentication required" },
+                  "404": { "description": "Process or version not found" },
+                  "500": { "description": "Unable to generate bundle" }
+                }
+            }
+        },
       "/businessconfig/processgroups":
         {
           "get":
