@@ -162,7 +162,7 @@ public class CardProcessingService {
                 processChildCardsWhenCardUpdate(card, jwt);
             }
             externalAppService.sendCardToExternalApplication(card, jwt);
-            processChildCard(card);
+            enrichWithParentDates(card);
 
             cardRepository.saveCard(card);
             if (oldCard == null)
@@ -234,12 +234,23 @@ public class CardProcessingService {
         }
     }
 
-    private void processChildCard(Card card) {
-        if (card.parentCardId != null) {
-            Card parentCard = getExistingCard(card.parentCardId, false);
-            card.startDate = parentCard.startDate;
-            card.endDate = getChildEndDateFromParent(parentCard);
+    private void enrichWithParentDates(Card card) {
+        if (card == null || card.parentCardId == null) {
+            return;
         }
+
+        Card parentCard = getExistingCard(card.parentCardId, false);
+
+        if (parentCard == null) {
+            log.warn(
+                    "Parent card {} not found for child {}, processing without inherited dates",
+                    card.parentCardId,
+                    card.id);
+            return;
+        }
+
+        card.startDate = parentCard.startDate;
+        card.endDate = getChildEndDateFromParent(parentCard);
     }
 
     private boolean shouldKeepChildCards(Card card) {
