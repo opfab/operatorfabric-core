@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import jakarta.validation.constraints.NotBlank;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -88,7 +89,7 @@ public abstract class RoleClaim {
         int payloadIndexInJwt = 1;
         String base64EncodedBody = tokenSplit[payloadIndexInJwt];
 
-        return new String(Base64.getUrlDecoder().decode(base64EncodedBody));
+        return new String(Base64.getUrlDecoder().decode(base64EncodedBody), StandardCharsets.UTF_8);
     }
 
     /**
