@@ -11,9 +11,11 @@ package org.opfab.cards.publication.repositories;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import org.opfab.common.businessconfig.Process;
@@ -63,13 +65,18 @@ public class ProcessRepositoryImpl implements ProcessRepository, EventListener {
 
         String result = null;
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
+            // Encode parameters to prevent security issues
+            // and allow special characters in the URL
+            // URLEncoder encodes space as +, but in URLs spaces should be %20
+            // so we replace + with %20
             String uri = String.format(
-                    "%s/processes/%s?version=%s", businessConfigUrl, processId, processVersion);
+                    "%s/processes/%s?version=%s", businessConfigUrl,
+                    URLEncoder.encode(processId, StandardCharsets.UTF_8).replace("+", "%20"),
+                    URLEncoder.encode(processVersion, StandardCharsets.UTF_8).replace("+", "%20"));
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(uri))
                     .build();
-
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 404)
                 return null;
