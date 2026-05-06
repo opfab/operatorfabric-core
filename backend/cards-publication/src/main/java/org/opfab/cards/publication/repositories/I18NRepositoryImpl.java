@@ -11,9 +11,11 @@ package org.opfab.cards.publication.repositories;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 import org.opfab.utilities.eventbus.EventBus;
@@ -53,8 +55,14 @@ public class I18NRepositoryImpl implements I18NRepository, EventListener {
     private String getI18NFromBusinessConfigService(String process, String processVersion)
             throws IOException, InterruptedException {
 
+        // Encode parameters to prevent security issues
+        // and allow special characters in the URL
+        // URLEncoder encodes space as +, but in URLs spaces should be %20
+        // so we replace + with %20
         String uri = String.format(
-                "%s/processes/%s/i18n?version=%s", businessConfigUrl, process, processVersion);
+                "%s/processes/%s/i18n?version=%s", businessConfigUrl,
+                URLEncoder.encode(process, StandardCharsets.UTF_8).replace("+", "%20"),
+                URLEncoder.encode(processVersion, StandardCharsets.UTF_8).replace("+", "%20"));
 
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
             HttpRequest request = HttpRequest.newBuilder()
