@@ -235,6 +235,25 @@ OperatorFabric includes an automatic purge mechanism that periodically removes o
 
 It is also possible to trigger this purge manually.
 
+=== Purge behavior
+
+The purge logic is based on the card `publishDate`.
+
+Two retention strategies are applied:
+
+* cards without `endDate` use:
+** `operatorfabric.cards-publication.purge.defaultDaysToKeepCardsAfterPublication`
+** `operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterPublication`
+
+* cards with `endDate` use:
+** `operatorfabric.cards-publication.purge.defaultDaysToKeepCardsAfterEndDate`
+** `operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterEndDate`
+
+For cards with an `endDate`, both conditions must be met for the purge to occur:
+
+* the `publishDate` retention limit must be reached
+* the `endDate` retention limit must be reached
+
 === Using the REST API
 
 The purge can be triggered via the following endpoint:
@@ -247,8 +266,9 @@ This endpoint executes the same purge logic as the scheduled job by calling the 
 
 It will:
 
-* delete old cards based on `operatorfabric.cards-publication.purge.defaultDaysToKeepCardsAfterPublication`
-* delete archived cards based on `operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterPublication`
+* delete old cards according to the configured retention policies
+* delete archived cards according to the configured retention policies
+* update archived cards deletion dates when applicable
 * apply only if `operatorfabric.cards-publication.purge.activate=true`
 
 NOTE: This operation is restricted to administrators.
@@ -262,7 +282,6 @@ opfab card purge
 ----
 
 This command internally calls the same REST endpoint and provides a simpler way for administrators to trigger the purge without manually constructing HTTP requests.
-
 == Restricted operations (administration)
 
 Some operations are restricted to users with administrative roles, either because they are administration

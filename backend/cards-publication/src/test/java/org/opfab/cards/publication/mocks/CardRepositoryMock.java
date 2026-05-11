@@ -205,18 +205,17 @@ public class CardRepositoryMock implements CardRepository {
     }
 
     @Override
-    public List<Card> deleteCardsByPublishDateBefore(Instant purgeDateLimit) {
-        // method intentionally left empty, not used in tests
-        return List.of();
-    }
-
-    @Override
-    public void deleteArchivedCardsByPublishDateBefore(Instant purgeDateLimit) {
+    public void deleteCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit) {
         // method intentionally left empty, not used in tests
     }
 
     @Override
-    public void updateDeletionDateForArchives(Instant deletionDateBefore) {
+    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit) {
+        // method intentionally left empty, not used in tests
+    }
+
+    @Override
+    public void updateDeletionDateForArchives(Instant publishDateLimit, Instant endDateLimit) {
         // method intentionally left empty, not used in tests
     }
 }

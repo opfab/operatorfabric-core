@@ -15,6 +15,8 @@ operatorfabric:
       purgeTime: "03:00"
       defaultDaysToKeepCardsAfterPublication: 30
       defaultDaysToKeepArchivesCardsAfterPublication: 365
+      defaultDaysToKeepCardsAfterEndDate: 10
+      defaultDaysToKeepArchivesCardsAfterEndDate: 30
     external-recipients:
       recipients:
         - id: "processAction"

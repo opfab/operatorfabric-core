@@ -219,36 +219,82 @@ public class CardRepositoryImpl implements CardRepository {
         return toUserBasedOperationResult(updateFirst);
     }
 
-    public List<Card> deleteCardsByPublishDateBefore(Instant publishDateBefore) {
+    public void deleteCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit) {
 
         Query query = new Query();
 
-        query.addCriteria(Criteria.where(PUBLISH_DATE).lt(publishDateBefore));
+        Criteria publishDateCriteria = Criteria.where(PUBLISH_DATE).lt(publishDateLimit);
+
+        Criteria noEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).isNull(),
+                publishDateCriteria
+        );
+
+        Criteria withEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).ne(null),
+                publishDateCriteria,
+                Criteria.where(END_DATE).lt(endDateLimit)
+        );
+
+        query.addCriteria(new Criteria().orOperator(
+                noEndDateCriteria,
+                withEndDateCriteria
+        ));
+
         query.fields().exclude("data");
 
-        List<Card> toDelete = template.find(query, Card.class);
         template.remove(query, Card.class);
-
-        return toDelete;
     }
 
-    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateBefore) {
+    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit) {
+
         Query query = new Query();
-        query.addCriteria(Criteria.where(PUBLISH_DATE).lt(publishDateBefore));
+
+        Criteria publishDateCriteria = Criteria.where(PUBLISH_DATE).lt(publishDateLimit);
+
+        Criteria noEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).isNull(),
+                publishDateCriteria
+        );
+
+        Criteria withEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).ne(null),
+                publishDateCriteria,
+                Criteria.where(END_DATE).lt(endDateLimit)
+        );
+
+        query.addCriteria(new Criteria().orOperator(
+                noEndDateCriteria,
+                withEndDateCriteria
+        ));
 
         template.remove(query, ArchivedCard.class);
     }
 
-    public void updateDeletionDateForArchives(Instant limitDate) {
+    public void updateDeletionDateForArchives(Instant publishDateLimit, Instant endDateLimit) {
 
         Query query = new Query();
 
-        query.addCriteria(
-                new Criteria().andOperator(
-                        Criteria.where(DELETION_DATE).isNull(),
-                        Criteria.where(PUBLISH_DATE).lt(limitDate)
-                )
+        Criteria publishDateCriteria = Criteria.where(PUBLISH_DATE).lt(publishDateLimit);
+
+        Criteria noEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).isNull(),
+                publishDateCriteria
         );
+
+        Criteria withEndDateCriteria = new Criteria().andOperator(
+                Criteria.where(END_DATE).ne(null),
+                publishDateCriteria,
+                Criteria.where(END_DATE).lt(endDateLimit)
+        );
+
+        query.addCriteria(new Criteria().andOperator(
+                Criteria.where(DELETION_DATE).isNull(),
+                new Criteria().orOperator(
+                        noEndDateCriteria,
+                        withEndDateCriteria
+                )
+        ));
 
         Update update = new Update()
                 .set(DELETION_DATE, Instant.now());
