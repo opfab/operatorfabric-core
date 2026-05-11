@@ -25,6 +25,9 @@ public class CardPurgeProperties {
     private int defaultDaysToKeepCardsAfterPublication = 30;
     private int defaultDaysToKeepArchivesCardsAfterPublication = 365;
 
+    private int defaultDaysToKeepCardsAfterEndDate = 30;
+    private int defaultDaysToKeepArchivesCardsAfterEndDate = 365;
+
     public boolean isActivate() {
         return activate;
     }
@@ -63,6 +66,30 @@ public class CardPurgeProperties {
                     "operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterPublication must be >= 0");
         }
         this.defaultDaysToKeepArchivesCardsAfterPublication = v;
+    }
+
+    public int getDefaultDaysToKeepCardsAfterEndDate() {
+        return defaultDaysToKeepCardsAfterEndDate;
+    }
+
+    public void setDefaultDaysToKeepCardsAfterEndDate(int v) {
+        if (v < 0) {
+            throw new IllegalArgumentException(
+                    "operatorfabric.cards-publication.purge.defaultDaysToKeepCardsAfterEndDate must be >= 0");
+        }
+        this.defaultDaysToKeepCardsAfterEndDate = v;
+    }
+
+    public int getDefaultDaysToKeepArchivesCardsAfterEndDate() {
+        return defaultDaysToKeepArchivesCardsAfterEndDate;
+    }
+
+    public void setDefaultDaysToKeepArchivesCardsAfterEndDate(int v) {
+        if (v < 0) {
+            throw new IllegalArgumentException(
+                    "operatorfabric.cards-publication.purge.defaultDaysToKeepArchivesCardsAfterEndDate must be >= 0");
+        }
+        this.defaultDaysToKeepArchivesCardsAfterEndDate = v;
     }
 
     /**

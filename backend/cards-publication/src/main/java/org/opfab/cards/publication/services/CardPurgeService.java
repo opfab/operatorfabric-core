@@ -45,23 +45,46 @@ public class CardPurgeService {
 
     private void purgeCards(Instant now) {
 
-        Instant purgeDateLimit = now.minus(purgeProperties.getDefaultDaysToKeepCardsAfterPublication(),
+        Instant publishDateLimit = now.minus(
+                purgeProperties.getDefaultDaysToKeepCardsAfterPublication(),
                 ChronoUnit.DAYS);
 
-        cardRepository.deleteCardsByPublishDateBefore(purgeDateLimit);
+        Instant endDateLimit = now.minus(
+                purgeProperties.getDefaultDaysToKeepCardsAfterEndDate(),
+                ChronoUnit.DAYS);
+
+        cardRepository.deleteCardsByPublishDateBefore(
+                publishDateLimit,
+                endDateLimit
+        );
     }
 
     private void purgeArchivedCards(Instant now) {
 
-        Instant purgeDateLimit = now.minus(
+        Instant publishDateLimit = now.minus(
                 purgeProperties.getDefaultDaysToKeepArchivesCardsAfterPublication(),
                 ChronoUnit.DAYS);
 
-        Instant updateLimit = now.minus(
+        Instant endDateLimit = now.minus(
+                purgeProperties.getDefaultDaysToKeepArchivesCardsAfterEndDate(),
+                ChronoUnit.DAYS);
+
+        archivedCardRepository.deleteArchivedCardsByPublishDateBefore(
+                publishDateLimit,
+                endDateLimit
+        );
+
+        Instant publishDateLimitForUpdate = now.minus(
                 purgeProperties.getDefaultDaysToKeepCardsAfterPublication(),
                 ChronoUnit.DAYS);
 
-        archivedCardRepository.deleteArchivedCardsByPublishDateBefore(purgeDateLimit);
-        archivedCardRepository.updateDeletionDateForArchives(updateLimit);
+        Instant endDateLimitForUpdate = now.minus(
+                purgeProperties.getDefaultDaysToKeepCardsAfterEndDate(),
+                ChronoUnit.DAYS);
+
+        archivedCardRepository.updateDeletionDateForArchives(
+                publishDateLimitForUpdate,
+                endDateLimitForUpdate
+        );
     }
 }

@@ -52,9 +52,9 @@ public interface CardRepository {
 
     public UserBasedOperationResult deleteAcksAndReads(String cardUid);
 
-    public List<Card> deleteCardsByPublishDateBefore(Instant publishDateBefore);
+    public void deleteCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit);
 
-    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateBefore);
+    public void deleteArchivedCardsByPublishDateBefore(Instant publishDateLimit, Instant endDateLimit);
 
-    public void updateDeletionDateForArchives(Instant deletionDateBefore);
+    public void updateDeletionDateForArchives(Instant publishDateLimit, Instant endDateLimit);
 }
