@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -111,23 +111,35 @@ export abstract class AuthHandler {
     }
 
     protected handleErrorOnTokenGeneration(errorResponse, category: string) {
-        let message, key;
-        const params = new Object();
-        switch (errorResponse.status) {
-            case 401:
-                message = 'Unable to authenticate the user';
-                key = `login.error.${category}`;
-                break;
-            case 0:
-            case 500:
-                message = 'Authentication service currently unavailable';
-                key = 'login.error.unavailable';
-                break;
-            default:
-                message = 'Unexpected error';
-                key = 'login.error.unexpected';
-                params['error'] = errorResponse.message;
+        let message: string, key: string;
+        const params = {};
+
+        const authenticationError =
+            errorResponse.status === 401 ||
+            (errorResponse.status === 400 &&
+                (errorResponse.error?.error === 'invalid_grant' ||
+                    errorResponse.error?.error_description?.toLowerCase().includes('credential') ||
+                    errorResponse.error?.error_description?.toLowerCase().includes('password') ||
+                    errorResponse.error?.error_description?.toLowerCase().includes('login')));
+
+        if (authenticationError) {
+            message = 'Unable to authenticate the user';
+            key = `login.error.${category}`;
+        } else {
+            switch (errorResponse.status) {
+                case 0:
+                case 500:
+                    message = 'Authentication service currently unavailable';
+                    key = 'login.error.unavailable';
+                    break;
+
+                default:
+                    message = 'Unexpected error';
+                    key = 'login.error.unexpected';
+                    params['error'] = errorResponse.message;
+            }
         }
+
         logger.error(message + ' - ' + JSON.stringify(errorResponse));
         this.rejectAuthentication.next(new Message(message, MessageLevel.ERROR, new I18n(key, params)));
     }
