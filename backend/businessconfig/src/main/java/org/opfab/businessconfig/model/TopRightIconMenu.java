@@ -11,9 +11,12 @@ package org.opfab.businessconfig.model;
 
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 @Validated
 public record TopRightIconMenu(
         String opfabCoreMenuId,
-        Boolean visible
+        Boolean visible,
+        List<String> showOnlyForGroups
 ) {}
 
