@@ -79,7 +79,8 @@
   "topRightIconMenus": [
     {
       "opfabCoreMenuId": "usercard",
-      "visible": true
+      "visible": true,
+      "showOnlyForGroups": ["ADMIN", "Dispatcher", "Planner", "Supervisor", "Manager", "Maintainer"]
     },
     {
       "opfabCoreMenuId": "calendar",
