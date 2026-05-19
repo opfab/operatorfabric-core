@@ -24,6 +24,7 @@ import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService'
 import {DashboardScreenDefinition} from '@ofServices/customScreen/dashboard/DashboardScreenDefinition';
 import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 
 const DASHBOARD_ID = 'dashboard';
 
@@ -66,6 +67,7 @@ describe('Dashboard', () => {
         OpfabEventStreamService.setEventStreamServer(opfabEventStreamServerMock);
         OpfabStore.reset();
         filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+        RealTimeDomainService.init();
         CustomScreenService.clearCustomScreenDefinitions();
     });
 
@@ -661,5 +663,42 @@ describe('Dashboard', () => {
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(2);
         expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.INFORMATION);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
+    });
+
+    it('GIVEN FROM_TODAY_TO_YEAR_END WHEN dashboard is created THEN business period is set to current year end', async () => {
+        await initProcesses();
+
+        const dashboardScreenDefinition = new DashboardScreenDefinition();
+        dashboardScreenDefinition.id = DASHBOARD_ID;
+        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+        dashboardScreenDefinition.initialBusinessPeriod = 'FROM_TODAY_TO_YEAR_END';
+
+        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+        await setUserPerimeter(new UserWithPerimeters(null, computedPerimeters, null, new Map()));
+
+        const today = new Date();
+
+        dashboardView = new DashboardView(DASHBOARD_ID);
+
+        const domain = RealTimeDomainService.getCurrentDomain();
+
+        const start = new Date(domain.startDate);
+        const end = new Date(domain.endDate);
+
+        // START = today
+        expect(start.getFullYear()).toEqual(today.getFullYear());
+        expect(start.getMonth()).toEqual(today.getMonth());
+        expect(start.getDate()).toEqual(today.getDate());
+        expect(start.getHours()).toEqual(0);
+        expect(start.getMinutes()).toEqual(0);
+
+        // END = end of year
+        expect(end.getFullYear()).toEqual(today.getFullYear());
+        expect(end.getMonth()).toEqual(11); // December
+        expect(end.getDate()).toEqual(31);
+        expect(end.getHours()).toEqual(23);
+        expect(end.getMinutes()).toEqual(59);
     });
 });
