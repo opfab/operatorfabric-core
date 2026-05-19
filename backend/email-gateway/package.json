@@ -48,7 +48,7 @@
         "@types/imap-simple": "4.2.10",
         "@types/jest": "30.0.0",
         "@types/jsdom": "27.0.0",
-        "@types/node": "24.12.2",
+        "@types/node": "24.12.4",
         "@types/mailparser": "3.4.6",
         "@types/nodemailer": "8.0.0",
         "@types/sinon": "21.0.1",
