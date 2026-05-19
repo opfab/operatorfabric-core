@@ -9,10 +9,12 @@
 
 {
     console.log(new Date().toISOString(), 'INFO Dashboard example loaded');
+
     const dashboardExample = {
         "id": "dashboard",
         "name": "Dashboard",
-        "type": "DASHBOARD"
+        "type": "DASHBOARD",
+        "initialBusinessPeriod": "FROM_TODAY_TO_YEAR_END"
     };
 
     const dashboardExample2 = {
@@ -48,5 +50,4 @@
 
     opfab.businessconfig.registerCustomScreen(dashboardExample);
     opfab.businessconfig.registerCustomScreen(dashboardExample2);
-
 }

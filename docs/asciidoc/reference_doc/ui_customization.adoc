@@ -8,7 +8,7 @@
 
 = UI Customization
 
-== UI configuration 
+== UI configuration
 
 To customize the UI, declare specific parameters in the `web-ui.json` file as link:../deployment/index.html#ui_properties[listed here]
 
@@ -825,6 +825,21 @@ When `processList` is absent or empty, all processes accessible to the user are 
 ----
 "processList": ["process1", "process2"]
 ----
+
+=== initialBusinessPeriod
+
+This optional field defines the initial business period applied when opening the dashboard.
+
+It controls the default time window used to filter cards displayed in the dashboard and the computation of severity bubbles.
+
+Possible values are:
+
+- `FEED` (default): the business period is aligned with the feed configuration period.
+- `FROM_TODAY_TO_YEAR_END`: the period starts at the current day (00:00) and ends at the end of the current year (23:59).
+
+This setting affects:
+- the initial filtering of cards displayed in the dashboard
+- the computation of severity bubbles (only cards within the period are counted)
 
 === customTiles
 
