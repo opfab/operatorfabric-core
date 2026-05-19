@@ -23,6 +23,7 @@ import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 import {CardFilter} from '@ofServices/customScreen/cardList/CardFilter';
 import {FilterValues} from '@ofServices/customScreen/cardList/FilterValues';
 import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
+import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 
 export class DashboardView {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -38,12 +39,34 @@ export class DashboardView {
         const dashboardScreenDefinition = CustomScreenService.getCustomScreenDefinition(
             this.customScreenId
         ) as DashboardScreenDefinition;
+
         this.processList = dashboardScreenDefinition?.processList;
         this.customTiles = dashboardScreenDefinition?.customTiles ?? [];
+
         this.filteredLightCardStore = OpfabStore.getFilteredLightCardStore();
+
+        this.setInitialBusinessPeriod(dashboardScreenDefinition);
+
         this.buildTiles();
         this.processLightCards();
         this.dashboardSubject.next(this.dashboardPage);
+    }
+
+    private setInitialBusinessPeriod(definition: DashboardScreenDefinition): void {
+        const initialBusinessPeriod = definition?.initialBusinessPeriod;
+
+        if (initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+
+            const startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
+
+            const endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
+
+            RealTimeDomainService.setStartAndEndPeriod(startDate, endDate);
+
+            RealTimeDomainService.saveUserPreferenceAsNearestDomain();
+        }
     }
 
     private buildTiles() {

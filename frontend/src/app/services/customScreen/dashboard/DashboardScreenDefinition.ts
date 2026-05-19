@@ -12,6 +12,7 @@ import {ScreenDefinition, ScreenType} from '../ScreenDefinition';
 export class DashboardScreenDefinition extends ScreenDefinition {
     processList: string[];
     customTiles?: CustomTile[];
+    initialBusinessPeriod?: string;
     type = ScreenType.DASHBOARD;
 }
 
