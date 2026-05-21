@@ -19,7 +19,7 @@
         "amqplib": "1.2.0",
         "axios": "1.16.1",
         "config": "4.4.1",
-        "date-fns": "4.1.0",
+        "date-fns": "4.2.1",
         "date-fns-tz": "3.2.0",
         "express": "5.2.1",
         "express-jwt": "8.5.1",
