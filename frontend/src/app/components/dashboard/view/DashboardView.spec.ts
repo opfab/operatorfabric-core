@@ -25,6 +25,7 @@ import {DashboardScreenDefinition} from '@ofServices/customScreen/dashboard/Dash
 import {ScreenType} from '@ofServices/customScreen/ScreenDefinition';
 import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {BusinessPeriodInitState} from '../../customScreen/BusinessPeriodInitState';
 
 const DASHBOARD_ID = 'dashboard';
 
@@ -664,41 +665,74 @@ describe('Dashboard', () => {
         expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.INFORMATION);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
     });
+    describe('GIVEN initialBusinessPeriod is set to FROM_TODAY_TO_YEAR_END', () => {
+        it('WHEN dashboard is created THEN business period is set to current year end', async () => {
+            await initProcesses();
 
-    it('GIVEN FROM_TODAY_TO_YEAR_END WHEN dashboard is created THEN business period is set to current year end', async () => {
-        await initProcesses();
+            const dashboardScreenDefinition = new DashboardScreenDefinition();
+            dashboardScreenDefinition.id = DASHBOARD_ID;
+            dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+            dashboardScreenDefinition.initialBusinessPeriod = 'FROM_TODAY_TO_YEAR_END';
 
-        const dashboardScreenDefinition = new DashboardScreenDefinition();
-        dashboardScreenDefinition.id = DASHBOARD_ID;
-        dashboardScreenDefinition.type = ScreenType.DASHBOARD;
-        dashboardScreenDefinition.initialBusinessPeriod = 'FROM_TODAY_TO_YEAR_END';
+            CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
 
-        CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+            const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+            await setUserPerimeter(new UserWithPerimeters(null, computedPerimeters, null, new Map()));
 
-        const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
-        await setUserPerimeter(new UserWithPerimeters(null, computedPerimeters, null, new Map()));
+            const today = new Date();
 
-        const today = new Date();
+            BusinessPeriodInitState.reset();
+            dashboardView = new DashboardView(DASHBOARD_ID);
 
-        dashboardView = new DashboardView(DASHBOARD_ID);
+            const domain = RealTimeDomainService.getCurrentDomain();
 
-        const domain = RealTimeDomainService.getCurrentDomain();
+            const start = new Date(domain.startDate);
+            const end = new Date(domain.endDate);
 
-        const start = new Date(domain.startDate);
-        const end = new Date(domain.endDate);
+            // START = today
+            expect(start.getFullYear()).toEqual(today.getFullYear());
+            expect(start.getMonth()).toEqual(today.getMonth());
+            expect(start.getDate()).toEqual(today.getDate());
+            expect(start.getHours()).toEqual(0);
+            expect(start.getMinutes()).toEqual(0);
 
-        // START = today
-        expect(start.getFullYear()).toEqual(today.getFullYear());
-        expect(start.getMonth()).toEqual(today.getMonth());
-        expect(start.getDate()).toEqual(today.getDate());
-        expect(start.getHours()).toEqual(0);
-        expect(start.getMinutes()).toEqual(0);
+            // END = end of year
+            expect(end.getFullYear()).toEqual(today.getFullYear());
+            expect(end.getMonth()).toEqual(11); // December
+            expect(end.getDate()).toEqual(31);
+            expect(end.getHours()).toEqual(23);
+            expect(end.getMinutes()).toEqual(59);
+        });
 
-        // END = end of year
-        expect(end.getFullYear()).toEqual(today.getFullYear());
-        expect(end.getMonth()).toEqual(11); // December
-        expect(end.getDate()).toEqual(31);
-        expect(end.getHours()).toEqual(23);
-        expect(end.getMinutes()).toEqual(59);
+        it('WHEN user changes business period and reopen the dashsboard screen THEN FROM_TODAY_TO_YEAR_END is not reapplied', async () => {
+            await initProcesses();
+
+            const dashboardScreenDefinition = new DashboardScreenDefinition();
+            dashboardScreenDefinition.id = DASHBOARD_ID;
+            dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+            dashboardScreenDefinition.initialBusinessPeriod = 'FROM_TODAY_TO_YEAR_END';
+
+            CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+
+            const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+            await setUserPerimeter(new UserWithPerimeters(null, computedPerimeters, null, new Map()));
+
+            // First open: sets the period and the deactivation flag
+            BusinessPeriodInitState.reset();
+            dashboardView = new DashboardView(DASHBOARD_ID);
+            dashboardView.destroy();
+
+            // Simulate user changing the period
+            const customStart = new Date(2020, 0, 1).getTime();
+            const customEnd = new Date(2020, 11, 31).getTime();
+            RealTimeDomainService.setStartAndEndPeriod(customStart, customEnd);
+
+            // Second open: session flag is set, FROM_TODAY_TO_YEAR_END should not be re-applied
+            dashboardView = new DashboardView(DASHBOARD_ID);
+
+            const domain = RealTimeDomainService.getCurrentDomain();
+            expect(domain.startDate).toEqual(customStart);
+            expect(domain.endDate).toEqual(customEnd);
+        });
     });
 });
