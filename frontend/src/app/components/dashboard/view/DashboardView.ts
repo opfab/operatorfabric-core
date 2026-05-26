@@ -24,6 +24,7 @@ import {CardFilter} from '@ofServices/customScreen/cardList/CardFilter';
 import {FilterValues} from '@ofServices/customScreen/cardList/FilterValues';
 import {CardListScreenDefinition} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {BusinessPeriodInitState} from '../../customScreen/BusinessPeriodInitState';
 
 export class DashboardView {
     private readonly dashboardSubject = new ReplaySubject<DashboardPage>(1);
@@ -56,16 +57,25 @@ export class DashboardView {
         const initialBusinessPeriod = definition?.initialBusinessPeriod;
 
         if (initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
-            const now = new Date();
-            const currentYear = now.getFullYear();
+            // FROM_TODAY_TO_YEAR_END is applied only once per page load.
+            // A shared in-memory static variable (not screen-specific) is used so that once the user
+            // changes the period in any dashboard or custom card list screen, this initial period
+            // will not be re-applied when opening any of these screens again.
+            // The state is automatically reset on every page reload (F5).
+            if (!BusinessPeriodInitState.fromTodayToYearEndDeactivated) {
+                const now = new Date();
+                const currentYear = now.getFullYear();
 
-            const startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
+                const startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
 
-            const endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
+                const endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
 
-            RealTimeDomainService.setStartAndEndPeriod(startDate, endDate);
+                RealTimeDomainService.setStartAndEndPeriod(startDate, endDate);
 
-            RealTimeDomainService.saveUserPreferenceAsNearestDomain();
+                RealTimeDomainService.saveUserPreferenceAsNearestDomain();
+
+                BusinessPeriodInitState.deactivate();
+            }
         }
     }
 

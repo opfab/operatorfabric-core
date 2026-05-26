@@ -29,6 +29,7 @@ import {OpfabStore} from '@ofStore/OpfabStore';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {OpfabEventStreamServerMock} from '@tests/mocks/opfab-event-stream.server.mock';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
+import {BusinessPeriodInitState} from '../../customScreen/BusinessPeriodInitState';
 import {
     CardListScreenDefinition,
     FieldType,
@@ -320,6 +321,70 @@ describe('CustomCardListView', () => {
             // Prevent occasional error: "An error was thrown in afterAll Error: executing a canceled action"
             // Ensure the observable is properly closed to avoid lingering subscriptions
             customScreenView.destroy();
+        });
+    });
+
+    describe('GIVEN initialBusinessPeriod is set to FROM_TODAY_TO_YEAR_END', () => {
+        const SCREEN_ID = 'testFromTodayId';
+
+        const getCardListScreenDefinitionWithFromTodayToYearEnd = () => {
+            const def = new CardListScreenDefinition();
+            def.id = SCREEN_ID;
+            def.name = 'testFromToday';
+            def.initialBusinessPeriod = 'FROM_TODAY_TO_YEAR_END';
+            return def;
+        };
+
+        beforeEach(() => {
+            BusinessPeriodInitState.reset();
+        });
+
+        it('WHEN custom card list is created THEN business period is set from today to year end', () => {
+            CustomScreenService.addCustomScreenDefinition(getCardListScreenDefinitionWithFromTodayToYearEnd());
+
+            const view = new CustomCardListView(SCREEN_ID);
+            const domain = view.getBusinessPeriod();
+            const today = new Date();
+
+            const start = new Date(domain.startDate);
+            const end = new Date(domain.endDate);
+
+            expect(start.getFullYear()).toEqual(today.getFullYear());
+            expect(start.getMonth()).toEqual(today.getMonth());
+            expect(start.getDate()).toEqual(today.getDate());
+            expect(start.getHours()).toEqual(0);
+            expect(start.getMinutes()).toEqual(0);
+
+            expect(end.getFullYear()).toEqual(today.getFullYear());
+            expect(end.getMonth()).toEqual(11); // December
+            expect(end.getDate()).toEqual(31);
+            expect(end.getHours()).toEqual(23);
+            expect(end.getMinutes()).toEqual(59);
+
+            view.destroy();
+        });
+
+        it('WHEN user changes business period and reopen the custom card list screen THEN FROM_TODAY_TO_YEAR_END is not reapplied', () => {
+            CustomScreenService.addCustomScreenDefinition(getCardListScreenDefinitionWithFromTodayToYearEnd());
+
+            // First open: sets the period and the deactivation flag
+            BusinessPeriodInitState.reset();
+            const view1 = new CustomCardListView(SCREEN_ID);
+            view1.destroy();
+
+            // Simulate user changing the period
+            const customStart = new Date(2020, 0, 1).getTime();
+            const customEnd = new Date(2020, 11, 31).getTime();
+            RealTimeDomainService.setStartAndEndPeriod(customStart, customEnd);
+
+            // Second open: session flag is set, FROM_TODAY_TO_YEAR_END should not be re-applied
+            const view2 = new CustomCardListView(SCREEN_ID);
+            const domain = view2.getBusinessPeriod();
+
+            expect(domain.startDate).toEqual(customStart);
+            expect(domain.endDate).toEqual(customEnd);
+
+            view2.destroy();
         });
     });
 });

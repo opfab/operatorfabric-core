@@ -19,6 +19,7 @@ import {ButtonActions} from './buttonActions/ButtonActions';
 import {FilterValues} from '../../../services/customScreen/cardList/FilterValues';
 import {getColumnsDefinitionForAgGrid} from './resultTable/ColumnDefinitions';
 import {CardListScreenDefinition, HeaderFilter} from '@ofServices/customScreen/cardList/CardListScreenDefinition';
+import {BusinessPeriodInitState} from '../../customScreen/BusinessPeriodInitState';
 
 /**
  * This class is responsible for implementing the business logic related to the UI component.
@@ -48,10 +49,21 @@ export class CustomCardListView {
         const filterValues = new FilterValues();
 
         if (this.cardListScreenDefinition?.initialBusinessPeriod === 'FROM_TODAY_TO_YEAR_END') {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            filterValues.startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
-            filterValues.endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
+            // FROM_TODAY_TO_YEAR_END is applied only once per page load.
+            // A shared in-memory static variable (not screen-specific) is used so that once the user
+            // changes the period in any dashboard or custom card list screen, this initial period
+            // will not be re-applied when opening any of these screens again.
+            // The state is automatically reset on every page reload (F5).
+            if (BusinessPeriodInitState.fromTodayToYearEndDeactivated) {
+                filterValues.startDate = RealTimeDomainService.getCurrentDomain()?.startDate;
+                filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
+            } else {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                filterValues.startDate = new Date(currentYear, now.getMonth(), now.getDate()).getTime();
+                filterValues.endDate = new Date(currentYear, 11, 31, 23, 59, 59, 999).getTime();
+                BusinessPeriodInitState.deactivate();
+            }
         } else {
             filterValues.startDate = RealTimeDomainService.getCurrentDomain()?.startDate;
             filterValues.endDate = RealTimeDomainService.getCurrentDomain()?.endDate;
