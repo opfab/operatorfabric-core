@@ -433,7 +433,7 @@ You can define the initial business period you want to display for each custom s
 The possible values are:
 
 - `FEED` (default value): the period is based on the feed period
-- `FROM_TODAY_TO_YEAR_END`: the period is from now to the end of the year
+- `FROM_TODAY_TO_YEAR_END`: the period is from now to the end of the year. This value is only applied once per page load: once the user changes the period in a dashboard or a custom card list screen, it will not be reset to `FROM_TODAY_TO_YEAR_END` the next time any of these screens is opened. Reloading the page (F5) resets this behaviour.
 
 For each field you want to display in the result table, define a column object. The following field types are available:
 
@@ -835,7 +835,7 @@ It controls the default time window used to filter cards displayed in the dashbo
 Possible values are:
 
 - `FEED` (default): the business period is aligned with the feed configuration period.
-- `FROM_TODAY_TO_YEAR_END`: the period starts at the current day (00:00) and ends at the end of the current year (23:59).
+- `FROM_TODAY_TO_YEAR_END`: the period starts at the current day (00:00) and ends at the end of the current year (23:59). This value is only applied once per page load: once the user changes the period in a dashboard or a custom card list screen, it will not be reset to `FROM_TODAY_TO_YEAR_END` the next time any of these screens is opened. Reloading the page (F5) resets this behaviour.
 
 This setting affects:
 - the initial filtering of cards displayed in the dashboard
