@@ -17,7 +17,7 @@
         "express": "5.2.1",
         "jwt-decode": "4.0.0",
         "amqp-connection-manager": "5.0.0",
-        "amqplib": "1.2.0",
+        "amqplib": "2.0.1",
         "winston": "3.19.0",
         "winston-daily-rotate-file": "5.0.0",
         "yaml": "2.9.0"

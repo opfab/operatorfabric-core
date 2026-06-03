@@ -16,7 +16,7 @@
     "license": "ISC",
     "dependencies": {
         "amqp-connection-manager": "5.0.0",
-        "amqplib": "1.2.0",
+        "amqplib": "2.0.1",
         "axios": "1.16.1",
         "config": "4.4.1",
         "date-fns": "4.4.0",
