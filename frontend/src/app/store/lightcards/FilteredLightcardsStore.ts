@@ -138,13 +138,13 @@ export class FilteredLightCardsStore {
     }
 
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
-        if (filterType === FilterType.BUSINESSDATE_FILTER)
+        if (filterType === FilterType.BUSINESSANDPUBLISHDATE_FILTER)
             OpfabEventStreamService.setSubscriptionDates(status.start, status.end);
         this.lightCardFilter.updateFilter(filterType, active, status);
     }
 
-    public getBusinessDateFilter(): Filter {
-        return this.lightCardFilter.getBusinessDateFilter();
+    public getBusinessAndPublishDateFilter(): Filter {
+        return this.lightCardFilter.getBusinessAndPublishDateFilter();
     }
 
     public getBusinessDateFilterChanges(): Observable<any> {
