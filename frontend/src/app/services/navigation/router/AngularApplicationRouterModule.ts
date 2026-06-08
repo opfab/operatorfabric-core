@@ -57,11 +57,6 @@ const routes: Routes = [
         loadComponent: () => import('../../../components/archives/ArchivesComponent').then((m) => m.ArchivesComponent)
     },
     {
-        path: 'dashboard',
-        loadComponent: () =>
-            import('../../../components/dashboard/DashboardComponent').then((m) => m.DashboardComponent)
-    },
-    {
         path: 'logging',
         loadComponent: () => import('../../../components/logging/LoggingComponent').then((m) => m.LoggingComponent)
     },
