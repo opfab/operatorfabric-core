@@ -130,8 +130,9 @@ export class DashboardView {
         ])
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe((results) => {
+                const businessPeriod = this.filteredLightCardStore.getBusinessAndPublishDateFilter().status;
                 const cards = results[1].filter((card) =>
-                    this.filteredLightCardStore.getBusinessDateFilter().applyFilter(card)
+                    this.isCardInBusinessPeriod(card, businessPeriod.start, businessPeriod.end)
                 );
                 this.buildTiles();
                 cards.forEach((lightCard) => {
@@ -139,6 +140,18 @@ export class DashboardView {
                 });
                 this.dashboardSubject.next(this.dashboardPage);
             });
+    }
+
+    private isCardInBusinessPeriod(card: Card, start: number, end: number): boolean {
+        if (start == null || end == null) return true;
+        if (!card.endDate) {
+            return start <= card.startDate && card.startDate <= end;
+        }
+        return (
+            (start <= card.startDate && card.startDate <= end) ||
+            (start <= card.endDate && card.endDate <= end) ||
+            (card.startDate <= start && end <= card.endDate)
+        );
     }
 
     private processOneLightCard(lightCard: Card) {
