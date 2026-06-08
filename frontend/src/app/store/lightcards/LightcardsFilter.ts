@@ -31,7 +31,7 @@ export class LightCardsFilter {
         this.filters[FilterType.RESPONSE_FILTER] = this.responseFilter;
         this.filters[FilterType.PROCESS_FILTER] = this.processFilter;
         this.filters[FilterType.NOTIFICATION_FILTER] = this.isNotificationFilter;
-        this.filters[FilterType.BUSINESSDATE_FILTER] = this.businessDateFilter;
+        this.filters[FilterType.BUSINESSANDPUBLISHDATE_FILTER] = this.businessAndPublishDateFilter;
     }
 
     public updateFilter(filterType: FilterType, active: boolean, status: any) {
@@ -57,7 +57,9 @@ export class LightCardsFilter {
     }
 
     public filterLightCardsOnlyByBusinessDateAndIsNotification(cards: Card[]) {
-        return cards.filter((card) => Filter.chainFilter(card, [this.businessDateFilter, this.isNotificationFilter]));
+        return cards.filter((card) =>
+            Filter.chainFilter(card, [this.businessAndPublishDateFilter, this.isNotificationFilter])
+        );
     }
 
     public filterLightCardsExcludingBusinessDateAndIsNotificationFilters(cards: Card[]) {
@@ -76,14 +78,14 @@ export class LightCardsFilter {
         return this.filterChanges.asObservable();
     }
 
-    public getBusinessDateFilter(): Filter {
-        return this.businessDateFilter;
+    public getBusinessAndPublishDateFilter(): Filter {
+        return this.businessAndPublishDateFilter;
     }
 
     public getBusinessDateFilterChanges(): Observable<any> {
         return this.filterChanges
             .asObservable()
-            .pipe(filter((filterType) => filterType === FilterType.BUSINESSDATE_FILTER));
+            .pipe(filter((filterType) => filterType === FilterType.BUSINESSANDPUBLISHDATE_FILTER));
     }
 
     private readonly typeFilter = new Filter(
@@ -104,7 +106,7 @@ export class LightCardsFilter {
         }
     );
 
-    private readonly businessDateFilter = new Filter(
+    private readonly businessAndPublishDateFilter = new Filter(
         (card: Card, status) => {
             if (status.start && status.end) {
                 return this.checkCardVisibilityinRange(card, status.start, status.end);

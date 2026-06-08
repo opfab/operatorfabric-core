@@ -28,6 +28,7 @@ import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainSe
 import {BusinessPeriodInitState} from '../../customScreen/BusinessPeriodInitState';
 
 const DASHBOARD_ID = 'dashboard';
+const ONE_HOUR = 3600 * 1000;
 
 async function initProcesses() {
     await setProcessConfiguration([
@@ -60,6 +61,10 @@ describe('Dashboard', () => {
     let dashboardView: DashboardView;
     let filteredLightCardStore: FilteredLightCardsStore;
     let opfabEventStreamServerMock: OpfabEventStreamServerMock;
+
+    function activateBusinessAndPublishDateFilter(start: number, end: number): void {
+        filteredLightCardStore.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {start, end});
+    }
 
     beforeEach(async () => {
         resetServices();
@@ -153,9 +158,9 @@ describe('Dashboard', () => {
 
         dashboardView = new DashboardView(DASHBOARD_ID);
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
 
         let result = await firstValueFrom(dashboardView.getDashboardPage());
@@ -233,9 +238,9 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
 
         const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
@@ -274,9 +279,9 @@ describe('Dashboard', () => {
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
 
         const result = await firstValueFrom(dashboardView.getDashboardPage());
@@ -300,16 +305,16 @@ describe('Dashboard', () => {
         });
         opfabEventStreamServerMock.sendLightCard(infoCard);
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
         let result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
 
-        filteredLightCardStore.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {start: 0, end: 1});
+        filteredLightCardStore.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {start: 0, end: 1});
 
         result = await firstValueFrom(dashboardView.getDashboardPage());
         expect(result.tiles[0].cells[0].circles.length).toEqual(1);
@@ -552,9 +557,9 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
 
         const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
@@ -653,9 +658,9 @@ describe('Dashboard', () => {
         opfabEventStreamServerMock.sendLightCard(alarmCard);
 
         filteredLightCardStore.updateFilter(
-            FilterType.BUSINESSDATE_FILTER,
+            FilterType.BUSINESSANDPUBLISHDATE_FILTER,
             true,
-            filteredLightCardStore.getBusinessDateFilter().status
+            filteredLightCardStore.getBusinessAndPublishDateFilter().status
         );
 
         const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
@@ -665,6 +670,101 @@ describe('Dashboard', () => {
         expect(result.tiles[0].cells[0].circles[0].severity).toEqual(Severity.INFORMATION);
         expect(result.tiles[0].cells[0].circles[0].color).toEqual(Utilities.getSeverityColor(Severity.INFORMATION));
     });
+    describe('Business period filtering (startDate and endDate only, publishDate ignored)', () => {
+        beforeEach(async () => {
+            await initProcesses();
+            const computedPerimeters = [new ComputedPerimeter('process1', 'state1', RightEnum.Receive, true)];
+            await setUserPerimeter(new UserWithPerimeters(null, computedPerimeters, null, new Map()));
+            const dashboardScreenDefinition = new DashboardScreenDefinition();
+            dashboardScreenDefinition.id = DASHBOARD_ID;
+            dashboardScreenDefinition.type = ScreenType.DASHBOARD;
+            CustomScreenService.addCustomScreenDefinition(dashboardScreenDefinition);
+            dashboardView = new DashboardView(DASHBOARD_ID);
+        });
+
+        it('GIVEN a card with startDate inside the business period and publishDate outside WHEN date filter is active THEN dashboard shows the card', async () => {
+            const now = Date.now();
+            const periodStart = now - ONE_HOUR; // 1 hour ago
+            const periodEnd = now + ONE_HOUR; // 1 hour from now
+
+            const card = getOneLightCard({
+                process: 'process1',
+                state: 'state1',
+                severity: Severity.INFORMATION,
+                publishDate: now - 10 * ONE_HOUR, // 10 hours ago — outside period
+                startDate: now, // now — inside period
+                endDate: null
+            });
+            opfabEventStreamServerMock.sendLightCard(card);
+            activateBusinessAndPublishDateFilter(periodStart, periodEnd);
+
+            const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+            expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        });
+
+        it('GIVEN a card with publishDate inside the business period but startDate after the period and no endDate WHEN date filter is active THEN dashboard does not show the card', async () => {
+            const now = Date.now();
+            const periodStart = now - ONE_HOUR; // 1 hour ago
+            const periodEnd = now + ONE_HOUR; // 1 hour from now
+
+            const card = getOneLightCard({
+                process: 'process1',
+                state: 'state1',
+                severity: Severity.INFORMATION,
+                publishDate: now, // now — inside period
+                startDate: now + 2 * ONE_HOUR, // 2 hours from now — after period end
+                endDate: null
+            });
+            opfabEventStreamServerMock.sendLightCard(card);
+            activateBusinessAndPublishDateFilter(periodStart, periodEnd);
+
+            const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+            expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+            expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+            expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
+        });
+
+        it('GIVEN a card with startDate and endDate both after the business period WHEN date filter is active THEN dashboard does not show the card', async () => {
+            const now = Date.now();
+            const periodStart = now - 3600 * 1000; // 1 hour ago
+            const periodEnd = now; // now
+
+            const card = getOneLightCard({
+                process: 'process1',
+                state: 'state1',
+                severity: Severity.INFORMATION,
+                startDate: now + ONE_HOUR, // 1 hour from now — after period
+                endDate: now + 2 * ONE_HOUR // 2 hours from now — after period
+            });
+            opfabEventStreamServerMock.sendLightCard(card);
+            activateBusinessAndPublishDateFilter(periodStart, periodEnd);
+
+            const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+            expect(result.tiles[0].cells[0].circles.length).toEqual(1);
+            expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(0);
+            expect(result.tiles[0].cells[0].circles[0].color).toEqual(dashboardView.noSeverityColor);
+        });
+
+        it('GIVEN a card whose startDate is before and endDate is after the business period WHEN date filter is active THEN dashboard shows the card', async () => {
+            const now = Date.now();
+            const periodStart = now;
+            const periodEnd = now + 3600 * 1000; // 1 hour from now
+
+            const card = getOneLightCard({
+                process: 'process1',
+                state: 'state1',
+                severity: Severity.INFORMATION,
+                startDate: now - ONE_HOUR, // 1 hour before period start
+                endDate: now + 2 * ONE_HOUR // 1 hour after period end
+            });
+            opfabEventStreamServerMock.sendLightCard(card);
+            activateBusinessAndPublishDateFilter(periodStart, periodEnd);
+
+            const result = await firstValueFrom(dashboardView.getDashboardPage().pipe(skip(1)));
+            expect(result.tiles[0].cells[0].circles[0].numberOfCards).toEqual(1);
+        });
+    });
+
     describe('GIVEN initialBusinessPeriod is set to FROM_TODAY_TO_YEAR_END', () => {
         it('WHEN dashboard is created THEN business period is set to current year end', async () => {
             await initProcesses();

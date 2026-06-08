@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -186,7 +186,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date after card 1 startDate => should return 3 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 start: Date.now() + 0.5 * ONE_HOUR,
                 end: Date.now() + 10 * ONE_HOUR
             });
@@ -200,7 +200,7 @@ describe('NewFilterService ', () => {
         it('Filter with business period matching card 3 ,4 , 5   => should return 3 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 start: Date.now() + 1.5 * ONE_HOUR,
                 end: Date.now() + 30 * ONE_HOUR
             });
@@ -214,7 +214,7 @@ describe('NewFilterService ', () => {
         it('Filter with business period matching card 4 only   => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 start: Date.now() + 2.5 * ONE_HOUR,
                 end: Date.now() + 20 * ONE_HOUR
             });
@@ -226,7 +226,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date after all business period, card 5 has publish date in business period  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 start: Date.now() + 20 * ONE_HOUR,
                 end: Date.now() + 30 * ONE_HOUR
             });
@@ -238,7 +238,7 @@ describe('NewFilterService ', () => {
         it('Filter with end date before all business period, card 6 has publish date before end date  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 end: Date.now() - 30 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
@@ -249,7 +249,7 @@ describe('NewFilterService ', () => {
         it('Filter with start date after all business periods, card 7 has publish date after start date  => should return 1 cards   ', () => {
             const cards = getSevenCards();
             service.updateFilter(FilterType.ACKNOWLEDGEMENT_FILTER, false, false);
-            service.updateFilter(FilterType.BUSINESSDATE_FILTER, true, {
+            service.updateFilter(FilterType.BUSINESSANDPUBLISHDATE_FILTER, true, {
                 start: Date.now() + 50 * ONE_HOUR
             });
             const filteredCards = service.filterLightCards(cards);
