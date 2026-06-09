@@ -1,5 +1,23 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'io.spring.dependency-management'
+
+// Following line needed to apply Spring Boot version BOM override
+// example in root build.gradle : ext['tomcat.version']="11.0.22"
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$springBoot"
+    }
+    // Prevent the Spring Boot BOM from overriding JUnit Platform versions,
+    // which would cause a version mismatch with junit-jupiter-engine (see issue #8169)
+    dependencies {
+        dependency "org.junit.jupiter:junit-jupiter-api:$junit5"
+        dependency "org.junit.jupiter:junit-jupiter-engine:$junit5"
+        dependency "org.junit.platform:junit-platform-commons:$junitPlatformVersion"
+        dependency "org.junit.platform:junit-platform-engine:$junitPlatformVersion"
+        dependency "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
+    }
+}
 
 dependencies {
 
