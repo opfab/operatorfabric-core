@@ -11,8 +11,8 @@
 
 source ${BASH_SOURCE%/*}/load_variables.sh
 
-sdk install java 21.0.10-zulu
-sdk use java 21.0.10-zulu
+sdk install java 21.0.11-zulu
+sdk use java 21.0.11-zulu
 nvm install v24.14.0
 nvm use v24.14.0
 echo "Install opfab-cli"
