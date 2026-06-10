@@ -85,6 +85,12 @@ ext['rabbit-amqp-client.version']="$rabbitMQ"
 // remove this line when spring boot update will be available
 ext['tomcat.version']="11.0.22"
 
+
+// override netty version for security reasons
+// remove this line when com.rabbitmq:amqp-client update will be available
+ext['reactor-bom.version']="2025.0.6"
+ext['netty.version']="4.2.15.Final"
+
 ext.proxy.https =  System.env.https_proxy != null ? "$System.env.https_proxy" : ""
 
 sonar {
