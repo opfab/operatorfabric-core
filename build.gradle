@@ -81,9 +81,6 @@ ext {
 // we do not use rabbitMQ via spring boot 
 ext['rabbit-amqp-client.version']="$rabbitMQ"
 
-// override tomcat version for security reasons
-// remove this line when spring boot update will be available
-ext['tomcat.version']="11.0.22"
 
 
 // override netty version for security reasons
