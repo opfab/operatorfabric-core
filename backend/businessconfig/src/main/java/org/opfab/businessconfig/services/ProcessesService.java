@@ -163,7 +163,6 @@ public class ProcessesService implements ResourceLoaderAware {
         }
     }
 
-
     /**
      * Loads realTimeScreens data to realTimeScreensCache
      */
@@ -462,8 +461,6 @@ public class ProcessesService implements ResourceLoaderAware {
 
         eventBus.sendEvent(PROCESS_EVENT_KEY, "UIMENU_CONFIG_CHANGE");
     }
-
-
 
     /**
      * Updates or creates process from disk saved bundle
@@ -825,12 +822,13 @@ public class ProcessesService implements ResourceLoaderAware {
                 .resolve(processId)
                 .resolve(version)
                 .normalize();
-
-        Path tempZip = Files.createTempFile(processId + "-" + version, ".zip");
-
+        // Suppressing Sonar rule java:S5443 (Temporary files should not be created in
+        // publicly writable directories)
+        // No risks identified here
+        Path tempZip = Files.createTempFile(processId + "-" + version, ".zip"); // NOSONAR
         try {
             try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(tempZip));
-                 Stream<Path> paths = Files.walk(bundlePath)) {
+                    Stream<Path> paths = Files.walk(bundlePath)) {
                 Iterator<Path> iterator = paths.filter(path -> !Files.isDirectory(path)).iterator();
                 while (iterator.hasNext()) {
                     Path path = iterator.next();
