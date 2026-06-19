@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -21,7 +21,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {CardBodyComponent} from './components/card-body/CardBodyComponent';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
@@ -29,7 +29,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-card',
     templateUrl: './CardComponent.html',
     styleUrls: ['./CardComponent.scss'],
-    imports: [CardBodyComponent, SpinnerComponent, TranslateModule]
+    imports: [CardBodyComponent, SpinnerComponent, TranslateDirective]
 })
 export class CardComponent implements OnInit, OnDestroy {
     protected modalService = inject(NgbModal);

@@ -26,7 +26,7 @@ import {UserActionLogsPageDescription} from 'app/components/useractionlogs/view/
 import {NgTemplateOutlet} from '@angular/common';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {ArchivedCardDetailComponent} from '../archives/components/archived-card-detail/ArchivedCardDetailComponent';
 import {OpfabTitleCasePipe} from '../share/pipes/OpfabTitleCasePipe';
@@ -43,7 +43,8 @@ import {DateRangePicker} from '../../utils/DateRangePicker';
         MultiSelectComponent,
         FormsModule,
         ReactiveFormsModule,
-        TranslateModule,
+
+        TranslateDirective,
         NgbPagination,
         SpinnerComponent,
         ArchivedCardDetailComponent,

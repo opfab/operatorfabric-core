@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {NgClass} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SimplifiedCardViewComponent} from '../share/simplified-card-view/SimplifiedCardViewComponent';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {LightCardModule} from '../share/light-card/LightCardModule';
@@ -41,7 +41,7 @@ import {Entity} from '@ofServices/entities/model/Entity';
     templateUrl: './UserCardComponent.html',
     styleUrls: ['./UserCardComponent.scss'],
     imports: [
-        TranslateModule,
+        TranslateDirective,
         FormsModule,
         ReactiveFormsModule,
         MultiSelectComponent,

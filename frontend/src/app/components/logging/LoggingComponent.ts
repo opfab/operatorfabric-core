@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -37,7 +37,7 @@ import {CardsService} from '@ofServices/cards/CardsService';
 
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {LoggingTableComponent} from './components/logging-table/LoggingTableComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {BusinessConfigAPI} from 'app/api/BusinessConfigApi';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
@@ -53,7 +53,8 @@ import {TranslationService} from '@ofServices/translation/TranslationService';
         ArchivesLoggingFiltersComponent,
         SpinnerComponent,
         LoggingTableComponent,
-        TranslateModule
+
+        TranslateDirective
     ]
 })
 export class LoggingComponent implements OnDestroy, OnInit, AfterViewInit {

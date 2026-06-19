@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, Output, inject} from '@angular/core';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
 import {Card} from 'app/model/Card';
@@ -25,7 +25,7 @@ import {AgGrid} from 'app/utils/AgGrid';
 @Component({
     selector: 'of-logging-table',
     templateUrl: './LoggingTableComponent.html',
-    imports: [AgGridAngular, TranslateModule, NgbPagination]
+    imports: [AgGridAngular, TranslateDirective, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {
     private readonly translate = inject(TranslateService);

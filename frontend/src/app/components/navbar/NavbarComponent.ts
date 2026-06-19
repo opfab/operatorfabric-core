@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {NavbarView} from 'app/components/navbar/view/NavbarView';
 import {NavbarMenuElement, NavbarPage} from 'app/components/navbar/view/NavbarPage';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {NavbarMenuView} from 'app/components/navbar/view/NavbarMenuView';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {InfoComponent} from './info/InfoComponent';
 import {UserCardComponent} from '../usercard/UserCardComponent';
 import {AboutComponent} from '../core/about/AboutComponent';
@@ -26,7 +26,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     templateUrl: './NavbarComponent.html',
     styleUrls: ['./NavbarComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgbPopover, TranslateModule, InfoComponent, UserCardComponent, AboutComponent, SpinnerComponent]
+    imports: [NgbPopover, TranslateDirective, InfoComponent, UserCardComponent, AboutComponent, SpinnerComponent]
 })
 export class NavbarComponent {
     private readonly modalService = inject(NgbModal);

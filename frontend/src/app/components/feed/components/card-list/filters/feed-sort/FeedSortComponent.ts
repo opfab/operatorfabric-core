@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,13 +14,13 @@ import {takeUntil} from 'rxjs/operators';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
 import {OpfabStore} from '../../../../../../store/OpfabStore';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-feed-sort',
     templateUrl: './FeedSortComponent.html',
     styleUrls: ['./FeedSortComponent.scss'],
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule]
+    imports: [TranslateDirective, FormsModule, ReactiveFormsModule]
 })
 export class FeedSortComponent implements OnInit, OnDestroy {
     @Input() defaultSorting: string;

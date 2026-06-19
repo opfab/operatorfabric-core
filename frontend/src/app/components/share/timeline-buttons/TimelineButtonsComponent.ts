@@ -14,13 +14,13 @@ import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeF
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RealTimeDomainService} from '@ofServices/realTimeDomain/RealTimeDomainService';
 import {NgClass} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-timeline-buttons',
     templateUrl: './TimelineButtonsComponent.html',
     styleUrls: ['./TimelineButtonsComponent.scss'],
-    imports: [TranslateModule, NgClass]
+    imports: [TranslateDirective, NgClass]
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
     public hideTimeLine = false;

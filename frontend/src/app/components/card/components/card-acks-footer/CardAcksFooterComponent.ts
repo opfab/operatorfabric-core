@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,17 +14,17 @@ import {Utilities} from '../../../../utils/Utilities';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/OpfabStore';
-import {TranslateModule} from '@ngx-translate/core';
 import {NgStyle} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-card-acks-footer',
     templateUrl: './CardAcksFooterComponent.html',
     styleUrls: ['./CardAcksFooterComponent.scss'],
-    imports: [TranslateModule, NgStyle, NgbPopover]
+    imports: [TranslateDirective, NgStyle, NgbPopover]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {
     @Input() card: Card;

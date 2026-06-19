@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -14,7 +14,7 @@ import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSe
 import {ConfigServer} from '@ofServices/config/server/ConfigServer';
 import {RealtimeUsersView} from 'app/components/realtimeusers/view/RealtimeUsersView';
 import {RealtimePage} from 'app/components/realtimeusers/view/RealtimePage';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
 
@@ -22,7 +22,7 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     selector: 'of-realtimeusers',
     templateUrl: './RealtimeUsersComponent.html',
     styleUrls: ['./RealtimeUsersComponent.scss'],
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, SpinnerComponent, MultiSelectComponent]
+    imports: [TranslateDirective, FormsModule, ReactiveFormsModule, SpinnerComponent, MultiSelectComponent]
 })
 export class RealtimeUsersComponent implements OnInit, OnDestroy {
     private readonly configServer = inject(ConfigServer);

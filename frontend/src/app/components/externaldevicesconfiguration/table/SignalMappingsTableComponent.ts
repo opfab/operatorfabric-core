@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './ExternalDevicesConfigurationDirective';
 import {ExternalDevicesService} from '@ofServices/notifications/ExternalDevicesService';
 import {SignalMappingsModalComponent} from '../editModal/SignalMappingsModalComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -21,7 +21,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-signal-mappings',
     templateUrl: './ExternalDevicesConfigurationDirective.html',
     styleUrls: ['../ExternalDevicesConfigurationComponent.scss'],
-    imports: [TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
+    imports: [TranslateDirective, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class SignalMappingsTableComponent extends ExternalDevicesConfigurationDirective {
     tableType = 'signalMappings';

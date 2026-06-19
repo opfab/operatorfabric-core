@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {debounceTime, distinctUntilChanged, first, map, switchMap, tap} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 import {CrudUtilities} from '@ofServices/admin/CrudUtils';
 
@@ -27,7 +27,7 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     templateUrl: './EditUserModalComponent.html',
     styleUrls: ['./EditUserModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateDirective, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditUserModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

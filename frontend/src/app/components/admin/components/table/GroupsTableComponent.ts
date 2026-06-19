@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ import {AdminTableDirective, Field} from './AdminTableDirective';
 import {AdminItemType} from '../../services/SharingService';
 import {EditGroupModalComponent} from '../editmodal/groups/EditGroupModalComponent';
 import {ActionButton} from '../cell-renderers/ActionCellRendererComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -23,7 +23,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-groups-table',
     styleUrls: ['AdminTableDirective.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, AgGridAngular, NgbPagination]
+    imports: [TranslateDirective, FormsModule, AgGridAngular, NgbPagination]
 })
 export class GroupsTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.GROUP;

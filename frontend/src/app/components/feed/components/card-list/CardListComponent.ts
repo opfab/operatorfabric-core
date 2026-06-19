@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -28,7 +28,7 @@ import {I18n} from 'app/model/I18n';
 import {FiltersComponent} from './filters/FiltersComponent';
 import {FeedFilterComponent} from './filters/feed-filter/FeedFilterComponent';
 import {AsyncPipe} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {LightCardModule} from 'app/components/share/light-card/LightCardModule';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
@@ -37,7 +37,7 @@ import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermis
     selector: 'of-card-list',
     templateUrl: './CardListComponent.html',
     styleUrls: ['./CardListComponent.scss'],
-    imports: [FiltersComponent, FeedFilterComponent, LightCardModule, TranslateModule, AsyncPipe]
+    imports: [FiltersComponent, FeedFilterComponent, LightCardModule, TranslateDirective, AsyncPipe]
 })
 export class CardListComponent implements AfterViewChecked, OnInit {
     @Input() public lightCards: Card[];

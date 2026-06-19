@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,13 +10,13 @@
 import {Component, OnInit} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-reload-required',
     styleUrls: ['./ReloadRequiredComponent.scss'],
     templateUrl: './ReloadRequiredComponent.html',
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class ReloadRequiredComponent implements OnInit {
     displayReloadRequired: boolean;

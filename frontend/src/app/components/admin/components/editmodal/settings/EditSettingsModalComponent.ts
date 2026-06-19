@@ -10,14 +10,15 @@
 import {ChangeDetectionStrategy, Component, Input, inject} from '@angular/core';
 import {User} from '@ofServices/users/model/User';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import {provideTranslateService} from '@ngx-translate/core';
 import {SettingsComponent} from 'app/components/settings/SettingsComponent';
 
 @Component({
     selector: 'of-edit-settings-modal',
     templateUrl: './EditSettingsModalComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, SettingsComponent]
+    imports: [SettingsComponent],
+    providers: [provideTranslateService()]
 })
 export class EditSettingsModalComponent {
     private readonly activeModal = inject(NgbActiveModal);

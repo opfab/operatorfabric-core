@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {Component, Input, OnChanges, OnDestroy, OnInit, inject} from '@angular/core';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CountDown} from '../../../utils/countdown/CountDown';
 
@@ -16,7 +16,7 @@ import {CountDown} from '../../../utils/countdown/CountDown';
     selector: 'of-countdown',
     templateUrl: './CountDownComponent.html',
     styleUrls: ['./CountDownComponent.scss'],
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {
     private readonly translate = inject(TranslateService);

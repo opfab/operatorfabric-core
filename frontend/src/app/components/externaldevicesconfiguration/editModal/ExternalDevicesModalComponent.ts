@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -24,7 +24,7 @@ import {DeviceConfiguration} from '@ofServices/notifications/model/ExternalDevic
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {Observable, of} from 'rxjs';
 
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponent';
 
@@ -32,7 +32,7 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-modal',
     templateUrl: './ExternalDevicesModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
-    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class ExternaldevicesModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

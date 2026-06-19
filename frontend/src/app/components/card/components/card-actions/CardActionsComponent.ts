@@ -34,7 +34,7 @@ import {LoggerService} from 'app/services/logs/LoggerService';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {UserCardComponent} from '../../../usercard/UserCardComponent';
 import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
@@ -45,7 +45,7 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     selector: 'of-card-actions',
     templateUrl: './CardActionsComponent.html',
     styleUrls: ['./CardActionsComponent.scss'],
-    imports: [TranslateModule, UserCardComponent, SpinnerComponent]
+    imports: [TranslateDirective, UserCardComponent, SpinnerComponent]
 })
 export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
     private readonly modalService = inject(NgbModal);

@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,7 +10,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {NotificationConfigurationView} from 'app/components/notificationconfiguration/view/NotificationConfigurationView';
 import {NotificationConfigurationPage} from 'app/components/notificationconfiguration/view/NotificationConfigurationPage';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {NgTemplateOutlet} from '@angular/common';
 
 @Component({
@@ -18,7 +18,7 @@ import {NgTemplateOutlet} from '@angular/common';
     templateUrl: './NotificationConfigurationComponent.html',
     styleUrls: ['./NotificationConfigurationComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, NgTemplateOutlet]
+    imports: [TranslateDirective, NgTemplateOutlet]
 })
 export class NotificationConfigurationComponent implements OnInit, AfterViewInit {
     notificationConfigurationView: NotificationConfigurationView;

@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,14 +12,14 @@ import {ConfigService} from 'app/services/config/ConfigService';
 import {Subject, debounceTime, takeUntil} from 'rxjs';
 import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/FeedFilterAndSortIconsComponent';
 import {FeedSearchComponent} from './feed-search/FeedSearchComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 
 @Component({
     selector: 'of-filters',
     templateUrl: './FiltersComponent.html',
     styleUrls: ['./FiltersComponent.scss'],
-    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, TranslateModule]
+    imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, TranslateDirective]
 })
 export class FiltersComponent implements OnInit, OnDestroy {
     @Input() filterActive: boolean;

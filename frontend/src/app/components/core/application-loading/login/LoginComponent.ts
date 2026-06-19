@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,14 +13,14 @@ import {filter} from 'rxjs/operators';
 import {Message, MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {AuthService} from 'app/authentication/AuthService';
 import {NgClass} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective, TranslatePipe} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-login',
     templateUrl: './LoginComponent.html',
     styles: ['.btn-primary {margin-right: 8px;}'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateModule]
+    imports: [FormsModule, ReactiveFormsModule, NgClass, TranslateDirective, TranslatePipe]
 })
 export class LoginComponent implements OnInit {
     private readonly authService = inject(AuthService);

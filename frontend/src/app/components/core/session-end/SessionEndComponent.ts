@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,14 +11,14 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} f
 import {I18n} from 'app/model/I18n';
 import {ModalService} from '@ofServices/modal/ModalService';
 import {SessionManagerService} from '@ofServices/sessionManager/SessionManagerService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-session-end',
     styleUrls: ['./SessionEndComponent.scss'],
     templateUrl: './SessionEndComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class SessionEndComponent implements OnInit {
     private readonly changeDetector = inject(ChangeDetectorRef);
