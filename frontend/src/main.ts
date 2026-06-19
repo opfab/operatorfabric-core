@@ -1,6 +1,6 @@
 /// <reference types="@angular/localize" />
 
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -62,7 +62,7 @@ import {BrowserModule, bootstrapApplication} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OAuthModule} from 'angular-oauth2-oidc';
 import {NgbModule, NgbModalModule} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import {provideTranslateService} from '@ngx-translate/core';
 import {AppRoutingModule} from './app/services/navigation/router/AngularApplicationRouterModule';
 import {AppComponent} from './app/AppComponent';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
@@ -75,18 +75,19 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
     providers: [
-        provideZoneChangeDetection(),importProvidersFrom(
+        provideZoneChangeDetection(),
+        importProvidersFrom(
             CommonModule,
             BrowserModule,
             FormsModule,
             ReactiveFormsModule,
             OAuthModule.forRoot(),
             NgbModule,
-            TranslateModule.forRoot(),
             NgbModalModule,
             AppRoutingModule,
             NgxDaterangepickerMd.forRoot()
         ),
+        provideTranslateService(),
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {
             provide: HTTP_INTERCEPTORS,

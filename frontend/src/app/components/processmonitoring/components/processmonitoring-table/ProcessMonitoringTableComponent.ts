@@ -17,7 +17,7 @@ import {
     ViewChild,
     inject
 } from '@angular/core';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {
     ColDef,
     GridOptions,
@@ -47,7 +47,7 @@ import {SetFilterComponent} from './SetFilterComponent';
     templateUrl: './ProcessMonitoringTableComponent.html',
     styleUrls: ['./ProcessMonitoringTableComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AgGridAngular, TranslateModule, NgbPagination, CardComponent]
+    imports: [AgGridAngular, TranslateDirective, NgbPagination, CardComponent]
 })
 export class ProcessmonitoringTableComponent {
     private readonly translate = inject(TranslateService);

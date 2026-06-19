@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,12 +9,12 @@
 
 import {Component} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-externaldevices',
     templateUrl: './ExternalDevicesConfigurationComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationComponent.scss'],
-    imports: [RouterLink, RouterLinkActive, TranslateModule, RouterOutlet]
+    imports: [RouterLink, RouterLinkActive, TranslateDirective, RouterOutlet]
 })
 export class ExternalDevicesConfigurationComponent {}

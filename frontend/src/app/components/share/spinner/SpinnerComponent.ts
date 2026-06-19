@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,14 +19,14 @@ import {
     inject
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-spinner',
     templateUrl: './SpinnerComponent.html',
     styleUrls: ['./SpinnerComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class SpinnerComponent implements OnInit, OnDestroy {
     private readonly modalService = inject(NgbModal);

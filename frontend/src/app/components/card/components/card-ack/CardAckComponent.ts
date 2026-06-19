@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,10 +25,10 @@ import {CardAction} from 'app/model/CardAction';
 import {UserWithPerimeters} from '@ofServices/users/model/UserWithPerimeters';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
 import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
-import {TranslateModule} from '@ngx-translate/core';
 import {NavigationService, PageType} from '@ofServices/navigation/NavigationService';
 import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermission';
 import {AcknowledgeStatus} from '@ofServices/acknowlegment/AcknowledgeStatus';
+import {TranslatePipe} from '@ngx-translate/core';
 
 const enum AckI18nKeys {
     BUTTON_TEXT_ACK = 'cardAcknowledgment.button.ack',
@@ -40,7 +40,7 @@ const enum AckI18nKeys {
 @Component({
     selector: 'of-card-ack',
     templateUrl: './CardAckComponent.html',
-    imports: [SpinnerComponent, TranslateModule]
+    imports: [TranslatePipe, SpinnerComponent]
 })
 export class CardAckComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: Card;

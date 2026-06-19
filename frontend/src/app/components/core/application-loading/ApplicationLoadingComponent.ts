@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -39,7 +39,7 @@ import {SoundServer} from '@ofServices/notifications/server/SoundServer';
 
 import {LoadingInProgressComponent} from './loading-in-progress/LoadingInProgressComponent';
 import {LoginComponent} from './login/LoginComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {HandlebarsTemplateServer} from '@ofServices/handlebars/server/HandlebarsTemplateServer';
 import {UserActionLogsServer} from '@ofServices/userActionLogs/server/UserActionLogsServer';
 import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
@@ -53,7 +53,8 @@ import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
         AppLoadedInAnotherTabComponent,
         LoginComponent,
         ActivityAreaChoiceAfterLoginComponent,
-        TranslateModule
+
+        TranslateDirective
     ]
 })
 export class ApplicationLoadingComponent implements OnInit {

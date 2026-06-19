@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 import {TestBed} from '@angular/core/testing';
-import {TranslateModule, TranslateService} from '@ngx-translate/core';
+import {provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AngularTranslationLib} from './AngularTranslationLib';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
@@ -17,8 +17,12 @@ describe('AngularTranslationService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot()],
-            providers: [TranslateService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+            providers: [
+                provideTranslateService(),
+                TranslateService,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting()
+            ]
         });
 
         service = TestBed.inject(AngularTranslationLib);

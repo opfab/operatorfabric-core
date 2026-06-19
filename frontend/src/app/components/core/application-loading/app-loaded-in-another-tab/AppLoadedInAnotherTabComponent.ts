@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@ import {SoundNotificationService} from '@ofServices/notifications/SoundNotificat
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {ModalService} from '../../../../services/modal/ModalService';
 import {I18n} from 'app/model/I18n';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 /** This component checks if the url of opfab is already in use
  *  in the browser (there should not be several accounts connected
@@ -29,7 +29,7 @@ import {TranslateModule} from '@ngx-translate/core';
     selector: 'of-app-loaded-in-another-tab',
     styleUrls: ['./AppLoadedInAnotherTabComponent.scss'],
     templateUrl: './AppLoadedInAnotherTabComponent.html',
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {
     private readonly urlLockService = inject(UrlLockService);

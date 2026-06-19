@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit, inject} from '@angular/core';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {Card} from 'app/model/Card';
 import {DisplayContext} from 'app/model/DisplayContext';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
@@ -21,7 +21,7 @@ import {SimplifiedCardViewComponent} from '../../../share/simplified-card-view/S
     templateUrl: './ArchivedCardDetailComponent.html',
     styleUrls: ['./ArchivedCardDetailComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SimplifiedCardViewComponent, TranslateModule]
+    imports: [SimplifiedCardViewComponent, TranslateDirective]
 })
 export class ArchivedCardDetailComponent implements OnInit {
     private readonly translate = inject(TranslateService);

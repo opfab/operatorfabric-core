@@ -236,6 +236,7 @@ describe('Acknowledgment tests', function () {
         cy.get('of-light-card').eq(0).click();
         cy.get('#opfab-selected-card-summary').should('have.text', 'Message received : Message received');
         cy.get('#opfab-card-acknowledged-footer').should('exist');
+        cy.get('#opfab-card-acknowledged-footer').contains('Acknowledgments :');
         cy.get('#opfab-card-acknowledged-footer')
             .find('span')
             .eq(1)

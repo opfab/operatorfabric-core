@@ -1,5 +1,5 @@
 /* Copyright (c) 2020, RTEi (http://www.rte-international.com)
- * Copyright (c) 2021-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2021-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,7 +25,7 @@ import {Process} from '@ofServices/processes/model/Processes';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
 import {AlertMessageService} from '@ofServices/alerteMessage/AlertMessageService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectComponent';
 
 @Component({
@@ -33,7 +33,7 @@ import {MultiSelectComponent} from '../../../../share/multi-select/MultiSelectCo
     templateUrl: './EditPerimeterModalComponent.html',
     styleUrls: ['./EditPerimeterModalComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateDirective, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditPerimeterModalComponent implements OnInit {
     private readonly activeModal = inject(NgbActiveModal);

@@ -10,7 +10,7 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
 import {TranslationService} from '@ofServices/translation/TranslationService';
 import {CardComponent} from 'app/components/card/CardComponent';
@@ -49,7 +49,7 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
     templateUrl: './CustomCardListComponent.html',
     styleUrls: ['./CustomCardListComponent.scss'],
     imports: [
-        TranslateModule,
+        TranslateDirective,
         AgGridAngular,
         FormsModule,
         NgxDaterangepickerMd,

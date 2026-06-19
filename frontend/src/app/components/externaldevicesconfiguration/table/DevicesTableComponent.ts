@@ -16,7 +16,7 @@ import {ModalService} from '@ofServices/modal/ModalService';
 import {I18n} from 'app/model/I18n';
 import {ExternaldevicesModalComponent} from '../editModal/ExternalDevicesModalComponent';
 import {ServerResponseStatus} from 'app/server/ServerResponse';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +25,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-externaldevices',
     templateUrl: './ExternalDevicesConfigurationDirective.html',
     styleUrls: ['../ExternalDevicesConfigurationComponent.scss'],
-    imports: [TranslateModule, SpinnerComponent, AgGridAngular, NgbPagination]
+    imports: [TranslateDirective, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {
     tableType = 'devices';

@@ -32,7 +32,7 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
 import {UsersService} from '@ofServices/users/UsersService';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
 import {sub} from 'date-fns';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 import {MultiSelectComponent} from '../multi-select/MultiSelectComponent';
 import {NgxDaterangepickerMd} from 'ngx-daterangepicker-material';
@@ -44,7 +44,7 @@ import {EntitiesService} from '@ofServices/entities/EntitiesService';
     templateUrl: './ArchivesLoggingFiltersComponent.html',
     styleUrls: ['./ArchivesLoggingFiltersComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgxDaterangepickerMd]
+    imports: [TranslateDirective, MultiSelectComponent, FormsModule, ReactiveFormsModule, NgxDaterangepickerMd]
 })
 export class ArchivesLoggingFiltersComponent implements OnInit, OnChanges, OnDestroy {
     private readonly changeDetector = inject(ChangeDetectorRef);

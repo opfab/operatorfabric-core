@@ -13,7 +13,7 @@ import {EditUserModalComponent} from '../editmodal/users/EditUserModalComponent'
 import {AdminTableDirective, Field} from './AdminTableDirective';
 import {AdminItemType} from '../../services/SharingService';
 import {ActionButton} from '../cell-renderers/ActionCellRendererComponent';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {FormsModule} from '@angular/forms';
 import {AgGridAngular} from 'ag-grid-angular';
 import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,7 @@ import {EditSettingsModalComponent} from '../editmodal/settings/EditSettingsModa
     selector: 'of-users-table',
     styleUrls: ['AdminTableDirective.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, AgGridAngular, NgbPagination]
+    imports: [TranslateDirective, FormsModule, AgGridAngular, NgbPagination]
 })
 export class UsersTableComponent extends AdminTableDirective implements OnInit {
     tableType = AdminItemType.USER;

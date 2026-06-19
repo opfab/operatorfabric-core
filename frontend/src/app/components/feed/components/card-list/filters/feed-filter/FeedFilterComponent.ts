@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -22,7 +22,7 @@ import {MultiSelect, MultiSelectOption} from 'app/components/share/multi-select/
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {UsersService} from '@ofServices/users/UsersService';
 import {ProcessStatesMultiSelectOptionsService} from '@ofServices/processStatesMultiSelectOptions/ProcessStatesMultiSelectOptionsService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 import {FeedSortComponent} from '../feed-sort/FeedSortComponent';
 import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelectComponent';
@@ -32,7 +32,7 @@ import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelec
     templateUrl: './FeedFilterComponent.html',
     styleUrls: ['./FeedFilterComponent.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, ReactiveFormsModule, TranslateModule, FeedSortComponent, MultiSelectComponent]
+    imports: [FormsModule, ReactiveFormsModule, TranslateDirective, FeedSortComponent, MultiSelectComponent]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {
     @Input() hideTimerTags: boolean;

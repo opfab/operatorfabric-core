@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {CardOperationType} from '@ofServices/events/model/CardOperation';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
 
@@ -26,7 +26,7 @@ import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
     selector: 'of-card-footer-text',
     templateUrl: './CardFooterTextComponent.html',
     styleUrls: ['./CardFooterTextComponent.scss'],
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class CardFooterTextComponent implements OnChanges, OnInit {
     @Input() card: Card;

@@ -15,14 +15,14 @@ import {Utilities} from '../../../../utils/Utilities';
 import {OpfabStore} from '../../../../store/OpfabStore';
 import {LowerCasePipe} from '@angular/common';
 import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 import {NavigationService} from '@ofServices/navigation/NavigationService';
 
 @Component({
     selector: 'of-pinned-cards',
     templateUrl: './PinnedCardsComponent.html',
     styleUrls: ['./PinnedCardsComponent.scss'],
-    imports: [NgbPopover, TranslateModule, LowerCasePipe]
+    imports: [NgbPopover, TranslateDirective, LowerCasePipe]
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();

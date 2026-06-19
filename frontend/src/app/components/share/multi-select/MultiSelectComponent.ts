@@ -9,7 +9,7 @@
 
 import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, inject} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {MultiSelectConfig, MultiSelectOption} from 'app/components/share/multi-select/model/MultiSelect';
 import * as _ from 'lodash-es';
 
@@ -18,7 +18,7 @@ declare const VirtualSelect: any;
 @Component({
     selector: 'of-multi-select ',
     templateUrl: './MultiSelectComponent.html',
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class MultiSelectComponent implements AfterViewInit, OnDestroy, OnChanges {
     private readonly translateService = inject(TranslateService);

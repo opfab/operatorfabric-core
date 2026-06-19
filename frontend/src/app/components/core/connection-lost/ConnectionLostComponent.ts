@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,14 +9,14 @@
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {OpfabEventStreamServer} from '@ofServices/events/server/OpfabEventStreamServer';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-connection-lost',
     styleUrls: ['./ConnectionLostComponent.scss'],
     templateUrl: './ConnectionLostComponent.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule]
+    imports: [TranslateDirective]
 })
 export class ConnectionLostComponent implements OnInit {
     private readonly opfabEventStreamServer = inject(OpfabEventStreamServer);

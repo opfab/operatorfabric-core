@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ import {ActivityAreaView} from 'app/components/activityarea/view/ActivityAreaVie
 import {ActivityAreaPage} from 'app/components/activityarea/view/ActivityAreaPage';
 import {Subject, firstValueFrom, takeUntil} from 'rxjs';
 import {ModalService} from '@ofServices/modal/ModalService';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 import {SpinnerComponent} from '../share/spinner/SpinnerComponent';
 import {I18n} from '../../model/I18n';
@@ -32,7 +32,7 @@ import {I18n} from '../../model/I18n';
     selector: 'of-activityarea',
     templateUrl: './ActivityAreaComponent.html',
     styleUrls: ['./ActivityAreaComponent.scss'],
-    imports: [TranslateModule, SpinnerComponent, FormsModule, ReactiveFormsModule]
+    imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class ActivityAreaComponent implements OnInit, OnDestroy, AfterViewChecked {
     @Input() titleI18nKey = 'activityArea.title';

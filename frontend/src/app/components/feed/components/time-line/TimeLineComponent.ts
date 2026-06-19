@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,13 +11,13 @@ import {TimelineButtonsComponent} from '../../../share/timeline-buttons/Timeline
 import {CustomTimelineChartComponent} from './custom-timeline-chart/CustomTimeLineChartComponent';
 import {PinnedCardsComponent} from '../pinned-cards/PinnedCardsComponent';
 
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-time-line',
     templateUrl: './TimeLineComponent.html',
     styleUrls: ['./TimeLineComponent.scss'],
-    imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, TranslateModule]
+    imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, TranslateDirective]
 })
 export class TimeLineComponent {
     @ViewChild('timelineButtons')

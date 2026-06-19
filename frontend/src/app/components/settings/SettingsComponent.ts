@@ -19,7 +19,7 @@ import {
     Output,
     inject
 } from '@angular/core';
-import {TranslateService, TranslateModule} from '@ngx-translate/core';
+import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {SettingsView} from 'app/components/settings/view/SettingsView';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
@@ -62,7 +62,7 @@ const settingsList = [
     templateUrl: './SettingsComponent.html',
     styleUrls: ['./SettingsComponent.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FormsModule, ReactiveFormsModule, MultiSelectComponent]
+    imports: [TranslateDirective, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     private readonly translateService = inject(TranslateService);
