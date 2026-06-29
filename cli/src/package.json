@@ -20,6 +20,6 @@
         "json5": "^2.2.3"
     },
     "devDependencies": {
-        "prettier": "3.8.4"
+        "prettier": "3.9.3"
     }
 }
