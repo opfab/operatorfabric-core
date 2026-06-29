@@ -58,6 +58,7 @@ class GivenNonAdminUserBusinessconfigControllerShould {
 
     @BeforeAll
     void setup() throws Exception {
+        PathUtils.setApplicationBasePath("/");
         copy(Paths.get("./src/test/docker/volume/businessconfig-storage"), testDataDir);
         this.mockMvc = webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
