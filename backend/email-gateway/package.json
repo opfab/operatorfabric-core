@@ -19,7 +19,7 @@
         "amqplib": "2.0.1",
         "axios": "1.18.1",
         "busboy": "1.6.0",
-        "config": "4.4.1",
+        "config": "4.4.2",
         "date-fns": "4.4.0",
         "date-fns-tz": "3.2.0",
         "express": "5.2.1",
