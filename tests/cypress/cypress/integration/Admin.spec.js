@@ -505,10 +505,9 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 1, 2, 'contains.text', 'Message');
         // We check the right for Message is ReceiveAndWrite (the badge must be from class opfab-bg-right-receiveandwrite)
         cy.get('ag-grid-angular')
-            .find('.ag-center-cols-container')
-            .find('.ag-row')
+            .find('[role="row"][row-index]')
             .eq(1)
-            .find('.ag-cell-value')
+            .find('[role="gridcell"]')
             .find('.opfab-bg-right-receiveandwrite')
             .eq(0)
             .should('exist');
@@ -556,10 +555,9 @@ describe('AdmininstrationPages', () => {
         agGrid.cellShould('ag-grid-angular', 1, 2, 'contains.text', 'Message with no ack');
         // We check the right for Message is Receive (the badge must be from class opfab-bg-right-receive)
         cy.get('ag-grid-angular')
-            .find('.ag-center-cols-container')
-            .find('.ag-row')
+            .find('[role="row"][row-index]')
             .eq(1)
-            .find('.ag-cell-value')
+            .find('[role="gridcell"]')
             .find('.opfab-bg-right-receive')
             .eq(0)
             .should('exist');
