@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,31 +16,24 @@ export class AgGridCommands extends OpfabCommands {
     }
 
     countTableRows = function (table, rowsNum) {
-        cy.get(table).find('.ag-center-cols-container').find('.ag-row').should('have.length', rowsNum);
+        cy.get(table).find('[role="row"][row-index]').should('have.length', rowsNum);
     };
 
     countTableColumns = function (table, columnsNum) {
-        cy.get(table).find('.ag-header-container').find('.ag-header-cell').should('have.length', columnsNum);
+        cy.get(table).find('.ag-header').find('.ag-header-cell').should('have.length', columnsNum);
     };
 
     // Check ag-grid cell value
     cellShould = function (table, row, col, operator, value) {
-        cy.get(table)
-            .find('.ag-center-cols-container')
-            .find('.ag-row')
-            .eq(row)
-            .find('.ag-cell-value')
-            .eq(col)
-            .should(operator, value);
+        cy.get(table).find('[role="row"][row-index]').eq(row).find('[role="gridcell"]').eq(col).should(operator, value);
     };
 
     // Check ag-grid cell value
     cellElementShould = function (table, row, col, element, operator, value) {
         cy.get(table)
-            .find('.ag-center-cols-container')
-            .find('.ag-row')
+            .find('[role="row"][row-index]')
             .eq(row)
-            .find('.ag-cell-value')
+            .find('[role="gridcell"]')
             .eq(col)
             .find(element)
             .should(operator, value);
@@ -51,26 +44,25 @@ export class AgGridCommands extends OpfabCommands {
     clickCell = function (table, row, col, tag) {
         if (tag) {
             cy.get(table)
-                .find('.ag-center-cols-container')
-                .find('.ag-row')
+                .find('[role="row"][row-index]')
                 .eq(row)
-                .find('.ag-cell-value')
+                .find('[role="gridcell"]')
                 .eq(col)
                 .find(tag)
                 .eq(0)
                 .click();
         } else {
-            cy.get(table)
-                .find('.ag-center-cols-container')
-                .find('.ag-row')
-                .eq(row)
-                .find('.ag-cell-value')
-                .eq(col)
-                .click();
+            cy.get(table).find('[role="row"][row-index]').eq(row).find('[role="gridcell"]').eq(col).click();
         }
     };
 
     clickColumnFilter = function (table, col) {
-        cy.get(table).find('.ag-header').find('.ag-header-cell').eq(col).find('.ag-icon-filter').click();
+        cy.get(table)
+            .find('.ag-header')
+            .find('.ag-header-cell')
+            .eq(col)
+            .find('[aria-label="Filter"], .ag-icon-filter, .ag-icon, button')
+            .first()
+            .click();
     };
 }

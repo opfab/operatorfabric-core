@@ -196,7 +196,7 @@ describe('User action logs page', () => {
 
     function updateUser() {
         // Create an alias to shorten the code
-        cy.get('ag-grid-angular').find('.ag-header-container').find('.ag-header-row-column').as('users-table-headers');
+        cy.get('ag-grid-angular').find('.ag-header').find('.ag-header-row-column').as('users-table-headers');
 
         // Sorting login column by ascending order
         cy.get('@users-table-headers').find('.ag-header-cell').eq(0).click();
