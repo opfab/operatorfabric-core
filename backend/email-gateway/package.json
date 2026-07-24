@@ -28,7 +28,7 @@
         "handlebars": "4.7.9",
         "html-to-text": "10.0.0",
         "imap-simple": "5.1.0",
-        "jsdom": "27.0.0",
+        "jsdom": "29.1.1",
         "jwks-rsa": "4.1.0",
         "jwt-decode": "4.0.0",
         "mailparser": "3.9.14",
