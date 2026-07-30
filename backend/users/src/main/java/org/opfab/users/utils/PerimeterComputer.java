@@ -144,7 +144,7 @@ public class PerimeterComputer {
 
     public Boolean mergeFilteringNotificationAllowed(List<Boolean> listFilteringNotificationAllowed) {
         for (Boolean filteringNotificationAllowed : listFilteringNotificationAllowed) {
-            if (filteringNotificationAllowed == Boolean.FALSE)
+            if (filteringNotificationAllowed.equals(Boolean.FALSE))
                 return false;
         }
         return Boolean.TRUE;
