@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:7.0.37-jammy
+    image: mongo:7.0.39-jammy
     ports:
       - "27017:27017"
     environment:
