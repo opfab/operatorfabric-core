@@ -110,6 +110,26 @@ function loadData() {
   responses += opfab.users.entities.getEntity('ENTITY1_FR').labels;
   responses += '</span></div>';
 
+  responses += '<div> getLogin() : <span id="opfab-users-currentUser-getLogin">';
+  responses += opfab.users.currentUser.getLogin();
+  responses += '</span></div>';
+
+  responses += '<div> getFirstName() : <span id="opfab-users-currentUser-getFirstName">';
+  responses += opfab.users.currentUser.getFirstName();
+  responses += '</span></div>';
+
+  responses += '<div> getLastName() : <span id="opfab-users-currentUser-getLastName">';
+  responses += opfab.users.currentUser.getLastName();
+  responses += '</span></div>';
+
+  responses += '<div> getGroups() : <span id="opfab-users-currentUser-getGroups">';
+  responses += opfab.users.currentUser.getGroups();
+  responses += '</span></div>';
+
+  responses += '<div> getEntities() : <span id="opfab-users-currentUser-getEntities">';
+  responses += opfab.users.currentUser.getEntities();
+  responses += '</span></div>';
+
   responses += '<div> getCurrentVisiblePeriod() : <span id="opfab-ui-getCurrentVisiblePeriod">';
   responses += 'Domain = ' + opfab.ui.getCurrentVisiblePeriod().domain + ', ';
   responses += 'startPeriod = ' + new Date(opfab.ui.getCurrentVisiblePeriod().startPeriod).toISOString() + ', endPeriod = ' +
