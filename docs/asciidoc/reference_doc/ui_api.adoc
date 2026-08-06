@@ -60,6 +60,52 @@ Obtain all entities as an array :
 const entities = opfab.users.entities.getAllEntities();
 ```
 
+=== Current User
+
+==== Function getLogin
+
+Obtain the login of the current user :
+
+```
+const login = opfab.users.currentUser.getLogin();
+```
+
+==== Function getFirstName
+
+Obtain the first name of the current user :
+
+```
+const firstName = opfab.users.currentUser.getFirstName();
+```
+
+==== Function getLastName
+
+Obtain the last name of the current user :
+
+```
+const lastName = opfab.users.currentUser.getLastName();
+```
+
+==== Function getGroups
+
+Obtain the list of group ids the current user belongs to :
+
+```
+const groups = opfab.users.currentUser.getGroups();
+```
+
+The function returns an array of group id strings.
+
+==== Function getEntities
+
+Obtain the list of entity ids the current user belongs to :
+
+```
+const entities = opfab.users.currentUser.getEntities();
+```
+
+The function returns an array of entity id strings.
+
 == BusinessConfig API
 
 === BusinessData

@@ -47,6 +47,11 @@ describe('Card detail', function () {
             // Check opfab API  calls
             cy.get('#opfab-users-entities-getEntityName').contains('Control Center FR North');
             cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');
+            cy.get('#opfab-users-currentUser-getLogin').contains(/^operator1_fr$/);
+            cy.get('#opfab-users-currentUser-getFirstName').contains(/^John$/);
+            cy.get('#opfab-users-currentUser-getLastName').contains(/^Doe$/);
+            cy.get('#opfab-users-currentUser-getGroups').contains(/^Maintainer,Dispatcher$/);
+            cy.get('#opfab-users-currentUser-getEntities').contains(/^ENTITY_FR,ENTITY1_FR$/);
             cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('true');
             cy.get('#opfab-currentCard-isUserMemberOfAnEntityRequiredToRespond').contains('true');
             cy.get('#opfab-currentCard-getEntitiesUsableForUserResponse').contains(/^ENTITY1_FR$/);
@@ -148,6 +153,11 @@ describe('Card detail', function () {
             // Check opfab API calls
             cy.get('#opfab-users-entities-getEntityName').contains('Control Center FR North');
             cy.get('#opfab-users-entities-getEntityName-unknownEntity').contains('unknownEntity');
+            cy.get('#opfab-users-currentUser-getLogin').contains(/^operator1_fr$/);
+            cy.get('#opfab-users-currentUser-getFirstName').contains(/^John$/);
+            cy.get('#opfab-users-currentUser-getLastName').contains(/^Doe$/);
+            cy.get('#opfab-users-currentUser-getGroups').contains(/^Maintainer,Dispatcher$/);
+            cy.get('#opfab-users-currentUser-getEntities').contains(/^ENTITY_FR,ENTITY1_FR$/);
 
             // in archives is isUserAllowedToRespond always return false
             cy.get('#opfab-currentCard-isUserAllowedToRespond').contains('false');
