@@ -30,7 +30,7 @@ jobs:
           docker pull lfeoperatorfabric/of-supervisor:SNAPSHOT
           docker pull lfeoperatorfabric/of-web-ui:SNAPSHOT
       - name: Analyse card consultation
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-cards-consultation
         with:
           image: "lfeoperatorfabric/of-cards-consultation:SNAPSHOT"
@@ -41,7 +41,7 @@ jobs:
           sarif_file: ${{ steps.scan-cards-consultation.outputs.sarif }}
           category: consultation
       - name: Analyse card publication
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-cards-publication
         with:
           image: "lfeoperatorfabric/of-cards-publication:SNAPSHOT"
@@ -52,7 +52,7 @@ jobs:
           sarif_file: ${{ steps.scan-cards-publication.outputs.sarif }}
           category: publication
       - name: Analyse users
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-users
         with:
           image: "lfeoperatorfabric/of-users:SNAPSHOT"
@@ -63,7 +63,7 @@ jobs:
           sarif_file: ${{ steps.scan-users.outputs.sarif }}
           category: users
       - name: Analyse businessConfig
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-businessconfig
         with:
           image: "lfeoperatorfabric/of-businessconfig:SNAPSHOT"
@@ -74,7 +74,7 @@ jobs:
           sarif_file: ${{ steps.scan-businessconfig.outputs.sarif }}
           category: businessconfig
       - name: Analyse external-devices
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-external-devices
         with:
           image: "lfeoperatorfabric/of-external-devices:SNAPSHOT"
@@ -85,7 +85,7 @@ jobs:
           sarif_file: ${{ steps.scan-external-devices.outputs.sarif }}
           category: external-devices
       - name: Analyse web-ui
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-web-ui
         with:
           image: "lfeoperatorfabric/of-web-ui:SNAPSHOT"
@@ -96,7 +96,7 @@ jobs:
           sarif_file: ${{ steps.scan-web-ui.outputs.sarif }}
           category: web-ui
       - name: Analyse email-gateway
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-email-gateway
         with:
           image: "lfeoperatorfabric/of-email-gateway:SNAPSHOT"
@@ -107,7 +107,7 @@ jobs:
           sarif_file: ${{ steps.scan-email-gateway.outputs.sarif }}
           category: email-gateway
       - name: Analyse cards reminder
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-cards-reminder
         with:
           image: "lfeoperatorfabric/of-cards-reminder:SNAPSHOT"
@@ -118,7 +118,7 @@ jobs:
           sarif_file: ${{ steps.scan-cards-reminder.outputs.sarif }}
           category: cards-reminder
       - name: Analyse supervisor
-        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
+        uses: anchore/scan-action@8964e60c6fabdb85fdbbbfd9834d8f19c97a3086 # v7.4.1
         id: scan-supervisor
         with:
           image: "lfeoperatorfabric/of-supervisor:SNAPSHOT"
