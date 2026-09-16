@@ -23,7 +23,7 @@
         "express-jwt": "8.5.1",
         "jwks-rsa": "4.1.0",
         "jwt-decode": "4.0.0",
-        "mongodb": "7.5.0",
+        "mongodb": "7.6.0",
         "winston": "3.19.0",
         "winston-daily-rotate-file": "5.0.0",
         "yaml": "2.9.0"
