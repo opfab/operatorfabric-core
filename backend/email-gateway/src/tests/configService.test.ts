@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import {getLogger} from '../common/server-side/logger';
 import ConfigService from '../domain/client-side/configService';
 import OutgoingEmailsConfigDTO from '../domain/client-side/outgoingEmailsConfigDTO';

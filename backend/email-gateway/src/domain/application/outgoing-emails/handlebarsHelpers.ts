@@ -7,11 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as Handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'node:fs';
+import {createRequire} from 'node:module';
 import {enUS, fr, nl} from 'date-fns/locale';
 import {formatInTimeZone, FormatOptionsWithTZ} from 'date-fns-tz';
+
+const nodeRequire = createRequire(process.cwd() + '/package.json');
+const quillFilePath = nodeRequire.resolve('quill');
 
 /**
  *  Handlebars helpers are similar to the ones used on the frontend
@@ -367,8 +371,6 @@ export class HandlebarsHelper {
 
     private static registerDeltaToHtml(): void {
         Handlebars.registerHelper('deltaToHtml', (delta: string) => {
-            const quillFilePath = require.resolve('quill');
-
             const quillLibrary = fs.readFileSync(quillFilePath);
             const TEMPLATE = `<div id="editor"></div>
             <script>${quillLibrary.toString()}</script>

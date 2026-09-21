@@ -7,7 +7,14 @@
  * This file is part of the OperatorFabric project.
  */
 module.exports = {
-    preset: 'ts-jest',
+    preset: 'ts-jest/presets/default-esm',
+    extensionsToTreatAsEsm: ['.ts'],
+    globals: {
+        'ts-jest': {
+            useESM: true,
+            tsconfig: 'tsconfig.test.json'
+        }
+    },
     collectCoverageFrom: [
         'src/**/*.{js,jsx,ts}',
         '!src/tests/**/*.{js,ts}', // Exclude test directory

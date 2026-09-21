@@ -7,9 +7,13 @@
  * This file is part of the OperatorFabric project.
  */
 
-import * as Handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 import {JSDOM} from 'jsdom';
 import * as fs from 'node:fs';
+import {createRequire} from 'node:module';
+
+const nodeRequire = createRequire(process.cwd() + '/package.json');
+const quillFilePath = nodeRequire.resolve('quill');
 
 /**
  * Handlebars helpers specific to the mail service.
@@ -22,7 +26,6 @@ export class MailHandlebarsHelper {
     private static quill: any;
 
     public static init(): void {
-        const quillFilePath = require.resolve('quill');
         const quillDistFilePath = quillFilePath.replace('quill.js', 'dist/quill.js');
 
         const quillLibrary = fs.readFileSync(quillDistFilePath);

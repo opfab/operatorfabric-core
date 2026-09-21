@@ -7,7 +7,7 @@
         "start:dev": "npx nodemon",
         "build": "rimraf ./build && tsc",
         "start": "npm run build && node build/cardsReminder.js",
-        "test": "jest --coverage --verbose",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --verbose",
         "test:watch": "jest --watch --verbose",
         "lint": "eslint ./src/",
         "prettier": "prettier . -c"

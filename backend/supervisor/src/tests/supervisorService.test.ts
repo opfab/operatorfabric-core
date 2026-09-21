@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
+import {jest} from '@jest/globals';
 import {getLogger} from '../common/server-side/logger';
 import ConfigDTO from '../domain/client-side/configDTO';
 import {SupervisorDatabaseServerStub} from './helpers/supervisorDatabasServerStub';

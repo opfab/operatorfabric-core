@@ -8,7 +8,7 @@
  */
 
 import {MailHandlebarsHelper} from '../domain/application/outgoing-emails/mailHandlebarsHelpers';
-import * as Handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 
 describe('Handlebars Services', () => {
     beforeAll(() => {

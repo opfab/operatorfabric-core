@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import RealTimeCardsDiffusionControl from '../domain/application/outgoing-emails/realTimeCardsDiffusionControl';
 import {getLogger} from '../common/server-side/logger';
 import CardsDiffusionRateLimiter from '../domain/application/outgoing-emails/cardsDiffusionRateLimiter';

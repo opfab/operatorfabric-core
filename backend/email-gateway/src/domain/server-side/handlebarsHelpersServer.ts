@@ -10,7 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
-import * as Handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 
 export function loadHelpers(filePath: string, logger: any) {
     logger.info('Loading custom handlebars helpers from ' + filePath);

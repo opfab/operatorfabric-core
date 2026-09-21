@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import CardsRoutingUtilities from '../domain/application/outgoing-emails/cardRoutingUtilities';
 
 describe('Card routing', function () {
