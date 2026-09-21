@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import RecapCardsDiffusionControl from '../domain/application/outgoing-emails/recapCardsDiffusionControl';
 import {getLogger} from '../common/server-side/logger';
 import {

@@ -7,7 +7,7 @@
         "start:dev": "npx nodemon",
         "build": "rimraf ./build && tsc",
         "start": "npm run build && node build/supervisor.js",
-        "test": "jest --coverage",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --verbose",
         "test:watch": "jest --watch",
         "lint": "eslint ./src/",
         "prettier": "prettier . -c"

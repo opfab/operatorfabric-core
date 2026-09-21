@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
+import {jest} from '@jest/globals';
 import CardsDiffusionRateLimiter from '../domain/application/outgoing-emails/cardsDiffusionRateLimiter';
 
 function setCurrentTime(dateTime: string): void {

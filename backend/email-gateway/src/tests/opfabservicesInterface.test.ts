@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import sinon from 'sinon';
 import {getLogger} from '../common/server-side/logger';
 import UsersServer from '../domain/server-side/usersServer';

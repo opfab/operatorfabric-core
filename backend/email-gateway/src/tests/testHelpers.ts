@@ -7,7 +7,6 @@
  * This file is part of the OperatorFabric project.
  */
 
-import 'jest';
 import OutgoingEmailsServer from '../domain/server-side/outgoingEmailsServer';
 import GetResponse from '../common/server-side/getResponse';
 import Handlebars from 'handlebars';
