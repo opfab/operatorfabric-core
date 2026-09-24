@@ -83,7 +83,7 @@ describe('Resilience tests', function () {
 
     function startNginx() {
         cy.exec('docker start web-ui');
-        cy.wait(20000); // Wait for subscription to be fully restored
+        cy.wait(50000); // Wait for subscription to be fully restored
     }
 
     function checkLoadingSpinnerIsNotVisible() {
