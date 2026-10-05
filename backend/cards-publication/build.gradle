@@ -7,6 +7,12 @@ apply plugin: 'jacoco'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 
+// Spring Boot's BOM pins Jackson 2.x to 2.21.5, which downgrades the jackson-databind
+// version requested transitively by Confluent's Kafka/Avro schema registry libraries (2.22.1).
+// Overriding the BOM property keeps the whole Jackson 2.x family consistent at 2.22.1.
+// TODO: reconsider/remove this override after the next Spring Boot version update.
+ext['jackson-2-bom.version'] = '2.22.1'
+
 dependencies {
     implementation misc.jsonSmart
     implementation misc.commonsLang
