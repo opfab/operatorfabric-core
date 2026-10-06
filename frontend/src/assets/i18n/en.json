@@ -672,7 +672,8 @@
         "notBlank": "Not blank",
         "true": "YES",
         "false": "NO",
-        "empty": " "
+        "empty": " ",
+        "noMatchingRows": "No matching rows"
     },
     "realTimeUsers": {
         "connected": "Connected",
