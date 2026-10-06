@@ -673,7 +673,8 @@
         "notBlank": "Pas vide",
         "true": "OUI",
         "false": "NON",
-        "empty": " "
+        "empty": " ",
+        "noMatchingRows": "Aucun résultat"
     },
     "realTimeUsers": {
         "connected": "Connecté",
