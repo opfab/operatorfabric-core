@@ -93,17 +93,39 @@ export class TimelineButtonsComponent implements OnInit, OnDestroy {
 
     setInitialDomain(): void {
         let currentDomain: string = RealTimeDomainService.getDomainId();
-
         if (!currentDomain) {
-            // the domain can be undefined when coming back from calendar
-            // as calendar is not using timeline domains
-            RealTimeDomainService.init();
-            currentDomain = RealTimeDomainService.getDomainId();
+            // the domain can be undefined when coming back from calendar or customscreens
+            // as calendar and customscreens are not using timeline domains
+            if (
+                +this.restOfYearMode &&
+                +this.buttonList.some((b) => b.domainId === 'Y') &&
+                +this.isCurrentPeriodRestOfYear()
+            ) {
+                currentDomain = 'Y';
+            } else {
+                // this will set the domain as the nearest domain to the current period
+                RealTimeDomainService.init();
+                currentDomain = RealTimeDomainService.getDomainId();
+            }
         }
 
         const buttonToActivate = this.buttonList.find((b) => b.domainId === currentDomain);
         if (buttonToActivate.domainId === 'Y' && this.restOfYearMode) this.setDomainInRestOfYearMode();
         else this.setDomain(buttonToActivate);
+    }
+
+    isCurrentPeriodRestOfYear(): boolean {
+        const startDate = new Date(RealTimeDomainService.getCurrentDomain().startDate);
+        const endDate = new Date(RealTimeDomainService.getCurrentDomain().endDate);
+        const today = new Date();
+        return (
+            startDate.getFullYear() === today.getFullYear() &&
+            endDate.getFullYear() === today.getFullYear() &&
+            startDate.getMonth() === today.getMonth() &&
+            startDate.getDate() === today.getDate() &&
+            endDate.getMonth() === 11 &&
+            endDate.getDate() === 31
+        );
     }
 
     setDomainInRestOfYearMode() {
