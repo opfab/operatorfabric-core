@@ -32,7 +32,7 @@
     "@fullcalendar/interaction": "6.1.21",
     "@fullcalendar/rrule": "6.1.21",
     "@fullcalendar/timegrid": "6.1.21",
-    "@ng-bootstrap/ng-bootstrap": "20.0.0",
+    "@ng-bootstrap/ng-bootstrap": "21.0.0",
     "@ngx-translate/core": "18.0.0",
     "@popperjs/core": "2.11.8",
     "ag-grid-angular": "36.0.0",
