@@ -15,7 +15,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "amqp-connection-manager": "5.0.0",
+        "amqp-connection-manager": "5.0.1",
         "amqplib": "2.2.0",
         "axios": "1.20.0",
         "busboy": "1.6.0",
