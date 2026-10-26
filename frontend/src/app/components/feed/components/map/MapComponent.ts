@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {
+    AfterViewChecked,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    inject,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {Severity} from 'app/model/Severity';
 import {FilteredLightCardsStore} from '../../../../store/lightcards/FilteredLightcardsStore';
 import {takeUntil} from 'rxjs/operators';
@@ -26,6 +34,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class MapComponent extends OpfabMap implements OnInit, OnDestroy, AfterViewChecked {

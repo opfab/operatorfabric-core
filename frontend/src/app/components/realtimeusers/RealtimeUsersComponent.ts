@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {MultiSelectConfig} from 'app/components/share/multi-select/model/MultiSelect';
@@ -22,6 +22,7 @@ import {MultiSelectComponent} from '../share/multi-select/MultiSelectComponent';
     selector: 'of-realtimeusers',
     templateUrl: './RealtimeUsersComponent.html',
     styleUrls: ['./RealtimeUsersComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, FormsModule, ReactiveFormsModule, SpinnerComponent, MultiSelectComponent]
 })
 export class RealtimeUsersComponent implements OnInit, OnDestroy {

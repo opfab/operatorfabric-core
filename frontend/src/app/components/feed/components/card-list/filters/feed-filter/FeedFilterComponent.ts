@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {Subject, timer} from 'rxjs';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {debounce, debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
@@ -32,6 +32,7 @@ import {MultiSelectComponent} from '../../../../../share/multi-select/MultiSelec
     templateUrl: './FeedFilterComponent.html',
     styleUrls: ['./FeedFilterComponent.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, ReactiveFormsModule, TranslateDirective, FeedSortComponent, MultiSelectComponent]
 })
 export class FeedFilterComponent implements OnInit, OnDestroy {

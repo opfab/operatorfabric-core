@@ -7,7 +7,17 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    SimpleChanges,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {PermissionEnum} from '@ofServices/groups/model/PermissionEnum';
@@ -40,6 +50,7 @@ const enum AckI18nKeys {
 @Component({
     selector: 'of-card-ack',
     templateUrl: './CardAckComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslatePipe, SpinnerComponent]
 })
 export class CardAckComponent implements OnInit, OnChanges, OnDestroy {

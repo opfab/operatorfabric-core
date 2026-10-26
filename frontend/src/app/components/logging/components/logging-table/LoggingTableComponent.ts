@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, Output, inject} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output, inject, ChangeDetectionStrategy} from '@angular/core';
 import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {takeUntil} from 'rxjs/operators';
 import {ColDef, GridOptions, AllCommunityModule, ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
@@ -25,6 +25,7 @@ import {AgGrid} from 'app/utils/AgGrid';
 @Component({
     selector: 'of-logging-table',
     templateUrl: './LoggingTableComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AgGridAngular, TranslateDirective, NgbPagination]
 })
 export class LoggingTableComponent implements OnDestroy {

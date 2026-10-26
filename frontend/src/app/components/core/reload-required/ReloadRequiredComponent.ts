@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamService';
 import {TranslateDirective} from '@ngx-translate/core';
@@ -16,6 +16,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-reload-required',
     styleUrls: ['./ReloadRequiredComponent.scss'],
     templateUrl: './ReloadRequiredComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective]
 })
 export class ReloadRequiredComponent implements OnInit {

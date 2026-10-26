@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {TranslateService, TranslateDirective} from '@ngx-translate/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {CountDown} from '../../../utils/countdown/CountDown';
@@ -16,6 +16,7 @@ import {CountDown} from '../../../utils/countdown/CountDown';
     selector: 'of-countdown',
     templateUrl: './CountDownComponent.html',
     styleUrls: ['./CountDownComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective]
 })
 export class CountDownComponent implements OnInit, OnDestroy, OnChanges {

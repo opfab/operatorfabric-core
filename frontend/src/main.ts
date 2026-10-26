@@ -15,7 +15,7 @@ import {environment} from './environments/environment';
 
 import {LoggerService as logger} from 'app/services/logs/LoggerService';
 import {LocationStrategy, HashLocationStrategy, CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {TokenInjector} from 'app/server/TokenInjector';
 import {AcknowledgeServer} from './app/services/acknowlegment/server/AcknowledgeServer';
 import {AngularAcknowledgeServer} from './app/services/acknowlegment/server/AngularAcknowledgementServer';
@@ -116,6 +116,6 @@ bootstrapApplication(AppComponent, {
         {provide: TranslationLib, useClass: AngularTranslationLib},
         {provide: ModalComponent, useClass: NgbModalComponent},
         {provide: SharingService, useClass: SharingService},
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withXhr(), withInterceptorsFromDi())
     ]
 }).catch((err) => logger.error(JSON.stringify(err)));

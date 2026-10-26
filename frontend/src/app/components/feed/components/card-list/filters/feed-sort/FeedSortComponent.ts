@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -20,6 +20,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-feed-sort',
     templateUrl: './FeedSortComponent.html',
     styleUrls: ['./FeedSortComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, FormsModule, ReactiveFormsModule]
 })
 export class FeedSortComponent implements OnInit, OnDestroy {

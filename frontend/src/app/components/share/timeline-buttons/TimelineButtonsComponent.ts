@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {UserPreferencesService} from '@ofServices/userPreferences/UserPreferencesService';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
@@ -20,6 +20,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-timeline-buttons',
     templateUrl: './TimelineButtonsComponent.html',
     styleUrls: ['./TimelineButtonsComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, NgClass]
 })
 export class TimelineButtonsComponent implements OnInit, OnDestroy {
