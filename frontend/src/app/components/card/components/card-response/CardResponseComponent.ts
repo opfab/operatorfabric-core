@@ -7,7 +7,18 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef, ViewChild, inject} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
@@ -40,6 +51,7 @@ const enum ResponseI18nKeys {
 @Component({
     selector: 'of-card-response',
     templateUrl: './CardResponseComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslatePipe, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class CardResponseComponent implements OnChanges, OnInit {

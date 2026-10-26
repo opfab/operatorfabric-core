@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, inject} from '@angular/core';
+import {Component, Input, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {FilteredLightCardsStore} from '../../../../../../store/lightcards/FilteredLightcardsStore';
@@ -18,6 +18,7 @@ import {OpfabStore} from '../../../../../../store/OpfabStore';
     selector: 'of-feed-search',
     templateUrl: './FeedSearchComponent.html',
     styleUrls: ['./FeedSearchComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, ReactiveFormsModule]
 })
 export class FeedSearchComponent implements OnInit {

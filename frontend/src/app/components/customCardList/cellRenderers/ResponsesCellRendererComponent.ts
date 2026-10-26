@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {NgStyle} from '@angular/common';
@@ -16,6 +16,7 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'of-responses-renderer',
     templateUrl: './ResponsesCellRendererComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbPopover, NgStyle]
 })
 export class ResponsesCellRendererComponent implements ICellRendererAngularComp {

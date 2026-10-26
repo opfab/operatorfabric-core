@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,15 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {Card} from 'app/model/Card';
 import {delay, map, takeUntil} from 'rxjs/operators';
-import {FilteredLightCardsStore} from '../../store/lightcards/FilteredLightcardsStore';
+import {FilteredLightCardsStore} from '@ofStore/lightcards/FilteredLightcardsStore';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {ActivatedRoute, RouterOutlet} from '@angular/router';
 import {SelectedCardService} from '@ofServices/selectedCard/SelectedCardService';
-import {OpfabStore} from '../../store/OpfabStore';
+import {OpfabStore} from '@ofStore/OpfabStore';
 import {TimeLineComponent} from './components/time-line/TimeLineComponent';
 import {AsyncPipe} from '@angular/common';
 import {PinnedCardsComponent} from './components/pinned-cards/PinnedCardsComponent';
@@ -26,6 +26,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-cards',
     templateUrl: './FeedComponent.html',
     styleUrls: ['./FeedComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TimeLineComponent, PinnedCardsComponent, CardListComponent, RouterOutlet, AsyncPipe]
 })
 export class FeedComponent implements OnInit, OnDestroy {

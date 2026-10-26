@@ -16,7 +16,8 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewEncapsulation
+    ViewEncapsulation,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
@@ -56,6 +57,7 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     templateUrl: './CardBodyComponent.html',
     styleUrls: ['./CardBodyComponent.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CardActionsComponent,
         CardHeaderComponent,

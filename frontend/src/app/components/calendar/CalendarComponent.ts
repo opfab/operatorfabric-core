@@ -9,7 +9,7 @@
 
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FullCalendarComponent, FullCalendarModule} from '@fullcalendar/angular';
 import {EventInput} from '@fullcalendar/core';
 import allLocales from '@fullcalendar/core/locales-all';
@@ -31,6 +31,7 @@ import {Card} from 'app/model/Card';
     selector: 'of-calendar',
     templateUrl: './CalendarComponent.html',
     styleUrls: ['./CalendarComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FullCalendarModule, CardComponent]
 })
 export class CalendarComponent implements OnInit, OnDestroy {

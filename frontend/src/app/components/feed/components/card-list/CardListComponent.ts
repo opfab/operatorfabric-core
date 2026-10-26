@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewChecked, Component, Input, OnInit, Output} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {CardAction} from 'app/model/CardAction';
 import {Observable, Subject} from 'rxjs';
@@ -37,6 +37,7 @@ import {AcknowledgePermission} from '@ofServices/acknowlegment/AcknowledgePermis
     selector: 'of-card-list',
     templateUrl: './CardListComponent.html',
     styleUrls: ['./CardListComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FiltersComponent, FeedFilterComponent, LightCardModule, TranslateDirective, AsyncPipe]
 })
 export class CardListComponent implements AfterViewChecked, OnInit {

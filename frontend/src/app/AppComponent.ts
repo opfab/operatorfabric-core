@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, HostListener, TemplateRef, ViewChild} from '@angular/core';
+import {Component, HostListener, TemplateRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {RemoteLoggerService} from 'app/services/logs/RemoteLoggerService';
 import {SoundNotificationService} from '@ofServices/notifications/SoundNotificationService';
@@ -25,6 +25,7 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     selector: 'of-root',
     templateUrl: './AppComponent.html',
     styleUrls: ['./AppComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ApplicationLoadingComponent,
         AlertComponent,

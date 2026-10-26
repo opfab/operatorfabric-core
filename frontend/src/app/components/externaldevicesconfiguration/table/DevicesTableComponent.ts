@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {MessageLevel} from '@ofServices/alerteMessage/model/Message';
 import {Observable} from 'rxjs';
 import {ExternalDevicesConfigurationDirective, Field, FieldType} from './ExternalDevicesConfigurationDirective';
@@ -25,6 +25,7 @@ import {NgbPagination} from '@ng-bootstrap/ng-bootstrap';
     selector: 'of-externaldevices',
     templateUrl: './ExternalDevicesConfigurationDirective.html',
     styleUrls: ['../ExternalDevicesConfigurationComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, SpinnerComponent, AgGridAngular, NgbPagination]
 })
 export class DevicesTableComponent extends ExternalDevicesConfigurationDirective {

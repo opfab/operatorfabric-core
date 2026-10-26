@@ -15,7 +15,7 @@ import {Entity} from '@ofServices/entities/model/Entity';
 import {RemoteLoggerServer} from '@ofServices/logs/server/RemoteLoggerServer';
 import {AngularEntitiesServer} from '@ofServices/entities/server/AngularEntitiesServer';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {resetServices} from '@tests/helpers';
 
 describe('EntitiesService', () => {
@@ -30,7 +30,7 @@ describe('EntitiesService', () => {
             imports: [],
             providers: [
                 {provide: RemoteLoggerServer, useValue: null},
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting()
             ]
         });

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, inject} from '@angular/core';
+import {Component, Input, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -32,6 +32,7 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-modal',
     templateUrl: './ExternalDevicesModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class ExternaldevicesModalComponent implements OnInit {

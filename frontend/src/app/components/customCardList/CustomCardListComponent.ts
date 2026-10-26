@@ -7,7 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject} from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPagination, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 import {TranslateDirective} from '@ngx-translate/core';
@@ -48,6 +57,7 @@ import {UserPreferencesService} from '@ofServices/userPreferences/UserPreference
     selector: 'of-custom-card-list-screen',
     templateUrl: './CustomCardListComponent.html',
     styleUrls: ['./CustomCardListComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         TranslateDirective,
         AgGridAngular,
