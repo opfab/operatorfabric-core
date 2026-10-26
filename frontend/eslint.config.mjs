@@ -1,19 +1,7 @@
 import {defineConfig, globalIgnores} from 'eslint/config';
 import jest from 'eslint-plugin-jest';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-import js from '@eslint/js';
-import {FlatCompat} from '@eslint/eslintrc';
+import angular from 'angular-eslint';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-/** @type {import('eslint').Linter.Config[]} */
 export default defineConfig([
     globalIgnores(['projects/**/*']),
     {
@@ -24,10 +12,7 @@ export default defineConfig([
         languageOptions: {
             globals: {
                 ...jest.environments.globals.globals
-            },
-
-            ecmaVersion: 2020,
-            sourceType: 'script'
+            }
         },
 
         rules: {
@@ -38,20 +23,8 @@ export default defineConfig([
     {
         files: ['**/*.ts'],
 
-        extends: compat.extends(
-            'plugin:@angular-eslint/recommended',
-            'plugin:@angular-eslint/template/process-inline-templates'
-        ),
-
-        languageOptions: {
-            ecmaVersion: 5,
-            sourceType: 'script',
-
-            parserOptions: {
-                project: ['tsconfig.json'],
-                createDefaultProgram: true
-            }
-        },
+        extends: [...angular.configs.tsRecommended],
+        processor: angular.processInlineTemplates,
 
         rules: {
             '@angular-eslint/directive-selector': [
@@ -79,7 +52,7 @@ export default defineConfig([
     },
     {
         files: ['**/*.html'],
-        extends: compat.extends('plugin:@angular-eslint/template/recommended'),
+        extends: [...angular.configs.templateRecommended],
         rules: {}
     }
 ]);

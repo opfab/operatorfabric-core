@@ -1,6 +1,8 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": false,
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./src",
     "importHelpers": true,
     "module": "es2020",
@@ -48,6 +50,10 @@
       "node_modules/@types"
     ],
     "useDefineForClassFields": false
+  },
+  "angularCompilerOptions": {
+      "strictTemplates": false,
+      "strictInputAccessModifiers": false
   }
 
 }
