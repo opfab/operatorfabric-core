@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
 import {Utilities} from '../../../../utils/Utilities';
@@ -24,6 +24,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-card-acks-footer',
     templateUrl: './CardAcksFooterComponent.html',
     styleUrls: ['./CardAcksFooterComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, NgStyle, NgbPopover]
 })
 export class CardAcksFooterComponent implements OnChanges, OnInit, OnDestroy {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, Output} from '@angular/core';
+import {Component, Input, OnChanges, Output, ChangeDetectionStrategy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {NgClass} from '@angular/common';
 
@@ -15,6 +15,7 @@ import {NgClass} from '@angular/common';
     selector: 'of-feed-filter-icon',
     templateUrl: './FeedFilterAndSortIconsComponent.html',
     styleUrls: ['./FeedFilterAndSortIconsComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class FeedFilterAndSortIconsComponent implements OnChanges {

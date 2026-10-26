@@ -1,4 +1,4 @@
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * Copyright (c) 2023, Alliander (http://www.alliander.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -104,12 +104,13 @@ export class CustomTimelineChartComponent implements OnInit, OnDestroy, OnChange
     // FOLLOWING METHODS ARE CALLED FROM THE HTML
     //
     circleHovered(myCircle, p): void {
-        if (this.openPopover) {
+        if (this.openPopover?.isOpen() && this.openPopover !== p) {
             this.openPopover.close();
         }
         clearTimeout(this.popoverTimeOut);
         this.openPopover = p;
         this.currentCircleHovered = myCircle;
+        p.open();
     }
 
     getTimeLineTitle() {

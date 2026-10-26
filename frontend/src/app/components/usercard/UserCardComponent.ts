@@ -7,7 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild, inject} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    ViewChild,
+    inject,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Card} from 'app/model/Card';
 import {CardWithChildCards} from '@ofServices/cards/model/CardWithChildCards';
@@ -40,6 +49,7 @@ import {Entity} from '@ofServices/entities/model/Entity';
     selector: 'of-usercard',
     templateUrl: './UserCardComponent.html',
     styleUrls: ['./UserCardComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         TranslateDirective,
         FormsModule,

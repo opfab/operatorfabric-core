@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: MPL-2.0
  * This file is part of the OperatorFabric project.
  */
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {TimelineButtonsComponent} from '../../../share/timeline-buttons/TimelineButtonsComponent';
 import {CustomTimelineChartComponent} from './custom-timeline-chart/CustomTimeLineChartComponent';
 import {PinnedCardsComponent} from '../pinned-cards/PinnedCardsComponent';
@@ -17,6 +17,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-time-line',
     templateUrl: './TimeLineComponent.html',
     styleUrls: ['./TimeLineComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TimelineButtonsComponent, CustomTimelineChartComponent, PinnedCardsComponent, TranslateDirective]
 })
 export class TimeLineComponent {

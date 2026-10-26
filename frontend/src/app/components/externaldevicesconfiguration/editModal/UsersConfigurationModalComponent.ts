@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, inject} from '@angular/core';
+import {Component, Input, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {User} from '@ofServices/users/model/User';
@@ -24,6 +24,7 @@ import {MultiSelectComponent} from '../../share/multi-select/MultiSelectComponen
     selector: 'of-externaldevices-users-modal',
     templateUrl: './UsersConfigurationModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class UsersconfigurationModalComponent implements OnInit {

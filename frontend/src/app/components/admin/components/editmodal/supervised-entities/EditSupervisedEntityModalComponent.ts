@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, inject} from '@angular/core';
+import {Component, Input, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {AdminItemType, SharingService} from '../../../services/SharingService';
@@ -24,6 +24,7 @@ import {CrudUtilities} from '@ofServices/admin/CrudUtils';
     selector: 'of-edit-supervised-entity-modal',
     templateUrl: './EditSupervisedEntityModalComponent.html',
     styleUrls: ['./EditSupervisedEntityModalComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, FormsModule, ReactiveFormsModule, MultiSelectComponent]
 })
 export class EditSupervisedEntityModalComponent implements OnInit {

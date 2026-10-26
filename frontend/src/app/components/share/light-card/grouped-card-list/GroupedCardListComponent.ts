@@ -1,5 +1,5 @@
 /* Copyright (c) 2022, Alliander (http://www.alliander.com)
- * Copyright (c) 2023-2025, RTE (http://www.rte-france.com)
+ * Copyright (c) 2023-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,7 +8,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {Observable} from 'rxjs';
 
@@ -19,6 +19,7 @@ import {Observable} from 'rxjs';
     // The component is not standalone to avoid circular dependencies
     // LightCardComponent is used in GroupedCardListComponent which is used in LightCardComponent
     // Solve this would require a lot of refactoring
+    changeDetection: ChangeDetectionStrategy.Eager,
     /* eslint-disable-next-line @angular-eslint/prefer-standalone */
     standalone: false
 })

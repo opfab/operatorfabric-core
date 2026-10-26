@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {User} from '@ofServices/users/model/User';
 import {DateTimeFormatterService} from 'app/services/dateTimeFormatter/DateTimeFormatterService';
@@ -26,6 +26,7 @@ import {AcknowledgeUtils} from '@ofServices/acknowlegment/AcknowledgeUtils';
     selector: 'of-card-footer-text',
     templateUrl: './CardFooterTextComponent.html',
     styleUrls: ['./CardFooterTextComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective]
 })
 export class CardFooterTextComponent implements OnChanges, OnInit {

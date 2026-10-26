@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {OnInit, Component, OnDestroy} from '@angular/core';
+import {OnInit, Component, OnDestroy, ChangeDetectionStrategy} from '@angular/core';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject, takeUntil, timer} from 'rxjs';
 import {Card} from 'app/model/Card';
@@ -22,6 +22,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-pinned-cards',
     templateUrl: './PinnedCardsComponent.html',
     styleUrls: ['./PinnedCardsComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbPopover, TranslateDirective, LowerCasePipe]
 })
 export class PinnedCardsComponent implements OnInit, OnDestroy {

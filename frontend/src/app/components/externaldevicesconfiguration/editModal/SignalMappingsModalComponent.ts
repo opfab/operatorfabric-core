@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnInit, inject} from '@angular/core';
+import {Component, Input, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -30,6 +30,7 @@ import {SpinnerComponent} from '../../share/spinner/SpinnerComponent';
     selector: 'of-signal-mappings-modal',
     templateUrl: './SignalMappingsModalComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationModalComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class SignalMappingsModalComponent implements OnInit {

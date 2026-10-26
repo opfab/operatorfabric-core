@@ -1,4 +1,4 @@
-/* Copyright (c) 2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2025-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
 import type {ITooltipAngularComp} from 'ag-grid-angular';
 
@@ -32,6 +32,7 @@ import type {ITooltipAngularComp} from 'ag-grid-angular';
             }
         `
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class CustomTooltipComponent implements ITooltipAngularComp {

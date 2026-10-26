@@ -16,7 +16,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    ViewChild
+    ViewChild,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivityAreaView} from 'app/components/activityarea/view/ActivityAreaView';
@@ -32,6 +33,7 @@ import {I18n} from '../../model/I18n';
     selector: 'of-activityarea',
     templateUrl: './ActivityAreaComponent.html',
     styleUrls: ['./ActivityAreaComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, SpinnerComponent, FormsModule, ReactiveFormsModule]
 })
 export class ActivityAreaComponent implements OnInit, OnDestroy, AfterViewChecked {
