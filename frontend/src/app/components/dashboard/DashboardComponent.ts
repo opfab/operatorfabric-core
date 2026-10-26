@@ -7,7 +7,16 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, Input} from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    inject,
+    Input,
+    ChangeDetectionStrategy
+} from '@angular/core';
 import {DashboardView} from 'app/components/dashboard/view/DashboardView';
 import {DashboardPage, Tile, TileCell} from 'app/components/dashboard/view/DashboardPage';
 import {NgbModal, NgbModalOptions, NgbModalRef, NgbPopover} from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +34,7 @@ declare const opfab: any;
     selector: 'of-dashboard',
     templateUrl: './DashboardComponent.html',
     styleUrls: ['./DashboardComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TimelineButtonsComponent, TranslateDirective, NgClass, NgbPopover, CardComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {

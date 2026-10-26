@@ -1,5 +1,5 @@
 /* Copyright (c) 2023, Alliander (http://www.alliander.com)
-/* Copyright (c) 2018-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2018-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,8 @@ import {
     OnInit,
     SimpleChanges,
     ViewChild,
-    inject
+    inject,
+    ChangeDetectionStrategy
 } from '@angular/core';
 
 import {Card} from 'app/model/Card';
@@ -35,6 +36,7 @@ import {CardComponent} from '../../../card/CardComponent';
     selector: 'of-monitoring-map',
     templateUrl: './MapComponent.html',
     styleUrls: ['./MapComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardComponent]
 })
 export class MonitoringMapComponent extends OpfabMap implements OnInit, OnChanges, OnDestroy, AfterViewChecked {

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2022-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {RoleEnum} from '@ofServices/entities/model/RoleEnum';
 import {ConfigService} from 'app/services/config/ConfigService';
@@ -19,6 +19,7 @@ import {ActivityAreaComponent} from '../../../activityarea/ActivityAreaComponent
 @Component({
     selector: 'of-activityarea-choice-after-login',
     templateUrl: './ActivityAreaChoiceAfterLoginComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ActivityAreaComponent]
 })
 export class ActivityAreaChoiceAfterLoginComponent extends ApplicationLoadingComponent {

@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {TranslateDirective} from '@ngx-translate/core';
 
@@ -15,6 +15,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-externaldevices',
     templateUrl: './ExternalDevicesConfigurationComponent.html',
     styleUrls: ['./ExternalDevicesConfigurationComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink, RouterLinkActive, TranslateDirective, RouterOutlet]
 })
 export class ExternalDevicesConfigurationComponent {}

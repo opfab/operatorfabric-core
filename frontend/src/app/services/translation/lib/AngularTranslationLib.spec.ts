@@ -10,7 +10,7 @@ import {TestBed} from '@angular/core/testing';
 import {provideTranslateService, TranslateService} from '@ngx-translate/core';
 import {AngularTranslationLib} from './AngularTranslationLib';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 
 describe('AngularTranslationService', () => {
     let service: AngularTranslationLib;
@@ -20,7 +20,7 @@ describe('AngularTranslationService', () => {
             providers: [
                 provideTranslateService(),
                 TranslateService,
-                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClient(withXhr(), withInterceptorsFromDi()),
                 provideHttpClientTesting()
             ]
         });

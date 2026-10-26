@@ -8,13 +8,14 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {SpinnerComponent} from '../../../share/spinner/SpinnerComponent';
 import {TranslateDirective} from '@ngx-translate/core';
 
 @Component({
     selector: 'of-loading-in-progress',
     templateUrl: './LoadingInProgressComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SpinnerComponent, TranslateDirective]
 })
 export class LoadingInProgressComponent implements OnInit, OnDestroy {

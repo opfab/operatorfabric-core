@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, OnDestroy, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomCardListComponent} from '../customCardList/CustomCardListComponent';
@@ -17,6 +17,7 @@ import {CustomScreenService} from '@ofServices/customScreen/CustomScreenService'
 @Component({
     selector: 'of-custom-screen',
     templateUrl: './CustomScreenComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CustomCardListComponent, DashboardComponent]
 })
 export class CustomScreenComponent implements OnInit, OnDestroy {

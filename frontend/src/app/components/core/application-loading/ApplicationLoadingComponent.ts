@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, OnInit, Output, ViewChild, inject} from '@angular/core';
+import {Component, OnInit, Output, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {LogLevel, LoggerService, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {firstValueFrom, Subject, tap} from 'rxjs';
 import {ActivityAreaChoiceAfterLoginComponent} from './activityarea-choice-after-login/ActivityAreaChoiceAfterLoginComponent';
@@ -48,6 +48,7 @@ import {loadBuiltInTemplates} from 'app/builtInTemplates/TemplatesLoader';
     selector: 'of-application-loading',
     styleUrls: ['./ApplicationLoadingComponent.scss'],
     templateUrl: './ApplicationLoadingComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         LoadingInProgressComponent,
         AppLoadedInAnotherTabComponent,
