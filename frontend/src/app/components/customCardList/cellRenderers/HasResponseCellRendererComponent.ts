@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ICellRendererAngularComp} from 'ag-grid-angular';
 import {ICellRendererParams} from 'ag-grid-community';
 import {TranslateDirective} from '@ngx-translate/core';
@@ -17,6 +17,7 @@ import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'of-has-response-cell-renderer',
     templateUrl: './HasResponseCellRendererComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, NgbPopover]
 })
 export class HasResponseCellRendererComponent implements ICellRendererAngularComp {

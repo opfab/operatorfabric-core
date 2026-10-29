@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnChanges} from '@angular/core';
+import {Component, Input, OnChanges, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {State, TypeOfStateEnum} from '@ofServices/processes/model/Processes';
 import {EntitiesService} from '@ofServices/entities/EntitiesService';
@@ -29,6 +29,7 @@ class EntityForCardHeader {
     selector: 'of-card-header',
     templateUrl: './CardHeaderComponent.html',
     styleUrls: ['./CardHeaderComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslatePipe, TranslateDirective, CountDownComponent, NgbPopover, NgStyle]
 })
 export class CardHeaderComponent implements OnChanges {

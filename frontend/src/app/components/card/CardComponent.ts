@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit, inject} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Card} from 'app/model/Card';
 import {ProcessesService} from '@ofServices/processes/ProcessesService';
 import {Subject} from 'rxjs';
@@ -29,6 +29,7 @@ import {NavigationService} from '@ofServices/navigation/NavigationService';
     selector: 'of-card',
     templateUrl: './CardComponent.html',
     styleUrls: ['./CardComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardBodyComponent, SpinnerComponent, TranslateDirective]
 })
 export class CardComponent implements OnInit, OnDestroy {

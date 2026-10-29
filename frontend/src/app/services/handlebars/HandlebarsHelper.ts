@@ -1,4 +1,4 @@
-/* Copyright (c) 2024-2025, RTE (http://www.rte-france.com)
+/* Copyright (c) 2024-2026, RTE (http://www.rte-france.com)
  * See AUTHORS.txt
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -224,7 +224,9 @@ export class HandlebarsHelper {
 
     private static registerReplace() {
         Handlebars.registerHelper('replace', function (find, replace, string) {
-            return string.replaceAll(find, replace);
+            if (string === null || string === undefined) return '';
+            const s = typeof string === 'string' ? string : String(string);
+            return s.replaceAll(String(find), String(replace));
         });
     }
 

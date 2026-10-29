@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, HostListener, TemplateRef, ViewChild, inject} from '@angular/core';
+import {Component, HostListener, TemplateRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {LogOption, LoggerService as logger} from 'app/services/logs/LoggerService';
 import {UrlLockService} from './UrlLockService';
 import {UsersService} from '@ofServices/users/UsersService';
@@ -29,6 +29,7 @@ import {TranslateDirective} from '@ngx-translate/core';
     selector: 'of-app-loaded-in-another-tab',
     styleUrls: ['./AppLoadedInAnotherTabComponent.scss'],
     templateUrl: './AppLoadedInAnotherTabComponent.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective]
 })
 export class AppLoadedInAnotherTabComponent extends ApplicationLoadingComponent {

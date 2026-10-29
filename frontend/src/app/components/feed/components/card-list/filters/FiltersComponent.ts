@@ -7,7 +7,7 @@
  * This file is part of the OperatorFabric project.
  */
 
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, Output, ChangeDetectionStrategy} from '@angular/core';
 import {ConfigService} from 'app/services/config/ConfigService';
 import {Subject, debounceTime, takeUntil} from 'rxjs';
 import {FeedFilterAndSortIconsComponent} from './feed-filter-and-sort-icons/FeedFilterAndSortIconsComponent';
@@ -19,6 +19,7 @@ import {OpfabEventStreamService} from '@ofServices/events/OpfabEventStreamServic
     selector: 'of-filters',
     templateUrl: './FiltersComponent.html',
     styleUrls: ['./FiltersComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FeedFilterAndSortIconsComponent, FeedSearchComponent, TranslateDirective]
 })
 export class FiltersComponent implements OnInit, OnDestroy {

@@ -17,7 +17,8 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    inject
+    inject,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import {NgbModal, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Card} from 'app/model/Card';
@@ -45,6 +46,7 @@ import {NavigationService, PageType} from '@ofServices/navigation/NavigationServ
     selector: 'of-card-actions',
     templateUrl: './CardActionsComponent.html',
     styleUrls: ['./CardActionsComponent.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [TranslateDirective, UserCardComponent, SpinnerComponent]
 })
 export class CardActionsComponent implements OnInit, OnChanges, OnDestroy {
