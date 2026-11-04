@@ -63,7 +63,7 @@ ext {
             collections4   : "org.apache.commons:commons-collections4:$apacheCommonsCollections4",
             commonsIO      : "commons-io:commons-io:$commonsIO",
             micrometer     : "io.micrometer:micrometer-registry-prometheus:$micrometer",
-            jsonSmart      : "net.minidev:json-smart:2.6.0",
+            jsonSmart      : "net.minidev:json-smart:2.6.1",
             handlebars     : "com.github.jknack:handlebars:4.5.8",
             jlibmodbus     : "com.intelligt.modbus:jlibmodbus:$jlibmodbus",
             commonsText    : "org.apache.commons:commons-text:$apacheCommonsText",
