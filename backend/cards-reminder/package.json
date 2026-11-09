@@ -17,7 +17,7 @@
     "dependencies": {
         "amqp-connection-manager": "5.0.1",
         "amqplib": "2.2.1",
-        "axios": "1.21.0",
+        "axios": "1.21.1",
         "config": "5.0.1",
         "date-fns": "4.4.0",
         "date-fns-tz": "3.2.0",
