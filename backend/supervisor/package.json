@@ -33,7 +33,7 @@
         "@types/config": "4.4.0",
         "@types/express": "5.0.6",
         "@types/jest": "30.0.0",
-        "@types/node": "26.6.7",
+        "@types/node": "26.6.11",
         "@types/sinon": "22.0.2",
         "eslint": "10.14.0",
         "@eslint/js": "10.0.1",
